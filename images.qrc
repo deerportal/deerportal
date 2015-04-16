@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/textures">
+        <file>assets/img/zw-tilesets/_MAP.png</file>
+    </qresource>
+</RCC>

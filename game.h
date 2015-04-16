@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "tilemap.h"
+#include "selector.h"
 
 namespace efc {
 class Game
