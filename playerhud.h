@@ -9,6 +9,9 @@ public:
     PlayerHud(int faceNumber, sf::Texture *faces);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+
+private:
+    sf::Sprite spriteFace;
 };
 
 

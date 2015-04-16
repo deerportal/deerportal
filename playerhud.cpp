@@ -2,7 +2,10 @@
 
 PlayerHud::PlayerHud(int faceNumber, sf::Texture *faces)
 {
-
+    spriteFace.setTexture(*faces);
+    spriteFace.setTextureRect(sf::IntRect(0, 0, 31, 31));
+    spriteFace.setScale(sf::Vector2f(0.25f, 1.f));
+    spriteFace.setPosition(0,200);
 }
 
 void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -17,6 +20,7 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
     rectangle.setOutlineColor(sf::Color(0,0,128));
 
     target.draw(rectangle, states);
+    target.draw(spriteFace);
 
 
 }
