@@ -57,8 +57,14 @@ Game::Game()
 
     // create the tilemap from the level definition
     TileMap map;
-    Selector selector(tileSize);
-    PlayerHud playerHud(1, &textureFaces);
+        Selector selector(tileSize);
+
+        int faceNumber = std::rand() % 80;
+//        faceNumber = 1;
+        PlayerHud playerHud1(std::rand() % 80, &textureFaces, 32,0);
+    PlayerHud playerHud2(std::rand() % 80, &textureFaces, 32,1);
+    PlayerHud playerHud3(std::rand() % 80, &textureFaces, 32,2);
+    PlayerHud playerHud4(std::rand() % 80, &textureFaces, 32,3);
     if (!map.load("assets/img/zw-tilesets/_MAP.png", sf::Vector2u(tileSize, tileSize), level, mapSize, mapSize))
         std::exit(1);
 
@@ -97,8 +103,13 @@ Game::Game()
         window.draw(selector);
 
         window.setView(viewGui);
-        window.draw(playerHud);
+        window.draw(playerHud1);
+        window.draw(playerHud2);
+        window.draw(playerHud3);
+        window.draw(playerHud4);
         window.display();
+
+
 
 
 
