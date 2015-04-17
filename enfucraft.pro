@@ -23,8 +23,5 @@ HEADERS += \
     selector.h \
     playerhud.h
 
-OTHER_FILES += \
-    assets/img/zw-tilesets/_MAP.png
-
 RESOURCES += \
     images.qrc
