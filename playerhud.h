@@ -10,7 +10,7 @@ class PlayerHud : public sf::Drawable, public sf::Transformable
 {
 public:
     PlayerHud();
-    PlayerHud(TextureHolder *textures, int faceNumber, sf::Texture *faces, sf::Texture *textureTiles, sf::Font *gameFont, int tileSize, int pos);
+    PlayerHud(TextureHolder *textures, int faceNumber, sf::Font *gameFont, int tileSize, int pos);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     int pos;
     int cash;

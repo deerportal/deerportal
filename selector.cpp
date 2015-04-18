@@ -9,7 +9,6 @@ Selector::Selector(int squareSize)
     rectangle.setOutlineThickness(1);
     rectangle.setOutlineColor(sf::Color(0,255,0));
     changeColor(3);
-
 }
 
 void Selector::changeColor(int colorNumber)
@@ -35,27 +34,11 @@ void Selector::changeColor(int colorNumber)
         rectangle.setFillColor(sf::Color(200, 200, 200,168));
         rectangle.setOutlineColor(sf::Color(200,200,200));
     }
-
-
-
 }
 
 void Selector::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     //   // apply the transform
     states.transform *= getTransform();
-
-    //   // apply the tileset texture
-    //   states.texture = &m_tileset;
-
-    //   // draw the vertex array
-    //   target.draw(m_vertices, states);
-
-
-//    sf::RectangleShape rectangle(sf::Vector2f(squareSize, squareSize));
-
-
     target.draw(rectangle, states);
-
-
 }

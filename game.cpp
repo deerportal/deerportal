@@ -58,12 +58,12 @@ void Game::initBoard()
         level[i] = 816;
     level[143] = 814;
 
-    map.load(&textureTiles, sf::Vector2u(efc::TILE_SIZE, efc::TILE_SIZE), level, mapSize, mapSize);
+    map.load(&textures, sf::Vector2u(efc::TILE_SIZE, efc::TILE_SIZE), level, mapSize, mapSize);
 
-    PlayerHud playerHud1(&textures, std::rand() % 80, &textureFaces, &textureTiles, &gameFont, 32,0);
-    PlayerHud playerHud2(&textures, std::rand() % 30, &textureFaces, &textureTiles, &gameFont, 32,1);
-    PlayerHud playerHud3(&textures, std::rand() % 60, &textureFaces, &textureTiles, &gameFont, 32,2);
-    PlayerHud playerHud4(&textures, std::rand() % 50, &textureFaces, &textureTiles, &gameFont, 32,3);
+    PlayerHud playerHud1(&textures, std::rand() % 80, &gameFont, 32,0);
+    PlayerHud playerHud2(&textures, std::rand() % 30, &gameFont, 32,1);
+    PlayerHud playerHud3(&textures, std::rand() % 60, &gameFont, 32,2);
+    PlayerHud playerHud4(&textures, std::rand() % 50, &gameFont, 32,3);
     players[0] = playerHud1;
     players[1] = playerHud2;
     players[2] = playerHud3;

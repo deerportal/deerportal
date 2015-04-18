@@ -11,15 +11,12 @@ public:
     BoardElem();
     BoardElem(TextureHolder *textures,int pos, int type, const sf::Texture *textureElem);
 
-
-
     int pos;
     int type;
 
 
-
 private:
-//    sf::Sprite spriteElem;
+
     const sf::Texture* textureElem;
     static const sf::Texture& textureElem2;
     TextureHolder *textures;
