@@ -7,7 +7,10 @@ SOURCES += main.cpp \
     game.cpp \
     tilemap.cpp \
     selector.cpp \
-    playerhud.cpp
+    playerhud.cpp \
+    boardelem.cpp \
+    boardelems.cpp \
+    textureholder.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics
 DESTDIR = ../build_release_enfucraft
@@ -21,7 +24,10 @@ HEADERS += \
     game.h \
     tilemap.h \
     selector.h \
-    playerhud.h
+    playerhud.h \
+    boardelem.h \
+    boardelems.h \
+    textureholder.h
 
 RESOURCES += \
     images.qrc

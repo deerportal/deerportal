@@ -1,34 +1,50 @@
 #include "playerhud.h"
-
-PlayerHud::PlayerHud(int faceNumber, sf::Texture *faces, sf::Font *gameFont, int tileSize, int pos)
+#include "textureholder.h"
+PlayerHud::PlayerHud()
 {
-    this->tileSize = tileSize;
-    spriteFace.setTexture(*faces);
+
+}
+
+PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber, sf::Texture *faces, sf::Texture *textureTiles, sf::Font *gameFont, int faceSize, int pos)
+{
+
+
+    //    level[0] = 441;
+    //    level[240] = 0;
+    //    level[255] = 0;
+    //    level[15] = 0;
+
+    int startPositions[4] = {0,15,240, 255};
+
+    this->textures = textures;
+
+
+    BoardElem startElem(textures, startPositions[pos],441, std::move(textureTiles));
+
+//    const sf::Texture& refTexture = sf::Texture(*textureTiles);
+    startElem.setTexture(this->textures->textureTiles);
+
+    elems.items.push_back(startElem);
+
+    this->faceSize = faceSize;
+    spriteFace.setTexture(textures->textureFaces);
     this->pos = pos;
 
     food = 0;
     cash = 0;
     energy = 0;
-
-    int y = (int) faceNumber /10;
     int x = faceNumber % 10;
 
-//    if (!gameFontloadFromFile("assets/fnt/8bitOperatorPlus-Regular.ttf"))
-//    {
-//        std::exit(1);
-//    }
-
+    int y = (int) faceNumber /10;
 
     txtCash.setFont(*gameFont);
     txtFood.setFont(*gameFont);
     txtEnergy.setFont(*gameFont);
 
-
     txtCash.setPosition(1,(pos*100)+40);
     txtCash.setString("Cash: " + std::to_string(cash));
     txtCash.setCharacterSize(10);
     txtCash.setScale(sf::Vector2f(0.25f, 1.f));
-
 
     txtFood.setPosition(1,(pos*100)+55);
     txtFood.setString("Food: " + std::to_string(food));
@@ -38,12 +54,13 @@ PlayerHud::PlayerHud(int faceNumber, sf::Texture *faces, sf::Font *gameFont, int
 
     txtEnergy.setPosition(1,(pos*100)+70);
     txtEnergy.setString("Enrg: " + std::to_string(energy));
+    txtEnergy.setString("Enrg: " + std::to_string(energy));
     txtEnergy.setCharacterSize(10);
     txtEnergy.setScale(sf::Vector2f(0.25f, 1.f));
 
     std::cout << "playerHud" << faceNumber << " " << x << " " << y << std::endl;
 
-    spriteFace.setTextureRect(sf::IntRect(x*tileSize, y*tileSize, tileSize, tileSize));
+    spriteFace.setTextureRect(sf::IntRect(x*faceSize, y*faceSize, faceSize, faceSize));
     spriteFace.setScale(sf::Vector2f(0.25f, 1.f));
     spriteFace.setPosition(0,pos*100);
 }
@@ -54,9 +71,9 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
    states.transform *= getTransform();
 
 
-    sf::RectangleShape rectangle(sf::Vector2f(tileSize, tileSize));
+    sf::RectangleShape rectangle(sf::Vector2f(faceSize, faceSize));
 
-    sf::RectangleShape rectangle2(sf::Vector2f(tileSize, (tileSize*2)+3));
+    sf::RectangleShape rectangle2(sf::Vector2f(faceSize, (faceSize*2)+3));
 
     if (pos==0)
     {
@@ -89,18 +106,20 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
     }
 
-
     rectangle.setOutlineThickness(1);
     rectangle.setPosition(0, pos*100);
-    rectangle2.setPosition(0, (pos*100)+tileSize+1);
+    rectangle2.setPosition(0, (pos*100)+faceSize+1);
     target.draw(rectangle, states);
     target.draw(rectangle2, states);
-    target.draw(txtCash);
-    target.draw(txtFood);
-    target.draw(txtEnergy);
+    target.draw(txtCash, states);
+    target.draw(txtFood, states);
+    target.draw(txtEnergy, states);
+    target.draw(spriteFace, states);
 
+    for (const BoardElem &i: elems.items)
+    {
+//        std::cout << i.pos << std::endl;
 
-    target.draw(spriteFace);
-
+    }
 
 }

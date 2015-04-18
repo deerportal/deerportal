@@ -4,17 +4,24 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include "boardelems.h"
+#include "textureholder.h"
 class PlayerHud : public sf::Drawable, public sf::Transformable
 {
 public:
-    PlayerHud(int faceNumber, sf::Texture *faces, sf::Font *gameFont, int tileSize, int pos);
+    PlayerHud();
+    PlayerHud(TextureHolder *textures, int faceNumber, sf::Texture *faces, sf::Texture *textureTiles, sf::Font *gameFont, int tileSize, int pos);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     int pos;
     int cash;
     int energy;
     int food;
+    BoardElems elems;
+
+
 
     std::vector<int> properties;
+
 
 
 private:
@@ -23,7 +30,9 @@ private:
     sf::Text txtCash;
     sf::Text txtEnergy;
     sf::Text txtFood;
+    int faceSize;
     int tileSize;
+    TextureHolder *textures;
 };
 
 
