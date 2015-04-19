@@ -12,6 +12,7 @@ enum {
     TILE_BOARD_SIZE = 40
 };
 sf::Vector2i transPosition(int pos);
+int transCords(sf::Vector2i cords);
 std::vector<int>  getNeighbours(int pos);
 }
 

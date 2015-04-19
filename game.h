@@ -13,15 +13,24 @@ class Game
 public:
     Game();
     sf::RenderWindow window;
+    sf::View viewTiles;
+
 
 private:
     void initBoard();
     void loadAssets();
-    enum state {
+    void drawPlayersGui();
+    sf::Vector2f getMousePos();
+
+    enum states {
+        state_init,
         state_menu,
         state_game,
+        state_select_building,
         state_quit
     };
+
+    states currentState;
 
     sf::Texture textureTiles;
     sf::Texture textureFaces;
@@ -34,7 +43,7 @@ private:
     int level[256];
     int levelElems[256];
     TextureHolder textures;
-
+    std::set<int> currentNeighbours;
 };
 }
 #endif // GAME_H

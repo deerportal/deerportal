@@ -1,5 +1,29 @@
 #include "playerhud.h"
 #include "textureholder.h"
+#include "boardelem.h"
+
+std::set<int> PlayerHud::getNeighbours(){
+
+    std::set<int> neighbours;
+
+    for (std::pair<int, efc::BoardElem> i: elems.items_map)
+    {
+     std::cout << "adding " << i.first << std::endl;
+
+    std::vector<int>  neighboursVector(efc::getNeighbours(i.second.pos));
+         for (int j: neighboursVector)
+         {
+             neighbours.insert(j);
+
+
+         }
+
+    }
+    return neighbours;
+
+}
+
+
 PlayerHud::PlayerHud()
 {
     active = false;

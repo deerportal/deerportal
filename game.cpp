@@ -58,7 +58,7 @@ void Game::initBoard()
         level[i] = 816;
     level[143] = 814;
 
-    map.load(&textures, sf::Vector2u(efc::TILE_SIZE, efc::TILE_SIZE), level, mapSize, mapSize);
+    map.load(&textures, sf::Vector2u(efc::TILE_SIZE, efc::TILE_SIZE), level, efc::BOARD_SIZE, efc::BOARD_SIZE);
 
     PlayerHud playerHud1(&textures, std::rand() % 80, &gameFont, 32,0);
     PlayerHud playerHud2(&textures, std::rand() % 30, &gameFont, 32,1);
@@ -69,6 +69,7 @@ void Game::initBoard()
     players[2] = playerHud3;
     players[3] = playerHud4;
     players[0].setActive(true);
+    currentNeighbours = players[0].getNeighbours();
 }
 
 void Game::loadAssets()
@@ -85,17 +86,15 @@ void Game::loadAssets()
     }
 }
 
-Game::Game()
+Game::Game():
+    window(sf::VideoMode(512, 400), "EnFuCraft"),
+    viewTiles(sf::FloatRect(00, 00, 400, 400))
+
 {
-    mapSize = 16;
+    currentState = state_init;
     std::srand (time(NULL));
     int turn = 0;
-
     loadAssets();
-
-
-
-    sf::RenderWindow window(sf::VideoMode(512, 400), "EnFuCraft");
     sf::View viewGui(sf::FloatRect(00, 00, 112, 400));
     viewGui.setViewport(sf::FloatRect(0.8f,0, 1.0f, 1.0f));
     sf::View viewTiles(sf::FloatRect(00, 00, 400, 400));
@@ -110,70 +109,114 @@ Game::Game()
 
 
     initBoard();
+    currentState = state_game;
 
     // run the main loop
     while (window.isOpen())
     {
         // handle events
         sf::Event event;
+        sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
+        sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
+
         while (window.pollEvent(event))
         {
+
+            int mousePosX = (int)localPosition.x / efc::TILE_SIZE;
+            int mousePosY = (int)localPosition.y / efc::TILE_SIZE;
+            int mousePos = efc::transCords(sf::Vector2i(mousePosX, mousePosY));
             if(event.type == sf::Event::Closed)
                 window.close();
+            if (currentNeighbours.find(mousePos) != currentNeighbours.end())
+            {
+                std::cout << "SUPER" << std::endl;
 
+            }
 
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    std::cout << "the right button was pressed" << std::endl;
-                    std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-                    std::cout << "mouse y: " << event.mouseButton.y << std::endl;
-                    turn++;
-                    if (turn==4)
-                        turn = 0;
-                    selector.changeColor(turn);
-                    for (int i=0;i<4;i++)
+
+                    if (currentState==state_game)
+
                     {
-                        if (i==turn)
-                            players[i].setActive(true);
-                        else
-                            players[i].setActive(false);
+                        turn++;
+                        if (turn==4)
+                            turn = 0;
+                        selector.changeColor(turn);
+                        for (int i=0;i<4;i++)
+                        {
+                            if (i==turn)
+                            {
+                                players[i].setActive(true);
+                                if (currentNeighbours.find(mousePos) != currentNeighbours.end())
+                                {
+                                    std::cout << "SUPER" << std::endl;
+
+                                }
+//                                  std::set<int>::iterator it;
+//                                for ( it=currentNeighbours.begin() ; it != currentNeighbours.end(); it++ )                                {
+//                                    std::cout << std::to_string(i) << std::endl;
+//                                }
+                                currentNeighbours = players[i].getNeighbours();
+
+                            }
+                            else
+                                players[i].setActive(false);
+                        }
+
                     }
+
+
                 }
             }
         }
 
-        //
-        sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
-        sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
-        if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=mapSize*efc::TILE_SIZE) && (localPosition.y<=mapSize*efc::TILE_SIZE))
+        //        localPosition = getMousePos(); // Why this does lag?
+
+        if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
         {
-//            std::cout << localPosition.x << " " << localPosition.y << " " << localPosition.x / efc::TILE_SIZE << " " << localPosition.y / efc::TILE_SIZE << std::endl;
+            //            std::cout << localPosition.x << " " << localPosition.y << " " << localPosition.x / efc::TILE_SIZE << " " << localPosition.y / efc::TILE_SIZE << std::endl;
             selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
         }
 
         // draw the map
         window.clear();
-        window.setView(viewTiles);
-        window.draw(map);
-        //        window.draw(mapElem);
 
-
-        for (int i=0;i<4;i++)
+        if (currentState==state_game)
         {
-            window.draw(players[i].elems);
+            window.setView(viewTiles);
+            window.draw(map);
+            for (int i=0;i<4;i++)
+            {
+                window.draw(players[i].elems);
+            }
+            window.draw(selector);
+            window.setView(viewGui);
+            drawPlayersGui();
+
         }
 
-        window.draw(selector);
 
-        window.setView(viewGui);
-        for (int i=0;i<4;i++)
-        {
-            window.draw(players[i]);
-        }
         window.display();
     }
+}
+
+void Game::drawPlayersGui(){
+    for (int i=0;i<4;i++)
+    {
+        window.draw(players[i]);
+    }
+}
+
+
+sf::Vector2f Game::getMousePos(){
+    sf::Vector2i mousePosTmp(sf::Mouse::getPosition(window));
+    sf::Vector2f mousePosition(window.mapPixelToCoords(mousePosTmp,viewTiles));
+    return mousePosition;
+}
+
 
 }
-}
+

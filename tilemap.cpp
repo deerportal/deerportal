@@ -9,6 +9,12 @@ sf::Vector2i transPosition(int pos) {
     return cords;
 }
 
+int transCords(sf::Vector2i cords) {
+//    std::cout << cords.x << " " << cords.y << " " << std::endl;
+    int pos = (cords.y * efc::BOARD_SIZE)+cords.x;
+    return pos;
+}
+
 std::vector<int>  getNeighbours(int pos) {
     sf::Vector2i cords = efc::transPosition(pos);
     std::vector<int> neighbours;

@@ -1,6 +1,7 @@
 #ifndef PLAYERHUD_H
 #define PLAYERHUD_H
 #include <iostream>
+#include <set>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -12,6 +13,8 @@ public:
     PlayerHud();
     PlayerHud(TextureHolder *textures, int faceNumber, sf::Font *gameFont, int tileSize, int pos);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    std::set<int> getNeighbours();
+
     int pos;
     int cash;
     int energy;

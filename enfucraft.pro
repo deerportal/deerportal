@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     playerhud.cpp \
     boardelem.cpp \
     boardelems.cpp \
-    textureholder.cpp
+    textureholder.cpp \
+    hover.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics
 DESTDIR = ../build_release_enfucraft
@@ -27,7 +28,8 @@ HEADERS += \
     playerhud.h \
     boardelem.h \
     boardelems.h \
-    textureholder.h
+    textureholder.h \
+    hover.h
 
 RESOURCES += \
     images.qrc
