@@ -2,18 +2,23 @@
 #include "textureholder.h"
 PlayerHud::PlayerHud()
 {
+    active = false;
+}
+
+void PlayerHud::setActive(bool newState){
+    active = newState;
+    elems.active = newState;
 
 }
 
 PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFont, int faceSize, int pos)
 {
-
+    active = false;
     int startPositions[4] = {0,15,240, 255};
     this->textures = textures;
-    BoardElem startElem(textures, startPositions[pos],441, &this->textures->textureTiles);
-    startElem.setTexture(this->textures->textureTiles);
+    efc::BoardElem startElem(textures, startPositions[pos],441, &this->textures->textureTiles);
     elems.items.push_back(startElem);
-
+    elems.items_map.insert({pos, startElem});
     this->faceSize = faceSize;
     spriteFace.setTexture(textures->textureFaces);
     this->pos = pos;
@@ -84,6 +89,7 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
         rectangle2.setFillColor(sf::Color(200, 200,200,168));
         rectangle.setOutlineColor(sf::Color(128,128,128));
     }
+
 
     rectangle.setOutlineThickness(1);
     rectangle.setPosition(0, pos*100);

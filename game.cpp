@@ -68,7 +68,7 @@ void Game::initBoard()
     players[1] = playerHud2;
     players[2] = playerHud3;
     players[3] = playerHud4;
-
+    players[0].setActive(true);
 }
 
 void Game::loadAssets()
@@ -133,6 +133,13 @@ Game::Game()
                     if (turn==4)
                         turn = 0;
                     selector.changeColor(turn);
+                    for (int i=0;i<4;i++)
+                    {
+                        if (i==turn)
+                            players[i].setActive(true);
+                        else
+                            players[i].setActive(false);
+                    }
                 }
             }
         }

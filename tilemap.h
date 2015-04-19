@@ -7,9 +7,14 @@
 #include "textureholder.h"
 namespace efc {
 enum {
-    TILE_SIZE = 25
+    TILE_SIZE = 25,
+    BOARD_SIZE = 16,
+    TILE_BOARD_SIZE = 40
 };
+sf::Vector2i transPosition(int pos);
+std::vector<int>  getNeighbours(int pos);
 }
+
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:

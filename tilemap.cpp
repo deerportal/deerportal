@@ -1,5 +1,30 @@
 #include "tilemap.h"
 
+namespace efc {
+
+sf::Vector2i transPosition(int pos) {
+    int x = (int) pos % efc::BOARD_SIZE;
+    int y = (int) pos / efc::BOARD_SIZE;
+    sf::Vector2i cords(x,y);
+    return cords;
+}
+
+std::vector<int>  getNeighbours(int pos) {
+    sf::Vector2i cords = efc::transPosition(pos);
+    std::vector<int> neighbours;
+    if (cords.x>0)
+        neighbours.push_back(pos-1);
+    if (cords.x<efc::BOARD_SIZE-1)
+        neighbours.push_back(pos+1);
+    if (cords.y>0)
+        neighbours.push_back(pos-efc::BOARD_SIZE);
+    if (cords.y<efc::BOARD_SIZE)
+        neighbours.push_back(pos+efc::BOARD_SIZE);
+    return neighbours;
+}
+
+}
+
 TileMap::TileMap()
 {
 }

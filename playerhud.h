@@ -16,8 +16,9 @@ public:
     int cash;
     int energy;
     int food;
+    bool active;
     BoardElems elems;
-
+    void setActive(bool newState);
 
 
     std::vector<int> properties;

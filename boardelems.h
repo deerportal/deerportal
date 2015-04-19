@@ -6,7 +6,10 @@ class BoardElems: public sf::Drawable, public sf::Transformable
 {
 public:
     BoardElems();
-    std::vector<BoardElem> items;
+    std::vector<efc::BoardElem> items;
+    std::map<int, efc::BoardElem> items_map;
+    bool active;
+
 private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

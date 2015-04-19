@@ -2,18 +2,28 @@
 
 BoardElems::BoardElems()
 {
+    active = false;
 }
+
+
 void BoardElems::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 
-    // apply the transform
     states.transform *= getTransform();
-    // apply the tileset texture
 
-    // draw the vertex array
-    for (BoardElem i: items)
+    for (efc::BoardElem i: items)
     {
+
         target.draw(i, states);
+        std::vector<int>  neighbours(efc::getNeighbours(i.pos));
+        if (active==true)
+        {
+            for (int j: neighbours)
+            {
+                sf::RectangleShape sprite(efc::createNeighbour(j));
+                target.draw(sprite, states);
+            }
+        }
 //        std::cout << "POS: "<< i.getPosition().x << " " << i.getPosition().y << std::endl;
     }
 
