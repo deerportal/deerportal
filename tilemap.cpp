@@ -6,6 +6,15 @@ sf::Vector2i transPosition(int pos) {
     int x = (int) pos % efc::BOARD_SIZE;
     int y = (int) pos / efc::BOARD_SIZE;
     sf::Vector2i cords(x,y);
+
+    return cords;
+}
+
+sf::Vector2i transTilePosition(int pos) {
+    int x = (int) pos % efc::TILE_BOARD_SIZE;
+    int y = (int) pos / efc::TILE_BOARD_SIZE;
+    sf::Vector2i cords(x,y);
+
     return cords;
 }
 
@@ -13,6 +22,14 @@ int transCords(sf::Vector2i cords) {
 //    std::cout << cords.x << " " << cords.y << " " << std::endl;
     int pos = (cords.y * efc::BOARD_SIZE)+cords.x;
     return pos;
+}
+
+sf::IntRect transPosIntoRect(int pos)
+{
+    sf::Vector2i cords = efc::transTilePosition(pos);
+    sf::IntRect posRect((int)cords.x*efc::TILE_SIZE, (int)cords.y*efc::TILE_SIZE, efc::TILE_SIZE, efc::TILE_SIZE);
+    std::cout << "debug transPosIntoRect " << pos << " "<<  cords.x << " " << cords.y << " " << posRect.left << " " << posRect.top << std::endl;
+    return posRect;
 }
 
 std::vector<int>  getNeighbours(int pos) {

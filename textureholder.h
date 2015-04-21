@@ -8,6 +8,9 @@ public:
     TextureHolder();
     sf::Texture textureTiles;
     sf::Texture textureFaces;
+    sf::Texture textureGui;
+
+
 };
 
 #endif // TEXTUREHOLDER_H

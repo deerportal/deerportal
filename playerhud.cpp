@@ -2,6 +2,13 @@
 #include "textureholder.h"
 #include "boardelem.h"
 
+
+void PlayerHud::addElem(int pos, int type) {
+    efc::BoardElem startElem(textures, pos,type, &this->textures->textureTiles);
+    elems.items.push_back(startElem);
+    elems.items_map.insert({pos, startElem});
+}
+
 std::set<int> PlayerHud::getNeighbours(){
 
     std::set<int> neighbours;

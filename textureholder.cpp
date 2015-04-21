@@ -6,4 +6,7 @@ TextureHolder::TextureHolder()
         std::exit(1);
     if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
         std::exit(1);
+    if (!textureGui.loadFromFile("assets/img/gui.png"))
+        std::exit(1);
+
 }

@@ -6,6 +6,8 @@
 #include "selector.h"
 #include "playerhud.h"
 #include "textureholder.h"
+#include "hover.h"
+#include "guichoosebuilding.h"
 
 namespace efc {
 class Game
@@ -26,6 +28,7 @@ private:
         state_init,
         state_menu,
         state_game,
+        state_gui_elem,
         state_select_building,
         state_quit
     };
@@ -44,6 +47,9 @@ private:
     int levelElems[256];
     TextureHolder textures;
     std::set<int> currentNeighbours;
+    void command(std::string command);
+    int selectedPos;
+    int turn;
 };
 }
 #endif // GAME_H

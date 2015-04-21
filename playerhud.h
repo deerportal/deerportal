@@ -22,14 +22,14 @@ public:
     bool active;
     BoardElems elems;
     void setActive(bool newState);
-
-
     std::vector<int> properties;
+
+    void addElem(int pos, int type);
 
 
 
 private:
-//    sf::Font gameFont;
+
     sf::Sprite spriteFace;
     sf::Text txtCash;
     sf::Text txtEnergy;

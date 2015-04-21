@@ -6,6 +6,7 @@ BoardElems::BoardElems()
 }
 
 
+
 void BoardElems::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 

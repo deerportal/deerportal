@@ -14,6 +14,10 @@ enum {
 sf::Vector2i transPosition(int pos);
 int transCords(sf::Vector2i cords);
 std::vector<int>  getNeighbours(int pos);
+sf::IntRect transPosIntoRect(int pos);
+sf::Vector2i transTilePosition(int pos);
+
+
 }
 
 class TileMap : public sf::Drawable, public sf::Transformable

@@ -11,7 +11,10 @@ SOURCES += main.cpp \
     boardelem.cpp \
     boardelems.cpp \
     textureholder.cpp \
-    hover.cpp
+    hover.cpp \
+    guiwindow.cpp \
+    purchaseguielem.cpp \
+    guichoosebuilding.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics
 DESTDIR = ../build_release_enfucraft
@@ -29,7 +32,10 @@ HEADERS += \
     boardelem.h \
     boardelems.h \
     textureholder.h \
-    hover.h
+    hover.h \
+    guiwindow.h \
+    purchaseguielem.h \
+    guichoosebuilding.h
 
 RESOURCES += \
     images.qrc

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "game.h"
+#include "guiwindow.h"
 #include <time.h>       /* time */
 
 namespace efc {
@@ -88,26 +89,21 @@ void Game::loadAssets()
 
 Game::Game():
     window(sf::VideoMode(512, 400), "EnFuCraft"),
-    viewTiles(sf::FloatRect(00, 00, 400, 400))
-
+    viewTiles(sf::FloatRect(00, 00, 400, 400)),
+    turn(0)
 {
+    Hover hover;
+    GuiWindow guiWindow(&textures);
+    GuiChooseBuilding guiSelectBuilding(&textures);
     currentState = state_init;
     std::srand (time(NULL));
-    int turn = 0;
     loadAssets();
     sf::View viewGui(sf::FloatRect(00, 00, 112, 400));
     viewGui.setViewport(sf::FloatRect(0.8f,0, 1.0f, 1.0f));
     sf::View viewTiles(sf::FloatRect(00, 00, 400, 400));
     viewTiles.setViewport(sf::FloatRect(0,0, 0.8f, 1.0f));
-
     Selector selector(efc::TILE_SIZE);
     selector.changeColor(turn); //This is only for the test TODO: remove
-
-    //    TileMap mapElem;
-    //    if (!mapElem.load(&textureTiles, sf::Vector2u(tileSize, tileSize), levelElems, mapSize, mapSize))
-    //        std::exit(1);
-
-
     initBoard();
     currentState = state_game;
 
@@ -119,6 +115,24 @@ Game::Game():
         sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
         sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
 
+        float hover_x =localPosition.x;
+        float hover_y = localPosition.y;
+
+        if (localPosition.y > 290)
+            hover_y = hover_y - 100;
+        if (localPosition.x > 240)
+            hover_x = hover_x - 150;
+
+        if (hover_x>250)
+            hover_x = 249.0f;
+        if (hover_x<0)
+            hover_x = 1.0f;
+        if (hover_y>300)
+            hover_y = 299.0f;
+        if (hover_y<0)
+            hover_y = 1.0f;
+
+
         while (window.pollEvent(event))
         {
 
@@ -129,18 +143,31 @@ Game::Game():
                 window.close();
             if (currentNeighbours.find(mousePos) != currentNeighbours.end())
             {
-                std::cout << "SUPER" << std::endl;
+
 
             }
 
-            if (event.type == sf::Event::MouseButtonPressed)
+            if (event.type == sf::Event::MouseButtonReleased)
             {
+
+                sf::Vector2i mTP = sf::Mouse::getPosition(window);
+
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-
                     if (currentState==state_game)
-
                     {
+                        if (currentNeighbours.find(mousePos) != currentNeighbours.end())
+                        {
+                            std::cout << "SUPER" << std::endl;
+                            if (!guiSelectBuilding.active)
+                            {
+                                selectedPos = mousePos;
+                                guiSelectBuilding.setPosition(hover_x, hover_y);
+                                guiSelectBuilding.active = true;
+                                currentState = state_gui_elem;
+                            }
+                            break;
+                        }
                         turn++;
                         if (turn==4)
                             turn = 0;
@@ -153,38 +180,32 @@ Game::Game():
                                 if (currentNeighbours.find(mousePos) != currentNeighbours.end())
                                 {
                                     std::cout << "SUPER" << std::endl;
-
                                 }
-//                                  std::set<int>::iterator it;
-//                                for ( it=currentNeighbours.begin() ; it != currentNeighbours.end(); it++ )                                {
-//                                    std::cout << std::to_string(i) << std::endl;
-//                                }
                                 currentNeighbours = players[i].getNeighbours();
-
                             }
                             else
                                 players[i].setActive(false);
                         }
-
+                    }
+                    if (currentState==state_gui_elem)
+                    {
+                        std::string result = guiSelectBuilding.getElem(localPosition);
+                        command(result);
                     }
 
 
                 }
             }
         }
-
-        //        localPosition = getMousePos(); // Why this does lag?
-
         if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
         {
-            //            std::cout << localPosition.x << " " << localPosition.y << " " << localPosition.x / efc::TILE_SIZE << " " << localPosition.y / efc::TILE_SIZE << std::endl;
             selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
         }
 
-        // draw the map
+
         window.clear();
 
-        if (currentState==state_game)
+        if ((currentState==state_game) || (currentState==state_gui_elem))
         {
             window.setView(viewTiles);
             window.draw(map);
@@ -198,7 +219,8 @@ Game::Game():
 
         }
 
-
+        window.setView(viewTiles);
+        window.draw(guiSelectBuilding);
         window.display();
     }
 }
@@ -210,6 +232,19 @@ void Game::drawPlayersGui(){
     }
 }
 
+void Game::command(std::string command){
+    std::cout << "RUNNING:" + command  << std::endl;
+    if (command=="close")
+        currentState=state_game;
+    if (command.find("build_")==0)
+    {
+        int buildingType = std::stoi(command.substr(6));
+        std::cout << "building:" + buildingType << " at " << selectedPos << std::endl;
+        players[turn].addElem(selectedPos, buildingType);
+        currentState=state_game;
+    }
+
+}
 
 sf::Vector2f Game::getMousePos(){
     sf::Vector2i mousePosTmp(sf::Mouse::getPosition(window));
