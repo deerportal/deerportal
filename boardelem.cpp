@@ -17,7 +17,7 @@ sf::RectangleShape createNeighbour(int pos) {
 }
 }
 
-efc::BoardElem::BoardElem(TextureHolder *textures,int pos, int type, const sf::Texture *textureElem)
+efc::BoardElem::BoardElem(TextureHolder *textures,int pos, int type)
 {
 
     textureTiles = &textures->textureTiles;

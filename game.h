@@ -50,6 +50,16 @@ private:
     void command(std::string command);
     int selectedPos;
     int turn;
+    void update();
+    void render();
+    sf::View viewGui;
+    Selector selector;
+    GuiChooseBuilding guiSelectBuilding;
+    void setCurrentNeighbours ();
+
+
+
+
 };
 }
 #endif // GAME_H

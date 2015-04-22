@@ -70,7 +70,13 @@ void Game::initBoard()
     players[2] = playerHud3;
     players[3] = playerHud4;
     players[0].setActive(true);
-    currentNeighbours = players[0].getNeighbours();
+    setCurrentNeighbours();
+}
+
+
+void Game::setCurrentNeighbours ()
+{
+    currentNeighbours = players[turn].getNeighbours();
 }
 
 void Game::loadAssets()
@@ -90,19 +96,20 @@ void Game::loadAssets()
 Game::Game():
     window(sf::VideoMode(512, 400), "EnFuCraft"),
     viewTiles(sf::FloatRect(00, 00, 400, 400)),
+    viewGui(sf::FloatRect(00, 00, 112, 400)),
+    selector(efc::TILE_SIZE),
+    guiSelectBuilding(&textures),
     turn(0)
+
 {
+    window.setVerticalSyncEnabled(true);
     Hover hover;
     GuiWindow guiWindow(&textures);
-    GuiChooseBuilding guiSelectBuilding(&textures);
     currentState = state_init;
     std::srand (time(NULL));
     loadAssets();
-    sf::View viewGui(sf::FloatRect(00, 00, 112, 400));
     viewGui.setViewport(sf::FloatRect(0.8f,0, 1.0f, 1.0f));
-    sf::View viewTiles(sf::FloatRect(00, 00, 400, 400));
     viewTiles.setViewport(sf::FloatRect(0,0, 0.8f, 1.0f));
-    Selector selector(efc::TILE_SIZE);
     selector.changeColor(turn); //This is only for the test TODO: remove
     initBoard();
     currentState = state_game;
@@ -179,7 +186,7 @@ Game::Game():
                                 players[i].setActive(true);
                                 if (currentNeighbours.find(mousePos) != currentNeighbours.end())
                                 {
-                                    std::cout << "SUPER" << std::endl;
+//                                    std::cout << "SUPER" << std::endl;
                                 }
                                 currentNeighbours = players[i].getNeighbours();
                             }
@@ -197,31 +204,15 @@ Game::Game():
                 }
             }
         }
+
         if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
         {
             selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
         }
 
 
-        window.clear();
 
-        if ((currentState==state_game) || (currentState==state_gui_elem))
-        {
-            window.setView(viewTiles);
-            window.draw(map);
-            for (int i=0;i<4;i++)
-            {
-                window.draw(players[i].elems);
-            }
-            window.draw(selector);
-            window.setView(viewGui);
-            drawPlayersGui();
-
-        }
-
-        window.setView(viewTiles);
-        window.draw(guiSelectBuilding);
-        window.display();
+        render();
     }
 }
 
@@ -232,16 +223,43 @@ void Game::drawPlayersGui(){
     }
 }
 
+
+void Game::update()
+{
+
+}
+
+void Game::render()
+{
+    window.clear();
+    if ((currentState==state_game) || (currentState==state_gui_elem))
+    {
+        window.setView(viewTiles);
+        window.draw(map);
+        for (int i=0;i<4;i++)
+        {
+            window.draw(players[i].elems);
+        }
+        window.draw(selector);
+        window.setView(viewGui);
+        drawPlayersGui();
+
+    }
+    window.setView(viewTiles);
+    window.draw(guiSelectBuilding);
+    window.display();
+}
+
 void Game::command(std::string command){
-    std::cout << "RUNNING:" + command  << std::endl;
+//    std::cout << "RUNNING:" + command  << std::endl;
     if (command=="close")
         currentState=state_game;
     if (command.find("build_")==0)
     {
         int buildingType = std::stoi(command.substr(6));
-        std::cout << "building:" + buildingType << " at " << selectedPos << std::endl;
         players[turn].addElem(selectedPos, buildingType);
-        currentState=state_game;
+        currentState = state_game;
+        setCurrentNeighbours();
     }
 
 }

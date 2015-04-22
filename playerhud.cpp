@@ -4,7 +4,7 @@
 
 
 void PlayerHud::addElem(int pos, int type) {
-    efc::BoardElem startElem(textures, pos,type, &this->textures->textureTiles);
+    efc::BoardElem startElem(textures, pos,type);
     elems.items.push_back(startElem);
     elems.items_map.insert({pos, startElem});
 }
@@ -20,7 +20,14 @@ std::set<int> PlayerHud::getNeighbours(){
     std::vector<int>  neighboursVector(efc::getNeighbours(i.second.pos));
          for (int j: neighboursVector)
          {
-             neighbours.insert(j);
+
+             if (elems.items_map.count(j) == 0)
+             {
+                neighbours.insert(j);
+             }
+
+
+
 
 
          }
@@ -47,7 +54,7 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     active = false;
     int startPositions[4] = {0,15,240, 255};
     this->textures = textures;
-    efc::BoardElem startElem(textures, startPositions[pos],441, &this->textures->textureTiles);
+    efc::BoardElem startElem(textures, startPositions[pos],441);
     elems.items.push_back(startElem);
     elems.items_map.insert({pos, startElem});
     this->faceSize = faceSize;

@@ -12,7 +12,7 @@ class BoardElem: public sf::Sprite
 {
 public:
     BoardElem();
-    BoardElem(TextureHolder *textures,int pos, int type, const sf::Texture *textureElem);
+    BoardElem(TextureHolder *textures,int pos, int type);
 
 
     int pos;
