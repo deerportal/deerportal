@@ -11,6 +11,8 @@ public:
     sf::Texture textureGui;
 
 
+    std::map<int, std::map<int, int>> tilesDescription;
+
 };
 
 #endif // TEXTUREHOLDER_H

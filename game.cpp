@@ -96,11 +96,11 @@ void Game::loadAssets()
 Game::Game():
     window(sf::VideoMode(512, 400), "EnFuCraft"),
     viewTiles(sf::FloatRect(00, 00, 400, 400)),
+    viewFull(sf::FloatRect(00, 00, 400, 400)),
     viewGui(sf::FloatRect(00, 00, 112, 400)),
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
     turn(0)
-
 {
     window.setVerticalSyncEnabled(true);
     Hover hover;
@@ -119,48 +119,24 @@ Game::Game():
     {
         // handle events
         sf::Event event;
-        sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
-        sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
-
-        float hover_x =localPosition.x;
-        float hover_y = localPosition.y;
-
-        if (localPosition.y > 290)
-            hover_y = hover_y - 100;
-        if (localPosition.x > 240)
-            hover_x = hover_x - 150;
-
-        if (hover_x>250)
-            hover_x = 249.0f;
-        if (hover_x<0)
-            hover_x = 1.0f;
-        if (hover_y>300)
-            hover_y = 299.0f;
-        if (hover_y<0)
-            hover_y = 1.0f;
-
-
         while (window.pollEvent(event))
         {
-
+            sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
+            sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
             int mousePosX = (int)localPosition.x / efc::TILE_SIZE;
             int mousePosY = (int)localPosition.y / efc::TILE_SIZE;
             int mousePos = efc::transCords(sf::Vector2i(mousePosX, mousePosY));
             if(event.type == sf::Event::Closed)
                 window.close();
-            if (currentNeighbours.find(mousePos) != currentNeighbours.end())
-            {
-
-
-            }
-
             if (event.type == sf::Event::MouseButtonReleased)
             {
-
-                sf::Vector2i mTP = sf::Mouse::getPosition(window);
-
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
+                    if (currentState==state_menu)
+                    {
+
+                    }
+
                     if (currentState==state_game)
                     {
                         if (currentNeighbours.find(mousePos) != currentNeighbours.end())
@@ -168,6 +144,20 @@ Game::Game():
                             std::cout << "SUPER" << std::endl;
                             if (!guiSelectBuilding.active)
                             {
+                                float hover_x =localPosition.x;
+                                float hover_y = localPosition.y;
+                                if (localPosition.y > 290)
+                                    hover_y = hover_y - 100;
+                                if (localPosition.x > 240)
+                                    hover_x = hover_x - 150;
+                                if (hover_x>250)
+                                    hover_x = 249.0f;
+                                if (hover_x<0)
+                                    hover_x = 1.0f;
+                                if (hover_y>300)
+                                    hover_y = 299.0f;
+                                if (hover_y<0)
+                                    hover_y = 1.0f;
                                 selectedPos = mousePos;
                                 guiSelectBuilding.setPosition(hover_x, hover_y);
                                 guiSelectBuilding.active = true;
@@ -175,44 +165,47 @@ Game::Game():
                             }
                             break;
                         }
-                        turn++;
-                        if (turn==4)
-                            turn = 0;
-                        selector.changeColor(turn);
-                        for (int i=0;i<4;i++)
-                        {
-                            if (i==turn)
-                            {
-                                players[i].setActive(true);
-                                if (currentNeighbours.find(mousePos) != currentNeighbours.end())
-                                {
-//                                    std::cout << "SUPER" << std::endl;
-                                }
-                                currentNeighbours = players[i].getNeighbours();
-                            }
-                            else
-                                players[i].setActive(false);
-                        }
+                        nextPlayer();
                     }
+
                     if (currentState==state_gui_elem)
                     {
                         std::string result = guiSelectBuilding.getElem(localPosition);
                         command(result);
                     }
 
-
                 }
+            }
+            if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
+            {
+                selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
             }
         }
 
-        if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
-        {
-            selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
-        }
+
 
 
 
         render();
+    }
+}
+
+void Game::nextPlayer(){
+    players[turn].updatePlayer();
+    turn++;
+
+    if (turn==4)
+        turn = 0;
+    selector.changeColor(turn);
+    for (int i=0;i<4;i++)
+    {
+        if (i==turn)
+        {
+            players[i].setActive(true);
+            currentNeighbours = players[i].getNeighbours();
+        }
+        else
+            players[i].setActive(false);
     }
 }
 
@@ -223,6 +216,12 @@ void Game::drawPlayersGui(){
     }
 }
 
+void Game::drawSquares() {
+    window.draw(selector);
+
+}
+
+
 
 void Game::update()
 {
@@ -232,7 +231,7 @@ void Game::update()
 void Game::render()
 {
     window.clear();
-    if ((currentState==state_game) || (currentState==state_gui_elem))
+    if (currentState==state_game)
     {
         window.setView(viewTiles);
         window.draw(map);
@@ -240,10 +239,20 @@ void Game::render()
         {
             window.draw(players[i].elems);
         }
-        window.draw(selector);
+        drawSquares();
         window.setView(viewGui);
         drawPlayersGui();
 
+    } else if (currentState==state_gui_elem) {
+        window.setView(viewTiles);
+        window.draw(map);
+        for (int i=0;i<4;i++)
+        {
+            window.draw(players[i].elems);
+        }
+//        window.draw(selector);
+        window.setView(viewGui);
+        drawPlayersGui();
     }
     window.setView(viewTiles);
     window.draw(guiSelectBuilding);
@@ -251,9 +260,10 @@ void Game::render()
 }
 
 void Game::command(std::string command){
-//    std::cout << "RUNNING:" + command  << std::endl;
     if (command=="close")
         currentState=state_game;
+    if (command=="end_turn")
+        nextPlayer();
     if (command.find("build_")==0)
     {
         int buildingType = std::stoi(command.substr(6));
@@ -261,7 +271,6 @@ void Game::command(std::string command){
         currentState = state_game;
         setCurrentNeighbours();
     }
-
 }
 
 sf::Vector2f Game::getMousePos(){

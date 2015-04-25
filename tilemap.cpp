@@ -1,5 +1,4 @@
 #include "tilemap.h"
-
 namespace efc {
 
 sf::Vector2i transPosition(int pos) {
@@ -32,20 +31,37 @@ sf::IntRect transPosIntoRect(int pos)
     return posRect;
 }
 
-std::vector<int>  getNeighbours(int pos) {
+std::set<int>  getNeighbours(int pos) {
     sf::Vector2i cords = efc::transPosition(pos);
-    std::vector<int> neighbours;
-    if (cords.x>0)
-        neighbours.push_back(pos-1);
-    if (cords.x<efc::BOARD_SIZE-1)
-        neighbours.push_back(pos+1);
-    if (cords.y>0)
-        neighbours.push_back(pos-efc::BOARD_SIZE);
-    if (cords.y<efc::BOARD_SIZE)
-        neighbours.push_back(pos+efc::BOARD_SIZE);
-    return neighbours;
-}
 
+
+
+    std::vector<int> neighbours;
+    std::set<int> neighboursSet;
+
+    if (cords.x>0)
+    {
+        neighbours.push_back(pos-1);
+        neighboursSet.insert(pos-1);
+    }
+    if (cords.x<efc::BOARD_SIZE-1)
+    {
+        neighbours.push_back(pos+1);
+        neighboursSet.insert(pos+1);
+    }
+
+    if (cords.y>0)
+    {
+        neighbours.push_back(pos-efc::BOARD_SIZE);
+        neighboursSet.insert(pos-efc::BOARD_SIZE);
+    }
+    if (cords.y<efc::BOARD_SIZE)
+    {
+        neighbours.push_back(pos+efc::BOARD_SIZE);
+        neighboursSet.insert(pos+efc::BOARD_SIZE);
+    }
+    return neighboursSet;
+}
 }
 
 TileMap::TileMap()

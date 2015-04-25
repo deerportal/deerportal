@@ -2,7 +2,6 @@
 #include "textureholder.h"
 #include "boardelem.h"
 
-
 void PlayerHud::addElem(int pos, int type) {
     efc::BoardElem startElem(textures, pos,type);
     elems.items.push_back(startElem);
@@ -10,53 +9,60 @@ void PlayerHud::addElem(int pos, int type) {
 }
 
 std::set<int> PlayerHud::getNeighbours(){
-
     std::set<int> neighbours;
-
     for (std::pair<int, efc::BoardElem> i: elems.items_map)
     {
-     std::cout << "adding " << i.first << std::endl;
+        std::cout << "adding " << i.first << std::endl;
 
-    std::vector<int>  neighboursVector(efc::getNeighbours(i.second.pos));
-         for (int j: neighboursVector)
-         {
+        std::set<int>  neighboursVector(efc::getNeighbours(i.second.pos));
+        for (int j: neighboursVector)
+        {
+            std::cout << "neigh " << j << " " << elems.items_map.count(j) << std::endl;
 
-             if (elems.items_map.count(j) == 0)
-             {
+            if (elems.items_map.count(j) == 0)
+            {
                 neighbours.insert(j);
-             }
-
-
-
-
-
-         }
-
+            }
+        }
     }
     return neighbours;
+}
 
+void PlayerHud::updatePlayer(){
+    for (const efc::BoardElem &i: elems.items)
+    {
+        int cashUpd  = textures->tilesDescription[i.type][1];
+        int foodUpd  = textures->tilesDescription[i.type][3];
+        int enrgUpd  = textures->tilesDescription[i.type][3];
+        cash += cashUpd;
+        energy += enrgUpd;
+        food += foodUpd;
+        txtCash.setString("Cash: " + std::to_string(cash));
+        std::cout << "CASH " << i.type << " " << i.pos << " " << cashUpd << " " << cash<< std::endl;
+    }
 }
 
 
 PlayerHud::PlayerHud()
 {
     active = false;
+    food = 0;
+    cash = 0;
+    energy = 0;
 }
 
 void PlayerHud::setActive(bool newState){
     active = newState;
     elems.active = newState;
-
 }
 
 PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFont, int faceSize, int pos)
 {
     active = false;
-    int startPositions[4] = {0,15,240, 255};
     this->textures = textures;
-    efc::BoardElem startElem(textures, startPositions[pos],441);
+    efc::BoardElem startElem(textures, startPlayers[pos],441);
     elems.items.push_back(startElem);
-    elems.items_map.insert({pos, startElem});
+    elems.items_map.insert({startPlayers[pos], startElem});
     this->faceSize = faceSize;
     spriteFace.setTexture(textures->textureFaces);
     this->pos = pos;
@@ -71,6 +77,13 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     txtCash.setFont(*gameFont);
     txtFood.setFont(*gameFont);
     txtEnergy.setFont(*gameFont);
+    txtNextRound.setFont(*gameFont);
+
+
+    txtNextRound.setString("End Turn");
+    txtNextRound.setScale(sf::Vector2f(0.25f, 1.f));
+    txtNextRound.setCharacterSize(10);
+    txtNextRound.setPosition(9,(pos*100)+10);
 
     txtCash.setPosition(1,(pos*100)+40);
     txtCash.setString("Cash: " + std::to_string(cash));
@@ -84,9 +97,9 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
 
     txtEnergy.setPosition(1,(pos*100)+70);
     txtEnergy.setString("Enrg: " + std::to_string(energy));
-    txtEnergy.setString("Enrg: " + std::to_string(energy));
     txtEnergy.setCharacterSize(10);
     txtEnergy.setScale(sf::Vector2f(0.25f, 1.f));
+
 
     std::cout << "playerHud" << faceNumber << " " << x << " " << y << std::endl;
 
@@ -138,5 +151,7 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(txtCash, states);
     target.draw(txtFood, states);
     target.draw(txtEnergy, states);
+    if (active)
+        target.draw(txtNextRound, states);
     target.draw(spriteFace, states);
 }

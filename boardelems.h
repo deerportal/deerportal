@@ -1,6 +1,7 @@
 #ifndef BOARDELEMS_H
 #define BOARDELEMS_H
 #include "boardelem.h"
+#include "elemsdescription.h"
 
 class BoardElems: public sf::Drawable, public sf::Transformable
 {

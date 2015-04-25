@@ -6,12 +6,12 @@ sf::RectangleShape createNeighbour(int pos) {
     sf::RectangleShape rectangle(sf::Vector2f(efc::TILE_SIZE, efc::TILE_SIZE));
     sf::Vector2i cords(efc::transPosition(pos));
 
-    rectangle.setFillColor(sf::Color(240, 240, 240,168));
-    rectangle.setOutlineColor(sf::Color(24,24,24));
+    rectangle.setFillColor(sf::Color(240, 240, 240,98));
+    rectangle.setOutlineColor(sf::Color(24,24,24, 90));
 
     rectangle.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
 
-    rectangle.setOutlineThickness(1);
+//    rectangle.setOutlineThickness(0.5);
     return rectangle;
 
 }

@@ -7,6 +7,10 @@
 #include <SFML/System.hpp>
 #include "boardelems.h"
 #include "textureholder.h"
+#include "elemsdescription.h"
+
+static int startPlayers[4] = {0,15,240,255};
+
 class PlayerHud : public sf::Drawable, public sf::Transformable
 {
 public:
@@ -27,6 +31,9 @@ public:
     void addElem(int pos, int type);
 
 
+    void updatePlayer();
+
+
 
 private:
 
@@ -34,6 +41,7 @@ private:
     sf::Text txtCash;
     sf::Text txtEnergy;
     sf::Text txtFood;
+    sf::Text txtNextRound;
     int faceSize;
     int tileSize;
     TextureHolder *textures;

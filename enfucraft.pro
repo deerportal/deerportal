@@ -35,7 +35,8 @@ HEADERS += \
     hover.h \
     guiwindow.h \
     purchaseguielem.h \
-    guichoosebuilding.h
+    guichoosebuilding.h \
+    elemsdescription.h
 
 RESOURCES += \
     images.qrc

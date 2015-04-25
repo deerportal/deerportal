@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "textureholder.h"
+#include <set>
+
 namespace efc {
 enum {
     TILE_SIZE = 25,
@@ -13,10 +15,9 @@ enum {
 };
 sf::Vector2i transPosition(int pos);
 int transCords(sf::Vector2i cords);
-std::vector<int>  getNeighbours(int pos);
+std::set<int>  getNeighbours(int pos);
 sf::IntRect transPosIntoRect(int pos);
 sf::Vector2i transTilePosition(int pos);
-
 
 }
 

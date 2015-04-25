@@ -54,10 +54,13 @@ private:
     void render();
     sf::View viewGui;
     Selector selector;
+    sf::View viewFull;
+
     GuiChooseBuilding guiSelectBuilding;
     void setCurrentNeighbours ();
+    void nextPlayer();
 
-
+    void drawSquares();
 
 
 };
