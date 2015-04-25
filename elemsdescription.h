@@ -1,6 +1,6 @@
 #ifndef ELEMSDESCRIPTION_H
 #define ELEMSDESCRIPTION_H
-
+/*
 static int fields[256][6] = {
     {10,2,10,0,2,2},
     {10,2,10,0,2,2},
@@ -259,5 +259,5 @@ static int fields[256][6] = {
     {10,2,10,0,2,2},
     {10,2,10,0,2,2},
 };
-
+*/
 #endif // ELEMSDESCRIPTION_H

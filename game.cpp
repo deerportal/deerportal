@@ -123,6 +123,8 @@ Game::Game():
         {
             sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
             sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
+            sf::Vector2f localPositionGui = window.mapPixelToCoords(localPositionTmp,viewGui);
+
             int mousePosX = (int)localPosition.x / efc::TILE_SIZE;
             int mousePosY = (int)localPosition.y / efc::TILE_SIZE;
             int mousePos = efc::transCords(sf::Vector2i(mousePosX, mousePosY));
@@ -141,7 +143,7 @@ Game::Game():
                     {
                         if (currentNeighbours.find(mousePos) != currentNeighbours.end())
                         {
-                            std::cout << "SUPER" << std::endl;
+//                            std::cout << "SUPER" << std::endl;
                             if (!guiSelectBuilding.active)
                             {
                                 float hover_x =localPosition.x;
@@ -165,7 +167,13 @@ Game::Game():
                             }
                             break;
                         }
-                        nextPlayer();
+
+                        std::string result = players[turn].getElem(localPositionGui);
+//                        std::cout << result << " hello" << turn << std::endl;
+                        command(result);
+
+
+//                        nextPlayer();
                     }
 
                     if (currentState==state_gui_elem)

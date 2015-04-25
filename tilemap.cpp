@@ -27,7 +27,7 @@ sf::IntRect transPosIntoRect(int pos)
 {
     sf::Vector2i cords = efc::transTilePosition(pos);
     sf::IntRect posRect((int)cords.x*efc::TILE_SIZE, (int)cords.y*efc::TILE_SIZE, efc::TILE_SIZE, efc::TILE_SIZE);
-    std::cout << "debug transPosIntoRect " << pos << " "<<  cords.x << " " << cords.y << " " << posRect.left << " " << posRect.top << std::endl;
+//    std::cout << "debug transPosIntoRect " << pos << " "<<  cords.x << " " << cords.y << " " << posRect.left << " " << posRect.top << std::endl;
     return posRect;
 }
 

@@ -17,11 +17,10 @@ void GuiChooseBuilding::addBuilding(std::string name, int pos){
 
     newBuilding.setTexture(textureTiles);
     newBuilding.setTextureRect(efc::transPosIntoRect(pos));
-
     sf::Vector2f mod((buildings.size()*efc::TILE_SIZE),efc::TILE_SIZE);
     newBuilding.move(mod);
     buildings.insert({name, newBuilding});
-    std::cout << "size " << buildings.size() <<std::endl;
+//    std::cout << "size " << buildings.size() <<std::endl;
 }
 
 void GuiChooseBuilding::draw(sf::RenderTarget& target, sf::RenderStates states) const{

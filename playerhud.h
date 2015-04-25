@@ -8,6 +8,7 @@
 #include "boardelems.h"
 #include "textureholder.h"
 #include "elemsdescription.h"
+#include "guiwindow.h"
 
 static int startPlayers[4] = {0,15,240,255};
 
@@ -32,6 +33,8 @@ public:
 
 
     void updatePlayer();
+    std::string getElem(sf::Vector2f mousePosition);
+    std::map<std::string, sf::RectangleShape> buttons;
 
 
 
@@ -45,6 +48,8 @@ private:
     int faceSize;
     int tileSize;
     TextureHolder *textures;
+    sf::RectangleShape rectangle;
+    sf::RectangleShape rectangle2;
 };
 
 

@@ -12,12 +12,12 @@ std::set<int> PlayerHud::getNeighbours(){
     std::set<int> neighbours;
     for (std::pair<int, efc::BoardElem> i: elems.items_map)
     {
-        std::cout << "adding " << i.first << std::endl;
+//        std::cout << "adding " << i.first << std::endl;
 
         std::set<int>  neighboursVector(efc::getNeighbours(i.second.pos));
         for (int j: neighboursVector)
         {
-            std::cout << "neigh " << j << " " << elems.items_map.count(j) << std::endl;
+//            std::cout << "neigh " << j << " " << elems.items_map.count(j) << std::endl;
 
             if (elems.items_map.count(j) == 0)
             {
@@ -106,15 +106,11 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     spriteFace.setTextureRect(sf::IntRect(x*faceSize, y*faceSize, faceSize, faceSize));
     spriteFace.setScale(sf::Vector2f(0.25f, 1.f));
     spriteFace.setPosition(0,pos*100);
-}
 
-void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-    //   // apply the transform
-    states.transform *= getTransform();
-    // Color rectangles making the gui on the right side
-    sf::RectangleShape rectangle(sf::Vector2f(faceSize, faceSize));
-    sf::RectangleShape rectangle2(sf::Vector2f(faceSize, (faceSize*2)+3));
+
+    rectangle.setSize(sf::Vector2f(this->faceSize, this->faceSize));
+    rectangle2.setSize(sf::Vector2f(this->faceSize, (this->faceSize*2)+3));
+
     if (pos==0)
     {
         rectangle.setFillColor(sf::Color(50, 50, 150,168));
@@ -145,6 +141,39 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
     rectangle.setOutlineThickness(1);
     rectangle.setPosition(0, pos*100);
     rectangle2.setPosition(0, (pos*100)+faceSize+1);
+
+    buttons.insert({"end_turn",rectangle});
+
+}
+
+std::string PlayerHud::getElem(sf::Vector2f mousePosition) {
+    std::string result = "";
+    sf::Vector2f hoverPos = getPosition();
+    for (std::pair<std::string, sf::RectangleShape> i: buttons)
+    {
+        sf::FloatRect spriteBounds = i.second.getLocalBounds();
+        sf::FloatRect closeRect;
+        closeRect.left = i.second.getPosition().x;
+        closeRect.top = i.second.getPosition().y;
+        closeRect.width = spriteBounds.width;
+        closeRect.height = spriteBounds.height;
+        if (closeRect.contains(mousePosition.x - hoverPos.x,mousePosition.y - hoverPos.y))
+        {
+            active = false;
+            return i.first;
+        }
+    }
+    return result;
+}
+
+void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    //   // apply the transform
+    states.transform *= getTransform();
+    // Color rectangles making the gui on the right side
+//    sf::RectangleShape rectangle(sf::Vector2f(faceSize, faceSize));
+//    sf::RectangleShape rectangle2(sf::Vector2f(faceSize, (faceSize*2)+3));
+
 
     target.draw(rectangle, states);
     target.draw(rectangle2, states);
