@@ -7,10 +7,25 @@ GuiWindow::GuiWindow(TextureHolder *textures)
     spriteClose.setTexture(textures->textureGui);
     spriteClose.setTextureRect(sf::IntRect(0,0,16,16));
     spriteClose.move(sf::Vector2f(150-16,0));
+    if (!guiElemFont.loadFromFile("assets/fnt/8bitOperatorPlus-Regular.ttf"))
+    {
+        std::exit(1);
+    };
+
+
+    title = "Choose building:";
+    guiTitleTxt.setFont(guiElemFont);
+    guiTitleTxt.setCharacterSize(10);
+    guiTitleTxt.setColor(sf::Color(0,0,0));
+    guiTitleTxt.move(2,0);
+    guiTitleTxt.setString(title);
 }
 
 GuiWindow::GuiWindow(){
-
+    if (!guiElemFont.loadFromFile("assets/fnt/8bitOperatorPlus-Regular.ttf"))
+    {
+        std::exit(1);
+    };
 }
 
 void GuiWindow::setTextureHolder(TextureHolder *textures)
@@ -31,7 +46,10 @@ void GuiWindow::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
     Hover::draw(target, states);
     if (active)
-    target.draw(spriteClose, states2);
+    {
+        target.draw(spriteClose, states2);
+        target.draw(guiTitleTxt, states2);
+    }
 }
 
 std::string GuiWindow::getElem(sf::Vector2f mousePosition)
@@ -45,8 +63,7 @@ std::string GuiWindow::getElem(sf::Vector2f mousePosition)
     closeRect.height = spriteBounds.height;
     if (closeRect.contains(mousePosition.x - hoverPos.x,mousePosition.y - hoverPos.y))
     {
-        active = false;
-        return "close";
+        return "close_gui";
     }
     else
         return "";

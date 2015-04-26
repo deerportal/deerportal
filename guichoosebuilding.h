@@ -11,8 +11,12 @@ public:
     const sf::Texture &textureTiles;
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     std::string getElem(sf::Vector2f mousePosition);
+    std::string description;
+    sf::Text guiElemTxt;
+    void updateDescription();
+    void setDescriptionTxt(std::string newDescription);
 
-
+    bool descriptionActive;
 };
 
 #endif // GUICHOOSEBUILDING_H

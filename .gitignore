@@ -1,0 +1,4 @@
+*.o
+enfucraft
+enfucraft.pro.user
+Makefile

@@ -15,6 +15,9 @@ public:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void init();
     virtual std::string getElem(sf::Vector2f mousePosition);
+    sf::Font guiElemFont;
+    std::string title;
+    sf::Text guiTitleTxt;
 
 
 

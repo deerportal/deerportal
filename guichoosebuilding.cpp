@@ -6,10 +6,30 @@ GuiChooseBuilding::GuiChooseBuilding(TextureHolder *textures)
       textureTiles(textures->textureTiles)
 {
     //    this->textureTiles = &textures->textureGui;
-    std::cout << "constructor" <<std::endl;
-    addBuilding("build_8", 8);
-    addBuilding("build_88", 88);
-    addBuilding("build_328", 328);
+    //    std::cout << "constructor" <<std::endl;
+    addBuilding("elem_651", 651);
+    addBuilding("elem_442", 442);
+    addBuilding("elem_585", 585);
+    addBuilding("elem_1100", 1100);
+
+
+    description = "Description";
+    guiElemTxt.setFont(guiElemFont);
+    guiElemTxt.setCharacterSize(10);
+    guiElemTxt.setColor(sf::Color(0,0,0));
+    updateDescription();
+    guiElemTxt.move(2,50);
+    descriptionActive = false;
+}
+
+void GuiChooseBuilding::updateDescription() {
+    guiElemTxt.setString(description);
+}
+
+void GuiChooseBuilding::setDescriptionTxt(std::string newDescription) {
+    description = newDescription;
+    updateDescription();
+
 }
 
 void GuiChooseBuilding::addBuilding(std::string name, int pos){
@@ -17,10 +37,10 @@ void GuiChooseBuilding::addBuilding(std::string name, int pos){
 
     newBuilding.setTexture(textureTiles);
     newBuilding.setTextureRect(efc::transPosIntoRect(pos));
-    sf::Vector2f mod((buildings.size()*efc::TILE_SIZE),efc::TILE_SIZE);
+    sf::Vector2f mod((buildings.size()*efc::TILE_SIZE)+4*(buildings.size()+1)+4,efc::TILE_SIZE);
     newBuilding.move(mod);
     buildings.insert({name, newBuilding});
-//    std::cout << "size " << buildings.size() <<std::endl;
+    //    std::cout << "size " << buildings.size() <<std::endl;
 }
 
 void GuiChooseBuilding::draw(sf::RenderTarget& target, sf::RenderStates states) const{
@@ -33,12 +53,14 @@ void GuiChooseBuilding::draw(sf::RenderTarget& target, sf::RenderStates states) 
         {
             target.draw(i.second, states2);
         }
+        if (descriptionActive)
+            target.draw(guiElemTxt, states2);
     }
 }
 
 std::string GuiChooseBuilding::getElem(sf::Vector2f mousePosition) {
     std::string result = GuiWindow::getElem(mousePosition);
-    if (result=="close")
+    if (result=="close_gui")
         return result;
     sf::Vector2f hoverPos = getPosition();
     for (std::pair<std::string, sf::Sprite> i: buildings)
@@ -51,7 +73,6 @@ std::string GuiChooseBuilding::getElem(sf::Vector2f mousePosition) {
         closeRect.height = spriteBounds.height;
         if (closeRect.contains(mousePosition.x - hoverPos.x,mousePosition.y - hoverPos.y))
         {
-            active = false;
             return i.first;
         }
     }

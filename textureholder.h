@@ -12,6 +12,7 @@ public:
 
 
     std::map<int, std::map<int, int>> tilesDescription;
+    std::map<int, std::string> tilesTxt;
 
 };
 

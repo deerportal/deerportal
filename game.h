@@ -1,13 +1,18 @@
 #ifndef GAME_H
 #define GAME_H
+#include <stdlib.h>
+#include <iostream>
+#include <time.h>       /* time */
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "tilemap.h"
 #include "selector.h"
 #include "playerhud.h"
 #include "textureholder.h"
 #include "hover.h"
 #include "guichoosebuilding.h"
+#include "guiwindow.h"
 
 namespace efc {
 class Game
@@ -62,6 +67,10 @@ private:
 
     void drawSquares();
 
+
+    sf::Music musicGame;
+    sf::SoundBuffer sfxClickBuffer;
+    sf::Sound sfxClick;
 
 };
 }

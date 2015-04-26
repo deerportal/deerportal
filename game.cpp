@@ -1,8 +1,4 @@
-#include <stdlib.h>
-#include <iostream>
 #include "game.h"
-#include "guiwindow.h"
-#include <time.h>       /* time */
 
 namespace efc {
 
@@ -94,7 +90,7 @@ void Game::loadAssets()
 }
 
 Game::Game():
-    window(sf::VideoMode(512, 400), "EnFuCraft"),
+    window(sf::VideoMode(800, 600), "EnFuCraft"),
     viewTiles(sf::FloatRect(00, 00, 400, 400)),
     viewFull(sf::FloatRect(00, 00, 400, 400)),
     viewGui(sf::FloatRect(00, 00, 112, 400)),
@@ -102,6 +98,17 @@ Game::Game():
     guiSelectBuilding(&textures),
     turn(0)
 {
+
+
+
+    if (!musicGame.openFromFile("assets/audio/wind.ogg"))
+        std::exit(1);
+    musicGame.play();
+    musicGame.setLoop(true);
+
+    if (!sfxClickBuffer.loadFromFile("assets/audio/click.ogg"))
+        std::exit(1);
+    sfxClick.setBuffer(sfxClickBuffer);
     window.setVerticalSyncEnabled(true);
     Hover hover;
     GuiWindow guiWindow(&textures);
@@ -117,6 +124,11 @@ Game::Game():
     // run the main loop
     while (window.isOpen())
     {
+
+        std::string resultCommand = "";
+
+
+
         // handle events
         sf::Event event;
         while (window.pollEvent(event))
@@ -130,6 +142,21 @@ Game::Game():
             int mousePos = efc::transCords(sf::Vector2i(mousePosX, mousePosY));
             if(event.type == sf::Event::Closed)
                 window.close();
+
+            if (currentState==state_gui_elem)
+            {
+                resultCommand = guiSelectBuilding.getElem(localPosition);
+
+
+                if (resultCommand.find("elem_")==0)
+                    command(resultCommand);
+                else
+                    command("hide_gui_elem_description");
+
+
+
+            }
+
             if (event.type == sf::Event::MouseButtonReleased)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
@@ -143,7 +170,7 @@ Game::Game():
                     {
                         if (currentNeighbours.find(mousePos) != currentNeighbours.end())
                         {
-//                            std::cout << "SUPER" << std::endl;
+                            //                            std::cout << "SUPER" << std::endl;
                             if (!guiSelectBuilding.active)
                             {
                                 float hover_x =localPosition.x;
@@ -163,23 +190,29 @@ Game::Game():
                                 selectedPos = mousePos;
                                 guiSelectBuilding.setPosition(hover_x, hover_y);
                                 guiSelectBuilding.active = true;
+                                sfxClick.play();
                                 currentState = state_gui_elem;
                             }
                             break;
                         }
 
-                        std::string result = players[turn].getElem(localPositionGui);
-//                        std::cout << result << " hello" << turn << std::endl;
-                        command(result);
+                        resultCommand = players[turn].getElem(localPositionGui);
+                        //                        std::cout << result << " hello" << turn << std::endl;
+                        command(resultCommand);
 
 
-//                        nextPlayer();
+                        //                        nextPlayer();
                     }
 
                     if (currentState==state_gui_elem)
                     {
-                        std::string result = guiSelectBuilding.getElem(localPosition);
-                        command(result);
+                        resultCommand = guiSelectBuilding.getElem(localPosition);
+                        if (resultCommand.find("elem_")==0)
+                        {
+                            std::string resultCommandWrapped = "build_" + resultCommand;
+                            command(resultCommandWrapped);
+                        } else if (resultCommand.find("close_gui")==0)
+                        {        command(resultCommand);}
                     }
 
                 }
@@ -215,6 +248,7 @@ void Game::nextPlayer(){
         else
             players[i].setActive(false);
     }
+   sfxClick.play();
 }
 
 void Game::drawPlayersGui(){
@@ -258,7 +292,7 @@ void Game::render()
         {
             window.draw(players[i].elems);
         }
-//        window.draw(selector);
+        //        window.draw(selector);
         window.setView(viewGui);
         drawPlayersGui();
     }
@@ -268,16 +302,60 @@ void Game::render()
 }
 
 void Game::command(std::string command){
-    if (command=="close")
+//    std::cout << command << std::endl;
+    if (command=="close_gui")
+    {
+        guiSelectBuilding.active = false;
         currentState=state_game;
+        sfxClick.play();
+
+
+
+
+    }
+
+    if (command=="hide_gui_elem_description")
+    {
+        if (currentState==state_gui_elem) {
+            guiSelectBuilding.descriptionActive = false;
+
+        }
+    }
+
+    if (command.find("elem_")==0)
+    {
+        if (currentState==state_gui_elem)
+        {
+
+            int buildingType = std::stoi(command.substr(5));
+
+
+            int cashUpd  = textures.tilesDescription[buildingType][0];
+            int foodUpd  = textures.tilesDescription[buildingType][2];
+            int enrgUpd  = textures.tilesDescription[buildingType][4];
+            std::string descTxt = textures.tilesTxt[buildingType];
+            guiSelectBuilding.setDescriptionTxt("Cash:" + std::to_string(cashUpd) +"\n"+descTxt);
+            guiSelectBuilding.descriptionActive = true;
+
+        }
+    }
+
     if (command=="end_turn")
         nextPlayer();
     if (command.find("build_")==0)
     {
-        int buildingType = std::stoi(command.substr(6));
-        players[turn].addElem(selectedPos, buildingType);
-        currentState = state_game;
-        setCurrentNeighbours();
+        int buildingType = std::stoi(command.substr(11));
+        bool purchaseResult = players[turn].addElem(selectedPos, buildingType);
+        if (purchaseResult)
+        {
+            currentState = state_game;
+            setCurrentNeighbours();
+            guiSelectBuilding.active = false;
+            sfxClick.play();
+
+
+
+        }
     }
 }
 

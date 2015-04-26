@@ -16,7 +16,7 @@ SOURCES += main.cpp \
     purchaseguielem.cpp \
     guichoosebuilding.cpp
 
-LIBS += -lsfml-window  -lsfml-system -lsfml-graphics
+LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_enfucraft
 
 assets.path    = $${DESTDIR}/assets
