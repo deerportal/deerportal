@@ -3,6 +3,7 @@
 BoardElems::BoardElems()
 {
     active = false;
+    displayNeighbours = true;
 }
 
 
@@ -17,7 +18,7 @@ void BoardElems::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
        target.draw(i, states);
         std::set<int>  neighbours(efc::getNeighbours(i.pos));
-        if (active==true)
+        if ((active==true) && (displayNeighbours==true))
         {
             for (int j: neighbours)
             {

@@ -57,6 +57,9 @@ private:
     TextureHolder *textures;
     sf::RectangleShape rectangle;
     sf::RectangleShape rectangle2;
+    std::set<int> getTerrainSet();
+
 };
+
 
 #endif // PLAYERHUD_H

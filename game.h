@@ -15,6 +15,12 @@
 #include "guiwindow.h"
 
 namespace efc {
+
+
+
+
+
+
 class Game
 {
 public:
@@ -27,6 +33,10 @@ private:
     void initBoard();
     void loadAssets();
     void drawPlayersGui();
+    void drawSquares();
+
+    void drawMenu();
+
     sf::Vector2f getMousePos();
 
     enum states {
@@ -43,6 +53,11 @@ private:
     sf::Texture textureTiles;
     sf::Texture textureFaces;
     sf::Font gameFont;
+    sf::Font menuFont;
+    sf::Text menuTxt;
+
+    std::string gameTitle;
+
 
     TileMap map;
     PlayerHud players[4];
@@ -65,12 +80,23 @@ private:
     void setCurrentNeighbours ();
     void nextPlayer();
 
-    void drawSquares();
+
+    sf::Sprite menuBackground;
 
 
     sf::Music musicGame;
+    sf::Music musicBackground;
+    sf::Music musicMenu;
+
     sf::SoundBuffer sfxClickBuffer;
     sf::Sound sfxClick;
+    void showMenu();
+    void hideMenu();
+    void showGameBoard();
+    void hideGameBoard();
+
+
+    bool showPlayerBoardElems;
 
 };
 }

@@ -10,6 +10,7 @@ public:
     std::vector<efc::BoardElem> items;
     std::map<int, efc::BoardElem> items_map;
     bool active;
+    bool displayNeighbours;
 private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

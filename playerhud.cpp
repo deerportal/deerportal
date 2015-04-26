@@ -20,20 +20,45 @@ bool PlayerHud::addElem(int pos, int type) {
     return false;
 }
 
+std::set<int> PlayerHud::getTerrainSet(){
+    std::set<int> terrain;
+    for (int i: efc::terrain)
+    {
+//        std::cout << i << std::endl;
+        terrain.insert(i);
+    }
+    return terrain;
+
+}
+
+
 std::set<int> PlayerHud::getNeighbours(){
     std::set<int> neighbours;
     for (std::pair<int, efc::BoardElem> i: elems.items_map)
     {
+        std::set<int> terrain = getTerrainSet();
 
         std::set<int>  neighboursVector(efc::getNeighbours(i.second.pos));
         for (int j: neighboursVector)
         {
-            if (elems.items_map.count(j) == 0)
+            if ((elems.items_map.count(j) == 0) && (terrain.count(j)==0))
             {
+                std::cout << j << " " << terrain.count(j) << std::endl;
                 neighbours.insert(j);
             }
         }
     }
+
+//    // Fill in s1 and s2 with values
+//    std::set<int> result;
+//    std::set_difference(neighbours.begin(), neighbours.end(), terrain.begin(), terrain.end(),
+//                        std::inserter(result, result.end()));
+
+
+//    for (int i: result)
+//    {
+//        std::cout << i << std::endl;
+//    }
     return neighbours;
 }
 
@@ -64,11 +89,7 @@ void PlayerHud::updatePlayer(){
 
 PlayerHud::PlayerHud()
 {
-    active = false;
-    food = 0;
-    cash = 10;
-    energy = 0;
-    faith = 0;
+
 }
 
 void PlayerHud::setActive(bool newState){
@@ -90,7 +111,7 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     this->pos = pos;
 
     food = 0;
-    cash = 10;
+    cash = 20;
     energy = 0;
     faith = 0;
 
@@ -109,22 +130,22 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     txtNextRound.setPosition(9,(pos*100)+10);
 
     txtCash.setPosition(1,(pos*100)+40);
-//    txtCash.setString("Cash: " + std::to_string(cash));
+    //    txtCash.setString("Cash: " + std::to_string(cash));
     txtCash.setCharacterSize(10);
     txtCash.setScale(sf::Vector2f(0.25f, 1.f));
 
     txtFood.setPosition(1,(pos*100)+55);
-//    txtFood.setString("Food: " + std::to_string(food));
+    //    txtFood.setString("Food: " + std::to_string(food));
     txtFood.setCharacterSize(10);
     txtFood.setScale(sf::Vector2f(0.25f, 1.f));
 
     txtEnergy.setPosition(1,(pos*100)+70);
-//    txtEnergy.setString("Enrg: " + std::to_string(energy));
+    //    txtEnergy.setString("Enrg: " + std::to_string(energy));
     txtEnergy.setCharacterSize(10);
     txtEnergy.setScale(sf::Vector2f(0.25f, 1.f));
 
     txtFaith.setPosition(1,(pos*100)+85);
-//    txtEnergy.setString("Enrg: " + std::to_string(energy));
+    //    txtEnergy.setString("Enrg: " + std::to_string(energy));
     txtFaith.setCharacterSize(10);
     txtFaith.setScale(sf::Vector2f(0.25f, 1.f));
     updateTxt();
@@ -196,8 +217,8 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
     //   // apply the transform
     states.transform *= getTransform();
     // Color rectangles making the gui on the right side
-//    sf::RectangleShape rectangle(sf::Vector2f(faceSize, faceSize));
-//    sf::RectangleShape rectangle2(sf::Vector2f(faceSize, (faceSize*2)+3));
+    //    sf::RectangleShape rectangle(sf::Vector2f(faceSize, faceSize));
+    //    sf::RectangleShape rectangle2(sf::Vector2f(faceSize, (faceSize*2)+3));
 
 
     target.draw(rectangle, states);

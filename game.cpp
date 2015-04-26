@@ -87,24 +87,74 @@ void Game::loadAssets()
     {
         std::exit(1);
     }
+    if (!menuFont.loadFromFile("assets/fnt/MorrisJensonInitialen.ttf"))
+    {
+        std::exit(1);
+    }
+
+
+
+        menuTxt.setFont(menuFont);
+        menuTxt.setCharacterSize(120);
+        menuTxt.setString(gameTitle);
+
+            menuTxt.setColor(sf::Color(55, 255, 35, 85));
+
+        int width = menuTxt.getLocalBounds().width;
+        int height = menuTxt.getLocalBounds().height;
+        std::cout << width << " "  << height << std::endl;
+        menuTxt.setPosition(400-(width/2),300-(height/2)-150);
+        menuTxt.setScale(0.5, 0.5);
+
+
+}
+
+
+void Game::showMenu()
+{
+    menuBackground.setTexture(textures.textureMenu);
+    musicMenu.play();
+    musicMenu.setLoop(true);
+    currentState = state_menu;
+}
+void Game::hideMenu()
+{
+    musicMenu.stop();
+}
+
+void Game::showGameBoard()
+{
+    musicGame.play();
+    musicGame.setLoop(true);
+    currentState = state_game;
+}
+
+void Game::hideGameBoard()
+{
+    musicGame.play();
+
 }
 
 Game::Game():
-    window(sf::VideoMode(800, 600), "EnFuCraft"),
+    window(sf::VideoMode(800, 600), "Pagan Board"),
     viewTiles(sf::FloatRect(00, 00, 400, 400)),
     viewFull(sf::FloatRect(00, 00, 400, 400)),
     viewGui(sf::FloatRect(00, 00, 112, 400)),
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
-    turn(0)
+    turn(0),
+    gameTitle(" PAgAN\nBOaRD ")
 {
 
 
-
-    if (!musicGame.openFromFile("assets/audio/wind.ogg"))
+    showPlayerBoardElems = false;
+    if (!musicGame.openFromFile("assets/audio/game.ogg"))
         std::exit(1);
-    musicGame.play();
-    musicGame.setLoop(true);
+    if (!musicBackground.openFromFile("assets/audio/wind.ogg"))
+        std::exit(1);
+    if (!musicMenu.openFromFile("assets/audio/menu.ogg"))
+        std::exit(1);
+
 
     if (!sfxClickBuffer.loadFromFile("assets/audio/click.ogg"))
         std::exit(1);
@@ -112,14 +162,15 @@ Game::Game():
     window.setVerticalSyncEnabled(true);
     Hover hover;
     GuiWindow guiWindow(&textures);
-    currentState = state_init;
+
     std::srand (time(NULL));
     loadAssets();
     viewGui.setViewport(sf::FloatRect(0.8f,0, 1.0f, 1.0f));
     viewTiles.setViewport(sf::FloatRect(0,0, 0.8f, 1.0f));
     selector.changeColor(turn); //This is only for the test TODO: remove
     initBoard();
-    currentState = state_game;
+    showMenu();
+
 
     // run the main loop
     while (window.isOpen())
@@ -157,21 +208,34 @@ Game::Game():
 
             }
 
+            if (currentState==state_game)
+            {
+
+
+                if ((localPosition.x>400) || (localPosition.x<0)  || (localPosition.y>400) || (localPosition.y<0))
+                {
+                    showPlayerBoardElems = false;
+                    players[turn].elems.displayNeighbours = false;
+                } else {
+                    showPlayerBoardElems = true;
+                    players[turn].elems.displayNeighbours = true;
+                }
+            }
+
             if (event.type == sf::Event::MouseButtonReleased)
             {
+                std::cout << "Hello " << std::endl;
+
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    if (currentState==state_menu)
-                    {
 
-                    }
 
                     if (currentState==state_game)
                     {
                         if (currentNeighbours.find(mousePos) != currentNeighbours.end())
                         {
                             //                            std::cout << "SUPER" << std::endl;
-                            if (!guiSelectBuilding.active)
+                            if ((!guiSelectBuilding.active) && (showPlayerBoardElems))
                             {
                                 float hover_x =localPosition.x;
                                 float hover_y = localPosition.y;
@@ -187,6 +251,7 @@ Game::Game():
                                     hover_y = 299.0f;
                                 if (hover_y<0)
                                     hover_y = 1.0f;
+
                                 selectedPos = mousePos;
                                 guiSelectBuilding.setPosition(hover_x, hover_y);
                                 guiSelectBuilding.active = true;
@@ -201,6 +266,7 @@ Game::Game():
                         command(resultCommand);
 
 
+
                         //                        nextPlayer();
                     }
 
@@ -213,6 +279,14 @@ Game::Game():
                             command(resultCommandWrapped);
                         } else if (resultCommand.find("close_gui")==0)
                         {        command(resultCommand);}
+                    }
+                    if (currentState==state_menu)
+                    {
+                        std::cout << "Hello 2" << std::endl;
+                        hideMenu();
+                        showGameBoard();
+
+
                     }
 
                 }
@@ -248,7 +322,7 @@ void Game::nextPlayer(){
         else
             players[i].setActive(false);
     }
-   sfxClick.play();
+    sfxClick.play();
 }
 
 void Game::drawPlayersGui(){
@@ -259,7 +333,11 @@ void Game::drawPlayersGui(){
 }
 
 void Game::drawSquares() {
-    window.draw(selector);
+    if (showPlayerBoardElems)
+    {
+
+        window.draw(selector);
+    }
 
 }
 
@@ -284,6 +362,8 @@ void Game::render()
         drawSquares();
         window.setView(viewGui);
         drawPlayersGui();
+        window.setView(viewTiles);
+        window.draw(guiSelectBuilding);
 
     } else if (currentState==state_gui_elem) {
         window.setView(viewTiles);
@@ -295,14 +375,21 @@ void Game::render()
         //        window.draw(selector);
         window.setView(viewGui);
         drawPlayersGui();
+        window.setView(viewTiles);
+        window.draw(guiSelectBuilding);
+    }  else if (currentState==state_menu) {
+
+window.draw(menuBackground);
+        window.draw(menuTxt);
+
+
     }
-    window.setView(viewTiles);
-    window.draw(guiSelectBuilding);
+
     window.display();
 }
 
 void Game::command(std::string command){
-//    std::cout << command << std::endl;
+    //    std::cout << command << std::endl;
     if (command=="close_gui")
     {
         guiSelectBuilding.active = false;
@@ -326,17 +413,13 @@ void Game::command(std::string command){
     {
         if (currentState==state_gui_elem)
         {
-
             int buildingType = std::stoi(command.substr(5));
-
-
             int cashUpd  = textures.tilesDescription[buildingType][0];
             int foodUpd  = textures.tilesDescription[buildingType][2];
             int enrgUpd  = textures.tilesDescription[buildingType][4];
             std::string descTxt = textures.tilesTxt[buildingType];
             guiSelectBuilding.setDescriptionTxt("Cash:" + std::to_string(cashUpd) +"\n"+descTxt);
             guiSelectBuilding.descriptionActive = true;
-
         }
     }
 

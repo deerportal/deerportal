@@ -18,7 +18,7 @@ sf::Vector2i transTilePosition(int pos) {
 }
 
 int transCords(sf::Vector2i cords) {
-//    std::cout << cords.x << " " << cords.y << " " << std::endl;
+    //    std::cout << cords.x << " " << cords.y << " " << std::endl;
     int pos = (cords.y * efc::BOARD_SIZE)+cords.x;
     return pos;
 }
@@ -27,7 +27,7 @@ sf::IntRect transPosIntoRect(int pos)
 {
     sf::Vector2i cords = efc::transTilePosition(pos);
     sf::IntRect posRect((int)cords.x*efc::TILE_SIZE, (int)cords.y*efc::TILE_SIZE, efc::TILE_SIZE, efc::TILE_SIZE);
-//    std::cout << "debug transPosIntoRect " << pos << " "<<  cords.x << " " << cords.y << " " << posRect.left << " " << posRect.top << std::endl;
+    //    std::cout << "debug transPosIntoRect " << pos << " "<<  cords.x << " " << cords.y << " " << posRect.left << " " << posRect.top << std::endl;
     return posRect;
 }
 
@@ -39,28 +39,51 @@ std::set<int>  getNeighbours(int pos) {
     std::vector<int> neighbours;
     std::set<int> neighboursSet;
 
+    std::set<int> terrain = efc::getTerrainSet();
+
+
+    int value = -1;
+
     if (cords.x>0)
     {
         neighbours.push_back(pos-1);
-        neighboursSet.insert(pos-1);
+        //        neighboursSet.insert(pos-1);
+        value = pos-1;
+        if ((value!=-1) && (terrain.count(value)==0))
+            neighboursSet.insert(value);
+
+
     }
     if (cords.x<efc::BOARD_SIZE-1)
     {
         neighbours.push_back(pos+1);
-        neighboursSet.insert(pos+1);
+        //        neighboursSet.insert(pos+1);
+        value = pos+1;
+        if ((value!=-1) && (terrain.count(value)==0))
+            neighboursSet.insert(value);
     }
 
     if (cords.y>0)
     {
         neighbours.push_back(pos-efc::BOARD_SIZE);
-        neighboursSet.insert(pos-efc::BOARD_SIZE);
+        //        neighboursSet.insert(pos-efc::BOARD_SIZE);
+        value = pos-efc::BOARD_SIZE;
+        if ((value!=-1) && (terrain.count(value)==0))
+            neighboursSet.insert(value);
     }
     if (cords.y<efc::BOARD_SIZE)
     {
         neighbours.push_back(pos+efc::BOARD_SIZE);
-        neighboursSet.insert(pos+efc::BOARD_SIZE);
+        //        neighboursSet.insert(pos+efc::BOARD_SIZE);
+        value = pos+efc::BOARD_SIZE;
+        if ((value!=-1) && (terrain.count(value)==0))
+            neighboursSet.insert(value);
     }
-    return neighboursSet;
+
+
+
+
+        return neighboursSet;
 }
 }
 
