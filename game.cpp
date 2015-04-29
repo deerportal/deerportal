@@ -102,7 +102,7 @@ void Game::loadAssets()
 
         int width = menuTxt.getLocalBounds().width;
         int height = menuTxt.getLocalBounds().height;
-        std::cout << width << " "  << height << std::endl;
+
         menuTxt.setPosition(400-(width/2),300-(height/2)-150);
         menuTxt.setScale(0.5, 0.5);
 
@@ -224,17 +224,20 @@ Game::Game():
 
             if (event.type == sf::Event::MouseButtonReleased)
             {
-                std::cout << "Hello " << std::endl;
-
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
 
 
                     if (currentState==state_game)
                     {
+
+
+                        resultCommand = players[turn].getElem(localPositionGui);
+                        command(resultCommand);
+
                         if (currentNeighbours.find(mousePos) != currentNeighbours.end())
                         {
-                            //                            std::cout << "SUPER" << std::endl;
+
                             if ((!guiSelectBuilding.active) && (showPlayerBoardElems))
                             {
                                 float hover_x =localPosition.x;
@@ -261,9 +264,7 @@ Game::Game():
                             break;
                         }
 
-                        resultCommand = players[turn].getElem(localPositionGui);
-                        //                        std::cout << result << " hello" << turn << std::endl;
-                        command(resultCommand);
+
 
 
 
@@ -282,7 +283,6 @@ Game::Game():
                     }
                     if (currentState==state_menu)
                     {
-                        std::cout << "Hello 2" << std::endl;
                         hideMenu();
                         showGameBoard();
 

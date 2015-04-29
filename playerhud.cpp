@@ -43,7 +43,7 @@ std::set<int> PlayerHud::getNeighbours(){
         {
             if ((elems.items_map.count(j) == 0) && (terrain.count(j)==0))
             {
-                std::cout << j << " " << terrain.count(j) << std::endl;
+//                std::cout << j << " " << terrain.count(j) << std::endl;
                 neighbours.insert(j);
             }
         }
@@ -204,8 +204,12 @@ std::string PlayerHud::getElem(sf::Vector2f mousePosition) {
         closeRect.top = i.second.getPosition().y;
         closeRect.width = spriteBounds.width;
         closeRect.height = spriteBounds.height;
+//        std::cout << closeRect.left <<  " " << closeRect.top << " " << closeRect.width << " " << closeRect.height
+//                  << hoverPos.x << " " << hoverPos.y << " OK"
+//                  << std::endl;
         if (closeRect.contains(mousePosition.x - hoverPos.x,mousePosition.y - hoverPos.y))
         {
+
             return i.first;
         }
     }
