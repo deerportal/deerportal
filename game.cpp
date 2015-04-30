@@ -65,6 +65,10 @@ void Game::initBoard()
     players[1] = playerHud2;
     players[2] = playerHud3;
     players[3] = playerHud4;
+
+
+
+
     players[0].setActive(true);
     setCurrentNeighbours();
 }
@@ -94,17 +98,17 @@ void Game::loadAssets()
 
 
 
-        menuTxt.setFont(menuFont);
-        menuTxt.setCharacterSize(120);
-        menuTxt.setString(gameTitle);
+    menuTxt.setFont(menuFont);
+    menuTxt.setCharacterSize(120);
+    menuTxt.setString(gameTitle);
 
-            menuTxt.setColor(sf::Color(55, 255, 35, 85));
+    menuTxt.setColor(sf::Color(55, 255, 35, 85));
 
-        int width = menuTxt.getLocalBounds().width;
-        int height = menuTxt.getLocalBounds().height;
+    int width = menuTxt.getLocalBounds().width;
+    int height = menuTxt.getLocalBounds().height;
 
-        menuTxt.setPosition(400-(width/2),300-(height/2)-150);
-        menuTxt.setScale(0.5, 0.5);
+    menuTxt.setPosition(400-(width/2),300-(height/2)-150);
+    menuTxt.setScale(0.5, 0.5);
 
 
 }
@@ -143,10 +147,13 @@ Game::Game():
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
     turn(0),
-    gameTitle(" PAgAN\nBOaRD ")
+    gameTitle(" PAgAN\nBOaRD "),
+    roundDice(players),
+    roundNumber(1),
+    guiRoundDice(&textures)
 {
 
-
+    guiRoundDice.active = true;
     showPlayerBoardElems = false;
     if (!musicGame.openFromFile("assets/audio/game.ogg"))
         std::exit(1);
@@ -162,6 +169,8 @@ Game::Game():
     window.setVerticalSyncEnabled(true);
     Hover hover;
     GuiWindow guiWindow(&textures);
+
+
 
     std::srand (time(NULL));
     loadAssets();
@@ -207,6 +216,8 @@ Game::Game():
 
 
             }
+
+
 
             if (currentState==state_game)
             {
@@ -289,6 +300,15 @@ Game::Game():
 
                     }
 
+                    if (currentState==state_gui_end_round)
+                    {
+                        resultCommand = guiRoundDice.getElem(localPosition);
+                            command(resultCommand);
+
+
+                    }
+
+
                 }
             }
             if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
@@ -304,13 +324,22 @@ Game::Game():
         render();
     }
 }
+void Game::nextRound() {
+    turn = 0;
+    std::string result = roundDice.drawRound();
+    roundNumber += 1;
+    std::cout << "END OF ROUND " << roundNumber << " " << result << std::endl;
+    command(result);
+}
 
 void Game::nextPlayer(){
     players[turn].updatePlayer();
     turn++;
 
     if (turn==4)
-        turn = 0;
+    {
+        nextRound();
+    }
     selector.changeColor(turn);
     for (int i=0;i<4;i++)
     {
@@ -348,57 +377,51 @@ void Game::update()
 
 }
 
+void Game::drawBaseGame()
+{
+    window.setView(viewTiles);
+    window.draw(map);
+    for (int i=0;i<4;i++)
+    {
+        window.draw(players[i].elems);
+    }
+    drawSquares();
+    window.setView(viewGui);
+    drawPlayersGui();
+    window.setView(viewTiles);
+}
+
 void Game::render()
 {
     window.clear();
     if (currentState==state_game)
     {
-        window.setView(viewTiles);
-        window.draw(map);
-        for (int i=0;i<4;i++)
-        {
-            window.draw(players[i].elems);
-        }
-        drawSquares();
-        window.setView(viewGui);
-        drawPlayersGui();
-        window.setView(viewTiles);
-        window.draw(guiSelectBuilding);
+        drawBaseGame();
 
     } else if (currentState==state_gui_elem) {
-        window.setView(viewTiles);
-        window.draw(map);
-        for (int i=0;i<4;i++)
-        {
-            window.draw(players[i].elems);
-        }
-        //        window.draw(selector);
-        window.setView(viewGui);
-        drawPlayersGui();
-        window.setView(viewTiles);
+        drawBaseGame();
         window.draw(guiSelectBuilding);
     }  else if (currentState==state_menu) {
 
-window.draw(menuBackground);
+        window.draw(menuBackground);
         window.draw(menuTxt);
 
 
+    } else if (currentState==state_gui_end_round){
+        drawBaseGame();
+        window.draw(guiRoundDice);
     }
 
     window.display();
 }
 
 void Game::command(std::string command){
-    //    std::cout << command << std::endl;
+        std::cout << command << std::endl;
     if (command=="close_gui")
     {
         guiSelectBuilding.active = false;
         currentState=state_game;
         sfxClick.play();
-
-
-
-
     }
 
     if (command=="hide_gui_elem_description")
@@ -407,6 +430,15 @@ void Game::command(std::string command){
             guiSelectBuilding.descriptionActive = false;
 
         }
+    }
+
+    if (command.find("end_of_round")==0)
+    {
+        std::string subResult = command.substr(13);
+        std::cout << "SUB RESULT " << subResult << std::endl;
+        guiRoundDice.active = true;
+        guiRoundDice.setTitle(subResult);
+        currentState = state_gui_end_round;
     }
 
     if (command.find("elem_")==0)

@@ -13,6 +13,8 @@
 #include "hover.h"
 #include "guichoosebuilding.h"
 #include "guiwindow.h"
+#include "rounddice.h"
+#include "guirounddice.h"
 
 namespace efc {
 
@@ -45,6 +47,7 @@ private:
         state_game,
         state_gui_elem,
         state_select_building,
+        state_gui_end_round,
         state_quit
     };
 
@@ -76,9 +79,16 @@ private:
     Selector selector;
     sf::View viewFull;
 
+    RoundDice roundDice;
+    int roundNumber;
+
+
     GuiChooseBuilding guiSelectBuilding;
+    GuiRoundDice guiRoundDice;
     void setCurrentNeighbours ();
     void nextPlayer();
+
+    void nextRound();
 
 
     sf::Sprite menuBackground;
@@ -96,8 +106,10 @@ private:
     void hideGameBoard();
 
 
-    bool showPlayerBoardElems;
 
+
+    bool showPlayerBoardElems;
+    void drawBaseGame();
 };
 }
 #endif // GAME_H

@@ -2,6 +2,11 @@
 
 
 
+void GuiWindow::setTitle(std::string newTitle) {
+    title = newTitle;
+    guiTitleTxt.setString(title);
+}
+
 GuiWindow::GuiWindow(TextureHolder *textures)
 {
     spriteClose.setTexture(textures->textureGui);
@@ -19,6 +24,7 @@ GuiWindow::GuiWindow(TextureHolder *textures)
     guiTitleTxt.setColor(sf::Color(0,0,0));
     guiTitleTxt.move(2,0);
     guiTitleTxt.setString(title);
+    setPosition(150, 100);
 }
 
 GuiWindow::GuiWindow(){
@@ -26,6 +32,7 @@ GuiWindow::GuiWindow(){
     {
         std::exit(1);
     };
+    setPosition(150, 100);
 }
 
 void GuiWindow::setTextureHolder(TextureHolder *textures)
@@ -45,11 +52,10 @@ void GuiWindow::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     states2.transform *= getTransform();
 
     Hover::draw(target, states);
-    if (active)
-    {
+
         target.draw(spriteClose, states2);
         target.draw(guiTitleTxt, states2);
-    }
+
 }
 
 std::string GuiWindow::getElem(sf::Vector2f mousePosition)

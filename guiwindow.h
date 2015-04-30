@@ -11,18 +11,21 @@ public:
     GuiWindow();
     void setTextureHolder(TextureHolder *textures);
 
-    sf::Texture* textureGui;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void init();
     virtual std::string getElem(sf::Vector2f mousePosition);
     sf::Font guiElemFont;
     std::string title;
+    std::string description;
     sf::Text guiTitleTxt;
+    sf::Texture* textureGui;
 
-
+    void setTitle(std::string newTitle);
 
 private:
     sf::Sprite spriteClose;
+
+
 
 };
 

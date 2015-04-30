@@ -14,7 +14,9 @@ SOURCES += main.cpp \
     hover.cpp \
     guiwindow.cpp \
     purchaseguielem.cpp \
-    guichoosebuilding.cpp
+    guichoosebuilding.cpp \
+    rounddice.cpp \
+    guirounddice.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_enfucraft
@@ -36,7 +38,9 @@ HEADERS += \
     guiwindow.h \
     purchaseguielem.h \
     guichoosebuilding.h \
-    elemsdescription.h
+    elemsdescription.h \
+    rounddice.h \
+    guirounddice.h
 
 RESOURCES += \
     images.qrc
