@@ -44,3 +44,6 @@ HEADERS += \
 
 RESOURCES += \
     images.qrc
+
+OTHER_FILES += \
+    CREDITS.md
