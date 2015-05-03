@@ -141,9 +141,9 @@ void Game::hideGameBoard()
 
 Game::Game():
     window(sf::VideoMode(800, 600), "Pagan Board"),
-    viewTiles(sf::FloatRect(00, 00, 400, 400)),
-    viewFull(sf::FloatRect(00, 00, 400, 400)),
-    viewGui(sf::FloatRect(00, 00, 112, 400)),
+    viewTiles(sf::FloatRect(00, 00, 600, 522)),
+    viewFull(sf::FloatRect(00, 00, 800, 600)),
+    viewGui(sf::FloatRect(00, 00, 112, 522)),
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
     turn(0),
@@ -152,6 +152,11 @@ Game::Game():
     roundNumber(1),
     guiRoundDice(&textures)
 {
+
+    if (!textureBackground.loadFromFile("assets/img/background.png"))
+         std::exit(1);
+
+    spriteBackground.setTexture(textureBackground);
 
     guiRoundDice.active = true;
     showPlayerBoardElems = false;
@@ -174,8 +179,9 @@ Game::Game():
 
     std::srand (time(NULL));
     loadAssets();
-    viewGui.setViewport(sf::FloatRect(0.8f,0, 1.0f, 1.0f));
-    viewTiles.setViewport(sf::FloatRect(0,0, 0.8f, 1.0f));
+    viewTiles.setViewport(sf::FloatRect(0.04f,0.066f, 1.0f, 1.14f));
+    viewGui.setViewport(sf::FloatRect(0.71f,0.066f, 1.04f, 1.14f));
+
     selector.changeColor(turn); //This is only for the test TODO: remove
     initBoard();
     showMenu();
@@ -394,6 +400,9 @@ void Game::drawBaseGame()
 void Game::render()
 {
     window.clear();
+
+
+
     if (currentState==state_game)
     {
         drawBaseGame();
@@ -411,6 +420,8 @@ void Game::render()
         drawBaseGame();
         window.draw(guiRoundDice);
     }
+    window.setView(viewFull);
+    window.draw(spriteBackground);
 
     window.display();
 }

@@ -33,8 +33,7 @@ efc::BoardElem::BoardElem(TextureHolder *textures,int pos, int type)
     setTextureRect(sf::IntRect(x_type*efc::TILE_SIZE, y_type*efc::TILE_SIZE, efc::TILE_SIZE, efc::TILE_SIZE));
 
 
-
-
+//    Sprite::SetBlendMode(sf::BlendMode::BlendAdd);
 
 
 

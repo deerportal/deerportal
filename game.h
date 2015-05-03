@@ -53,6 +53,9 @@ private:
 
     states currentState;
 
+    sf::Texture textureBackground;
+    sf::Sprite spriteBackground;
+
     sf::Texture textureTiles;
     sf::Texture textureFaces;
     sf::Font gameFont;

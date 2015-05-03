@@ -14,6 +14,10 @@ void BoardElems::draw(sf::RenderTarget& target, sf::RenderStates states) const
     std::set<int> neighboursAll;
 
     states.transform *= getTransform();
+    sf::BlendMode blendmode = sf::BlendAlpha;
+
+    states.blendMode = blendmode;
+
     for (const efc::BoardElem &i: items)
     {
        target.draw(i, states);

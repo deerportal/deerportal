@@ -14,7 +14,7 @@ static int startPlayers[4] = {0,15,240,255};
 
 namespace efc {
 static sf::Color playersColors[4] = {
-    sf::Color(50, 50,230,255),
+    sf::Color(20, 20,230,155),
     sf::Color(50, 230,50,255),
     sf::Color(230, 50,50,255),
     sf::Color(150, 150,150,255)
