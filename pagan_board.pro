@@ -19,7 +19,7 @@ SOURCES += main.cpp \
     guirounddice.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
-DESTDIR = ../build_release_enfucraft
+DESTDIR = ../build_release_pagan_board
 
 assets.path    = $${DESTDIR}/assets
 assets.files   = assets/*

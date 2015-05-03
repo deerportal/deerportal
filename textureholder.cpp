@@ -12,6 +12,9 @@ TextureHolder::TextureHolder()
     if (!textureSymbols.loadFromFile("assets/img/symbols.png"))
         std::exit(1);
 
+    if (!backgroundDark.loadFromFile("assets/img/background_dark.png"))
+        std::exit(1);
+
 
     if (!textureMenu.loadFromFile("assets/img/menu.jpg"))
         std::exit(1);

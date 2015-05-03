@@ -156,6 +156,11 @@ Game::Game():
     if (!textureBackground.loadFromFile("assets/img/background.png"))
          std::exit(1);
 
+
+    spriteBackgroundDark.setTexture(textures.backgroundDark);
+    spriteBackgroundDark.setPosition(568,000);
+//    spriteBackgroundDark.setColor(sf::Color(55,55,55,155));
+
     spriteBackground.setTexture(textureBackground);
 
     guiRoundDice.active = true;
@@ -405,22 +410,36 @@ void Game::render()
 
     if (currentState==state_game)
     {
+        window.setView(viewFull);
+        window.draw(spriteBackgroundDark);
+        window.setView(viewTiles);
         drawBaseGame();
 
+
     } else if (currentState==state_gui_elem) {
+        window.setView(viewFull);
+        window.draw(spriteBackgroundDark);
         drawBaseGame();
         window.draw(guiSelectBuilding);
+
     }  else if (currentState==state_menu) {
 
         window.draw(menuBackground);
         window.draw(menuTxt);
+//        window.setView(viewFull);
+//        window.draw(spriteBackgroundDark);
 
 
     } else if (currentState==state_gui_end_round){
+        window.setView(viewFull);
+        window.draw(spriteBackgroundDark);
         drawBaseGame();
         window.draw(guiRoundDice);
+//        window.setView(viewFull);
+//        window.draw(spriteBackgroundDark);
     }
     window.setView(viewFull);
+//    window.draw(spriteBackgroundDark);
     window.draw(spriteBackground);
 
     window.display();

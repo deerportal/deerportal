@@ -118,8 +118,9 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
 
 
     symbol.setTextureRect(symbolsRect[pos]);
-    symbol.setScale(sf::Vector2f(0.025f, 0.1f));
-    symbol.setColor(sf::Color(25, 25, 25, 55));
+    symbol.setScale(sf::Vector2f(0.05f, 0.1f));
+    symbol.setColor(sf::Color(25, 25, 25, 105));
+    symbol.setPosition(12.5, (pos*100)+55);
 
 
     food = 0;
@@ -142,7 +143,6 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     txtNextRound.setPosition(9,(pos*100)+10);
 
 
-    symbol.setPosition(15, (pos*100)+52);
 
     txtCash.setPosition(1,(pos*100)+40);
     //    txtCash.setString("Cash: " + std::to_string(cash));
@@ -175,28 +175,28 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
 
     if (pos==0)
     {
-        rectangle.setFillColor(sf::Color(50, 50, 150,168));
-        rectangle2.setFillColor(sf::Color(100, 100, 150,168));
-        rectangle.setOutlineColor(sf::Color(0,0,128));
+        rectangle.setFillColor(sf::Color(50, 50, 200,68));
+        rectangle2.setFillColor(sf::Color(100, 100, 150,38));
+        rectangle.setOutlineColor(sf::Color(0,0,128,68));
     }
     else if (pos==1)
     {
-        rectangle.setFillColor(sf::Color(50, 150, 50,168));
-        rectangle2.setFillColor(sf::Color(100, 150,100,168));
-        rectangle.setOutlineColor(sf::Color(0,128,0));
+        rectangle.setFillColor(sf::Color(50, 150, 50,68));
+        rectangle2.setFillColor(sf::Color(100, 150,100,38));
+        rectangle.setOutlineColor(sf::Color(0,128,0,68));
     }
 
     else if (pos==2)
     {
-        rectangle.setFillColor(sf::Color(150, 50, 50,168));
-        rectangle2.setFillColor(sf::Color(150, 100,100,168));
-        rectangle.setOutlineColor(sf::Color(128,0,0));
+        rectangle.setFillColor(sf::Color(150, 50, 50,68));
+        rectangle2.setFillColor(sf::Color(150, 100,100,38));
+        rectangle.setOutlineColor(sf::Color(128,0,0,68));
     }
     else if (pos==3)
     {
-        rectangle.setFillColor(sf::Color(150, 150, 150,168));
-        rectangle2.setFillColor(sf::Color(200, 200,200,168));
-        rectangle.setOutlineColor(sf::Color(128,128,128));
+        rectangle.setFillColor(sf::Color(150, 150, 150,68));
+        rectangle2.setFillColor(sf::Color(200, 200,200,38));
+        rectangle.setOutlineColor(sf::Color(128,128,128,68));
     }
 
 
