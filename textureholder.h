@@ -33,6 +33,11 @@ public:
     sf::Texture textureFaces;
     sf::Texture textureGui;
     sf::Texture textureMenu;
+    sf::Texture textureSymbols;
+
+    sf::Texture backgroundDark;
+
+
 
     std::map<int, std::map<int, int>> tilesDescription;
     std::map<int, std::string> tilesTxt;

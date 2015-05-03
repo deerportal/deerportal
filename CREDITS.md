@@ -30,3 +30,5 @@ bye ShwiggityShwag, This work is licensed under the Creative Commons 0 License[^
 *Andy's Report* http://opengameart.org/content/andys-report-8bit-and-piano-ver
 
 by megupets, This work is licensed under the Creative Commons 0 License[^cc0].
+
+*Ancient symbols* https://openclipart.org/user-detail/cinemacookie

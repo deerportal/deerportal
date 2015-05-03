@@ -110,6 +110,18 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     spriteFace.setTexture(textures->textureFaces);
     this->pos = pos;
 
+
+    symbol.setTexture(this->textures->textureSymbols);
+
+
+    sf::IntRect symbolsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
+
+
+    symbol.setTextureRect(symbolsRect[pos]);
+    symbol.setScale(sf::Vector2f(0.025f, 0.1f));
+    symbol.setColor(sf::Color(25, 25, 25, 55));
+
+
     food = 0;
     cash = 20;
     energy = 0;
@@ -128,6 +140,9 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     txtNextRound.setScale(sf::Vector2f(0.25f, 1.f));
     txtNextRound.setCharacterSize(10);
     txtNextRound.setPosition(9,(pos*100)+10);
+
+
+    symbol.setPosition(15, (pos*100)+52);
 
     txtCash.setPosition(1,(pos*100)+40);
     //    txtCash.setString("Cash: " + std::to_string(cash));
@@ -234,5 +249,6 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
     if (active)
         target.draw(txtNextRound, states);
+    target.draw(symbol, states);
     target.draw(spriteFace, states);
 }

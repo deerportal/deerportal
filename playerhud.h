@@ -57,6 +57,9 @@ private:
     TextureHolder *textures;
     sf::RectangleShape rectangle;
     sf::RectangleShape rectangle2;
+
+    sf::Sprite symbol;
+
     std::set<int> getTerrainSet();
 
 };
