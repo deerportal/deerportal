@@ -103,7 +103,12 @@ private:
 
     sf::SoundBuffer sfxClickBuffer;
     sf::Sound sfxClick;
+
+    sf::SoundBuffer sfxDoneBuffer;
+    sf::Sound sfxDone;
+
     void showMenu();
+
     void hideMenu();
     void showGameBoard();
     void hideGameBoard();

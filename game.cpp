@@ -242,6 +242,11 @@ Game::Game():
     if (!sfxClickBuffer.loadFromFile("assets/audio/click.ogg"))
         std::exit(1);
     sfxClick.setBuffer(sfxClickBuffer);
+
+    if (!sfxDoneBuffer.loadFromFile("assets/audio/done.ogg"))
+        std::exit(1);
+    sfxDone.setBuffer(sfxDoneBuffer);
+
     window.setVerticalSyncEnabled(true);
     Hover hover;
     GuiWindow guiWindow(&textures);
@@ -556,10 +561,27 @@ void Game::command(std::string command){
         {
             int buildingType = std::stoi(command.substr(5));
             int cashUpd  = textures.tilesDescription[buildingType][0];
+            int cashCost  = textures.tilesDescription[buildingType][1];
             int foodUpd  = textures.tilesDescription[buildingType][2];
+            int foodCost  = textures.tilesDescription[buildingType][3];
             int enrgUpd  = textures.tilesDescription[buildingType][4];
+            int enrgCost  = textures.tilesDescription[buildingType][5];
             std::string descTxt = textures.tilesTxt[buildingType];
-            guiSelectBuilding.setDescriptionTxt("Cash:" + std::to_string(cashUpd) +"\n"+descTxt);
+
+            char priceTxtChar [100];
+            int cx = snprintf ( priceTxtChar, 100, "Price: cash: %2d food: %2d energy: %2d \n", cashUpd, foodUpd, enrgUpd);
+            std::string priceTxt = priceTxtChar;
+
+
+            char costTxtChar [100];
+            cx = snprintf ( costTxtChar, 100, "Cost:  cash: %2d food: %2d energy: %2d \n", cashCost, foodCost, enrgCost);
+            std::string costTxt = costTxtChar;
+
+            //            std::string priceTxt = "Price: cash:" + std::to_string(cashUpd) + " food: " + std::to_string(foodUpd) + " energy: " + std::to_string(enrgUpd);
+            //            std::string costTxt =  "Cost:  cash:" + std::to_string(cashCost) + " food: " + std::to_string(foodCost) + " energy: " + std::to_string(enrgCost);
+
+
+            guiSelectBuilding.setDescriptionTxt(priceTxt + costTxt + "\n"+descTxt);
             guiSelectBuilding.descriptionActive = true;
         }
     }
@@ -575,7 +597,7 @@ void Game::command(std::string command){
             currentState = state_game;
             setCurrentNeighbours();
             guiSelectBuilding.active = false;
-            sfxClick.play();
+            sfxDone.play();
 
 
 

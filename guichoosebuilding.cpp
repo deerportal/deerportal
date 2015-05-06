@@ -15,7 +15,7 @@ GuiChooseBuilding::GuiChooseBuilding(TextureHolder *textures)
 
     description = "Description";
     guiElemTxt.setFont(guiElemFont);
-    guiElemTxt.setCharacterSize(10);
+    guiElemTxt.setCharacterSize(16);
     guiElemTxt.setColor(sf::Color(255,255,255,200));
     updateDescription();
     guiElemTxt.move(2,50);

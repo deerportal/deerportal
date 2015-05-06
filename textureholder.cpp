@@ -68,10 +68,10 @@ TextureHolder::TextureHolder()
             counter++;
     };
     tilesTxt.insert({443, "Your base."});
-    tilesTxt.insert({651, "Windmill, produces energy."});
-    tilesTxt.insert({442, "Granary, increases food\nresources."});
-    tilesTxt.insert({585, "Marketplace, generates cash"});
-    tilesTxt.insert({1100, "Monasterium, brings you luck"});
+    tilesTxt.insert({651, "Windmill, produces energy.\nEnergy is a basic resource in a game,\nneeded by other buildings to running them."});
+    tilesTxt.insert({442, "Granary, food storehouse.\nFood gives your people ability to live.\nWithout the food your people will face\na death by starvation."});
+    tilesTxt.insert({585, "Marketplace, generates cash.\nProvides your tribe trading area.\nToday's offer - dog's bone."});
+    tilesTxt.insert({1100, "Monasterium, increase your faith.\nAs we all know, our world is being ruled\nby four ancient gods..."});
 
 
 
