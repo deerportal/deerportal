@@ -32,3 +32,7 @@ bye ShwiggityShwag, This work is licensed under the Creative Commons 0 License[^
 by megupets, This work is licensed under the Creative Commons 0 License[^cc0].
 
 *Ancient symbols* https://openclipart.org/user-detail/cinemacookie
+
+*Dices* https://www.freesound.org/people/qubodup/sounds/189321/
+
+by qubodup

@@ -20,10 +20,12 @@ public:
     sf::Text guiTitleTxt;
     sf::Texture* textureGui;
 
+    sf::Sprite bgdDark;
+
     void setTitle(std::string newTitle);
+    sf::Sprite spriteClose;
 
 private:
-    sf::Sprite spriteClose;
 
 
 

@@ -12,23 +12,27 @@ GuiWindow::GuiWindow(TextureHolder *textures)
     spriteClose.setTexture(textures->textureGui);
     spriteClose.setTextureRect(sf::IntRect(0,0,16,16));
     spriteClose.move(sf::Vector2f(150-16,0));
-    if (!guiElemFont.loadFromFile("assets/fnt/8bitOperatorPlus-Regular.ttf"))
+    if (!guiElemFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
     {
         std::exit(1);
     };
 
 
+    bgdDark.setTexture(textures->backgroundDark);
+//    bgdDark.setColor(sf::Color(160, 160, 160, 200));
+
+    bgdDark.setTextureRect((sf::IntRect)rectangle.getLocalBounds());
     title = "Choose building:";
     guiTitleTxt.setFont(guiElemFont);
-    guiTitleTxt.setCharacterSize(10);
-    guiTitleTxt.setColor(sf::Color(0,0,0));
+    guiTitleTxt.setCharacterSize(16);
+    guiTitleTxt.setColor(sf::Color(255,255,255,200));
     guiTitleTxt.move(2,0);
     guiTitleTxt.setString(title);
     setPosition(150, 100);
 }
 
 GuiWindow::GuiWindow(){
-    if (!guiElemFont.loadFromFile("assets/fnt/8bitOperatorPlus-Regular.ttf"))
+    if (!guiElemFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
     {
         std::exit(1);
     };
@@ -52,7 +56,7 @@ void GuiWindow::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     states2.transform *= getTransform();
 
     Hover::draw(target, states);
-
+    target.draw(bgdDark, states2);
         target.draw(spriteClose, states2);
         target.draw(guiTitleTxt, states2);
 

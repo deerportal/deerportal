@@ -4,6 +4,11 @@ RoundDice::RoundDice(PlayerHud (&players)[4])
 {
     playersHud = players;
     diceResult = 0;
+
+    if (!sfxDiceBuffer.loadFromFile("assets/audio/dice.ogg"))
+        std::exit(1);
+    sfxDice.setBuffer(sfxDiceBuffer);
+
 }
 
 std::string RoundDice::drawRound(){
@@ -23,6 +28,7 @@ std::string RoundDice::drawRound(){
 }
 
 int RoundDice::throwDice(){
+    sfxDice.play();
     int result = random()%100;
     diceResult = result;
     return result;

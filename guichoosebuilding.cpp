@@ -16,10 +16,15 @@ GuiChooseBuilding::GuiChooseBuilding(TextureHolder *textures)
     description = "Description";
     guiElemTxt.setFont(guiElemFont);
     guiElemTxt.setCharacterSize(10);
-    guiElemTxt.setColor(sf::Color(0,0,0));
+    guiElemTxt.setColor(sf::Color(255,255,255,200));
     updateDescription();
     guiElemTxt.move(2,50);
     descriptionActive = false;
+    rectangle.setSize(sf::Vector2f(400,200));
+    bgdDark.setTextureRect((sf::IntRect)rectangle.getLocalBounds());
+    spriteClose.setPosition(sf::Vector2f(rectangle.getLocalBounds().width-16,0));
+
+
 }
 
 void GuiChooseBuilding::updateDescription() {

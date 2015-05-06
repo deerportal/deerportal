@@ -15,12 +15,9 @@
 #include "guiwindow.h"
 #include "rounddice.h"
 #include "guirounddice.h"
+#include "grouphud.h"
 
 namespace efc {
-
-
-
-
 
 
 class Game
@@ -97,7 +94,8 @@ private:
 
 
     sf::Sprite menuBackground;
-
+    sf::Sprite seasons[4];
+    int currentSeason = 0;
 
     sf::Music musicGame;
     sf::Music musicBackground;
@@ -111,10 +109,11 @@ private:
     void hideGameBoard();
 
 
-
+    GroupHud groupHud;
 
     bool showPlayerBoardElems;
     void drawBaseGame();
+    int month = 0;
 };
 }
 #endif // GAME_H

@@ -16,7 +16,8 @@ SOURCES += main.cpp \
     purchaseguielem.cpp \
     guichoosebuilding.cpp \
     rounddice.cpp \
-    guirounddice.cpp
+    guirounddice.cpp \
+    grouphud.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -40,7 +41,9 @@ HEADERS += \
     guichoosebuilding.h \
     elemsdescription.h \
     rounddice.h \
-    guirounddice.h
+    guirounddice.h \
+    grouphud.h \
+    data.h
 
 RESOURCES += \
     images.qrc

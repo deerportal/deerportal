@@ -1,7 +1,9 @@
 #ifndef ROUNDDICE_H
 #define ROUNDDICE_H
 #include <random>
+#include <SFML/Audio.hpp>
 #include "playerhud.h"
+
 
 
 class RoundDice
@@ -18,6 +20,8 @@ private:
     int throwDice();
     void eventExtraCash();
 
+    sf::SoundBuffer sfxDiceBuffer;
+    sf::Sound sfxDice;
 
 };
 

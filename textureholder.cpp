@@ -2,6 +2,8 @@
 
 TextureHolder::TextureHolder()
 {
+//        textureTiles.setSmooth(true);
+
     if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
         std::exit(1);
     if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
@@ -10,6 +12,8 @@ TextureHolder::TextureHolder()
         std::exit(1);
 
     if (!textureSymbols.loadFromFile("assets/img/symbols.png"))
+        std::exit(1);
+    if (!textureSeasons.loadFromFile("assets/img/seasons.png"))
         std::exit(1);
 
     if (!backgroundDark.loadFromFile("assets/img/background_dark.png"))

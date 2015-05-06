@@ -118,9 +118,9 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
 
 
     symbol.setTextureRect(symbolsRect[pos]);
-    symbol.setScale(sf::Vector2f(0.05f, 0.1f));
+    symbol.setScale(sf::Vector2f(0.2f, 0.20f));
     symbol.setColor(sf::Color(25, 25, 25, 105));
-    symbol.setPosition(12.5, (pos*100)+55);
+    symbol.setPosition(60, (pos*100)+40);
 
 
     food = 0;
@@ -138,40 +138,40 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
 
     txtNextRound.setFont(*gameFont);
     txtNextRound.setString("End Turn");
-    txtNextRound.setScale(sf::Vector2f(0.25f, 1.f));
-    txtNextRound.setCharacterSize(10);
-    txtNextRound.setPosition(9,(pos*100)+10);
+//    txtNextRound.setScale(sf::Vector2f(0.25f, 1.f));
+    txtNextRound.setCharacterSize(12);
+    txtNextRound.setPosition(40,(pos*100)+10);
 
 
 
     txtCash.setPosition(1,(pos*100)+40);
     //    txtCash.setString("Cash: " + std::to_string(cash));
     txtCash.setCharacterSize(10);
-    txtCash.setScale(sf::Vector2f(0.25f, 1.f));
+//    txtCash.setScale(sf::Vector2f(0.25f, 1.f));
 
     txtFood.setPosition(1,(pos*100)+55);
     //    txtFood.setString("Food: " + std::to_string(food));
     txtFood.setCharacterSize(10);
-    txtFood.setScale(sf::Vector2f(0.25f, 1.f));
+//    txtFood.setScale(sf::Vector2f(0.25f, 1.f));
 
     txtEnergy.setPosition(1,(pos*100)+70);
     //    txtEnergy.setString("Enrg: " + std::to_string(energy));
     txtEnergy.setCharacterSize(10);
-    txtEnergy.setScale(sf::Vector2f(0.25f, 1.f));
+//    txtEnergy.setScale(sf::Vector2f(0.25f, 1.f));
 
     txtFaith.setPosition(1,(pos*100)+85);
     //    txtEnergy.setString("Enrg: " + std::to_string(energy));
     txtFaith.setCharacterSize(10);
-    txtFaith.setScale(sf::Vector2f(0.25f, 1.f));
+//    txtFaith.setScale(sf::Vector2f(0.25f, 1.f));
     updateTxt();
 
     spriteFace.setTextureRect(sf::IntRect(x*faceSize, y*faceSize, faceSize, faceSize));
-    spriteFace.setScale(sf::Vector2f(0.25f, 1.f));
+//    spriteFace.setScale(sf::Vector2f(0.25f, 1.f));
     spriteFace.setPosition(0,pos*100);
 
 
-    rectangle.setSize(sf::Vector2f(this->faceSize, this->faceSize));
-    rectangle2.setSize(sf::Vector2f(this->faceSize, (this->faceSize*2)+3));
+    rectangle.setSize(sf::Vector2f((this->faceSize)*7, this->faceSize));
+    rectangle2.setSize(sf::Vector2f((this->faceSize)*7, (this->faceSize*2)+3));
 
     if (pos==0)
     {
