@@ -9,6 +9,7 @@
 #include "textureholder.h"
 #include "elemsdescription.h"
 #include "guiwindow.h"
+#include "character.h"
 
 static int startPlayers[4] = {0,15,240,255};
 
@@ -44,6 +45,14 @@ public:
     std::string getElem(sf::Vector2f mousePosition);
     std::map<std::string, sf::RectangleShape> buttons;
     void updateTxt();
+
+    std::vector<Character> characters;
+
+    void update(sf::Time deltaTime);
+    void play();
+
+
+
 
 private:
     sf::Sprite spriteFace;

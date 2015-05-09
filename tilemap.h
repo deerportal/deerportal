@@ -19,6 +19,8 @@ std::set<int>  getNeighbours(int pos);
 sf::IntRect transPosIntoRect(int pos);
 sf::Vector2i transTilePosition(int pos);
 
+sf::Vector2i getCords(sf::Vector2f position);
+
 }
 
 class TileMap : public sf::Drawable, public sf::Transformable

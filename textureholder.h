@@ -36,6 +36,7 @@ public:
     sf::Texture textureSymbols;
     sf::Texture textureSeasons;
     sf::Texture backgroundDark;
+    sf::Texture textureCharacters;
 
 
 

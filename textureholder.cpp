@@ -16,6 +16,9 @@ TextureHolder::TextureHolder()
     if (!textureSeasons.loadFromFile("assets/img/seasons.png"))
         std::exit(1);
 
+    if (!textureCharacters.loadFromFile("assets/img/characters.png"))
+        std::exit(1);
+
     if (!backgroundDark.loadFromFile("assets/img/background_dark.png"))
         std::exit(1);
 

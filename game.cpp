@@ -103,16 +103,12 @@ void Game::loadAssets()
 
 
     menuTxt.setFont(menuFont);
-    menuTxt.setCharacterSize(120);
+    menuTxt.setCharacterSize(60);
     menuTxt.setString(gameTitle);
-
-    menuTxt.setColor(sf::Color(55, 255, 35, 85));
-
     int width = menuTxt.getLocalBounds().width;
     int height = menuTxt.getLocalBounds().height;
-
     menuTxt.setPosition(400-(width/2),300-(height/2)-150);
-    //    menuTxt.setScale(0.5, 0.5);
+    menuTxt.setColor(sf::Color(55, 255, 35, 85));
 
 
 }
@@ -146,15 +142,17 @@ void Game::hideGameBoard()
 }
 
 Game::Game():
-    window(sf::VideoMode(800, 600), "Pagan Board"),
+    screenSize(efc::initScreenX,efc::initScreenY),
+    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Pagan Board"),
     viewTiles(sf::FloatRect(0, 0, 524, 458)),
-    viewGui(sf::FloatRect(00, 00, 800, 600)),
-    viewFull(sf::FloatRect(00, 00, 800, 600)),
+    viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
+    viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
 
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
+    character(&textures, 3),
     turn(0),
-    gameTitle(" PAgAN\nBOaRD "),
+    gameTitle("pagan\nboard"),
     roundDice(players),
     roundNumber(1),
     guiRoundDice(&textures)
@@ -181,9 +179,9 @@ Game::Game():
 
     int guiStartPos[4][2] = {
         {borderLeft+3,borderTop+2},
-        {800 - guiWidth - borderRight - gWidth-4,borderTop+2},
-        {borderLeft+3,600-gHeight-borderBottom-4} ,
-        {800 - guiWidth - borderRight - gWidth-4, 600-gHeight-borderBottom-4}};
+        {screenSize.x - guiWidth - borderRight - gWidth-4,borderTop+2},
+        {borderLeft+3,screenSize.y-gHeight-borderBottom-4} ,
+        {screenSize.x - guiWidth - borderRight - gWidth-4, screenSize.y-gHeight-borderBottom-4}};
 
     sf::Sprite season1;
     season1.setTexture(textures.textureSeasons);
@@ -221,6 +219,9 @@ Game::Game():
     season4.setColor(sf::Color(255,0,0,80));
     seasons[3] = season4;
 
+    sf::Clock frameClock;
+
+    float speed = 80.f;
 
     spriteBackgroundDark.setTexture(textures.backgroundDark);
     spriteBackgroundDark.setPosition(568,000);
@@ -267,7 +268,7 @@ Game::Game():
     // run the main loop
     while (window.isOpen())
     {
-
+        sf::Time frameTime = frameClock.restart();
         std::string resultCommand = "";
 
         // handle events
@@ -393,10 +394,25 @@ Game::Game():
             }
         }
 
+//                character.play();
+                for (int i=0;i<4;i++)
+                {
+                    players[i].play();
+                }
 
 
+//                animatedSprite.play(*currentAnimation);
+//         animatedSprite.update(frameTime);
+        sf::Vector2f movement(-10.f, 0.f);
+        character.move(movement * frameTime.asSeconds());
+
+        for (int i=0;i<4;i++)
+        {
+            players[i].update(frameTime);
+        }
 
 
+         character.update(frameTime);
         render();
     }
 }
@@ -482,6 +498,18 @@ void Game::drawBaseGame()
     window.setView(viewTiles);
 }
 
+void Game::drawCharacters(){
+    window.setView(viewFull);
+    for (int i=0;i<4;i++)
+    {
+        for (auto&& j: players[i].characters)
+        {
+            window.draw(j);
+        }
+
+    }
+}
+
 void Game::render()
 {
     window.clear();
@@ -494,14 +522,19 @@ void Game::render()
         window.draw(spriteBackgroundDark);
 
         window.setView(viewTiles);
+
+
+
         drawBaseGame();
+drawCharacters();
+
 
 
     } else if (currentState==state_gui_elem) {
         window.setView(viewFull);
         window.draw(spriteBackgroundDark);
         drawBaseGame();
-        window.setView(viewFull);
+        drawCharacters();
         window.draw(guiSelectBuilding);
 
     }  else if (currentState==state_menu) {
@@ -510,7 +543,7 @@ void Game::render()
         window.draw(menuTxt);
         window.draw(groupHud);
 
-        //        window.setView(viewFull);
+                window.setView(viewFull);
         //        window.draw(spriteBackgroundDark);
 
 
@@ -519,13 +552,15 @@ void Game::render()
         window.draw(spriteBackgroundDark);
         drawBaseGame();
         window.draw(guiRoundDice);
-        //        window.setView(viewFull);
+drawCharacters();
         //        window.draw(spriteBackgroundDark);
     }
     window.setView(viewFull);
     //    window.draw(spriteBackgroundDark);
     window.draw(spriteBackground);
     window.draw(groupHud);
+
+
     window.display();
 }
 
@@ -567,20 +602,12 @@ void Game::command(std::string command){
             int enrgUpd  = textures.tilesDescription[buildingType][4];
             int enrgCost  = textures.tilesDescription[buildingType][5];
             std::string descTxt = textures.tilesTxt[buildingType];
-
             char priceTxtChar [100];
             int cx = snprintf ( priceTxtChar, 100, "Price: cash: %2d food: %2d energy: %2d \n", cashUpd, foodUpd, enrgUpd);
             std::string priceTxt = priceTxtChar;
-
-
             char costTxtChar [100];
             cx = snprintf ( costTxtChar, 100, "Cost:  cash: %2d food: %2d energy: %2d \n", cashCost, foodCost, enrgCost);
             std::string costTxt = costTxtChar;
-
-            //            std::string priceTxt = "Price: cash:" + std::to_string(cashUpd) + " food: " + std::to_string(foodUpd) + " energy: " + std::to_string(enrgUpd);
-            //            std::string costTxt =  "Cost:  cash:" + std::to_string(cashCost) + " food: " + std::to_string(foodCost) + " energy: " + std::to_string(enrgCost);
-
-
             guiSelectBuilding.setDescriptionTxt(priceTxt + costTxt + "\n"+descTxt);
             guiSelectBuilding.descriptionActive = true;
         }

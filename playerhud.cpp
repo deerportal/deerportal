@@ -3,6 +3,7 @@
 #include "boardelem.h"
 
 bool PlayerHud::addElem(int pos, int type) {
+
     int price = textures->tilesDescription[type][0];
 
 
@@ -15,7 +16,10 @@ bool PlayerHud::addElem(int pos, int type) {
 
         cash -= price;
         updateTxt();
+        characters.push_back(Character (this->textures, this->pos));
+
         return true;
+
     }
     return false;
 }
@@ -99,8 +103,12 @@ void PlayerHud::setActive(bool newState){
 
 PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFont, int faceSize, int pos)
 {
+
+
     active = false;
     this->textures = textures;
+    Character character(this->textures, pos);
+    characters.push_back(Character (this->textures, pos));
     efc::BoardElem startElem(textures, startPlayers[pos],444);
     startElem.setColor(efc::playersColors[pos]);
 
@@ -240,6 +248,8 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
     //    sf::RectangleShape rectangle2(sf::Vector2f(faceSize, (faceSize*2)+3));
 
 
+
+
     target.draw(rectangle, states);
     target.draw(rectangle2, states);
     target.draw(txtCash, states);
@@ -251,4 +261,36 @@ void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
         target.draw(txtNextRound, states);
     target.draw(symbol, states);
     target.draw(spriteFace, states);
+}
+void PlayerHud::play()
+{
+    for (auto&& i: characters)
+    {
+
+        i.play();
+}
+
+}
+void PlayerHud::update(sf::Time deltaTime)
+{
+    for (auto&& i: characters)
+    {
+
+        sf::Vector2f movement(0.f, 0.f);
+        if  (i.currentAnimationIndex==efc::DIR_LEFT)
+            movement = sf::Vector2f (-10.f, 0.f);
+        else if  (i.currentAnimationIndex==efc::DIR_RIGHT)
+            movement = sf::Vector2f (10.f, 0.f);
+        else if  (i.currentAnimationIndex==efc::DIR_UP)
+            movement = sf::Vector2f (0.f, -10.f);
+        else if  (i.currentAnimationIndex==efc::DIR_DOWN)
+            movement = sf::Vector2f (0.f, 10.f);
+
+
+        i.move(movement * deltaTime.asSeconds());
+        i.update(deltaTime);
+
+
+    }
+
 }

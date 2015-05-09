@@ -16,8 +16,14 @@
 #include "rounddice.h"
 #include "guirounddice.h"
 #include "grouphud.h"
+#include "animatedsprite.h"
+#include "character.h"
+
 
 namespace efc {
+
+static int initScreenX = 800;
+static int initScreenY = 600;
 
 
 class Game
@@ -29,6 +35,9 @@ public:
 
 
 private:
+    sf::Vector2i screenSize;
+
+
     void initBoard();
     void loadAssets();
     void drawPlayersGui();
@@ -119,6 +128,17 @@ private:
     bool showPlayerBoardElems;
     void drawBaseGame();
     int month = 0;
+
+    Animation walkingAnimationDown;
+    Animation walkingAnimationUp;
+    Animation walkingAnimationLeft;
+    Animation walkingAnimationRight;
+    Animation* currentAnimation;
+    AnimatedSprite animatedSprite;
+
+    Character character;
+    void drawCharacters();
+
 };
 }
 #endif // GAME_H

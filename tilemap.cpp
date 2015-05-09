@@ -17,6 +17,14 @@ sf::Vector2i transTilePosition(int pos) {
     return cords;
 }
 
+sf::Vector2i getCords(sf::Vector2f position){
+    int x = position.x/efc::BOARD_SIZE;
+    int y = position.y/efc::BOARD_SIZE;
+    return sf::Vector2i(x, y);
+
+}
+
+
 int transCords(sf::Vector2i cords) {
     //    std::cout << cords.x << " " << cords.y << " " << std::endl;
     int pos = (cords.y * efc::BOARD_SIZE)+cords.x;
