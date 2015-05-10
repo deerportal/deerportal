@@ -2,6 +2,10 @@
 
 namespace efc {
 
+int initScreenX = 800;
+int initScreenY = 600;
+
+
 void Game::initBoard()
 {
     // Grass tile starts at 342 and has 11 tiles
@@ -144,9 +148,10 @@ void Game::hideGameBoard()
 Game::Game():
     screenSize(efc::initScreenX,efc::initScreenY),
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Pagan Board"),
-    viewTiles(sf::FloatRect(0, 0, 524, 458)),
-    viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
+    viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
+    viewTiles(sf::FloatRect(0, 0, 524, 458)),
+
 
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
@@ -221,7 +226,7 @@ Game::Game():
 
     sf::Clock frameClock;
 
-    float speed = 80.f;
+//    float speed = 80.f;
 
     spriteBackgroundDark.setTexture(textures.backgroundDark);
     spriteBackgroundDark.setPosition(568,000);
@@ -595,18 +600,18 @@ void Game::command(std::string command){
         if (currentState==state_gui_elem)
         {
             int buildingType = std::stoi(command.substr(5));
-            int cashUpd  = textures.tilesDescription[buildingType][0];
-            int cashCost  = textures.tilesDescription[buildingType][1];
-            int foodUpd  = textures.tilesDescription[buildingType][2];
-            int foodCost  = textures.tilesDescription[buildingType][3];
-            int enrgUpd  = textures.tilesDescription[buildingType][4];
-            int enrgCost  = textures.tilesDescription[buildingType][5];
+//            int cashUpd  = textures.tilesDescription[buildingType][0];
+//            int cashCost  = textures.tilesDescription[buildingType][1];
+//            int foodUpd  = textures.tilesDescription[buildingType][2];
+//            int foodCost  = textures.tilesDescription[buildingType][3];
+//            int enrgUpd  = textures.tilesDescription[buildingType][4];
+//            int enrgCost  = textures.tilesDescription[buildingType][5];
             std::string descTxt = textures.tilesTxt[buildingType];
             char priceTxtChar [100];
-            int cx = snprintf ( priceTxtChar, 100, "Price: cash: %2d food: %2d energy: %2d \n", cashUpd, foodUpd, enrgUpd);
+
             std::string priceTxt = priceTxtChar;
             char costTxtChar [100];
-            cx = snprintf ( costTxtChar, 100, "Cost:  cash: %2d food: %2d energy: %2d \n", cashCost, foodCost, enrgCost);
+//            int cx = snprintf ( costTxtChar, 100, "Cost:  cash: %2d food: %2d energy: %2d \n", cashCost, foodCost, enrgCost);
             std::string costTxt = costTxtChar;
             guiSelectBuilding.setDescriptionTxt(priceTxt + costTxt + "\n"+descTxt);
             guiSelectBuilding.descriptionActive = true;

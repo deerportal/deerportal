@@ -8,5 +8,9 @@ namespace efc {
         DIR_UP,
         DIR_DOWN
     };
+
+
+
+
 }
 #endif // DATA_H

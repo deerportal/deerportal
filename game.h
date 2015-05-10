@@ -22,20 +22,24 @@
 
 namespace efc {
 
-static int initScreenX = 800;
-static int initScreenY = 600;
-
+extern int initScreenX;
+extern int initScreenY;
 
 class Game
 {
-public:
-    Game();
-    sf::RenderWindow window;
-    sf::View viewTiles;
-
 
 private:
     sf::Vector2i screenSize;
+
+public:
+    Game();
+    sf::RenderWindow window;
+    sf::View viewFull;
+    sf::View viewGui;
+    sf::View viewTiles;
+
+private:
+
 
 
     void initBoard();
@@ -70,7 +74,6 @@ private:
     sf::Font menuFont;
     sf::Text menuTxt;
 
-    std::string gameTitle;
 
 
     TileMap map;
@@ -83,18 +86,20 @@ private:
     std::set<int> currentNeighbours;
     void command(std::string command);
     int selectedPos;
+    Selector selector;
+    GuiChooseBuilding guiSelectBuilding;
+    Character character;
+
     int turn;
     void update();
     void render();
-    sf::View viewGui;
-    Selector selector;
-    sf::View viewFull;
+
+    std::string gameTitle;
 
     RoundDice roundDice;
     int roundNumber;
 
 
-    GuiChooseBuilding guiSelectBuilding;
     GuiRoundDice guiRoundDice;
     void setCurrentNeighbours ();
     void nextPlayer();
@@ -136,7 +141,6 @@ private:
     Animation* currentAnimation;
     AnimatedSprite animatedSprite;
 
-    Character character;
     void drawCharacters();
 
 };

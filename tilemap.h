@@ -1,11 +1,12 @@
  #ifndef TILEMAP_H
 #define TILEMAP_H
 #include <iostream>
+#include <set>
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "textureholder.h"
-#include <set>
 
 namespace efc {
 enum {

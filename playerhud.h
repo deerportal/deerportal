@@ -10,8 +10,7 @@
 #include "elemsdescription.h"
 #include "guiwindow.h"
 #include "character.h"
-
-static int startPlayers[4] = {0,15,240,255};
+#include "terrain_array.h"
 
 namespace efc {
 static sf::Color playersColors[4] = {

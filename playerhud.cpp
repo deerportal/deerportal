@@ -26,7 +26,7 @@ bool PlayerHud::addElem(int pos, int type) {
 
 std::set<int> PlayerHud::getTerrainSet(){
     std::set<int> terrain;
-    for (int i: efc::terrain)
+    for (int i: terrainArray)
     {
 //        std::cout << i << std::endl;
         terrain.insert(i);
@@ -103,6 +103,7 @@ void PlayerHud::setActive(bool newState){
 
 PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFont, int faceSize, int pos)
 {
+    static int startPlayers[4] = {0,15,240,255};
 
 
     active = false;

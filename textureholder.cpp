@@ -1,8 +1,19 @@
 #include "textureholder.h"
+#include "terrain_array.h"
+namespace efc {
 
+std::set<int> getTerrainSet() {
+    std::set<int> terrain;
+    for (int i: terrainArray)
+    {
+        terrain.insert(i);
+    }
+    return terrain;
+};
+
+}
 TextureHolder::TextureHolder()
 {
-//        textureTiles.setSmooth(true);
 
     if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
         std::exit(1);
