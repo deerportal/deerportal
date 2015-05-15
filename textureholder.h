@@ -3,12 +3,10 @@
 #include <set>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "terrain_array.h"
+#include "data.h"
 
 
 namespace efc {
-
-
 
 std::set<int> getTerrainSet();
 
@@ -28,7 +26,6 @@ public:
     sf::Texture textureSeasons;
     sf::Texture backgroundDark;
     sf::Texture textureCharacters;
-
 
 
     std::map<int, std::map<int, int>> tilesDescription;

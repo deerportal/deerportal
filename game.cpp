@@ -61,132 +61,23 @@ void Game::initBoard()
 
     map.load(&textures, sf::Vector2u(efc::TILE_SIZE, efc::TILE_SIZE), level, efc::BOARD_SIZE, efc::BOARD_SIZE);
 
+
+    sfxClick.setBuffer(sfxClickBuffer);
+    sfxDone.setBuffer(sfxDoneBuffer);
+
+    spriteBackground.setTexture(textureBackground);
+    spriteBackgroundDark.setTexture(textures.backgroundDark);
+    spriteBackgroundDark.setPosition(568,000);
+
+    viewTiles.setViewport(sf::FloatRect(0.04f,0.060f, 1.0f, 1.0f));
+    viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
+    selector.changeColor(turn); //This is only for the test TODO: remove
+
     groupHud.setFont(&gameFont);
     groupHud.setSeason(currentSeason);
     groupHud.setRoundName(roundNumber);
 
-    PlayerHud playerHud1(&textures, std::rand() % 80, &gameFont, 32,0);
-    PlayerHud playerHud2(&textures, std::rand() % 30, &gameFont, 32,1);
-    PlayerHud playerHud3(&textures, std::rand() % 60, &gameFont, 32,2);
-    PlayerHud playerHud4(&textures, std::rand() % 50, &gameFont, 32,3);
-    players[0] = playerHud1;
-    players[1] = playerHud2;
-    players[2] = playerHud3;
-    players[3] = playerHud4;
-
-
-
-
-    players[0].setActive(true);
-    setCurrentNeighbours();
-}
-
-
-void Game::setCurrentNeighbours ()
-{
-    currentNeighbours = players[turn].getNeighbours();
-}
-
-void Game::loadAssets()
-{
-    if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
-        std::exit(1);
-
-    if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
-        std::exit(1);
-
-    if (!gameFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
-    {
-        std::exit(1);
-    }
-    if (!menuFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
-    {
-        std::exit(1);
-    }
-
-
-
-    menuTxt.setFont(menuFont);
-    menuTxt.setCharacterSize(60);
-    menuTxt.setString(gameTitle);
-    int width = menuTxt.getLocalBounds().width;
-    int height = menuTxt.getLocalBounds().height;
-    menuTxt.setPosition(400-(width/2),300-(height/2)-150);
-    menuTxt.setColor(sf::Color(55, 255, 35, 85));
-
-
-}
-
-
-void Game::showMenu()
-{
-    menuBackground.setTexture(textures.textureMenu);
-    musicMenu.play();
-    musicMenu.setLoop(true);
-    currentState = state_menu;
-}
-void Game::hideMenu()
-{
-    musicMenu.stop();
-}
-
-void Game::showGameBoard()
-{
-    musicGame.setVolume(20);
-    musicGame.play();
-
-    musicGame.setLoop(true);
-    currentState = state_game;
-}
-
-void Game::hideGameBoard()
-{
-    musicGame.play();
-
-}
-
-Game::Game():
-    screenSize(efc::initScreenX,efc::initScreenY),
-    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Pagan Board"),
-    viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
-    viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
-    viewTiles(sf::FloatRect(0, 0, 524, 458)),
-
-
-    selector(efc::TILE_SIZE),
-    guiSelectBuilding(&textures),
-    character(&textures, 3),
-    turn(0),
-    gameTitle("pagan\nboard"),
-    roundDice(players),
-    roundNumber(1),
-    guiRoundDice(&textures)
-{
-
-    if (!textureBackground.loadFromFile("assets/img/background.png"))
-        std::exit(1);
-
-
-
-
-
     sf::IntRect seasonsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
-
-
-    int gWidth = guiSelectBuilding.rectangle.getLocalBounds().width;
-    int gHeight =  guiSelectBuilding.rectangle.getLocalBounds().height;
-    int borderLeft = 31;
-    int borderRight = 28;
-    int borderTop = 39;
-    int borderBottom = 39;
-    int guiWidth  = 128;
-
-
-    int guiStartPos[4][2] = {
-        {borderLeft+3,borderTop+2},
-        {screenSize.x - guiWidth - borderRight - gWidth-4,borderTop+2},
-        {borderLeft+3,screenSize.y-gHeight-borderBottom-4} ,
-        {screenSize.x - guiWidth - borderRight - gWidth-4, screenSize.y-gHeight-borderBottom-4}};
 
     sf::Sprite season1;
     season1.setTexture(textures.textureSeasons);
@@ -224,48 +115,227 @@ Game::Game():
     season4.setColor(sf::Color(255,0,0,80));
     seasons[3] = season4;
 
-    sf::Clock frameClock;
 
-//    float speed = 80.f;
+    PlayerHud playerHud1(&textures, std::rand() % 80, &gameFont, 32,0);
+    PlayerHud playerHud2(&textures, std::rand() % 30, &gameFont, 32,1);
+    PlayerHud playerHud3(&textures, std::rand() % 60, &gameFont, 32,2);
+    PlayerHud playerHud4(&textures, std::rand() % 50, &gameFont, 32,3);
+    players[0] = playerHud1;
+    players[1] = playerHud2;
+    players[2] = playerHud3;
+    players[3] = playerHud4;
 
-    spriteBackgroundDark.setTexture(textures.backgroundDark);
-    spriteBackgroundDark.setPosition(568,000);
-    //    spriteBackgroundDark.setColor(sf::Color(55,55,55,155));
+    players[0].setActive(true);
+    setCurrentNeighbours();
+}
 
-    spriteBackground.setTexture(textureBackground);
 
-    guiRoundDice.active = true;
-    showPlayerBoardElems = false;
+void Game::setCurrentNeighbours ()
+{
+    currentNeighbours = players[turn].getNeighbours();
+}
+
+void Game::loadAssets()
+{
+    if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
+        std::exit(1);
+
+    if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
+        std::exit(1);
+
+    if (!gameFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
+    {
+        std::exit(1);
+    }
+    if (!menuFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
+    {
+        std::exit(1);
+    }
+
     if (!musicGame.openFromFile("assets/audio/game.ogg"))
         std::exit(1);
-    if (!musicBackground.openFromFile("assets/audio/wind.ogg"))
+    if (!musicBackground.openFromFile("assets/audio/wind2.ogg"))
         std::exit(1);
     if (!musicMenu.openFromFile("assets/audio/menu.ogg"))
         std::exit(1);
 
-    musicBackground.play();
-    musicBackground.setLoop(true);
+
     if (!sfxClickBuffer.loadFromFile("assets/audio/click.ogg"))
         std::exit(1);
-    sfxClick.setBuffer(sfxClickBuffer);
 
     if (!sfxDoneBuffer.loadFromFile("assets/audio/done.ogg"))
         std::exit(1);
-    sfxDone.setBuffer(sfxDoneBuffer);
+    if (!textureBackground.loadFromFile("assets/img/background.png"))
+        std::exit(1);
+
+
+
+    menuTxt.setFont(menuFont);
+    menuTxt.setCharacterSize(60);
+    menuTxt.setString(gameTitle);
+    int width = menuTxt.getLocalBounds().width;
+    int height = menuTxt.getLocalBounds().height;
+    menuTxt.setPosition(400-(width/2),300-(height/2)-150);
+    menuTxt.setColor(sf::Color(55, 255, 35, 85));
+
+
+}
+
+
+void Game::showMenu()
+{
+    musicBackground.play();
+    musicBackground.setLoop(true);
+    menuBackground.setTexture(textures.textureMenu);
+    musicMenu.play();
+    musicMenu.setLoop(true);
+    currentState = state_menu;
+}
+void Game::hideMenu()
+{
+    musicMenu.stop();
+}
+
+void Game::showGameBoard()
+{
+    musicGame.setVolume(20);
+    musicGame.play();
+
+    musicGame.setLoop(true);
+    currentState = state_game;
+}
+
+void Game::handleLeftClick(sf::Vector2f pos,
+                           sf::Vector2f posGui, sf::Vector2f posFull, int mousePos) {
+    if (currentState==state_game)
+    {
+
+        std::string resultCommand = players[turn].getElem(posGui);
+        command(resultCommand);
+        if (currentNeighbours.find(mousePos) != currentNeighbours.end())
+        {
+
+            if ((!guiSelectBuilding.active) && (showPlayerBoardElems))
+            {
+                float hover_x =posFull.x;
+                float hover_y = posFull.y;
+                if (pos.y > 290)
+                    hover_y = hover_y - 100;
+                if (pos.x > 240)
+                    hover_x = hover_x - 150;
+                if (hover_x>250)
+                    hover_x = 249.0f;
+                if (hover_x<0)
+                    hover_x = 1.0f;
+                if (hover_y>300)
+                    hover_y = 299.0f;
+                if (hover_y<0)
+                    hover_y = 1.0f;
+
+                selectedPos = mousePos;
+
+                std::cout <<  hover_x << " " << hover_y << std::endl;
+                guiSelectBuilding.setPosition(guiStartPos[turn][0],guiStartPos[turn][1]);
+                guiSelectBuilding.active = true;
+                sfxClick.play();
+                currentState = state_gui_elem;
+            }
+        }
+
+    }
+
+    else if (currentState==state_gui_elem)
+    {
+        std::string resultCommand = guiSelectBuilding.getElem(posFull);
+        if (resultCommand.find("elem_")==0)
+        {
+            std::string resultCommandWrapped = "build_" + resultCommand;
+            command(resultCommandWrapped);
+        } else if (resultCommand.find("close_gui")==0)
+        {        command(resultCommand);}
+    }
+    if (currentState==state_menu)
+    {
+        hideMenu();
+        showGameBoard();
+
+
+    }
+
+    if (currentState==state_gui_end_round)
+    {
+        std::string resultCommand = guiRoundDice.getElem(pos);
+        command(resultCommand);
+
+
+    }
+
+
+}
+
+void Game::hideGameBoard()
+{
+    musicGame.play();
+
+}
+
+Game::Game():
+    screenSize(efc::initScreenX,efc::initScreenY),
+    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Pagan Board"),
+    viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
+    viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
+    viewTiles(sf::FloatRect(0, 0, 524, 458)),
+    selector(efc::TILE_SIZE),
+    guiSelectBuilding(&textures),
+    character(&textures, 3),
+    turn(0),
+    gameTitle("pagan\nboard"),
+    roundDice(players),
+    roundNumber(1),
+    guiRoundDice(&textures)
+{
+
+    int gWidth = guiSelectBuilding.rectangle.getLocalBounds().width;
+    int gHeight =  guiSelectBuilding.rectangle.getLocalBounds().height;
+    int borderLeft = 31;
+    int borderRight = 28;
+    int borderTop = 39;
+    int borderBottom = 39;
+    int guiWidth  = 128;
+
+    int guiStartPosTmp[4][2] = {
+        {borderLeft+3,borderTop+2},
+        {screenSize.x - guiWidth - borderRight - gWidth-4,borderTop+2},
+        {borderLeft+3,screenSize.y-gHeight-borderBottom-4} ,
+        {screenSize.x - guiWidth - borderRight - gWidth-4, screenSize.y-gHeight-borderBottom-4}};
+
+
+    for (int i=0;i<4;i++)
+    {
+        for (int j=0;j<4;j++)
+            guiStartPos[i][j] = guiStartPosTmp[i][j];
+
+    }
+
+
+    sf::Clock frameClock;
+
+
+    guiRoundDice.active = true;
+    showPlayerBoardElems = false;
+
+
+
 
     window.setVerticalSyncEnabled(true);
     Hover hover;
     GuiWindow guiWindow(&textures);
 
-
-
     std::srand (time(NULL));
     loadAssets();
 
-    viewTiles.setViewport(sf::FloatRect(0.04f,0.060f, 1.0f, 1.0f));
-    viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
 
-    selector.changeColor(turn); //This is only for the test TODO: remove
+
     initBoard();
     showMenu();
 
@@ -301,8 +371,6 @@ Game::Game():
                     command("hide_gui_elem_description");
             }
 
-
-
             if (currentState==state_game)
             {
                 if ((localPosition.x>400) || (localPosition.x<0)  || (localPosition.y>400) || (localPosition.y<0))
@@ -318,80 +386,8 @@ Game::Game():
             if (event.type == sf::Event::MouseButtonReleased)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    if (currentState==state_game)
-                    {
-                        resultCommand = players[turn].getElem(localPositionGui);
-                        command(resultCommand);
-                        if (currentNeighbours.find(mousePos) != currentNeighbours.end())
-                        {
-
-                            if ((!guiSelectBuilding.active) && (showPlayerBoardElems))
-                            {
-                                float hover_x =localPositionFull.x;
-                                float hover_y = localPositionFull.y;
-                                if (localPosition.y > 290)
-                                    hover_y = hover_y - 100;
-                                if (localPosition.x > 240)
-                                    hover_x = hover_x - 150;
-                                if (hover_x>250)
-                                    hover_x = 249.0f;
-                                if (hover_x<0)
-                                    hover_x = 1.0f;
-                                if (hover_y>300)
-                                    hover_y = 299.0f;
-                                if (hover_y<0)
-                                    hover_y = 1.0f;
-
-                                selectedPos = mousePos;
-
-                                std::cout <<  hover_x << " " << hover_y << std::endl;
-
-
-
-                                guiSelectBuilding.setPosition(guiStartPos[turn][0],guiStartPos[turn][1]);
-                                guiSelectBuilding.active = true;
-                                sfxClick.play();
-                                currentState = state_gui_elem;
-                            }
-                            break;
-                        }
-
-
-
-
-
-                        //                        nextPlayer();
-                    }
-
-                    if (currentState==state_gui_elem)
-                    {
-                        resultCommand = guiSelectBuilding.getElem(localPositionFull);
-                        if (resultCommand.find("elem_")==0)
-                        {
-                            std::string resultCommandWrapped = "build_" + resultCommand;
-                            command(resultCommandWrapped);
-                        } else if (resultCommand.find("close_gui")==0)
-                        {        command(resultCommand);}
-                    }
-                    if (currentState==state_menu)
-                    {
-                        hideMenu();
-                        showGameBoard();
-
-
-                    }
-
-                    if (currentState==state_gui_end_round)
-                    {
-                        resultCommand = guiRoundDice.getElem(localPosition);
-                        command(resultCommand);
-
-
-                    }
-
-
-                }
+                    handleLeftClick(localPosition, localPositionGui,
+                                    localPositionFull, mousePos);
             }
             if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
             {
@@ -399,28 +395,24 @@ Game::Game():
             }
         }
 
-//                character.play();
-                for (int i=0;i<4;i++)
-                {
-                    players[i].play();
-                }
-
-
-//                animatedSprite.play(*currentAnimation);
-//         animatedSprite.update(frameTime);
-        sf::Vector2f movement(-10.f, 0.f);
-        character.move(movement * frameTime.asSeconds());
-
-        for (int i=0;i<4;i++)
-        {
-            players[i].update(frameTime);
-        }
-
-
-         character.update(frameTime);
+        update(frameTime);
         render();
     }
 }
+
+void Game::update(sf::Time frameTime) {
+    for (int i=0;i<4;i++)
+    {
+        players[i].play();
+    }
+
+
+    for (int i=0;i<4;i++)
+    {
+        players[i].update(frameTime, busyTiles);
+    }
+}
+
 void Game::nextRound() {
     turn = 0;
     std::string result = roundDice.drawRound();
@@ -459,8 +451,8 @@ void Game::nextPlayer(){
     std::cout << roundNumber << " " << roundNumber % 16 << std::endl;
     groupHud.setRoundName(roundNumber);
     groupHud.setSeason(currentSeason);
-
     groupHud.setMonthName(month%4);
+    setBusyTiles();
 
 }
 
@@ -479,13 +471,6 @@ void Game::drawSquares() {
 
         window.draw(selector);
     }
-
-}
-
-
-
-void Game::update()
-{
 
 }
 
@@ -531,7 +516,7 @@ void Game::render()
 
 
         drawBaseGame();
-drawCharacters();
+        drawCharacters();
 
 
 
@@ -548,7 +533,7 @@ drawCharacters();
         window.draw(menuTxt);
         window.draw(groupHud);
 
-                window.setView(viewFull);
+        window.setView(viewFull);
         //        window.draw(spriteBackgroundDark);
 
 
@@ -557,7 +542,7 @@ drawCharacters();
         window.draw(spriteBackgroundDark);
         drawBaseGame();
         window.draw(guiRoundDice);
-drawCharacters();
+        drawCharacters();
         //        window.draw(spriteBackgroundDark);
     }
     window.setView(viewFull);
@@ -600,18 +585,18 @@ void Game::command(std::string command){
         if (currentState==state_gui_elem)
         {
             int buildingType = std::stoi(command.substr(5));
-//            int cashUpd  = textures.tilesDescription[buildingType][0];
-//            int cashCost  = textures.tilesDescription[buildingType][1];
-//            int foodUpd  = textures.tilesDescription[buildingType][2];
-//            int foodCost  = textures.tilesDescription[buildingType][3];
-//            int enrgUpd  = textures.tilesDescription[buildingType][4];
-//            int enrgCost  = textures.tilesDescription[buildingType][5];
+            //            int cashUpd  = textures.tilesDescription[buildingType][0];
+            //            int cashCost  = textures.tilesDescription[buildingType][1];
+            //            int foodUpd  = textures.tilesDescription[buildingType][2];
+            //            int foodCost  = textures.tilesDescription[buildingType][3];
+            //            int enrgUpd  = textures.tilesDescription[buildingType][4];
+            //            int enrgCost  = textures.tilesDescription[buildingType][5];
             std::string descTxt = textures.tilesTxt[buildingType];
             char priceTxtChar [100];
 
             std::string priceTxt = priceTxtChar;
             char costTxtChar [100];
-//            int cx = snprintf ( costTxtChar, 100, "Cost:  cash: %2d food: %2d energy: %2d \n", cashCost, foodCost, enrgCost);
+            //            int cx = snprintf ( costTxtChar, 100, "Cost:  cash: %2d food: %2d energy: %2d \n", cashCost, foodCost, enrgCost);
             std::string costTxt = costTxtChar;
             guiSelectBuilding.setDescriptionTxt(priceTxt + costTxt + "\n"+descTxt);
             guiSelectBuilding.descriptionActive = true;
@@ -641,6 +626,30 @@ sf::Vector2f Game::getMousePos(){
     sf::Vector2i mousePosTmp(sf::Mouse::getPosition(window));
     sf::Vector2f mousePosition(window.mapPixelToCoords(mousePosTmp,viewTiles));
     return mousePosition;
+}
+
+
+
+void Game::setBusyTiles() {
+
+    busyTiles.clear();
+    for (int i: efc::terrainArray)
+    {
+        busyTiles.insert(i);
+    }
+
+    for (int i=0;i<4;i++)
+    {
+        for (int j:players[i].getBusy())
+        {
+            busyTiles.insert(j);
+        }
+    }
+
+
+
+
+
 }
 
 

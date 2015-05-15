@@ -1,10 +1,10 @@
 #include "textureholder.h"
-#include "terrain_array.h"
+
 namespace efc {
 
 std::set<int> getTerrainSet() {
     std::set<int> terrain;
-    for (int i: terrainArray)
+    for (int i: efc::terrainArray)
     {
         terrain.insert(i);
     }

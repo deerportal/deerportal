@@ -14,7 +14,6 @@ public:
     BoardElem();
     BoardElem(TextureHolder *textures,int pos, int type);
 
-
     int pos;
     int type;
 

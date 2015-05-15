@@ -10,15 +10,10 @@
 #include "elemsdescription.h"
 #include "guiwindow.h"
 #include "character.h"
-#include "terrain_array.h"
+#include "data.h"
 
 namespace efc {
-static sf::Color playersColors[4] = {
-    sf::Color(0, 150,255,255),
-    sf::Color(50, 230,50,255),
-    sf::Color(230, 50,50,255),
-    sf::Color(150, 150,150,255)
-};
+
 
 }
 
@@ -47,9 +42,10 @@ public:
 
     std::vector<Character> characters;
 
-    void update(sf::Time deltaTime);
+    void update(sf::Time deltaTime, std::set<int> &busyTiles);
     void play();
 
+    std::set<int> getBusy();
 
 
 

@@ -26,7 +26,7 @@ bool PlayerHud::addElem(int pos, int type) {
 
 std::set<int> PlayerHud::getTerrainSet(){
     std::set<int> terrain;
-    for (int i: terrainArray)
+    for (int i: efc::terrainArray)
     {
 //        std::cout << i << std::endl;
         terrain.insert(i);
@@ -34,7 +34,16 @@ std::set<int> PlayerHud::getTerrainSet(){
     return terrain;
 
 }
+std::set<int> PlayerHud::getBusy(){
 
+    std::set<int> busyTiles;
+    for (std::pair<int, efc::BoardElem> i: elems.items_map)
+    {
+        busyTiles.insert(i.first);
+    }
+
+    return busyTiles;
+}
 
 std::set<int> PlayerHud::getNeighbours(){
     std::set<int> neighbours;
@@ -272,7 +281,7 @@ void PlayerHud::play()
 }
 
 }
-void PlayerHud::update(sf::Time deltaTime)
+void PlayerHud::update(sf::Time deltaTime, std::set<int>& busyTiles)
 {
     for (auto&& i: characters)
     {
@@ -289,7 +298,7 @@ void PlayerHud::update(sf::Time deltaTime)
 
 
         i.move(movement * deltaTime.asSeconds());
-        i.update(deltaTime);
+        i.update(deltaTime, busyTiles);
 
 
     }

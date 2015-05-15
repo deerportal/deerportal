@@ -21,7 +21,7 @@ SOURCES += main.cpp \
     animation.cpp \
     animatedsprite.cpp \
     character.cpp \
-    terrain_array.cpp
+    data.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -50,8 +50,7 @@ HEADERS += \
     data.h \
     animation.h \
     animatedsprite.h \
-    character.h \
-    terrain_array.h
+    character.h
 
 RESOURCES += \
     images.qrc

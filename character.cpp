@@ -27,7 +27,7 @@ void Character::play()
     animatedSprite.play(animations[currentAnimationIndex]);
     sf::Vector2f a(getPosition());
     sf::Vector2i position(efc::getCords(a));
-    std::cout << a.x << " " << a.y << " " << position.x << " " << position.y << "" << std::endl;
+    std::cout << a.x << "    " << a.y << "           " << position.x << "       " << position.y << "" << efc::transCords(position) << std::endl;
 }
 
 Character::Character(TextureHolder *textures, int playerNumber):
@@ -55,7 +55,7 @@ Character::Character(TextureHolder *textures, int playerNumber):
     walkingAnimationUp.addFrame(sf::IntRect(offset, 144, 16, 24));
     walkingAnimationUp.addFrame(sf::IntRect(offset, 168, 16, 24));
 
-    currentAnimation = &walkingAnimationLeft;
+    currentAnimation = &walkingAnimationRight;
 
 
     animations[efc::DIR_LEFT] = walkingAnimationLeft;
@@ -81,11 +81,17 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 }
 
-void Character::update(sf::Time deltaTime)
+void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
 {
+
+
 
     sf::Vector2f a(getPosition());
     sf::Vector2i position(efc::getCords(a));
+
+    int charPos = efc::transCords(position);
+
+//    std::cout << a.x << " " << a.y << " " << position.x << " " << position.y << " " << charPos << std::endl;
 
     nextRedirect -= deltaTime.asSeconds();
 
@@ -129,7 +135,7 @@ void Character::update(sf::Time deltaTime)
         }
     }  else   if (currentAnimationIndex==efc::DIR_DOWN)
     {
-        if (position.y>efc::TILE_BOARD_SIZE-1)
+        if (position.y>efc::BOARD_SIZE-1)
         {
             setDirIndex(efc::DIR_UP);
             setDir();
@@ -144,7 +150,7 @@ void Character::update(sf::Time deltaTime)
         }
     }  else   if (currentAnimationIndex==efc::DIR_RIGHT)
     {
-        if (position.x>efc::TILE_BOARD_SIZE-1)
+        if (position.x>efc::BOARD_SIZE-1)
         {
             setDirIndex(efc::DIR_LEFT);
             setDir();

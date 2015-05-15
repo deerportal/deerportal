@@ -91,7 +91,7 @@ private:
     Character character;
 
     int turn;
-    void update();
+    void update(sf::Time frameTime);
     void render();
 
     std::string gameTitle;
@@ -142,6 +142,14 @@ private:
     AnimatedSprite animatedSprite;
 
     void drawCharacters();
+    void handleLeftClick(sf::Vector2f pos,
+                         sf::Vector2f posGui, sf::Vector2f posFull, int mousePos);
+
+    int guiStartPos[4][2];
+
+    std::set<int> busyTiles;
+    void setBusyTiles();
+
 
 };
 }
