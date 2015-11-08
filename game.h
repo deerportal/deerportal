@@ -109,7 +109,7 @@ private:
 
     sf::Sprite menuBackground;
     sf::Sprite seasons[4];
-    int currentSeason = 0;
+    //int currentSeason = 0;
 
     sf::Music musicGame;
     sf::Music musicBackground;

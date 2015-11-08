@@ -4,7 +4,7 @@ namespace efc {
 
 int initScreenX = 800;
 int initScreenY = 600;
-
+int currentSeason = 0;
 
 void Game::initBoard()
 {
