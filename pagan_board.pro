@@ -57,3 +57,4 @@ RESOURCES += \
 
 OTHER_FILES += \
     CREDITS.md
+QMAKE_CXXFLAGS += -std=c++0x
