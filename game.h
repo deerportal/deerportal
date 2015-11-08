@@ -132,7 +132,7 @@ private:
 
     bool showPlayerBoardElems;
     void drawBaseGame();
-    int month = 0;
+    int month;
 
     Animation walkingAnimationDown;
     Animation walkingAnimationUp;
