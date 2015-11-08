@@ -3,6 +3,7 @@ compiler:
   - gcc
 
 before_script:
+  - lsb_release -a
   - sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.5 libglew1.5-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1  libxrandr2 libxrender1 libsoil1 libsfml-dev  libsfml-audio2 libsfml-dev libsfml-graphics2 libsfml-network2 libsfml-system2 libsfml-window2
 
 script: qmake && make
