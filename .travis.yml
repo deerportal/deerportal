@@ -1,12 +1,12 @@
 language: cpp
 compiler:
   - gcc
-
+    http://www.sfml-dev.org/files/SFML-2.3.2-linux-gcc-64-bit.tar.gz
 before_script:
-  - wget http://sfml-dev.org/download/sfml/2.1/SFML-2.3-linux-gcc-64bits.tar.bz2 -O /tmp/sfml.tar.bz2
+  - wget http://www.sfml-dev.org/files/SFML-2.3.2-linux-gcc-64-bit.tar.gz -O /tmp/sfml.tar.bz2
   - tar -xjvf /tmp/sfml.tar.bz2
   - sudo cp -r SFML-2.3/* /usr/
   - lsb_release -a
-  - sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.5 libglew1.5-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1  libxrandr2 libxrender1 libsoil1 
+  - sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.5 libglew1.5-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1  libxrandr2 libxrender1 libsoil1 cppcheck
 
-script: qmake && make
+script: qmake && make && cppcheck . --enable=all
