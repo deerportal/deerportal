@@ -297,7 +297,7 @@ void PlayerHud::update(sf::Time deltaTime, std::set<int>& busyTiles)
             movement = sf::Vector2f (0.f, 10.f);
 
 
-        i.move(movement * deltaTime.asSeconds());
+//        i.move(movement * deltaTime.asSeconds());
         i.update(deltaTime, busyTiles);
 
 

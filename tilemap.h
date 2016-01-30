@@ -21,7 +21,7 @@ sf::IntRect transPosIntoRect(int pos);
 sf::Vector2i transTilePosition(int pos);
 
 sf::Vector2i getCords(sf::Vector2f position);
-
+sf::Vector2f getScreenPos(sf::Vector2i cords);
 }
 
 class TileMap : public sf::Drawable, public sf::Transformable

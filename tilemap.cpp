@@ -1,6 +1,9 @@
 #include "tilemap.h"
 namespace efc {
 
+/*!
+ * Returns sf::Vector2i cords taking int board position as input.
+ */
 sf::Vector2i transPosition(int pos) {
     int x = (int) pos % efc::BOARD_SIZE;
     int y = (int) pos / efc::BOARD_SIZE;
@@ -17,14 +20,31 @@ sf::Vector2i transTilePosition(int pos) {
     return cords;
 }
 
+/*!
+ * Returns int cords taking screen sf::Vector2f position
+ * as the input.
+ */
 sf::Vector2i getCords(sf::Vector2f position){
     int x = position.x/efc::TILE_BOARD_SIZE;
     int y = position.y/efc::TILE_BOARD_SIZE;
     return sf::Vector2i(x, y);
+}
 
+/*!
+ * Returns screen sf::Vector2f pos taking sf::Vector2i cords
+ * as the input.
+ */
+sf::Vector2f getScreenPos(sf::Vector2i cords){
+    float x = cords.x * efc::TILE_SIZE;
+    float y = cords.y * efc::TILE_SIZE;
+    return sf::Vector2f(x, y);
 }
 
 
+/*!
+ * Returns int board position (1-256, 16x16) taking
+ * sf::Vector2i cords as the input.
+ */
 int transCords(sf::Vector2i cords) {
     //    std::cout << cords.x << " " << cords.y << " " << std::endl;
     int pos = (cords.y * efc::BOARD_SIZE)+cords.x;

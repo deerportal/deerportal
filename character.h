@@ -36,6 +36,9 @@ public:
     void setDirIndex(int direction);
     float nextRedirect;
 
+
+    void setBoardPosition(int boardPosition);
+    int getBoardPosition();
     int tile_pos;
 
 };

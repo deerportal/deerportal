@@ -1,7 +1,6 @@
 #include "character.h"
 
 
-
 void Character::setDir(int direction)
 {
     if (direction==efc::DIR_LEFT)
@@ -27,7 +26,10 @@ void Character::play()
     animatedSprite.play(animations[currentAnimationIndex]);
     sf::Vector2f a(getPosition());
     sf::Vector2i position(efc::getCords(a));
-    std::cout << a.x << "    " << a.y << "           " << position.x << "       " << position.y << "" << efc::transCords(position) << std::endl;
+
+//    std::cout << a.x << "    " << a.y << "           "
+//              << position.x << "       " << position.y << " pos > "
+//              << getBoardPosition() << std::endl;
 }
 
 Character::Character(TextureHolder *textures, int playerNumber):
@@ -73,7 +75,10 @@ Character::Character(TextureHolder *textures, int playerNumber):
         sf::Vector2f(20, 240),
         sf::Vector2f(40, 240)
     };
-    setPosition(positions[playerNumber]);
+
+    std::array<int, 4> boardPositions{0,15,255-15,255};
+//    std::cout << "define " << playerNumber << std::endl;
+    setBoardPosition(boardPositions[playerNumber]);
 
 
 }
@@ -172,3 +177,33 @@ sf::FloatRect Character::getGlobalBounds() const
 {
     return getTransform().transformRect(getLocalBounds());
 }
+
+/*!
+ * \brief Character::getBoardPosition
+ * \return
+ */
+int Character::getBoardPosition()
+{
+    sf::Vector2f currentPos(getPosition());
+    sf::Vector2i currentCords(efc::getCords(currentPos));
+    int currentBoardPosition = efc::transCords(currentCords);
+    return currentBoardPosition;
+}
+
+/*!
+ * \brief Character::setBoardPosition
+ * \param boardPosition
+ */
+void Character::setBoardPosition(int boardPosition)
+{
+    sf::Vector2i neededCords(efc::transPosition(boardPosition));
+
+    sf::Vector2f newPos(efc::getScreenPos(neededCords));
+    std::cout << "board pos >> " << boardPosition << " cords >>" << neededCords.x << " "   << neededCords.y
+              << "newpos >> " << newPos.x << " " << newPos.y
+              << std::endl;
+    setPosition(newPos.x, newPos.y);
+
+}
+
+
