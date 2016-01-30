@@ -15,6 +15,10 @@ std::set<int> getTerrainSet() {
 TextureHolder::TextureHolder()
 {
 
+
+    if (!textureGameBackground.loadFromFile("assets/img/game-background.png"))
+        std::exit(1);
+
     if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
         std::exit(1);
     if (!textureFaces.loadFromFile("assets/img/faces.jpg"))

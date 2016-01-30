@@ -91,6 +91,8 @@ void Game::initBoard()
     spriteBackgroundDark.setTexture(textures.backgroundDark);
     spriteBackgroundDark.setPosition(568,000);
 
+    gameBackground.setTexture(textures.textureGameBackground);
+
     viewTiles.setViewport(sf::FloatRect(0.04f,0.060f, 1.0f, 1.0f));
     viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
     selector.changeColor(turn); //This is only for the test TODO: remove
@@ -515,7 +517,7 @@ void Game::drawBaseGame()
 void Game::drawCharacters(){
 //    window.setView(viewFull);
     window.setView(viewTiles); // Yeah Katia's inspiration
-
+    window.draw(gameBackground);
     for (int i=0;i<4;i++)
     {
         for (auto&& j: players[i].characters)

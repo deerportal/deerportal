@@ -65,6 +65,7 @@ private:
 
     sf::Texture textureBackground;
     sf::Sprite spriteBackground;
+    sf::Sprite gameBackground;
     sf::Sprite spriteBackgroundDark;
 
 

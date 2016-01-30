@@ -26,6 +26,7 @@ public:
     sf::Texture textureSeasons;
     sf::Texture backgroundDark;
     sf::Texture textureCharacters;
+    sf::Texture textureGameBackground;
 
 
     std::map<int, std::map<int, int>> tilesDescription;
