@@ -58,3 +58,4 @@ RESOURCES += \
 OTHER_FILES += \
     CREDITS.md
 QMAKE_CXXFLAGS += -std=gnu++0x
+

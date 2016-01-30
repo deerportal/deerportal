@@ -34,7 +34,7 @@ TextureHolder::TextureHolder()
         std::exit(1);
 
 
-    if (!textureMenu.loadFromFile("assets/img/menu.jpg"))
+    if (!textureMenu.loadFromFile("assets/img/background_new.png"))
         std::exit(1);
 
     int defaultArray[5][8] = {
