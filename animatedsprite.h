@@ -21,6 +21,9 @@
 //
 ////////////////////////////////////////////////////////////
 
+// This file has been created using Maximilian Wagenbach (aka. Foaly) sources
+// further modificated. Thank you Foaly.
+
 #ifndef ANIMATEDSPRITE_INCLUDE
 #define ANIMATEDSPRITE_INCLUDE
 

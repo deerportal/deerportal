@@ -21,6 +21,9 @@
 //
 ////////////////////////////////////////////////////////////
 
+// This file has been created using Maximilian Wagenbach (aka. Foaly) sources
+// further modificated. Thank you Foaly.
+
 #ifndef ANIMATION_INCLUDE
 #define ANIMATION_INCLUDE
 

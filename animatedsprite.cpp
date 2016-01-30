@@ -21,6 +21,9 @@
 //
 ////////////////////////////////////////////////////////////
 
+// This file has been created using Maximilian Wagenbach (aka. Foaly) sources
+// further modificated. Thank you Foaly.
+
 #include "animatedsprite.h"
 
 AnimatedSprite::AnimatedSprite(sf::Time frameTime, bool paused, bool looped) :
