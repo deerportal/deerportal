@@ -256,11 +256,13 @@ void Game::handleLeftClick(sf::Vector2f pos,
 
                 selectedPos = mousePos;
 
-                std::cout <<  hover_x << " " << hover_y << std::endl;
-                guiSelectBuilding.setPosition(guiStartPos[turn][0],guiStartPos[turn][1]);
-                guiSelectBuilding.active = true;
-                sfxClick.play();
-                currentState = state_gui_elem;
+
+                // Currently we are not goint to use it.
+//                std::cout <<  hover_x << " " << hover_y << std::endl;
+//                guiSelectBuilding.setPosition(guiStartPos[turn][0],guiStartPos[turn][1]);
+//                guiSelectBuilding.active = true;
+//                sfxClick.play();
+//                currentState = state_gui_elem;
             }
         }
 
@@ -439,7 +441,7 @@ void Game::nextRound() {
     turn = 0;
     std::string result = roundDice.drawRound();
     roundNumber += 1;
-    std::cout << "END OF ROUND " << roundNumber << " " << result << std::endl;
+//    std::cout << "END OF ROUND " << roundNumber << " " << result << std::endl;
     month++;
     if (month==13)
         month=1;
@@ -470,7 +472,7 @@ void Game::nextPlayer(){
             players[i].setActive(false);
     }
     sfxClick.play();
-    std::cout << roundNumber << " " << roundNumber % 16 << std::endl;
+//    std::cout << roundNumber << " " << roundNumber % 16 << std::endl;
     groupHud.setRoundName(roundNumber);
     groupHud.setSeason(currentSeason);
     groupHud.setMonthName(month%4);
@@ -511,7 +513,9 @@ void Game::drawBaseGame()
 }
 
 void Game::drawCharacters(){
-    window.setView(viewFull);
+//    window.setView(viewFull);
+    window.setView(viewTiles); // Yeah Katia's inspiration
+
     for (int i=0;i<4;i++)
     {
         for (auto&& j: players[i].characters)
@@ -577,7 +581,7 @@ void Game::render()
 }
 
 void Game::command(std::string command){
-    std::cout << command << std::endl;
+//    std::cout << command << std::endl;
     if (command=="close_gui")
     {
         guiSelectBuilding.active = false;
@@ -596,7 +600,7 @@ void Game::command(std::string command){
     if (command.find("end_of_round")==0)
     {
         std::string subResult = command.substr(13);
-        std::cout << "SUB RESULT " << subResult << std::endl;
+//        std::cout << "SUB RESULT " << subResult << std::endl;
         guiRoundDice.active = true;
         guiRoundDice.setTitle(subResult);
         currentState = state_gui_end_round;

@@ -67,7 +67,12 @@ Character::Character(TextureHolder *textures, int playerNumber):
     setDirIndex(efc::DIR_LEFT);
     setDir();
 
-    sf::Vector2f positions[4] = {sf::Vector2f(40, 40),sf::Vector2f(540, 40),sf::Vector2f(40, 440),sf::Vector2f(540, 440)};
+    sf::Vector2f positions[4] = {
+        sf::Vector2f(0, 0),
+        sf::Vector2f(20, 40),
+        sf::Vector2f(20, 240),
+        sf::Vector2f(40, 240)
+    };
     setPosition(positions[playerNumber]);
 
 
@@ -124,8 +129,6 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
 
     }
 
-
-
     if (currentAnimationIndex==efc::DIR_UP)
     {
         if (position.y<2)
@@ -156,8 +159,6 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
             setDir();
         }
     }
-
-
     animatedSprite.update(deltaTime);
 }
 

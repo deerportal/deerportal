@@ -12,7 +12,6 @@ GuiChooseBuilding::GuiChooseBuilding(TextureHolder *textures)
     addBuilding("elem_585", 585);
     addBuilding("elem_1100", 1100);
 
-
     description = "Description";
     guiElemTxt.setFont(guiElemFont);
     guiElemTxt.setCharacterSize(16);

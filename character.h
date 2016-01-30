@@ -36,6 +36,8 @@ public:
     void setDirIndex(int direction);
     float nextRedirect;
 
+    int tile_pos;
+
 };
 
 #endif // CHARACTER_H

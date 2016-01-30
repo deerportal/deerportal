@@ -2,22 +2,18 @@
 
 Hover::Hover()
 {
-
     width = 150;
     height = 100;
     rectangle.setSize(sf::Vector2f(width, height));
     init();
-
 }
 
 Hover::Hover(int width, int height)
 {
-
     this->width = width;
     this->height = height;
     rectangle.setSize(sf::Vector2f(width, height));
     init();
-
 }
 
 void Hover::init() {
