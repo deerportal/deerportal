@@ -22,9 +22,9 @@ std::array<int,2> Character::getMovements(int howFar)
                 if (indexRight==-1)
                     break;
                 indexRight = efc::boards[indexRight][1];
-                            std::cout << " howfar" << howFar << " index R" << indexRight
-                                       << " move L " << moveLeft <<  " move R " << moveRight << " dice " << diceResult
-                                      << std::endl;
+//                            std::cout << " howfar" << howFar << " index R" << indexRight
+//                                       << " move L " << moveLeft <<  " move R " << moveRight << " dice " << diceResult
+//                                      << std::endl;
                 if (indexRight==-1)
                     break;
             }
@@ -38,9 +38,9 @@ std::array<int,2> Character::getMovements(int howFar)
             {            if (indexLeft==-1)
                     break;
                 indexLeft = efc::boards[indexLeft][0];
-                            std::cout << " howfar" << howFar  << " index l " << indexLeft
-                                      << " move L " << moveLeft << " move R " << moveRight << " dice " << diceResult
-                                      << std::endl;
+//                            std::cout << " howfar" << howFar  << " index l " << indexLeft
+//                                      << " move L " << moveLeft << " move R " << moveRight << " dice " << diceResult
+//                                      << std::endl;
                 if (indexLeft==-1)
                     break;
             }
@@ -347,5 +347,6 @@ void Character::setBoardPosition(int boardPosition)
               << "movements >> " << movements[0] << " " << movements[1]
               << std::endl;
 
+   sf::Vector2i newVecPos(getPosition());
 
 }

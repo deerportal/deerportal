@@ -72,11 +72,12 @@ void Game::initBoard()
 
     spriteBackground.setTexture(textureBackground);
     spriteBackgroundDark.setTexture(textures.backgroundDark);
-    spriteBackgroundDark.setPosition(568,000);
+    spriteBackgroundDark.setPosition(0,0);
 
     gameBackground.setTexture(textures.textureGameBackground);
 
-    viewTiles.setViewport(sf::FloatRect(0.04f,0.060f, 1.0f, 1.0f));
+//    viewTiles.setViewport(sf::FloatRect(0.04f,0.060f, 1.0f, 1.0f));
+    viewTiles.setViewport(sf::FloatRect(0.1f,0.05f, 1.0f, 1.0f));
     viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
     selector.changeColor(turn); //This is only for the test TODO: remove
 
@@ -198,6 +199,7 @@ void Game::showMenu()
     musicBackground.play();
     musicBackground.setLoop(true);
     menuBackground.setTexture(textures.textureMenu);
+    musicBackground.setVolume(7);
     musicMenu.play();
     musicMenu.setLoop(true);
     currentState = state_menu;
@@ -209,7 +211,7 @@ void Game::hideMenu()
 
 void Game::showGameBoard()
 {
-    musicGame.setVolume(20);
+    musicGame.setVolume(50);
     musicGame.play();
 
     musicGame.setLoop(true);
@@ -313,7 +315,7 @@ Game::Game():
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Pagan Board"),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
-    viewTiles(sf::FloatRect(0, 0, 824, 458)),
+    viewTiles(sf::FloatRect(0, 0, 1360, 768)),
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
     character(&textures, 3),
@@ -402,7 +404,7 @@ Game::Game():
 
             if (currentState==state_game)
             {
-                if ((localPosition.x>400) || (localPosition.x<0)  || (localPosition.y>400) || (localPosition.y<0))
+                if ((localPosition.x>efc::TILE_SIZE*efc::BOARD_SIZE) || (localPosition.x<0)  || (localPosition.y>efc::TILE_SIZE*efc::BOARD_SIZE) || (localPosition.y<0))
                 {
                     showPlayerBoardElems = false;
                     players[turn].elems.displayNeighbours = false;
@@ -421,6 +423,9 @@ Game::Game():
             if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
             {
                 selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
+            } else
+            {
+                std::cout << "does not worl :) " << std::endl;
             }
         }
 
@@ -502,6 +507,8 @@ void Game::drawSquares() {
     {
 
         window.draw(selector);
+    } else {
+        std::cout << "sont dhow" <<std::endl;
     }
 
 }
@@ -509,7 +516,7 @@ void Game::drawSquares() {
 void Game::drawBaseGame()
 {
     window.setView(viewTiles);
-    window.draw(map);
+//    window.draw(map);
     for (int i=0;i<4;i++)
     {
         window.draw(players[i].elems);

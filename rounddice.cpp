@@ -8,6 +8,7 @@ RoundDice::RoundDice(PlayerHud (&players)[4])
     if (!sfxDiceBuffer.loadFromFile("assets/audio/dice.ogg"))
         std::exit(1);
     sfxDice.setBuffer(sfxDiceBuffer);
+    sfxDice.setVolume(12);
 
 }
 

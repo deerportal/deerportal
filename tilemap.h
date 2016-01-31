@@ -10,9 +10,9 @@
 
 namespace efc {
 enum {
-    TILE_SIZE = 25,
+    TILE_SIZE = 40,
     BOARD_SIZE = 16,
-    TILE_BOARD_SIZE = 40
+    TILE_BOARD_SIZE = 80
 };
 sf::Vector2i transPosition(int pos);
 int transCords(sf::Vector2i cords);
