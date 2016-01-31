@@ -7,52 +7,54 @@
 std::array<int,2> Character::getMovements(int howFar)
 {
 
+    std::array<int,2> myArray;
 
-    std::cout << "howfar: " <<howFar <<std::endl;
+    if (active==true)
+    {
+//        std::cout << "howfar: " <<howFar <<std::endl;
 
 
-    if (boardPosition+howFar>255)
-        moveRight = -1;
+
+            int indexRight = boardPosition;
+            for (int i=boardPosition;i<=boardPosition+howFar-1;i++)
+            {
+
+                if (indexRight==-1)
+                    break;
+                indexRight = efc::boards[indexRight][1];
+                            std::cout << " howfar" << howFar << " index R" << indexRight
+                                       << " move L " << moveLeft <<  " move R " << moveRight << " dice " << diceResult
+                                      << std::endl;
+                if (indexRight==-1)
+                    break;
+            }
+
+            moveRight = indexRight;
+
+
+
+            int indexLeft = boardPosition;
+            for (int i=boardPosition;i>=boardPosition-howFar+1;i--)
+            {            if (indexLeft==-1)
+                    break;
+                indexLeft = efc::boards[indexLeft][0];
+                            std::cout << " howfar" << howFar  << " index l " << indexLeft
+                                      << " move L " << moveLeft << " move R " << moveRight << " dice " << diceResult
+                                      << std::endl;
+                if (indexLeft==-1)
+                    break;
+            }
+            moveLeft = indexLeft;
+
+
+
+        myArray = {moveLeft,moveRight};
+    }
     else
     {
-        int index = boardPosition;
-        for (int i=boardPosition;i<=boardPosition+howFar-1;i++)
-        {
-            std::cout << "FUCK ME " << index << std::endl;
-            if (index==-1)
-                break;
-            index = efc::boards[index][1];
-//            std::cout << " index R" << index
-//                      << " move R " << moveRight
-//                      << std::endl;
-            if (index==-1)
-                break;
-        }
-
-        moveRight = index;
+        myArray = {-1,-1};
     }
-
-    if (boardPosition-howFar<0)
-        moveLeft = -1;
-    else
-    {
-        int index = boardPosition;
-        for (int i=boardPosition;i>=boardPosition-howFar+1;i--)
-        {            if (index==-1)
-                break;
-            index = efc::boards[index][0];
-//            std::cout << " index l " << index
-//                      << " move L " << moveLeft
-//                      << std::endl;
-            if (index==-1)
-                break;
-        }
-        moveLeft = index;
-    }
-
-
-    std::array<int,2> myArray = {moveLeft,moveRight};
-    int x = efc::boards[2][2];
+//    std::cout << "howfar: " <<howFar << std::endl;
     return myArray;
 
 }
@@ -292,7 +294,7 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
             rightChar.setPosition(newPos);
         }
 
-        std::cout << " dice " << diceResult<< moveLeft << " " << moveRight  << std::endl;
+//        std::cout << " dice " << diceResult<< moveLeft << " " << moveRight  << std::endl;
     }
 
 
