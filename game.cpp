@@ -542,6 +542,7 @@ void Game::drawCharacters(){
     window.draw(gameBackground);
     window.setView(viewFull);
     window.draw(spriteBackgroundArt);
+    window.draw(roundDice.spriteDice);
     window.setView(viewTiles);
     drawSquares();
     for (int i=0;i<4;i++)

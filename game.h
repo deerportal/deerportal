@@ -54,7 +54,9 @@ private:
     enum states {
         state_init,
         state_menu,
+        state_roll_dice,
         state_game,
+
         state_gui_elem,
         state_select_building,
         state_gui_end_round,

@@ -2,6 +2,7 @@
 #define ROUNDDICE_H
 #include <random>
 #include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 #include "playerhud.h"
 
 
@@ -15,14 +16,24 @@ public:
 
     std::string drawRound();
     int diceResult;
+    int diceResultSix;
     int throwDiceSix();
+    sf::Texture textureDices;
+    sf::Sprite spriteDice;
+
+
 
 private:
     int throwDice();
+
+
+    int diceSize;
+
     void eventExtraCash();
 
     sf::SoundBuffer sfxDiceBuffer;
     sf::Sound sfxDice;
+    void setDiceTexture();
 
 };
 

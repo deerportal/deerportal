@@ -3,13 +3,25 @@
 RoundDice::RoundDice(PlayerHud (&players)[4])
 {
     playersHud = players;
-    diceResult = 0;
-
+    diceResult = 1;
+    diceResultSix = 1;
+    diceSize = 150;
     if (!sfxDiceBuffer.loadFromFile("assets/audio/dice.ogg"))
         std::exit(1);
+
+    if (!textureDices.loadFromFile("assets/img/dicesWhite.png"))
+        std::exit(1);
+
+    spriteDice.setTexture(textureDices);
+
     sfxDice.setBuffer(sfxDiceBuffer);
     sfxDice.setVolume(12);
+    spriteDice.setPosition(1140,550);
+}
 
+void RoundDice::setDiceTexture(){
+    sf::IntRect diceRect(diceSize*diceResultSix, 0, diceSize, diceSize);
+    spriteDice.setTextureRect(diceRect);
 }
 
 std::string RoundDice::drawRound(){
@@ -37,8 +49,9 @@ int RoundDice::throwDice(){
 
 int RoundDice::throwDiceSix(){
     sfxDice.play();
-    int result = random()%5;
-    diceResult = result;
+    int result = random()%6;
+    diceResultSix = result;
+    setDiceTexture();
     return result+1;
 }
 
