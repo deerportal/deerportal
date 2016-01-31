@@ -24,7 +24,7 @@ GuiWindow::GuiWindow(TextureHolder *textures)
     bgdDark.setTextureRect((sf::IntRect)rectangle.getLocalBounds());
     title = "Choose building:";
     guiTitleTxt.setFont(guiElemFont);
-    guiTitleTxt.setCharacterSize(18);
+    guiTitleTxt.setCharacterSize(58);
     guiTitleTxt.setColor(sf::Color(255,255,255,200));
     guiTitleTxt.move(2,0);
     guiTitleTxt.setString(title);

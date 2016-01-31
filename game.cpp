@@ -77,7 +77,7 @@ void Game::initBoard()
     gameBackground.setTexture(textures.textureGameBackground);
 
 //    viewTiles.setViewport(sf::FloatRect(0.04f,0.060f, 1.0f, 1.0f));
-    viewTiles.setViewport(sf::FloatRect(0.1f,0.05f, 1.0f, 1.0f));
+    viewTiles.setViewport(sf::FloatRect(0.15f,0.1f, 1.0f, 1.0f));
     viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
     selector.changeColor(turn); //This is only for the test TODO: remove
 
@@ -163,6 +163,13 @@ void Game::loadAssets()
     {
         std::exit(1);
     }
+    if (!textureBackgroundArt.loadFromFile("assets/img/background_land.png"))
+        std::exit(1);
+
+
+    spriteBackgroundArt.setTexture(textureBackgroundArt);
+
+
 
     if (!musicGame.openFromFile("assets/audio/game.ogg"))
         std::exit(1);
@@ -530,7 +537,12 @@ void Game::drawBaseGame()
 void Game::drawCharacters(){
 //    window.setView(viewFull);
     window.setView(viewTiles); // Yeah Katia's inspiration
+
+
     window.draw(gameBackground);
+    window.setView(viewFull);
+    window.draw(spriteBackgroundArt);
+    window.setView(viewTiles);
     drawSquares();
     for (int i=0;i<4;i++)
     {

@@ -69,6 +69,9 @@ private:
     sf::Sprite spriteBackgroundDark;
 
 
+    sf::Texture textureBackgroundArt;
+    sf::Sprite spriteBackgroundArt;
+
     sf::Texture textureTiles;
     sf::Texture textureFaces;
     sf::Font gameFont;

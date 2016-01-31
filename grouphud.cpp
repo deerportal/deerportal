@@ -19,11 +19,11 @@ void GroupHud::setFont(sf::Font *gameFont) {
     roundName.setFont(*gameFont);
     monthName.setFont(*gameFont);
 
-    seasonName.setCharacterSize(10);
-    roundName.setCharacterSize(10);
-    monthName.setCharacterSize(10);
-    roundName.move(100, 0);
-    monthName.move(200, 0);
+    seasonName.setCharacterSize(30);
+    roundName.setCharacterSize(30);
+    monthName.setCharacterSize(30);
+    roundName.move(400, 0);
+//    monthName.move(400, 0);
     setMonthName(1);
 }
 
@@ -48,7 +48,7 @@ void GroupHud::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
         target.draw(seasonName, states);
         target.draw(roundName, states);
-        target.draw(monthName, states);
+//        target.draw(monthName, states);
 
 
 }
