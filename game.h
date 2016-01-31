@@ -150,7 +150,7 @@ private:
 
     std::set<int> busyTiles;
     void setBusyTiles();
-
+    int diceResultPlayer;
 
 };
 }

@@ -34,6 +34,13 @@ int RoundDice::throwDice(){
     return result;
 }
 
+int RoundDice::throwDiceSix(){
+    sfxDice.play();
+    int result = random()%5;
+    diceResult = result;
+    return result+1;
+}
+
 void RoundDice::eventExtraCash(){
 
     for (int i=0;i<4;i++)

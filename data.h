@@ -14,6 +14,7 @@ namespace efc {
     };
     extern int terrainArray[24];
     extern sf::Color playersColors[4];
+    extern std::array<std::array<int,2>,256> boards;
 
 
 }

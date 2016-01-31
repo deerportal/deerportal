@@ -7,26 +7,7 @@ int initScreenY = 768;
 int currentSeason = 0;
 int month = 0;
 
-std::array<std::array<int,2>,256> boards = {
-    {
-        {0,1},{0,2},{1,3},{2,4},{3,5},{4,6},{5,12},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-        {0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},{0,2},
-    },
-};
+
 
 void Game::initBoard()
 {
@@ -55,6 +36,8 @@ void Game::initBoard()
     //    level[240] = 0;
     //    level[255] = 0;
     //    level[15] = 0;
+
+
 
     level[8] = 813;
     level[24] = 803;
@@ -151,6 +134,10 @@ void Game::initBoard()
 
     players[0].setActive(true);
     setCurrentNeighbours();
+
+    roundDice.throwDiceSix();
+    diceResultPlayer =  roundDice.throwDiceSix();
+    players[turn].characters[0].diceResult = diceResultPlayer;
 }
 
 
@@ -231,8 +218,24 @@ void Game::showGameBoard()
 
 void Game::handleLeftClick(sf::Vector2f pos,
                            sf::Vector2f posGui, sf::Vector2f posFull, int mousePos) {
+
+
+    std::cout << "mouse clicked mousePose " << mousePos << "dice " << diceResultPlayer << std::endl;
+
     if (currentState==state_game)
     {
+
+
+
+        std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
+
+        if ((mousePos==movements[0]) || (mousePos==movements[1]))
+        {
+            std::cout << "mouse clicked HURRAY mousePos " << mousePos  << std::endl;
+            players[turn].setFigurePos(mousePos);
+            nextPlayer();
+
+        }
 
         std::string resultCommand = players[turn].getElem(posGui);
         command(resultCommand);
@@ -310,7 +313,7 @@ Game::Game():
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Pagan Board"),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
-    viewTiles(sf::FloatRect(0, 0, 524, 458)),
+    viewTiles(sf::FloatRect(0, 0, 824, 458)),
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
     character(&textures, 3),
@@ -474,6 +477,9 @@ void Game::nextPlayer(){
             players[i].setActive(false);
     }
     sfxClick.play();
+    roundDice.throwDiceSix();
+    diceResultPlayer =  roundDice.throwDiceSix();
+    players[turn].characters[0].diceResult = diceResultPlayer;
 //    std::cout << roundNumber << " " << roundNumber % 16 << std::endl;
     groupHud.setRoundName(roundNumber);
     groupHud.setSeason(currentSeason);
@@ -518,6 +524,7 @@ void Game::drawCharacters(){
 //    window.setView(viewFull);
     window.setView(viewTiles); // Yeah Katia's inspiration
     window.draw(gameBackground);
+    drawSquares();
     for (int i=0;i<4;i++)
     {
         for (auto&& j: players[i].characters)

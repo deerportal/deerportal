@@ -108,6 +108,11 @@ PlayerHud::PlayerHud()
 void PlayerHud::setActive(bool newState){
     active = newState;
     elems.active = newState;
+    for (auto&& i: characters)
+    {
+
+        i.active = newState;
+}
 }
 
 PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFont, int faceSize, int pos)
@@ -303,4 +308,14 @@ void PlayerHud::update(sf::Time deltaTime, std::set<int>& busyTiles)
 
     }
 
+}
+
+std::array<int,2> PlayerHud::getMovements(int diceResult)
+{
+    return characters[0].getMovements(diceResult);
+}
+
+void PlayerHud::setFigurePos(int pos)
+{
+    characters[0].setBoardPosition(pos);
 }

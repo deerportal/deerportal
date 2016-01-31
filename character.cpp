@@ -1,5 +1,56 @@
 #include "character.h"
 
+/*!
+ * \brief Character::getMovements
+ * \return
+ */
+std::array<int,2> Character::getMovements(int howFar)
+{
+
+
+
+
+    if (boardPosition+howFar>255)
+        moveRight = -1;
+    else
+    {
+        int index = boardPosition;
+        for (int i=boardPosition;i<=boardPosition+howFar-1;i++)
+        {
+            index = efc::boards[index][1];
+//            std::cout << " index R" << index
+//                      << " move R " << moveRight
+//                      << std::endl;
+            if (index==-1)
+                break;
+        }
+
+        moveRight = index;
+    }
+
+    if (boardPosition-howFar<0)
+        moveLeft = -1;
+    else
+    {
+        int index = boardPosition;
+        for (int i=boardPosition;i>=boardPosition-howFar+1;i--)
+        {
+            index = efc::boards[index][0];
+//            std::cout << " index l " << index
+//                      << " move L " << moveLeft
+//                      << std::endl;
+            if (index==-1)
+                break;
+        }
+        moveLeft = index;
+    }
+
+
+    std::array<int,2> myArray = {moveLeft,moveRight};
+    int x = efc::boards[2][2];
+    return myArray;
+
+}
 
 void Character::setDir(int direction)
 {
@@ -34,12 +85,21 @@ void Character::play()
 
 Character::Character(TextureHolder *textures, int playerNumber):
     animatedSprite(sf::seconds(0.2), true, false),
-    nextRedirect(0.f)
-
+    nextRedirect(0.f),
+    diceResult(2)
 {
 
     this->textures = textures;
     int offset = playerNumber*16;
+    active = false;
+
+
+    rectangleLeft.setFillColor(sf::Color(12, 12, 12,120));
+    rectangleLeft.setOutlineColor(sf::Color(24,24,40, 255));
+    rectangleRight.setFillColor(sf::Color(240, 240, 240,98));
+    rectangleRight.setOutlineColor(sf::Color(24,40,24, 90));
+
+
 
     walkingAnimationDown.setSpriteSheet(textures->textureCharacters);
     walkingAnimationDown.addFrame(sf::IntRect(offset, 0, 16, 24));
@@ -58,6 +118,14 @@ Character::Character(TextureHolder *textures, int playerNumber):
     walkingAnimationUp.addFrame(sf::IntRect(offset, 168, 16, 24));
 
     currentAnimation = &walkingAnimationRight;
+
+
+    leftChar.setTexture(textures->textureCharacters);
+    leftChar.setTextureRect(sf::IntRect(offset, 96, 16, 24));
+
+
+    rightChar.setTexture(textures->textureCharacters);
+    rightChar.setTextureRect(sf::IntRect(offset, 48, 16, 24));
 
 
     animations[efc::DIR_LEFT] = walkingAnimationLeft;
@@ -87,12 +155,40 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 
     states.transform *= getTransform();
-    target.draw(animatedSprite, states);
+
+
+    if (active==true)
+    {
+        if (moveLeft>-1)
+        {
+//            std::cout << "draw " << rectangleLeft.getPosition().x <<  " "  << rectangleLeft.getPosition().y << std::endl;
+
+            target.draw(leftChar, states);
+
+        }
+
+        if (moveRight>-1)
+        {
+//            std::cout << "draw R" << rectangleRight.getPosition().x <<  " "  << rectangleRight.getPosition().y << std::endl;
+
+
+            target.draw(rightChar, states);
+
+            //        target.draw(rectangleRight, 4, sf::Quads, states);
+
+        }
+    }
+
+     target.draw(animatedSprite, states);
+
 
 }
 
 void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
 {
+
+
+
 
 
 
@@ -165,6 +261,35 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
         }
     }
     animatedSprite.update(deltaTime);
+
+    std::array<int,2> movements(getMovements(diceResult));
+    int left = movements[0];
+    int right = movements[1];
+
+
+    if (left>-1)
+    {
+        sf::Vector2i cords(efc::transPosition(left));
+
+
+        rectangleLeft.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
+        rectangleLeft.setPosition(200,200);
+        leftChar.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
+
+//        target.draw(rectangleLeft, states);
+    }
+
+
+    if (right>-1)
+    {
+        sf::Vector2i cords(efc::transPosition(right));
+        sf::RectangleShape rectangleRight(sf::Vector2f(efc::TILE_SIZE, efc::TILE_SIZE));
+        rectangleRight.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
+        rightChar.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
+//        target.draw(rectangleRight, states);
+    }
+
+
 }
 
 sf::FloatRect Character::getLocalBounds() const
@@ -194,16 +319,25 @@ int Character::getBoardPosition()
  * \brief Character::setBoardPosition
  * \param boardPosition
  */
+
+
+
+
+
 void Character::setBoardPosition(int boardPosition)
 {
     sf::Vector2i neededCords(efc::transPosition(boardPosition));
 
     sf::Vector2f newPos(efc::getScreenPos(neededCords));
-    std::cout << "board pos >> " << boardPosition << " cords >>" << neededCords.x << " "   << neededCords.y
-              << "newpos >> " << newPos.x << " " << newPos.y
-              << std::endl;
+
     setPosition(newPos.x, newPos.y);
+    this->boardPosition = boardPosition;
+
+    std::array<int,2> movements(getMovements(diceResult));
+    std::cout << "board pos >> " << boardPosition << " cords >>" << neededCords.x << " "   << neededCords.y
+              << "newpos >> " << newPos.x << " " << newPos.y << " "
+              << "movements >> " << movements[0] << " " << movements[1]
+              << std::endl;
+
 
 }
-
-

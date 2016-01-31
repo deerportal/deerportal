@@ -6,6 +6,7 @@
 #include "textureholder.h"
 #include "animatedsprite.h"
 #include "tilemap.h"
+#include "character.h"
 
 
 class Character: public sf::Drawable, public sf::Transformable
@@ -20,6 +21,10 @@ public:
     Animation animations[4];
     Animation* currentAnimation;
     int currentAnimationIndex;
+
+
+    sf::Sprite leftChar;
+    sf::Sprite rightChar;
 
     AnimatedSprite animatedSprite;
     sf::FloatRect getLocalBounds() const;
@@ -36,10 +41,23 @@ public:
     void setDirIndex(int direction);
     float nextRedirect;
 
-
+    std::array<int,2> getMovements(int howFar);
     void setBoardPosition(int boardPosition);
     int getBoardPosition();
-    int tile_pos;
+
+    int boardPosition;
+
+    int diceResult;
+    sf::RectangleShape rectangleLeft;
+    sf::RectangleShape rectangleRight;
+
+    int moveLeft;
+    int moveRight;
+
+
+    bool active;
+
+
 
 };
 

@@ -15,6 +15,7 @@ public:
 
     std::string drawRound();
     int diceResult;
+    int throwDiceSix();
 
 private:
     int throwDice();
