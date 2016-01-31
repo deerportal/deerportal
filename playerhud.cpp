@@ -16,7 +16,7 @@ bool PlayerHud::addElem(int pos, int type) {
 
         cash -= price;
         updateTxt();
-        characters.push_back(Character (this->textures, this->pos));
+//        characters.push_back(Character (this->textures, this->pos));
 
         return true;
 

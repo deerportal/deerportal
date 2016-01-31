@@ -8,6 +8,7 @@ std::array<int,2> Character::getMovements(int howFar)
 {
 
 
+    std::cout << "howfar: " <<howFar <<std::endl;
 
 
     if (boardPosition+howFar>255)
@@ -17,6 +18,9 @@ std::array<int,2> Character::getMovements(int howFar)
         int index = boardPosition;
         for (int i=boardPosition;i<=boardPosition+howFar-1;i++)
         {
+            std::cout << "FUCK ME " << index << std::endl;
+            if (index==-1)
+                break;
             index = efc::boards[index][1];
 //            std::cout << " index R" << index
 //                      << " move R " << moveRight
@@ -34,7 +38,8 @@ std::array<int,2> Character::getMovements(int howFar)
     {
         int index = boardPosition;
         for (int i=boardPosition;i>=boardPosition-howFar+1;i--)
-        {
+        {            if (index==-1)
+                break;
             index = efc::boards[index][0];
 //            std::cout << " index l " << index
 //                      << " move L " << moveLeft
@@ -85,8 +90,7 @@ void Character::play()
 
 Character::Character(TextureHolder *textures, int playerNumber):
     animatedSprite(sf::seconds(0.2), true, false),
-    nextRedirect(0.f),
-    diceResult(2)
+    nextRedirect(0.f)
 {
 
     this->textures = textures;
@@ -155,7 +159,7 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 
     states.transform *= getTransform();
-
+target.draw(animatedSprite, states);
 
     if (active==true)
     {
@@ -163,7 +167,7 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
         {
 //            std::cout << "draw " << rectangleLeft.getPosition().x <<  " "  << rectangleLeft.getPosition().y << std::endl;
 
-            target.draw(leftChar, states);
+            target.draw(leftChar);
 
         }
 
@@ -172,14 +176,14 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 //            std::cout << "draw R" << rectangleRight.getPosition().x <<  " "  << rectangleRight.getPosition().y << std::endl;
 
 
-            target.draw(rightChar, states);
+            target.draw(rightChar);
 
             //        target.draw(rectangleRight, 4, sf::Quads, states);
 
         }
     }
 
-     target.draw(animatedSprite, states);
+
 
 
 }
@@ -267,26 +271,28 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
     int right = movements[1];
 
 
-    if (left>-1)
+    if (active==true)
     {
-        sf::Vector2i cords(efc::transPosition(left));
+        if (moveLeft>-1)
+        {
+            sf::Vector2i cordsLeft(efc::transPosition(moveLeft));
+            sf::Vector2i neededCords(efc::transPosition(moveLeft));
+
+            sf::Vector2f newPos(efc::getScreenPos(neededCords));
+            leftChar.setPosition(newPos);
+        }
 
 
-        rectangleLeft.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
-        rectangleLeft.setPosition(200,200);
-        leftChar.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
+        if (moveRight>-1)
+        {
+            sf::Vector2i cordsRight(efc::transPosition(moveRight));
+            sf::Vector2i neededCords(efc::transPosition(moveRight));
 
-//        target.draw(rectangleLeft, states);
-    }
+            sf::Vector2f newPos(efc::getScreenPos(neededCords));
+            rightChar.setPosition(newPos);
+        }
 
-
-    if (right>-1)
-    {
-        sf::Vector2i cords(efc::transPosition(right));
-        sf::RectangleShape rectangleRight(sf::Vector2f(efc::TILE_SIZE, efc::TILE_SIZE));
-        rectangleRight.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
-        rightChar.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
-//        target.draw(rectangleRight, states);
+        std::cout << " dice " << diceResult<< moveLeft << " " << moveRight  << std::endl;
     }
 
 
