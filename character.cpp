@@ -133,6 +133,8 @@ Character::Character(TextureHolder *textures, int playerNumber):
     rightChar.setTexture(textures->textureCharacters);
     rightChar.setTextureRect(sf::IntRect(offset, 48, 16, 24));
 
+    leftChar.scale(0.75,0.75);
+    rightChar.scale(0.75,0.75);
 
     animations[efc::DIR_LEFT] = walkingAnimationLeft;
     animations[efc::DIR_RIGHT] = walkingAnimationRight;
@@ -281,7 +283,7 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
             sf::Vector2i neededCords(efc::transPosition(moveLeft));
 
             sf::Vector2f newPos(efc::getScreenPos(neededCords));
-            leftChar.setPosition(newPos);
+            leftChar.setPosition(newPos.x+efc::TILE_SIZE/4,newPos.y);
         }
 
 
@@ -291,7 +293,7 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
             sf::Vector2i neededCords(efc::transPosition(moveRight));
 
             sf::Vector2f newPos(efc::getScreenPos(neededCords));
-            rightChar.setPosition(newPos);
+            rightChar.setPosition(newPos.x+efc::TILE_SIZE/4,newPos.y);
         }
 
 //        std::cout << " dice " << diceResult<< moveLeft << " " << moveRight  << std::endl;
@@ -348,5 +350,13 @@ void Character::setBoardPosition(int boardPosition)
               << std::endl;
 
    sf::Vector2i newVecPos(getPosition());
+   sf::FloatRect newSize(getGlobalBounds());
+   float newX =  newVecPos.x + (efc::TILE_SIZE/3);
+//   newX = newX - (newSize.width);
+   setPosition(newX, newPos.y);
+
+
+
+
 
 }
