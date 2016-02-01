@@ -130,15 +130,16 @@ void Game::initBoard()
     PlayerHud playerHud4(&textures, std::rand() % 50, &gameFont, 32,3);
     players[0] = playerHud1;
     players[1] = playerHud2;
-    players[2] = playerHud3;
-    players[3] = playerHud4;
+    players[3] = playerHud3;
+    players[2] = playerHud4;
 
     players[0].setActive(true);
     setCurrentNeighbours();
 
-    roundDice.throwDiceSix();
-    diceResultPlayer =  roundDice.throwDiceSix();
+//    roundDice.throwDiceSix();
+    diceResultPlayer =  6;
     players[turn].characters[0].diceResult = diceResultPlayer;
+     roundDice.setColor(turn);
 }
 
 
@@ -222,7 +223,7 @@ void Game::showGameBoard()
     musicGame.play();
 
     musicGame.setLoop(true);
-    currentState = state_game;
+    currentState = state_roll_dice;
 }
 
 void Game::handleLeftClick(sf::Vector2f pos,
@@ -281,6 +282,18 @@ void Game::handleLeftClick(sf::Vector2f pos,
         }
 
     }
+else if (currentState==state_roll_dice)
+    {
+        sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
+        if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+        {
+            diceResultPlayer = roundDice.throwDiceSix();
+            players[turn].characters[0].diceResult=diceResultPlayer;
+            currentState=state_game;
+        }
+
+    }
+
 
     else if (currentState==state_gui_elem)
     {
@@ -442,6 +455,27 @@ Game::Game():
 }
 
 void Game::update(sf::Time frameTime) {
+    if (currentState==state_game)
+    {
+        std::array<int,2> currentMovements = players[turn].getMovements(diceResultPlayer);
+        if (currentMovements[0]>-1)
+        {
+            prevRotateElem.spriteRotate.setPosition(players[turn].characters[0].leftChar.getPosition());
+            prevRotateElem.spriteRotate.move(4,16);
+            prevRotateElem.update(frameTime);
+            prevRotateElem.setColor(turn);
+        }
+        if (currentMovements[1]>-1)
+        {
+            nextRotateElem.spriteRotate.setPosition(players[turn].characters[0].rightChar.getPosition());
+            nextRotateElem.spriteRotate.move(4,16);
+            nextRotateElem.update(frameTime);
+            nextRotateElem.setColor(turn);
+        }
+
+
+
+    }
     for (int i=0;i<4;i++)
     {
         players[i].play();
@@ -452,6 +486,8 @@ void Game::update(sf::Time frameTime) {
     {
         players[i].update(frameTime, busyTiles);
     }
+
+
 }
 
 void Game::nextRound() {
@@ -489,14 +525,19 @@ void Game::nextPlayer(){
             players[i].setActive(false);
     }
     sfxClick.play();
-    roundDice.throwDiceSix();
-    diceResultPlayer =  roundDice.throwDiceSix();
+//    roundDice.throwDiceSix();
+//    diceResultPlayer =  roundDice.throwDiceSix();
+     diceResultPlayer = 6;
+
+    roundDice.setDiceTexture(diceResultPlayer);
     players[turn].characters[0].diceResult = diceResultPlayer;
 //    std::cout << roundNumber << " " << roundNumber % 16 << std::endl;
     groupHud.setRoundName(roundNumber);
     groupHud.setSeason(currentSeason);
     groupHud.setMonthName(month%4);
     setBusyTiles();
+    currentState = state_roll_dice;
+    roundDice.setColor(turn);
 
 }
 
@@ -514,8 +555,6 @@ void Game::drawSquares() {
     {
 
         window.draw(selector);
-    } else {
-        std::cout << "sont dhow" <<std::endl;
     }
 
 }
@@ -545,14 +584,29 @@ void Game::drawCharacters(){
     window.draw(roundDice.spriteDice);
     window.setView(viewTiles);
     drawSquares();
+    if (currentState==state_game)
+    {
+        std::array<int,2> currentMovements = players[turn].characters[0].getMovements(diceResultPlayer);
+        if (currentMovements[1]>-1)
+            window.draw(nextRotateElem);
+        if (currentMovements[0]>-1)
+            window.draw(prevRotateElem);
+    }
     for (int i=0;i<4;i++)
     {
         for (auto&& j: players[i].characters)
         {
+            if (currentState==state_game)
+                j.drawMovements = true;
+            else
+               j.drawMovements = false;
             window.draw(j);
         }
 
     }
+
+
+
 }
 
 void Game::render()
@@ -565,15 +619,15 @@ void Game::render()
     {
         window.setView(viewFull);
         window.draw(spriteBackgroundDark);
-
         window.setView(viewTiles);
-
-
-
         drawBaseGame();
         drawCharacters();
-
-
+    } else if (currentState==state_roll_dice) {
+        window.setView(viewFull);
+        window.draw(spriteBackgroundDark);
+        window.setView(viewTiles);
+        drawBaseGame();
+        drawCharacters();
 
     } else if (currentState==state_gui_elem) {
         window.setView(viewFull);

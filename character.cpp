@@ -9,6 +9,11 @@ std::array<int,2> Character::getMovements(int howFar)
 
     std::array<int,2> myArray;
 
+    if (howFar==7)
+    {
+        return std::array<int,2> {-1,-1};
+    }
+
     if (active==true)
     {
 //        std::cout << "howfar: " <<howFar <<std::endl;
@@ -95,6 +100,7 @@ Character::Character(TextureHolder *textures, int playerNumber):
     nextRedirect(0.f)
 {
 
+    drawMovements = false;
     this->textures = textures;
     int offset = playerNumber*16;
     active = false;
@@ -165,7 +171,7 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= getTransform();
 target.draw(animatedSprite, states);
 
-    if (active==true)
+    if ((active==true) && (drawMovements==true))
     {
         if (moveLeft>-1)
         {

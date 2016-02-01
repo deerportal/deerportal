@@ -18,6 +18,7 @@
 #include "grouphud.h"
 #include "animatedsprite.h"
 #include "character.h"
+#include "rotateelem.h"
 
 
 namespace efc {
@@ -156,6 +157,9 @@ private:
     std::set<int> busyTiles;
     void setBusyTiles();
     int diceResultPlayer;
+
+    RotateElem nextRotateElem;
+    RotateElem prevRotateElem;
 
 };
 }

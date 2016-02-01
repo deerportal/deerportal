@@ -56,7 +56,7 @@ public:
 
 
     bool active;
-
+    bool drawMovements;
 
 
 };

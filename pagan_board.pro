@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     animation.cpp \
     animatedsprite.cpp \
     character.cpp \
-    data.cpp
+    data.cpp \
+    rotateelem.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -50,7 +51,8 @@ HEADERS += \
     data.h \
     animation.h \
     animatedsprite.h \
-    character.h
+    character.h \
+    rotateelem.h
 
 RESOURCES += \
     images.qrc

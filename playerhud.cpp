@@ -195,35 +195,35 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
 
     rectangle.setSize(sf::Vector2f((this->faceSize)*7, this->faceSize));
     rectangle2.setSize(sf::Vector2f((this->faceSize)*7, (this->faceSize*2)+3));
-
+    rectangle.setFillColor(efc::playersColors[pos]);
     if (pos==0)
     {
-        rectangle.setFillColor(sf::Color(50, 50, 200,68));
-        rectangle2.setFillColor(sf::Color(100, 100, 150,38));
-        rectangle.setOutlineColor(sf::Color(0,0,128,68));
+        rectangle.setFillColor(efc::playersColors[pos]);
+//        rectangle2.setFillColor(sf::Color(100, 100, 150,38));
+//        rectangle.setOutlineColor(sf::Color(0,0,128,68));
     }
     else if (pos==1)
     {
-        rectangle.setFillColor(sf::Color(50, 150, 50,68));
-        rectangle2.setFillColor(sf::Color(100, 150,100,38));
-        rectangle.setOutlineColor(sf::Color(0,128,0,68));
+//        rectangle.setFillColor(sf::Color(50, 150, 50,68));
+//        rectangle2.setFillColor(sf::Color(100, 150,100,38));
+//        rectangle.setOutlineColor(sf::Color(0,128,0,68));
     }
 
     else if (pos==2)
     {
-        rectangle.setFillColor(sf::Color(150, 50, 50,68));
-        rectangle2.setFillColor(sf::Color(150, 100,100,38));
-        rectangle.setOutlineColor(sf::Color(128,0,0,68));
+//        rectangle.setFillColor(sf::Color(150, 50, 50,68));
+//        rectangle2.setFillColor(sf::Color(150, 100,100,38));
+//        rectangle.setOutlineColor(sf::Color(128,0,0,68));
     }
     else if (pos==3)
     {
-        rectangle.setFillColor(sf::Color(150, 150, 150,68));
-        rectangle2.setFillColor(sf::Color(200, 200,200,38));
-        rectangle.setOutlineColor(sf::Color(128,128,128,68));
+//        rectangle.setFillColor(sf::Color(150, 150, 150,68));
+//        rectangle2.setFillColor(sf::Color(200, 200,200,38));
+//        rectangle.setOutlineColor(sf::Color(128,128,128,68));
     }
 
 
-    rectangle.setOutlineThickness(1);
+//    rectangle.setOutlineThickness(1);
     rectangle.setPosition(0, pos*100);
     rectangle2.setPosition(0, (pos*100)+faceSize+1);
 

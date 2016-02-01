@@ -76,11 +76,19 @@ std::array<std::array<int,2>,256> boards = {
 //level[143] = 814;
 
 // Colors for the board elements
+//sf::Color playersColors[4] = {
+//    sf::Color(0, 150,255,255),
+//    sf::Color(50, 230,50,255),
+//    sf::Color(230, 50,50,255),
+//    sf::Color(150, 150,150,255)
+//};
+
 sf::Color playersColors[4] = {
-    sf::Color(0, 150,255,255),
-    sf::Color(50, 230,50,255),
-    sf::Color(230, 50,50,255),
-    sf::Color(150, 150,150,255)
+    sf::Color(122, 185,246,255),
+    sf::Color(144, 226,106,255),
+    sf::Color(255, 163,142,255),
+    sf::Color(250, 255,117,255),
+
 };
 
 }

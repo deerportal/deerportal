@@ -20,8 +20,10 @@ public:
     int throwDiceSix();
     sf::Texture textureDices;
     sf::Sprite spriteDice;
+    void setDiceTexture();
+    void setDiceTexture(int diceResult);
 
-
+    void setColor(int playerNumber);
 
 private:
     int throwDice();
@@ -33,7 +35,6 @@ private:
 
     sf::SoundBuffer sfxDiceBuffer;
     sf::Sound sfxDice;
-    void setDiceTexture();
 
 };
 

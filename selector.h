@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include "data.h"
 
 class Selector : public sf::Drawable, public sf::Transformable
 {
