@@ -156,11 +156,11 @@ void Game::loadAssets()
     if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
         std::exit(1);
 
-    if (!gameFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
+    if (!gameFont.loadFromFile("assets/fnt/metal-macabre.regular.ttf"))
     {
         std::exit(1);
     }
-    if (!menuFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
+    if (!menuFont.loadFromFile("assets/fnt/metal-macabre.regular.ttf"))
     {
         std::exit(1);
     }

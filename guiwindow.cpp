@@ -12,7 +12,7 @@ GuiWindow::GuiWindow(TextureHolder *textures)
     spriteClose.setTexture(textures->textureGui);
     spriteClose.setTextureRect(sf::IntRect(0,0,16,16));
     spriteClose.move(sf::Vector2f(150-16,0));
-    if (!guiElemFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
+    if (!guiElemFont.loadFromFile("assets/fnt/metal-macabre.regular.ttf"))
     {
         std::exit(1);
     };
@@ -32,7 +32,7 @@ GuiWindow::GuiWindow(TextureHolder *textures)
 }
 
 GuiWindow::GuiWindow(){
-    if (!guiElemFont.loadFromFile("assets/fnt/VCR_OSD_MONO_1.001.ttf"))
+    if (!guiElemFont.loadFromFile("assets/fnt/metal-macabre.regular.ttf"))
     {
         std::exit(1);
     };

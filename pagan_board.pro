@@ -54,8 +54,6 @@ HEADERS += \
     character.h \
     rotateelem.h
 
-RESOURCES += \
-    images.qrc
 
 OTHER_FILES += \
     CREDITS.md
