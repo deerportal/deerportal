@@ -156,7 +156,7 @@ void Game::loadAssets()
     if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
         std::exit(1);
 
-    if (!gameFont.loadFromFile("assets/fnt/metal-macabre.regular.ttf"))
+    if (!gameFont.loadFromFile("assets/fnt/metal-mania.regular.ttf"))
     {
         std::exit(1);
     }
@@ -340,7 +340,7 @@ Game::Game():
     guiSelectBuilding(&textures),
     character(&textures, 3),
     turn(0),
-    gameTitle("pagan\nboard"),
+    gameTitle("pagan   board"),
     roundDice(players),
     roundNumber(1),
     guiRoundDice(&textures)

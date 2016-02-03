@@ -14,15 +14,16 @@ GroupHud::GroupHud(){
 }
 
 void GroupHud::setFont(sf::Font *gameFont) {
-    move(250,2);
+    move(20,2);
     seasonName.setFont(*gameFont);
     roundName.setFont(*gameFont);
     monthName.setFont(*gameFont);
-
+    seasonName.setColor(sf::Color(0,0,0,255));
     seasonName.setCharacterSize(30);
     roundName.setCharacterSize(30);
     monthName.setCharacterSize(30);
-    roundName.move(400, 0);
+    roundName.setColor(sf::Color(0,0,0,255));
+    roundName.move(1200, 0);
 //    monthName.move(400, 0);
     setMonthName(1);
 }

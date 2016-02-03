@@ -115,7 +115,7 @@ Character::Character(TextureHolder *textures, int playerNumber):
 
     walkingAnimationDown.setSpriteSheet(textures->textureCharacters);
     walkingAnimationDown.addFrame(sf::IntRect(offset, 0, 16, 24));
-    walkingAnimationDown.addFrame(sf::IntRect(offset, 23, 16, 24));
+    walkingAnimationDown.addFrame(sf::IntRect(offset, 24, 16, 24));
 
     walkingAnimationRight.setSpriteSheet(textures->textureCharacters);
     walkingAnimationRight.addFrame(sf::IntRect(offset, 48, 16, 24));
