@@ -226,6 +226,13 @@ void Game::showGameBoard()
     currentState = state_roll_dice;
 }
 
+void Game::endGame()
+{
+    currentState = state_end_game;
+    musicBackground.stop();
+}
+
+
 void Game::handleLeftClick(sf::Vector2f pos,
                            sf::Vector2f posGui, sf::Vector2f posFull, int mousePos) {
 
@@ -234,24 +241,27 @@ void Game::handleLeftClick(sf::Vector2f pos,
 
     if (currentState==state_game)
     {
-
-
-
         std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
-
         if ((mousePos==movements[0]) || (mousePos==movements[1]))
         {
-            std::cout << "mouse clicked HURRAY mousePos " << mousePos  << std::endl;
             players[turn].setFigurePos(mousePos);
+            int *possibleExit = std::find(std::begin(efc::possibleExits),
+                                          std::end(efc::possibleExits), mousePos);
+            if (possibleExit != efc::possibleExits+4) {
+                std::cerr << "Found hahahah" << mousePos << std::endl;
+                players[turn].done=true;
+                numberFinishedPlayers += 1;
+                if (numberFinishedPlayers > 3)
+                   endGame();
+            } else {
+               std::cerr << "Not found" << std::endl;
+            }
             nextPlayer();
-
         }
-
         std::string resultCommand = players[turn].getElem(posGui);
         command(resultCommand);
         if (currentNeighbours.find(mousePos) != currentNeighbours.end())
         {
-
             if ((!guiSelectBuilding.active) && (showPlayerBoardElems))
             {
                 float hover_x =posFull.x;
@@ -268,10 +278,7 @@ void Game::handleLeftClick(sf::Vector2f pos,
                     hover_y = 299.0f;
                 if (hover_y<0)
                     hover_y = 1.0f;
-
                 selectedPos = mousePos;
-
-
                 // Currently we are not goint to use it.
 //                std::cout <<  hover_x << " " << hover_y << std::endl;
 //                guiSelectBuilding.setPosition(guiStartPos[turn][0],guiStartPos[turn][1]);
@@ -280,8 +287,7 @@ void Game::handleLeftClick(sf::Vector2f pos,
 //                currentState = state_gui_elem;
             }
         }
-
-    }
+}
 else if (currentState==state_roll_dice)
     {
         sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
@@ -309,27 +315,19 @@ else if (currentState==state_roll_dice)
     {
         hideMenu();
         showGameBoard();
-
-
     }
 
     if (currentState==state_gui_end_round)
     {
         std::string resultCommand = guiRoundDice.getElem(pos);
         command(resultCommand);
-
-
     }
-
-
 }
 
 void Game::hideGameBoard()
 {
     musicGame.play();
-
 }
-
 Game::Game():
     screenSize(efc::initScreenX,efc::initScreenY),
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Pagan Board"),
@@ -353,50 +351,37 @@ Game::Game():
     int borderTop = 39;
     int borderBottom = 39;
     int guiWidth  = 128;
-
     int guiStartPosTmp[4][2] = {
         {borderLeft+3,borderTop+2},
         {screenSize.x - guiWidth - borderRight - gWidth-4,borderTop+2},
         {borderLeft+3,screenSize.y-gHeight-borderBottom-4} ,
-        {screenSize.x - guiWidth - borderRight - gWidth-4, screenSize.y-gHeight-borderBottom-4}};
-
-
+        {screenSize.x - guiWidth - borderRight - gWidth-4,
+         screenSize.y-gHeight-borderBottom-4}};
     for (int i=0;i<4;i++)
     {
         for (int j=0;j<4;j++)
             guiStartPos[i][j] = guiStartPosTmp[i][j];
 
     }
-
+    numberFinishedPlayers = 0;
 
     sf::Clock frameClock;
 
 
     guiRoundDice.active = true;
     showPlayerBoardElems = false;
-
-
-
-
     window.setVerticalSyncEnabled(true);
     Hover hover;
     GuiWindow guiWindow(&textures);
-
     std::srand (time(NULL));
     loadAssets();
-
-
-
     initBoard();
     showMenu();
-
-
     // run the main loop
     while (window.isOpen())
     {
         sf::Time frameTime = frameClock.restart();
         std::string resultCommand = "";
-
         // handle events
         sf::Event event;
         while (window.pollEvent(event))
@@ -405,13 +390,11 @@ Game::Game():
             sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
             sf::Vector2f localPositionGui = window.mapPixelToCoords(localPositionTmp,viewGui);
             sf::Vector2f localPositionFull = window.mapPixelToCoords(localPositionTmp,viewFull);
-
             int mousePosX = (int)localPosition.x / efc::TILE_SIZE;
             int mousePosY = (int)localPosition.y / efc::TILE_SIZE;
             int mousePos = efc::transCords(sf::Vector2i(mousePosX, mousePosY));
             if(event.type == sf::Event::Closed)
                 window.close();
-
             if (currentState==state_gui_elem)
             {
                 resultCommand = guiSelectBuilding.getElem(localPositionFull);
@@ -443,9 +426,6 @@ Game::Game():
             if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
             {
                 selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
-            } else
-            {
-                std::cout << "does not worl :) " << std::endl;
             }
         }
 
@@ -494,7 +474,7 @@ void Game::nextRound() {
     turn = 0;
     std::string result = roundDice.drawRound();
     roundNumber += 1;
-//    std::cout << "END OF ROUND " << roundNumber << " " << result << std::endl;
+    // std::cout << "END OF ROUND " << roundNumber << " " << result << std::endl;
     month++;
     if (month==13)
         month=1;
@@ -502,14 +482,34 @@ void Game::nextRound() {
         currentSeason++;
     if (currentSeason>3)
         currentSeason=0;
-    command(result);
+
+    if (players[turn].done==true)
+        nextPlayer();
+
+//    command(result);
 }
 
 void Game::nextPlayer(){
-    players[turn].updatePlayer();
+
+    if (numberFinishedPlayers==4)
+    {
+        std::cout << "Everybody Finished!!!" << std::endl;
+        endGame();
+
+    }
+    if (turn<4)
+        players[turn].updatePlayer();
+    else
+        nextRound();
     turn++;
 
-    if (turn==4)
+    if ((players[turn].done==true) && (turn<4))
+    {
+        std::cout << "Player " << turn << " is done" << std::endl;
+        nextPlayer();
+    }
+
+    if ((turn==4) || (turn>4))
     {
         nextRound();
     }
@@ -530,12 +530,13 @@ void Game::nextPlayer(){
      diceResultPlayer = 6;
 
     roundDice.setDiceTexture(diceResultPlayer);
+//    std::cout << "DEBUG " << turn << " "<<  diceResultPlayer << std::endl;
     players[turn].characters[0].diceResult = diceResultPlayer;
 //    std::cout << roundNumber << " " << roundNumber % 16 << std::endl;
     groupHud.setRoundName(roundNumber);
     groupHud.setSeason(currentSeason);
     groupHud.setMonthName(month%4);
-    setBusyTiles();
+//    setBusyTiles();
     currentState = state_roll_dice;
     roundDice.setColor(turn);
 
@@ -553,7 +554,6 @@ void Game::drawPlayersGui(){
 void Game::drawSquares() {
     if (showPlayerBoardElems)
     {
-
         window.draw(selector);
     }
 
@@ -612,9 +612,6 @@ void Game::drawCharacters(){
 void Game::render()
 {
     window.clear();
-
-
-
     if (currentState==state_game)
     {
         window.setView(viewFull);
@@ -643,20 +640,14 @@ void Game::render()
         window.draw(groupHud);
 
         window.setView(viewFull);
-        //        window.draw(spriteBackgroundDark);
-
 
     } else if (currentState==state_gui_end_round){
         window.setView(viewFull);
         window.draw(spriteBackgroundDark);
         drawBaseGame();
         window.draw(guiRoundDice);
-//        drawCharacters();
-        //        window.draw(spriteBackgroundDark);
     }
     window.setView(viewFull);
-    //    window.draw(spriteBackgroundDark);
-//    window.draw(spriteBackground);
    window.draw(groupHud);
 
 
@@ -676,59 +667,49 @@ void Game::command(std::string command){
     {
         if (currentState==state_gui_elem) {
             guiSelectBuilding.descriptionActive = false;
-
         }
     }
 
     if (command.find("end_of_round")==0)
     {
         std::string subResult = command.substr(13);
-//        std::cout << "SUB RESULT " << subResult << std::endl;
         guiRoundDice.active = true;
         guiRoundDice.setTitle(subResult);
         currentState = state_gui_end_round;
     }
 
-    if (command.find("elem_")==0)
-    {
-        if (currentState==state_gui_elem)
-        {
-            int buildingType = std::stoi(command.substr(5));
-            //            int cashUpd  = textures.tilesDescription[buildingType][0];
-            //            int cashCost  = textures.tilesDescription[buildingType][1];
-            //            int foodUpd  = textures.tilesDescription[buildingType][2];
-            //            int foodCost  = textures.tilesDescription[buildingType][3];
-            //            int enrgUpd  = textures.tilesDescription[buildingType][4];
-            //            int enrgCost  = textures.tilesDescription[buildingType][5];
-            std::string descTxt = textures.tilesTxt[buildingType];
-            char priceTxtChar [100];
-
-            std::string priceTxt = priceTxtChar;
-            char costTxtChar [100];
-            //            int cx = snprintf ( costTxtChar, 100, "Cost:  cash: %2d food: %2d energy: %2d \n", cashCost, foodCost, enrgCost);
-            std::string costTxt = costTxtChar;
-            guiSelectBuilding.setDescriptionTxt(priceTxt + costTxt + "\n"+descTxt);
-            guiSelectBuilding.descriptionActive = true;
-        }
-    }
+//    if (command.find("elem_")==0)
+//    {
+//        if (currentState==state_gui_elem)
+//        {
+//            int buildingType = std::stoi(command.substr(5));
+//               std::string descTxt = textures.tilesTxt[buildingType];
+//            char priceTxtChar [100];
+//            std::string priceTxt = priceTxtChar;
+//            char costTxtChar [100];
+//            std::string costTxt = costTxtChar;
+//            guiSelectBuilding.setDescriptionTxt(priceTxt + costTxt + "\n"+descTxt);
+//            guiSelectBuilding.descriptionActive = true;
+//        }
+//    }
 
     if (command=="end_turn")
         nextPlayer();
-    if (command.find("build_")==0)
-    {
-        int buildingType = std::stoi(command.substr(11));
-        bool purchaseResult = players[turn].addElem(selectedPos, buildingType);
-        if (purchaseResult)
-        {
-            currentState = state_game;
-            setCurrentNeighbours();
-            guiSelectBuilding.active = false;
-            sfxDone.play();
+//    if (command.find("build_")==0)
+//    {
+//        int buildingType = std::stoi(command.substr(11));
+//        bool purchaseResult = players[turn].addElem(selectedPos, buildingType);
+//        if (purchaseResult)
+//        {
+//            currentState = state_game;
+//            setCurrentNeighbours();
+//            guiSelectBuilding.active = false;
+//            sfxDone.play();
 
 
 
-        }
-    }
+//        }
+//    }
 }
 
 sf::Vector2f Game::getMousePos(){

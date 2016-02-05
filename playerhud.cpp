@@ -120,6 +120,8 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     static int startPlayers[4] = {0,15,240,255};
 
 
+    done = false;
+
     active = false;
     this->textures = textures;
     Character character(this->textures, pos);

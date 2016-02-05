@@ -61,6 +61,7 @@ private:
         state_gui_elem,
         state_select_building,
         state_gui_end_round,
+        state_end_game,
         state_quit
     };
 
@@ -157,9 +158,10 @@ private:
     std::set<int> busyTiles;
     void setBusyTiles();
     int diceResultPlayer;
-
+    int numberFinishedPlayers;
     RotateElem nextRotateElem;
     RotateElem prevRotateElem;
+    void endGame();
 
 };
 }

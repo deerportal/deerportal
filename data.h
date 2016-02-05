@@ -16,6 +16,10 @@ namespace efc {
     extern sf::Color playersColors[4];
     extern std::array<std::array<int,2>,256> boards;
 
+    extern int possibleExits[4];
+
+
+
 
 }
 #endif // DATA_H

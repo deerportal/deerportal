@@ -48,7 +48,7 @@ public:
     std::set<int> getBusy();
     std::array<int,2> getMovements(int diceResult);
     void setFigurePos(int pos);
-
+    bool done;
 
 private:
     sf::Sprite spriteFace;
