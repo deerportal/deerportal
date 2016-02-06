@@ -31,8 +31,16 @@ public:
 
     std::array<int,efc::diamondsNumber> getBoardPositions();
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    int getRandomPos(int element);
 
     void reorder();
+
+    bool ifFieldIsEmpty(int pos, int element);
+    bool ifFieldIsEmpty(int pos);
+
+    void collectField(int pos);
+
+
 };
 
 #endif // BOARDDIAMONDSEQ_H

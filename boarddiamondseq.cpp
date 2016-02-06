@@ -32,22 +32,74 @@ std::array<int,efc::diamondsNumber> BoardDiamondSeq::getBoardPositions()
     return results;
 }
 
+bool BoardDiamondSeq::ifFieldIsEmpty(int pos, int element)
+{
+    for (int i=element*14;i<(efc::diamondsNumber/4)+(element*14);i++)
+    {
+        if (diamonds[i].boardPosition==pos)
+            return false;
+    }
+    return true;
+
+}
+
+bool BoardDiamondSeq::ifFieldIsEmpty(int pos)
+{
+    for (int element=0;element<4;element++)
+    {
+        for (int i=element*14;i<(efc::diamondsNumber/4)+(element*14);i++)
+        {
+            if (diamonds[i].boardPosition==pos)
+               return false;
+         }
+    }
+    return true;
+
+}
+
+int BoardDiamondSeq::getRandomPos(int element)
+{
+    std::set<int> setSteps(efc::occupiedFields[element].cbegin(), efc::occupiedFields[element].cend());
+    for (int i=element*14;i<(efc::diamondsNumber/4)+(element*14);i++)
+    {
+        if (diamonds[i].boardPosition!=-1)
+        {
+            setSteps.erase(diamonds[i].boardPosition);
+        }
+    }
+    int step = rand()%setSteps.size();
+    std::vector<int> freePositions;
+    freePositions.resize(setSteps.size());
+    freePositions.assign(setSteps.begin(),setSteps.end());
+    return freePositions[step];
+}
+
 void BoardDiamondSeq::reorder()
 {
     srand((unsigned)time(0));
 
     for (int element=0;element<4;element++)
-    {std::cout << "UP reorder " << ""<< efc::diamondsNumber/4 << "" << element << std::endl;
+    {
         int start = element;
         for (int i=start*14;i<(efc::diamondsNumber/4)+(start*14);i++)
         {
-            std::cout << "reorder " << i << std::endl;
-            int step = rand()%efc::numberSteps;
-            diamonds[i].setBoardPosition(efc::occupiedFields[start][step]);
+            int step = getRandomPos(element);
+            diamonds[i].setBoardPosition(step);
         }
+
     }
 
 }
 
-    ;
+void BoardDiamondSeq::collectField(int pos)
+{
+    for (int i=0;  i<efc::diamondsNumber; i++)
+    {
+        if (diamonds[i].boardPosition==pos)
+        {
+            diamonds[i].setBoardPosition(-1);
+            break;
+        }
+    }
+}
 

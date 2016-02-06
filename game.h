@@ -20,6 +20,7 @@
 #include "character.h"
 #include "rotateelem.h"
 #include "boarddiamondseq.h"
+#include "soundfx.h"
 
 namespace efc {
 
@@ -164,6 +165,8 @@ private:
     void endGame();
 
     BoardDiamondSeq boardDiamonds;
+
+    SoundFX sfx;
 
 };
 }

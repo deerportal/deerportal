@@ -22,7 +22,6 @@ void BoardDiamond::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
         states.transform *= getTransform();
         sf::Vector2f where(getPosition());
-        std::cout << "drawing " << where.x << " " << where.y << std::endl;
         target.draw(spriteHolder, states);
     }
 }

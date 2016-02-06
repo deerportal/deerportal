@@ -44,3 +44,5 @@ by suntemple
 *db16 RPG Character Sprites* http://opengameart.org/content/db16-rpg-character-sprites
 
 by usr_share
+
+https://www.freesound.org/people/limetoe/sounds/238855/ collect.wav

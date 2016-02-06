@@ -248,6 +248,14 @@ void Game::handleLeftClick(sf::Vector2f pos,
         if ((mousePos==movements[0]) || (mousePos==movements[1]))
         {
             players[turn].setFigurePos(mousePos);
+
+            if (boardDiamonds.ifFieldIsEmpty(mousePos)==false)
+            {
+                std::cout << "COLLECT " << std::endl;
+                sfx.playCollect();
+                boardDiamonds.collectField(mousePos);
+
+            }
             int *possibleExit = std::find(std::begin(efc::possibleExits),
                                           std::end(efc::possibleExits), mousePos);
             if (possibleExit != efc::possibleExits+4) {
@@ -630,6 +638,7 @@ void Game::render()
         window.setView(viewTiles);
         drawBaseGame();
         drawCharacters();
+        window.draw(boardDiamonds);
 
     } else if (currentState==state_gui_elem) {
         window.setView(viewFull);
