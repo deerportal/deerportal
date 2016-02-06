@@ -163,71 +163,12 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
 
     txtNextRound.setFont(*gameFont);
     txtNextRound.setString("End Turn");
-//    txtNextRound.setScale(sf::Vector2f(0.25f, 1.f));
     txtNextRound.setCharacterSize(12);
     txtNextRound.setPosition(40,(pos*100)+10);
 
 
 
-    txtCash.setPosition(1,(pos*100)+40);
-    //    txtCash.setString("Cash: " + std::to_string(cash));
-    txtCash.setCharacterSize(10);
-//    txtCash.setScale(sf::Vector2f(0.25f, 1.f));
 
-    txtFood.setPosition(1,(pos*100)+55);
-    //    txtFood.setString("Food: " + std::to_string(food));
-    txtFood.setCharacterSize(10);
-//    txtFood.setScale(sf::Vector2f(0.25f, 1.f));
-
-    txtEnergy.setPosition(1,(pos*100)+70);
-    //    txtEnergy.setString("Enrg: " + std::to_string(energy));
-    txtEnergy.setCharacterSize(10);
-//    txtEnergy.setScale(sf::Vector2f(0.25f, 1.f));
-
-    txtFaith.setPosition(1,(pos*100)+85);
-    //    txtEnergy.setString("Enrg: " + std::to_string(energy));
-    txtFaith.setCharacterSize(10);
-//    txtFaith.setScale(sf::Vector2f(0.25f, 1.f));
-    updateTxt();
-
-    spriteFace.setTextureRect(sf::IntRect(x*faceSize, y*faceSize, faceSize, faceSize));
-//    spriteFace.setScale(sf::Vector2f(0.25f, 1.f));
-    spriteFace.setPosition(0,pos*100);
-
-
-    rectangle.setSize(sf::Vector2f((this->faceSize)*7, this->faceSize));
-    rectangle2.setSize(sf::Vector2f((this->faceSize)*7, (this->faceSize*2)+3));
-    rectangle.setFillColor(efc::playersColors[pos]);
-    if (pos==0)
-    {
-        rectangle.setFillColor(efc::playersColors[pos]);
-//        rectangle2.setFillColor(sf::Color(100, 100, 150,38));
-//        rectangle.setOutlineColor(sf::Color(0,0,128,68));
-    }
-    else if (pos==1)
-    {
-//        rectangle.setFillColor(sf::Color(50, 150, 50,68));
-//        rectangle2.setFillColor(sf::Color(100, 150,100,38));
-//        rectangle.setOutlineColor(sf::Color(0,128,0,68));
-    }
-
-    else if (pos==2)
-    {
-//        rectangle.setFillColor(sf::Color(150, 50, 50,68));
-//        rectangle2.setFillColor(sf::Color(150, 100,100,38));
-//        rectangle.setOutlineColor(sf::Color(128,0,0,68));
-    }
-    else if (pos==3)
-    {
-//        rectangle.setFillColor(sf::Color(150, 150, 150,68));
-//        rectangle2.setFillColor(sf::Color(200, 200,200,38));
-//        rectangle.setOutlineColor(sf::Color(128,128,128,68));
-    }
-
-
-//    rectangle.setOutlineThickness(1);
-    rectangle.setPosition(0, pos*100);
-    rectangle2.setPosition(0, (pos*100)+faceSize+1);
 
     buttons.insert({"end_turn",rectangle});
 
@@ -244,12 +185,9 @@ std::string PlayerHud::getElem(sf::Vector2f mousePosition) {
         closeRect.top = i.second.getPosition().y;
         closeRect.width = spriteBounds.width;
         closeRect.height = spriteBounds.height;
-//        std::cout << closeRect.left <<  " " << closeRect.top << " " << closeRect.width << " " << closeRect.height
-//                  << hoverPos.x << " " << hoverPos.y << " OK"
-//                  << std::endl;
+
         if (closeRect.contains(mousePosition.x - hoverPos.x,mousePosition.y - hoverPos.y))
         {
-
             return i.first;
         }
     }
@@ -258,35 +196,17 @@ std::string PlayerHud::getElem(sf::Vector2f mousePosition) {
 
 void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    //   // apply the transform
     states.transform *= getTransform();
-    // Color rectangles making the gui on the right side
-    //    sf::RectangleShape rectangle(sf::Vector2f(faceSize, faceSize));
-    //    sf::RectangleShape rectangle2(sf::Vector2f(faceSize, (faceSize*2)+3));
-
-
-
-
-    target.draw(rectangle, states);
-    target.draw(rectangle2, states);
-    target.draw(txtCash, states);
-    target.draw(txtFood, states);
-    target.draw(txtEnergy, states);
-    target.draw(txtFaith, states);
-
     if (active)
         target.draw(txtNextRound, states);
-    target.draw(symbol, states);
-    target.draw(spriteFace, states);
+
 }
 void PlayerHud::play()
 {
     for (auto&& i: characters)
     {
-
         i.play();
-}
-
+    }
 }
 void PlayerHud::update(sf::Time deltaTime, std::set<int>& busyTiles)
 {
@@ -302,7 +222,6 @@ void PlayerHud::update(sf::Time deltaTime, std::set<int>& busyTiles)
             movement = sf::Vector2f (0.f, -10.f);
         else if  (i.currentAnimationIndex==efc::DIR_DOWN)
             movement = sf::Vector2f (0.f, 10.f);
-
 
 //        i.move(movement * deltaTime.asSeconds());
         i.update(deltaTime, busyTiles);

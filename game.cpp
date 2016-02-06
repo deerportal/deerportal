@@ -344,7 +344,8 @@ Game::Game():
     gameTitle("pagan   board"),
     roundDice(players),
     roundNumber(1),
-    guiRoundDice(&textures)
+    guiRoundDice(&textures),
+    boardDiamonds(&textures)
 {
 
     int gWidth = guiSelectBuilding.rectangle.getLocalBounds().width;
@@ -622,6 +623,7 @@ void Game::render()
         window.setView(viewTiles);
         drawBaseGame();
         drawCharacters();
+        window.draw(boardDiamonds);
     } else if (currentState==state_roll_dice) {
         window.setView(viewFull);
         window.draw(spriteBackgroundDark);
