@@ -6,10 +6,9 @@
 #include "textureholder.h"
 #include "animatedsprite.h"
 #include "tilemap.h"
-#include "character.h"
+#include "elem.h"
 
-
-class Character: public sf::Drawable, public sf::Transformable
+class Character: public Elem
 {
 public:
     Character(TextureHolder *textures, int playerNumber);
@@ -42,10 +41,11 @@ public:
     float nextRedirect;
 
     std::array<int,2> getMovements(int howFar);
-    void setBoardPosition(int boardPosition);
-    int getBoardPosition();
 
-    int boardPosition;
+//    void setBoardPosition(int boardPosition);
+//    int getBoardPosition();
+//    int boardPosition;
+
     int diceResult;
 
     sf::RectangleShape rectangleLeft;

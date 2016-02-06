@@ -1,0 +1,15 @@
+Source: pagan-board
+Section: games
+Priority: optional
+Maintainer: Bluszcz <bluszcz@bluszcz.net>
+Build-Depends: debhelper (>= 9), qtbase5-dev, qtbase5-dev-tools, qt5-qmake
+Standards-Version: 3.9.6
+Homepage: https://github.com/bluszcz/pagan-board
+
+Package: pagan-board
+Architecture: any
+Depends: libqt5gui5, libqt5widgets5, libqt5core5a, ${misc:Depends}, ${shlibs:Depends}
+Description: Game
+ SFML / Pagan / Board Linux
+ Etc etc
+ 
