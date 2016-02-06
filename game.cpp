@@ -124,6 +124,9 @@ void Game::initBoard()
     seasons[3] = season4;
 
 
+
+
+
     PlayerHud playerHud1(&textures, std::rand() % 80, &gameFont, 32,0);
     PlayerHud playerHud2(&textures, std::rand() % 30, &gameFont, 32,1);
     PlayerHud playerHud3(&textures, std::rand() % 60, &gameFont, 32,2);

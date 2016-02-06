@@ -19,7 +19,7 @@
 #include "animatedsprite.h"
 #include "character.h"
 #include "rotateelem.h"
-
+#include "boarddiamond.h"
 
 namespace efc {
 
@@ -162,6 +162,8 @@ private:
     RotateElem nextRotateElem;
     RotateElem prevRotateElem;
     void endGame();
+
+    sf::Sprite boardDiamonds[4];
 
 };
 }

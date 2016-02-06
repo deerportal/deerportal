@@ -36,7 +36,8 @@ TextureHolder::TextureHolder()
 
     if (!backgroundDark.loadFromFile("assets/img/background_dark.png"))
         std::exit(1);
-
+    if (!textureBoardDiamond.loadFromFile("assets/img/board_diamonds.png"))
+        std::exit(1);
 
     if (!textureMenu.loadFromFile("assets/img/background_new.png"))
         std::exit(1);

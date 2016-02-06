@@ -22,11 +22,11 @@ public:
     Animation* currentAnimation;
     int currentAnimationIndex;
 
-
     sf::Sprite leftChar;
     sf::Sprite rightChar;
 
     AnimatedSprite animatedSprite;
+
     sf::FloatRect getLocalBounds() const;
     sf::FloatRect getGlobalBounds() const;
     void setDirUp();
@@ -46,14 +46,13 @@ public:
     int getBoardPosition();
 
     int boardPosition;
-
     int diceResult;
+
     sf::RectangleShape rectangleLeft;
     sf::RectangleShape rectangleRight;
 
     int moveLeft;
     int moveRight;
-
 
     bool active;
     bool drawMovements;

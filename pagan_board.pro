@@ -22,7 +22,9 @@ SOURCES += main.cpp \
     animatedsprite.cpp \
     character.cpp \
     data.cpp \
-    rotateelem.cpp
+    rotateelem.cpp \
+    boarddiamond.cpp \
+    boarddiamondseq.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -52,7 +54,9 @@ HEADERS += \
     animation.h \
     animatedsprite.h \
     character.h \
-    rotateelem.h
+    rotateelem.h \
+    boarddiamond.h \
+    boarddiamondseq.h
 
 
 OTHER_FILES += \

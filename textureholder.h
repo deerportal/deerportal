@@ -27,7 +27,7 @@ public:
     sf::Texture backgroundDark;
     sf::Texture textureCharacters;
     sf::Texture textureGameBackground;
-
+    sf::Texture textureBoardDiamond;
 
     std::map<int, std::map<int, int>> tilesDescription;
     std::map<int, std::string> tilesTxt;
