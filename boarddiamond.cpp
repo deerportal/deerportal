@@ -10,6 +10,7 @@ BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,
     this->textures = textures;
     this->element = element;
     this->boardPosition = boardPosition;
+    this->idNumber = idNumber;
     spriteHolder.setTexture(this->textures->textureBoardDiamond);
     sf::IntRect textureRect(idNumber*44, 0, 44,44);
     spriteHolder.setTextureRect(textureRect);

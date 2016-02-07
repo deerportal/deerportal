@@ -253,7 +253,7 @@ void Game::handleLeftClick(sf::Vector2f pos,
                     players[turn].cash += 1;
 
                 };
-                std::cout << "cash " << players[turn].cash << " " << " for " << turn << " " << boardDiamonds.getNumberForField(mousePos) << std::endl;
+                std::cout << "cash " << players[turn].cash << " " << " for " << turn << " " << boardDiamonds.getNumberForField(mousePos) << " result" << std::endl;
 
                 // After this no more visible
                 boardDiamonds.collectField(mousePos);
