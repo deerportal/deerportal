@@ -1,2 +1,4 @@
-build:
-  image:  ubuntu:14.04
+image:  ubuntu:14.04
+script:
+  - qmake
+  - make
