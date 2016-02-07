@@ -2,4 +2,10 @@ build:
   image:  bluszcz/libsfml-dev
   commands:
     - qmake
-    - make 
+    - make
+notify:
+  email:
+    from: bluszcz@bluszcz.net
+    host: 127.0.0.1
+    recipients:
+      - bluszcz@bluszcz.net
