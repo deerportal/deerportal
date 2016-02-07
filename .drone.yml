@@ -1,6 +1,7 @@
 build:
   image:  ubuntu:14.04
   commands:
+    - sudo apt-get update
     - sudo apt-get install libc6-dev gcc g++ qt5-qmake build-essential -y
     - qmake
     - make
