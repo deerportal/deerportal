@@ -68,9 +68,9 @@ int RoundDice::throwDiceSix(){
 
 void RoundDice::eventExtraCash(){
 
-    for (int i=0;i<4;i++)
-    {
-        playersHud[i].cash += 20;
-        playersHud[i].updateTxt();
-    }
+//    for (int i=0;i<4;i++)
+//    {
+//        playersHud[i].cash += 20;
+//        playersHud[i].updateTxt();
+//    }
 }

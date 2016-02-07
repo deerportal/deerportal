@@ -532,7 +532,7 @@ void Game::drawPlayersGui(){
         window.draw(players[i]);
     }
 
-    window.draw(seasons[currentSeason]);
+//    window.draw(seasons[currentSeason]);
 }
 
 void Game::drawSquares() {
@@ -553,7 +553,6 @@ void Game::drawBaseGame()
     }
     drawSquares();
     window.setView(viewGui);
-    drawPlayersGui();
     window.setView(viewTiles);
 }
 
@@ -568,6 +567,7 @@ void Game::drawCharacters(){
     window.draw(roundDice.spriteDice);
     window.setView(viewTiles);
     drawSquares();
+
     if (currentState==state_game)
     {
         std::array<int,2> currentMovements = players[turn].characters[0].getMovements(diceResultPlayer);
@@ -604,6 +604,10 @@ void Game::render()
         drawBaseGame();
         drawCharacters();
         window.draw(boardDiamonds);
+        window.setView(viewFull);
+
+        drawPlayersGui();
+
     } else if (currentState==state_roll_dice) {
         window.setView(viewFull);
         window.draw(spriteBackgroundDark);
@@ -611,6 +615,9 @@ void Game::render()
         drawBaseGame();
         drawCharacters();
         window.draw(boardDiamonds);
+        window.setView(viewFull);
+
+        drawPlayersGui();
 
     } else if (currentState==state_gui_elem) {
         window.setView(viewFull);
