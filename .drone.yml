@@ -2,3 +2,7 @@ image:  ubuntu:14.04
 script:
   - qmake
   - make
+notify:
+  email:
+    recipients:
+      - b@idoru.pl
