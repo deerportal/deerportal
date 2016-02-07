@@ -1,1 +1,2 @@
-image:  ubuntu:14.04
+build:
+  image:  ubuntu:14.04
