@@ -1,7 +1,5 @@
 build:
-  image:  ubuntu:14.04
+  image:  bluszcz/libsfml-dev
   commands:
-    - sudo apt-get update
-    - sudo apt-get install libc6-dev gcc g++ qt5-qmake build-essential -y
     - qmake
     - make
