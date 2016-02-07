@@ -7,20 +7,20 @@ bool PlayerHud::addElem(int pos, int type) {
     int price = textures->tilesDescription[type][0];
 
 
-    if (price<=cash)
-    {
-        efc::BoardElem startElem(textures, pos,type);
-        startElem.setColor(efc::playersColors[this->pos]);
-        elems.items.push_back(startElem);
-        elems.items_map.insert({pos, startElem});
+//    if (price<=cash)
+//    {
+//        efc::BoardElem startElem(textures, pos,type);
+//        startElem.setColor(efc::playersColors[this->pos]);
+//        elems.items.push_back(startElem);
+//        elems.items_map.insert({pos, startElem});
 
-        cash -= price;
-        updateTxt();
-//        characters.push_back(Character (this->textures, this->pos));
+//        cash -= price;
+//        updateTxt();
+////        characters.push_back(Character (this->textures, this->pos));
 
-        return true;
+//        return true;
 
-    }
+//    }
     return false;
 }
 
@@ -87,15 +87,15 @@ void PlayerHud::updateTxt(){
 void PlayerHud::updatePlayer(){
     for (const efc::BoardElem &i: elems.items)
     {
-        int cashUpd  = textures->tilesDescription[i.type][1];
-        int foodUpd  = textures->tilesDescription[i.type][3];
-        int enrgUpd  = textures->tilesDescription[i.type][5];
-        int faithUpd  = textures->tilesDescription[i.type][7];
+//        int cashUpd  = textures->tilesDescription[i.type][1];
+//        int foodUpd  = textures->tilesDescription[i.type][3];
+//        int enrgUpd  = textures->tilesDescription[i.type][5];
+//        int faithUpd  = textures->tilesDescription[i.type][7];
 
-        cash += cashUpd;
-        energy += enrgUpd;
-        food += foodUpd;
-        faith += faithUpd;
+//        cash += cashUpd;
+//        energy += enrgUpd;
+//        food += foodUpd;
+//        faith += faithUpd;
         updateTxt();
     }
 }
@@ -149,7 +149,7 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
 
 
     food = 0;
-    cash = 20;
+    cash = 0;
     energy = 0;
     faith = 0;
 

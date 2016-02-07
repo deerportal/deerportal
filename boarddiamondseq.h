@@ -39,7 +39,7 @@ public:
     bool ifFieldIsEmpty(int pos);
 
     void collectField(int pos);
-
+    int getNumberForField(int pos);
 
 };
 

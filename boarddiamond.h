@@ -17,6 +17,7 @@ public:
 
     TextureHolder *textures;
     int idNumber; // number from the sprite sheet
+
     int element; // 0-3 elements area on the board
     sf::Sprite spriteHolder;
 };

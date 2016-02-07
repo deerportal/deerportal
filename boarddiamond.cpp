@@ -30,3 +30,5 @@ void BoardDiamond::update(sf::Time deltaTime, std::set<int> &busyTiles)
 {
 
 }
+
+

@@ -238,10 +238,6 @@ void Game::endGame()
 
 void Game::handleLeftClick(sf::Vector2f pos,
                            sf::Vector2f posGui, sf::Vector2f posFull, int mousePos) {
-
-
-    std::cout << "mouse clicked mousePose " << mousePos << "dice " << diceResultPlayer << std::endl;
-
     if (currentState==state_game)
     {
         std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
@@ -251,53 +247,32 @@ void Game::handleLeftClick(sf::Vector2f pos,
 
             if (boardDiamonds.ifFieldIsEmpty(mousePos)==false)
             {
-                std::cout << "COLLECT " << std::endl;
                 sfx.playCollect();
-                boardDiamonds.collectField(mousePos);
+                if (boardDiamonds.getNumberForField(mousePos)==4)
+                {
+                    players[turn].cash += 1;
 
+                };
+                std::cout << "cash " << players[turn].cash << " " << " for " << turn << " " << boardDiamonds.getNumberForField(mousePos) << std::endl;
+
+                // After this no more visible
+                boardDiamonds.collectField(mousePos);
             }
             int *possibleExit = std::find(std::begin(efc::possibleExits),
                                           std::end(efc::possibleExits), mousePos);
             if (possibleExit != efc::possibleExits+4) {
-                std::cerr << "Found hahahah" << mousePos << std::endl;
+//                std::cerr << "Found hahahah" << mousePos << std::endl;
                 players[turn].done=true;
                 numberFinishedPlayers += 1;
                 if (numberFinishedPlayers > 3)
                    endGame();
             } else {
-               std::cerr << "Not found" << std::endl;
+//               std::cerr << "Not found" << std::endl;
             }
             nextPlayer();
         }
         std::string resultCommand = players[turn].getElem(posGui);
         command(resultCommand);
-        if (currentNeighbours.find(mousePos) != currentNeighbours.end())
-        {
-            if ((!guiSelectBuilding.active) && (showPlayerBoardElems))
-            {
-                float hover_x =posFull.x;
-                float hover_y = posFull.y;
-                if (pos.y > 290)
-                    hover_y = hover_y - 100;
-                if (pos.x > 240)
-                    hover_x = hover_x - 150;
-                if (hover_x>250)
-                    hover_x = 249.0f;
-                if (hover_x<0)
-                    hover_x = 1.0f;
-                if (hover_y>300)
-                    hover_y = 299.0f;
-                if (hover_y<0)
-                    hover_y = 1.0f;
-                selectedPos = mousePos;
-                // Currently we are not goint to use it.
-//                std::cout <<  hover_x << " " << hover_y << std::endl;
-//                guiSelectBuilding.setPosition(guiStartPos[turn][0],guiStartPos[turn][1]);
-//                guiSelectBuilding.active = true;
-//                sfxClick.play();
-//                currentState = state_gui_elem;
-            }
-        }
 }
 else if (currentState==state_roll_dice)
     {
@@ -308,9 +283,7 @@ else if (currentState==state_roll_dice)
             players[turn].characters[0].diceResult=diceResultPlayer;
             currentState=state_game;
         }
-
     }
-
 
     else if (currentState==state_gui_elem)
     {
@@ -486,7 +459,6 @@ void Game::nextRound() {
     turn = 0;
     std::string result = roundDice.drawRound();
     roundNumber += 1;
-    // std::cout << "END OF ROUND " << roundNumber << " " << result << std::endl;
     month++;
     if (month==13)
         month=1;
@@ -502,7 +474,7 @@ void Game::nextRound() {
 }
 
 void Game::nextPlayer(){
-
+//    boardDiamonds.reorder();
     if (numberFinishedPlayers==4)
     {
         std::cout << "Everybody Finished!!!" << std::endl;

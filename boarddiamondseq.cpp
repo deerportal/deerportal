@@ -103,3 +103,15 @@ void BoardDiamondSeq::collectField(int pos)
     }
 }
 
+int BoardDiamondSeq::getNumberForField(int pos)
+{
+    for (int i=0;  i<efc::diamondsNumber; i++)
+    {
+        if (diamonds[i].boardPosition==pos)
+        {
+            return diamonds[i].idNumber;
+        }
+    }
+    return -1;
+}
+
