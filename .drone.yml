@@ -1,5 +1,6 @@
 build:
   image:  ubuntu:14.04
   commands:
+    - sudo apt-get install qt5-qmake build-essential -y
     - qmake
     - make
