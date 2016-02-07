@@ -1,8 +1,8 @@
 Pagan Board
 -----------
 
-[![Pagan Board](https://picup.it/media/pictures/Pagan_Board_678.png )](https://picup.it/p/12893/ )
+[![PicupShare](https://picup.it/media/smarts/461bf145fb3b258caf440d114fab808e.jpg )](https://picup.it/p/17455/ )
 
-[![PicupShare](https://picup.it/media/pictures/Pagan_Board_690.png )](https://picup.it/p/13097/ )
+A board game with classical elements and pagan theme.
 
-Simply strategy driven by classical elements.
+SFML, Linux, OSX, Windows.
