@@ -6,6 +6,8 @@ class Pile
 {
 public:
     Pile();
+    int elementNumber;
+
 };
 
 #endif // PILE_H
