@@ -26,7 +26,9 @@ SOURCES += main.cpp \
     boarddiamond.cpp \
     boarddiamondseq.cpp \
     elem.cpp \
-    soundfx.cpp
+    soundfx.cpp \
+    card.cpp \
+    pile.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -60,7 +62,9 @@ HEADERS += \
     boarddiamond.h \
     boarddiamondseq.h \
     elem.h \
-    soundfx.h
+    soundfx.h \
+    card.h \
+    pile.h
 
 
 OTHER_FILES += \
