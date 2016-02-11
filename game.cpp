@@ -222,10 +222,12 @@ void Game::hideMenu()
 
 void Game::showGameBoard()
 {
-    musicGame.setVolume(50);
+    musicGame.setVolume(20);
     musicGame.play();
 
     musicGame.setLoop(true);
+    sfx.playLetsBegin();
+    std::cout << "lets begin" << std::endl;
     currentState = state_roll_dice;
 }
 
@@ -633,6 +635,8 @@ void Game::render()
         window.draw(groupHud);
 
         window.setView(viewFull);
+
+
 
     } else if (currentState==state_gui_end_round){
         window.setView(viewFull);
