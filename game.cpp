@@ -7,65 +7,8 @@ int initScreenY = 768;
 int currentSeason = 0;
 int month = 0;
 
-
-
 void Game::initBoard()
 {
-    // Grass tile starts at 342 and has 11 tiles
-    //    int level[256];
-    //    int level[256];
-
-    // Structure of the board
-    /*
-    {
-        342, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        80, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0,
-        1, 1, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3 }
-    */
-
-    //    Fill the array
-    for (int i=0;i<256;i++)
-    {
-        int grass = (rand() % 10) + 1;
-        level[i] = 342 + grass;
-        level[i] = level[i];
-    }
-
-
-    //    level[0] = 441;
-    //    level[240] = 0;
-    //    level[255] = 0;
-    //    level[15] = 0;
-
-
-
-    level[8] = 813;
-    level[24] = 803;
-    level[40] = 803;
-    level[56] = 803;
-    level[72] = 803;
-
-    level[88] = 801;
-
-    level[167] = 809;
-    level[183] = 803;
-    level[199] = 803;
-    level[215] = 803;
-    level[231] = 803;
-    level[247] = 812;
-
-    level[112] = 811;
-    for (int i=113;i<117;i++)
-        level[i] = 816;
-    level[117] = 815;
-
-    level[138] = 800;
-    for (int i=139;i<143;i++)
-        level[i] = 816;
-    level[143] = 814;
-
-    map.load(&textures, sf::Vector2u(efc::TILE_SIZE, efc::TILE_SIZE), level, efc::BOARD_SIZE, efc::BOARD_SIZE);
-
 
     sfxClick.setBuffer(sfxClickBuffer);
     sfxDone.setBuffer(sfxDoneBuffer);
@@ -76,10 +19,9 @@ void Game::initBoard()
 
     gameBackground.setTexture(textures.textureGameBackground);
     spriteLestBegin.setTexture(textures.textureLetsBegin);
-//    viewTiles.setViewport(sf::FloatRect(0.04f,0.060f, 1.0f, 1.0f));
     viewTiles.setViewport(sf::FloatRect(0.15f,0.1f, 1.0f, 1.0f));
     viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
-    selector.changeColor(turn); //This is only for the test TODO: remove
+
 
     groupHud.setFont(&gameFont);
     groupHud.setSeason(currentSeason);
@@ -124,9 +66,6 @@ void Game::initBoard()
     seasons[3] = season4;
 
 
-
-
-
     PlayerHud playerHud1(&textures, std::rand() % 80, &gameFont, 32,0);
     PlayerHud playerHud2(&textures, std::rand() % 30, &gameFont, 32,1);
     PlayerHud playerHud3(&textures, std::rand() % 60, &gameFont, 32,2);
@@ -139,10 +78,9 @@ void Game::initBoard()
     players[0].setActive(true);
     setCurrentNeighbours();
 
-//    roundDice.throwDiceSix();
     diceResultPlayer =  6;
     players[turn].characters[0].diceResult = diceResultPlayer;
-     roundDice.setColor(turn);
+    roundDice.setColor(turn);
 }
 
 
@@ -536,10 +474,7 @@ void Game::drawBaseGame()
 }
 
 void Game::drawCharacters(){
-//    window.setView(viewFull);
     window.setView(viewTiles); // Yeah Katia's inspiration
-
-
     window.draw(gameBackground);
     window.setView(viewFull);
     window.draw(spriteBackgroundArt);
@@ -565,11 +500,7 @@ void Game::drawCharacters(){
                j.drawMovements = false;
             window.draw(j);
         }
-
     }
-
-
-
 }
 
 void Game::render()
@@ -584,11 +515,9 @@ void Game::render()
         drawCharacters();
         window.draw(boardDiamonds);
         window.setView(viewFull);
-
         drawPlayersGui();
-
         window.setView(viewFull);
-       window.draw(groupHud);
+        window.draw(groupHud);
 
     } else if (currentState==state_roll_dice) {
         window.setView(viewFull);
@@ -598,7 +527,6 @@ void Game::render()
         drawCharacters();
         window.draw(boardDiamonds);
         window.setView(viewFull);
-
         drawPlayersGui();
         window.setView(viewFull);
        window.draw(groupHud);
@@ -610,7 +538,7 @@ void Game::render()
         drawCharacters();
         window.draw(guiSelectBuilding);
         window.setView(viewFull);
-       window.draw(groupHud);
+        window.draw(groupHud);
 
     }  else if (currentState==state_menu) {
         window.draw(menuTxt);
@@ -622,7 +550,6 @@ void Game::render()
         drawCharacters();
         window.draw(boardDiamonds);
         window.setView(viewFull);
-
         drawPlayersGui();
         window.draw(spriteLestBegin);
 
@@ -632,23 +559,18 @@ void Game::render()
         drawBaseGame();
         window.draw(guiRoundDice);
         window.setView(viewFull);
-       window.draw(groupHud);
+        window.draw(groupHud);
     }
-
-
-
     window.display();
 }
 
 void Game::command(std::string command){
-//    std::cout << command << std::endl;
     if (command=="close_gui")
     {
         guiSelectBuilding.active = false;
         currentState=state_game;
         sfxClick.play();
     }
-
     if (command=="hide_gui_elem_description")
     {
         if (currentState==state_gui_elem) {
@@ -664,38 +586,9 @@ void Game::command(std::string command){
         currentState = state_gui_end_round;
     }
 
-//    if (command.find("elem_")==0)
-//    {
-//        if (currentState==state_gui_elem)
-//        {
-//            int buildingType = std::stoi(command.substr(5));
-//               std::string descTxt = textures.tilesTxt[buildingType];
-//            char priceTxtChar [100];
-//            std::string priceTxt = priceTxtChar;
-//            char costTxtChar [100];
-//            std::string costTxt = costTxtChar;
-//            guiSelectBuilding.setDescriptionTxt(priceTxt + costTxt + "\n"+descTxt);
-//            guiSelectBuilding.descriptionActive = true;
-//        }
-//    }
-
     if (command=="end_turn")
         nextPlayer();
-//    if (command.find("build_")==0)
-//    {
-//        int buildingType = std::stoi(command.substr(11));
-//        bool purchaseResult = players[turn].addElem(selectedPos, buildingType);
-//        if (purchaseResult)
-//        {
-//            currentState = state_game;
-//            setCurrentNeighbours();
-//            guiSelectBuilding.active = false;
-//            sfxDone.play();
 
-
-
-//        }
-//    }
 }
 
 sf::Vector2f Game::getMousePos(){
@@ -722,7 +615,6 @@ void Game::setBusyTiles() {
         }
     }
 }
-
 
 }
 
