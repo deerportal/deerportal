@@ -598,23 +598,5 @@ sf::Vector2f Game::getMousePos(){
 }
 
 
-
-void Game::setBusyTiles() {
-
-    busyTiles.clear();
-    for (int i: efc::terrainArray)
-    {
-        busyTiles.insert(i);
-    }
-
-    for (int i=0;i<4;i++)
-    {
-        for (int j:players[i].getBusy())
-        {
-            busyTiles.insert(j);
-        }
-    }
-}
-
 }
 
