@@ -28,7 +28,8 @@ SOURCES += main.cpp \
     elem.cpp \
     soundfx.cpp \
     card.cpp \
-    pile.cpp
+    pile.cpp \
+    cardslist.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -64,7 +65,8 @@ HEADERS += \
     elem.h \
     soundfx.h \
     card.h \
-    pile.h
+    pile.h \
+    cardslist.h
 
 
 OTHER_FILES += \

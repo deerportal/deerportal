@@ -56,6 +56,7 @@ private:
     enum states {
         state_init,
         state_menu,
+        state_lets_begin,
         state_roll_dice,
         state_game,
 
@@ -73,6 +74,7 @@ private:
     sf::Sprite gameBackground;
     sf::Sprite spriteBackgroundDark;
 
+    sf::Sprite spriteLestBegin;
 
     sf::Texture textureBackgroundArt;
     sf::Sprite spriteBackgroundArt;
@@ -154,7 +156,7 @@ private:
     void handleLeftClick(sf::Vector2f pos,
                          sf::Vector2f posGui, sf::Vector2f posFull, int mousePos);
 
-    int guiStartPos[4][2];
+//    int guiStartPos[4][2];
 
     std::set<int> busyTiles;
     void setBusyTiles();
@@ -167,6 +169,8 @@ private:
     BoardDiamondSeq boardDiamonds;
 
     SoundFX sfx;
+
+    float downTimeCounter;
 
 };
 }

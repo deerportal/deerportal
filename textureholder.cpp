@@ -42,6 +42,9 @@ TextureHolder::TextureHolder()
     if (!textureMenu.loadFromFile("assets/img/background_new.png"))
         std::exit(1);
 
+    if (!textureLetsBegin.loadFromFile("assets/img/letsbegin.png"))
+        std::exit(1);
+
     int defaultArray[5][8] = {
         //Cash   Food    Energy  Faith
         {10, 2,  0,  0,  0,  0,  0,  0}, // base
