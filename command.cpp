@@ -1,6 +1,6 @@
 #include "command.h"
 
-Command::Command()
+Command::Command(efc::Game &game)
 {
 
 }

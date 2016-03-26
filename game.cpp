@@ -157,7 +157,7 @@ void Game::hideMenu()
 
 void Game::showGameBoard()
 {
-//    musicGame.setVolume(20);
+    //    musicGame.setVolume(20);
     musicGame.play();
     musicGame.setLoop(true);
     sfx.playLetsBegin();
@@ -195,20 +195,20 @@ void Game::handleLeftClick(sf::Vector2f pos,
             int *possibleExit = std::find(std::begin(efc::possibleExits),
                                           std::end(efc::possibleExits), mousePos);
             if (possibleExit != efc::possibleExits+4) {
-//                std::cerr << "Found hahahah" << mousePos << std::endl;
+                //                std::cerr << "Found hahahah" << mousePos << std::endl;
                 players[turn].done=true;
                 numberFinishedPlayers += 1;
                 if (numberFinishedPlayers > 3)
-                   endGame();
+                    endGame();
             } else {
-//               std::cerr << "Not found" << std::endl;
+                //               std::cerr << "Not found" << std::endl;
             }
             nextPlayer();
         }
-        std::string resultCommand = players[turn].getElem(posGui);
-        command(resultCommand);
-}
-else if (currentState==state_roll_dice)
+//        std::string resultCommand = players[turn].getElem(posGui);
+//        command(resultCommand);
+    }
+    else if (currentState==state_roll_dice)
     {
         sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
         if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
@@ -219,16 +219,6 @@ else if (currentState==state_roll_dice)
         }
     }
 
-    else if (currentState==state_gui_elem)
-    {
-        std::string resultCommand = guiSelectBuilding.getElem(posFull);
-        if (resultCommand.find("elem_")==0)
-        {
-            std::string resultCommandWrapped = "build_" + resultCommand;
-            command(resultCommandWrapped);
-        } else if (resultCommand.find("close_gui")==0)
-        {        command(resultCommand);}
-    }
     if (currentState==state_menu)
     {
         downTimeCounter = 0;
@@ -309,28 +299,31 @@ Game::Game():
                     command("hide_gui_elem_description");
             }
 
+            // Showing mouse hover
             if (currentState==state_game)
             {
                 if ((localPosition.x>efc::TILE_SIZE*efc::BOARD_SIZE) || (localPosition.x<0)  || (localPosition.y>efc::TILE_SIZE*efc::BOARD_SIZE) || (localPosition.y<0))
                 {
                     showPlayerBoardElems = false;
-                    players[turn].elems.displayNeighbours = false;
                 } else {
                     showPlayerBoardElems = true;
-                    players[turn].elems.displayNeighbours = true;
                 }
             }
 
+            if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
+            {
+                selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
+            }
+
+            // Handling mouse click
             if (event.type == sf::Event::MouseButtonReleased)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                     handleLeftClick(localPosition, localPositionGui,
                                     localPositionFull, mousePos);
             }
-            if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
-            {
-                selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
-            }
+
+
         }
 
         update(frameTime);
@@ -374,13 +367,13 @@ void Game::update(sf::Time frameTime) {
     if (currentState==state_lets_begin)
     {
         downTimeCounter += frameTime.asSeconds();
-    std::cout << downTimeCounter << std::endl;
+        std::cout << downTimeCounter << std::endl;
 
-    spriteLestBegin.setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
-    if (downTimeCounter>6)
-    {
-        currentState = state_roll_dice;
-    }
+        spriteLestBegin.setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
+        if (downTimeCounter>6)
+        {
+            currentState = state_roll_dice;
+        }
 
     }
 
@@ -463,7 +456,7 @@ void Game::drawSquares() {
 void Game::drawBaseGame()
 {
     window.setView(viewTiles);
-//    window.draw(map);
+    //    window.draw(map);
     for (int i=0;i<4;i++)
     {
         window.draw(players[i].elems);
@@ -497,7 +490,7 @@ void Game::drawCharacters(){
             if (currentState==state_game)
                 j.drawMovements = true;
             else
-               j.drawMovements = false;
+                j.drawMovements = false;
             window.draw(j);
         }
     }
@@ -529,7 +522,7 @@ void Game::render()
         window.setView(viewFull);
         drawPlayersGui();
         window.setView(viewFull);
-       window.draw(groupHud);
+        window.draw(groupHud);
 
     } else if (currentState==state_gui_elem) {
         window.setView(viewFull);

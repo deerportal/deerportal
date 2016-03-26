@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     card.cpp \
     pile.cpp \
     cardslist.cpp \
-    command.cpp
+    command.cpp \
+    cardsdeck.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -68,7 +69,8 @@ HEADERS += \
     card.h \
     pile.h \
     cardslist.h \
-    command.h
+    command.h \
+    cardsdeck.h
 
 
 OTHER_FILES += \

@@ -3,9 +3,11 @@
 #include <stdlib.h>
 #include <iostream>
 #include <time.h>       /* time */
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
 #include "tilemap.h"
 #include "selector.h"
 #include "playerhud.h"
@@ -21,6 +23,7 @@
 #include "rotateelem.h"
 #include "boarddiamondseq.h"
 #include "soundfx.h"
+#include "command.h"
 
 namespace efc {
 
@@ -41,9 +44,6 @@ public:
     sf::View viewTiles;
 
 private:
-
-
-
     void initBoard();
     void loadAssets();
     void drawPlayersGui();
@@ -141,7 +141,11 @@ private:
 
     GroupHud groupHud;
 
+    /*!
+     * \brief showPlayerBoardElems defines if show mouse hover for the player
+     */
     bool showPlayerBoardElems;
+
     void drawBaseGame();
     int month;
 

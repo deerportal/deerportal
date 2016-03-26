@@ -21,6 +21,7 @@ public:
     Animation* currentAnimation;
     int currentAnimationIndex;
 
+
     sf::Sprite leftChar;
     sf::Sprite rightChar;
 
@@ -41,11 +42,6 @@ public:
     float nextRedirect;
 
     std::array<int,2> getMovements(int howFar);
-
-//    void setBoardPosition(int boardPosition);
-//    int getBoardPosition();
-//    int boardPosition;
-
     int diceResult;
 
     sf::RectangleShape rectangleLeft;
