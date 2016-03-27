@@ -2,11 +2,7 @@
 #include "textureholder.h"
 #include "boardelem.h"
 
-bool PlayerHud::addElem(int pos, int type) {
 
-    int price = textures->tilesDescription[type][0];
-    return false;
-}
 
 std::set<int> PlayerHud::getTerrainSet(){
     std::set<int> terrain;
@@ -88,7 +84,7 @@ void PlayerHud::setActive(bool newState){
 }
 }
 
-PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFont, int faceSize, int pos)
+PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize, int pos)
 {
     static int startPlayers[4] = {0,15,240,255};
 
@@ -125,9 +121,6 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     cash = 0;
     energy = 0;
     faith = 0;
-
-    int x = faceNumber % 10;
-    int y = (int) faceNumber /10;
 
     txtCash.setFont(*gameFont);
     txtCash.setCharacterSize(20);

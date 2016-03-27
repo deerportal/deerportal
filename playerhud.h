@@ -22,7 +22,7 @@ class PlayerHud : public sf::Drawable, public sf::Transformable
 {
 public:
     PlayerHud();
-    PlayerHud(TextureHolder *textures, int faceNumber, sf::Font *gameFont, int tileSize, int pos);
+    PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int tileSize, int pos);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     std::set<int> getNeighbours();
     int pos;
@@ -34,7 +34,7 @@ public:
     BoardElems elems;
     void setActive(bool newState);
     std::vector<int> properties;
-    bool addElem(int pos, int type);
+
     void updatePlayer();
     std::string getElem(sf::Vector2f mousePosition);
     std::map<std::string, sf::RectangleShape> buttons;

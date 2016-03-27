@@ -23,11 +23,7 @@ void Command::removeDiamond(int playerNumber)
         {
             diamonds.push_back(areaNumber);
         }
-
-
     }
     int numberDiamonds = diamonds.size();
     int elemToRemove = rand() %  numberDiamonds;
-
-
 }
