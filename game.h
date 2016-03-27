@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+#include "command.h"
 #include "tilemap.h"
 #include "selector.h"
 #include "playerhud.h"
@@ -23,12 +24,15 @@
 #include "rotateelem.h"
 #include "boarddiamondseq.h"
 #include "soundfx.h"
-#include "command.h"
+
+//class Command;
+
 
 namespace efc {
 
 extern int initScreenX;
 extern int initScreenY;
+
 
 class Game
 {
@@ -171,6 +175,8 @@ private:
 
     SoundFX sfx;
     float downTimeCounter;
+    Command commandManager;
+
 
 };
 }

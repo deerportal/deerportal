@@ -15,6 +15,10 @@ public:
     TextureHolder *textures;
     /*!
      * \brief number from the sprite sheet
+     *
+     * 0-3 are corresponding to the players numbers,
+     * everything above are the extra items:
+     * 4 - diamond
      */
     int idNumber;
 

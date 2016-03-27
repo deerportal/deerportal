@@ -180,7 +180,13 @@ void Game::handleLeftClick(sf::Vector2f pos,
                 {
                     players[turn].cash += 1;
 
-                };
+                } else if ((boardDiamonds.getNumberForField(mousePos)!=turn)
+                        && (boardDiamonds.getNumberForField(mousePos)<4))
+                {
+                    commandManager.removeDiamond(boardDiamonds.getNumberForField(mousePos));
+                    std::cout << "REMOVE DIAMOND BITCH" << std::endl;
+                }
+
                 std::cout << "cash " << players[turn].cash << " " << " for " << turn << " " << boardDiamonds.getNumberForField(mousePos) << " result" << std::endl;
                 // After this no more visible
                 boardDiamonds.collectField(mousePos);
@@ -235,7 +241,7 @@ void Game::hideGameBoard()
 }
 Game::Game():
     screenSize(efc::initScreenX,efc::initScreenY),
-    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Pagan Board"),
+    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewTiles(sf::FloatRect(0, 0, 1360, 768)),
@@ -247,8 +253,13 @@ Game::Game():
     roundDice(players),
     roundNumber(1),
     guiRoundDice(&textures),
-    boardDiamonds(&textures)
+    boardDiamonds(&textures),
+    commandManager(*this)
 {
+
+
+//    Command commandManager;
+
 
 
     numberFinishedPlayers = 0;
