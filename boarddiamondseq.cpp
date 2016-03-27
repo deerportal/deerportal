@@ -57,10 +57,10 @@ bool BoardDiamondSeq::ifFieldIsEmpty(int pos)
 
 }
 
-int BoardDiamondSeq::getRandomPos(int element)
+int BoardDiamondSeq::getRandomPos(int playerNumber)
 {
-    std::set<int> setSteps(efc::occupiedFields[element].cbegin(), efc::occupiedFields[element].cend());
-    for (int i=element*14;i<(efc::diamondsNumber/4)+(element*14);i++)
+    std::set<int> setSteps(efc::occupiedFields[playerNumber].cbegin(), efc::occupiedFields[playerNumber].cend());
+    for (int i=playerNumber*14;i<(efc::diamondsNumber/4)+(playerNumber*14);i++)
     {
         if (diamonds[i].boardPosition!=-1)
         {

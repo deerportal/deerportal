@@ -18,6 +18,11 @@ BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,
     setBoardPosition(boardPosition);
 }
 
+int BoardDiamond::getPlayerNumber()
+{
+
+}
+
 void BoardDiamond::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     if (boardPosition>-1)

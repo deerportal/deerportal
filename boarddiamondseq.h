@@ -31,7 +31,7 @@ public:
 
     std::array<int,efc::diamondsNumber> getBoardPositions();
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    int getRandomPos(int element);
+    int getRandomPos(int playerNumber);
 
     void reorder();
 

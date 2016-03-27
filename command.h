@@ -16,7 +16,7 @@ public:
      * \brief Removes a diamond from the player's field.
      * \param player
      */
-    void removeDiamond(int player);
+    void removeDiamond(int playerNumber);
     efc::Game &game;
 };
 

@@ -12,14 +12,24 @@ public:
     BoardDiamond(TextureHolder *textures, int idNumber,
                  int element, int boardPosition);
 
+    TextureHolder *textures;
+    /*!
+     * \brief number from the sprite sheet
+     */
+    int idNumber;
+
+    /*!
+     * \brief 0-3 elements area on the board
+     */
+    int element;
+    sf::Sprite spriteHolder;
+
+    int getPlayerNumber(); /* TODO: this should be solved by saving number
+                              of the player in the first place.
+                             */
+
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void update(sf::Time deltaTime, std::set<int>& busyTiles);
-
-    TextureHolder *textures;
-    int idNumber; // number from the sprite sheet
-
-    int element; // 0-3 elements area on the board
-    sf::Sprite spriteHolder;
 };
 
 #endif // BOARDDIAMOND_H

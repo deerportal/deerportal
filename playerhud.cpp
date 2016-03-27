@@ -155,10 +155,6 @@ PlayerHud::PlayerHud(TextureHolder *textures, int faceNumber,  sf::Font *gameFon
     };
 
     txtCash.setPosition(textPos[pos][0],textPos[pos][1] );
-
-
-
-
     buttons.insert({"end_turn",rectangle});
 
 }
