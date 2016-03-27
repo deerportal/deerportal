@@ -6,14 +6,17 @@
 class CardsList
 {
 public:
-    CardsList();
+    CardsList(); // To create an array of CardsList
     CardsList(int element);
     int amount;
     void addCard(Card card);
     std::vector<Card*> sd;
-    int element;
+    /*!
+     * \brief element Number of the element
+     */
+    int element; /*!< Number of the element */
 
-
+    int var;     /*!< Detailed description after the member */
 };
 
 #endif // CARDSLIST_H

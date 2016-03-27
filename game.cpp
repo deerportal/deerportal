@@ -22,7 +22,6 @@ void Game::initBoard()
     viewTiles.setViewport(sf::FloatRect(0.15f,0.1f, 1.0f, 1.0f));
     viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
 
-
     groupHud.setFont(&gameFont);
     groupHud.setSeason(currentSeason);
     groupHud.setRoundName(roundNumber);
@@ -65,7 +64,7 @@ void Game::initBoard()
     season4.setColor(sf::Color(255,0,0,80));
     seasons[3] = season4;
 
-
+    // Initialization of the players
     PlayerHud playerHud1(&textures, std::rand() % 80, &gameFont, 32,0);
     PlayerHud playerHud2(&textures, std::rand() % 30, &gameFont, 32,1);
     PlayerHud playerHud3(&textures, std::rand() % 60, &gameFont, 32,2);
@@ -108,11 +107,6 @@ void Game::loadAssets()
     if (!textureBackgroundArt.loadFromFile("assets/img/background_land.png"))
         std::exit(1);
 
-
-    spriteBackgroundArt.setTexture(textureBackgroundArt);
-
-
-
     if (!musicGame.openFromFile("assets/audio/game.ogg"))
         std::exit(1);
     if (!musicBackground.openFromFile("assets/audio/wind2.ogg"))
@@ -129,6 +123,7 @@ void Game::loadAssets()
     if (!textureBackground.loadFromFile("assets/img/background.png"))
         std::exit(1);
 
+    spriteBackgroundArt.setTexture(textureBackgroundArt);
     menuTxt.setFont(menuFont);
     menuTxt.setCharacterSize(60);
     menuTxt.setString(gameTitle);
@@ -136,8 +131,6 @@ void Game::loadAssets()
     int height = menuTxt.getLocalBounds().height;
     menuTxt.setPosition(400-(width/2),300-(height/2)-150);
     menuTxt.setColor(sf::Color(255, 255, 255, 85));
-
-
 }
 
 void Game::showMenu()

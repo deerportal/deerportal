@@ -10,7 +10,14 @@ namespace efc {
 class Command
 {
 public:
-    Command(efc::Game &game);
+    Command(efc::Game &currentGame);
+
+    /*!
+     * \brief Removes a diamond from the player's field.
+     * \param player
+     */
+    void removeDiamond(int player);
+    efc::Game &game;
 };
 
 #endif // COMMAND_H
