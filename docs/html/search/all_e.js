@@ -5,7 +5,7 @@ var searchData=
   ['rectangleleft',['rectangleLeft',['../class_character.html#a71b2d1b4e17d296aa7aa56659afd2068',1,'Character']]],
   ['rectangleright',['rectangleRight',['../class_character.html#a075db3039c46ae71add4b4475be3ccc6',1,'Character']]],
   ['remove',['REMOVE',['../class_card.html#a7bdb17784252ad99964eece6f48c0a75ac0fe3983433d76318a98c0f381492d5f',1,'Card']]],
-  ['removediamond',['removeDiamond',['../class_command.html#a8876b9ea9409178847a5e17caca9eb20',1,'Command']]],
+  ['removediamond',['removeDiamond',['../class_command.html#aa3c4f75d804dc9173c627d9bcc97751c',1,'Command']]],
   ['reorder',['reorder',['../class_board_diamond_seq.html#a7d897aefb62996dd59f82506f18ffa09',1,'BoardDiamondSeq']]],
   ['rightchar',['rightChar',['../class_character.html#a0b4e73a979ca3fba2739a46f6ae57d47',1,'Character']]],
   ['rotateelem',['RotateElem',['../class_rotate_elem.html',1,'RotateElem'],['../class_rotate_elem.html#ac085c02c914f1fa7193ae8ab8dfcf26b',1,'RotateElem::RotateElem()']]],
