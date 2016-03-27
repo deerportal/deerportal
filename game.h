@@ -42,6 +42,7 @@ public:
     sf::View viewFull;
     sf::View viewGui;
     sf::View viewTiles;
+    BoardDiamondSeq boardDiamonds;
 
 private:
     void initBoard();
@@ -168,7 +169,6 @@ private:
     RotateElem prevRotateElem;
     void endGame();
 
-    BoardDiamondSeq boardDiamonds;
     SoundFX sfx;
     float downTimeCounter;
 

@@ -15,5 +15,19 @@ void Command::removeDiamond(int playerNumber)
      * - get a random element
      * - remove from the board - set not active
      */
+    std::vector<int> diamonds;
+    for (auto&& i: game.boardDiamonds.diamonds)
+    {
+        int areaNumber = i.playerNumber;
+        if (areaNumber==playerNumber)
+        {
+            diamonds.push_back(areaNumber);
+        }
+
+
+    }
+    int numberDiamonds = diamonds.size();
+    int elemToRemove = rand() %  numberDiamonds;
+
 
 }

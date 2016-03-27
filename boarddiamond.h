@@ -10,7 +10,7 @@ class   BoardDiamond: public Elem
 public:
     BoardDiamond();
     BoardDiamond(TextureHolder *textures, int idNumber,
-                 int element, int boardPosition);
+                 int playerNumber, int boardPosition);
 
     TextureHolder *textures;
     /*!
@@ -21,12 +21,9 @@ public:
     /*!
      * \brief 0-3 elements area on the board
      */
-    int element;
+    int playerNumber;
     sf::Sprite spriteHolder;
 
-    int getPlayerNumber(); /* TODO: this should be solved by saving number
-                              of the player in the first place.
-                             */
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void update(sf::Time deltaTime, std::set<int>& busyTiles);

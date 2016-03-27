@@ -5,10 +5,10 @@ BoardDiamond::BoardDiamond()
 }
 
 BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,
-                           int element, int boardPosition)
+                           int playerNumber, int boardPosition)
 {
     this->textures = textures;
-    this->element = element;
+    this->playerNumber = playerNumber;
     this->boardPosition = boardPosition;
     this->idNumber = idNumber;
     spriteHolder.setTexture(this->textures->textureBoardDiamond);
@@ -18,10 +18,7 @@ BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,
     setBoardPosition(boardPosition);
 }
 
-int BoardDiamond::getPlayerNumber()
-{
 
-}
 
 void BoardDiamond::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {

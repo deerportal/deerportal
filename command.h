@@ -1,7 +1,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 #include "game.h"
-
+#include "vector"
 
 namespace efc {
     class Game;
