@@ -35,8 +35,9 @@ namespace efc {
     const static int numberSteps = 39;
 
     const static std::map<std::string, std::string> cardTypes = {
-        {"freeze",          "Freezes a player for the one turn time"},
-        {"collect_diamond", "Collect a diamond from the player area"},
+        {"stop",          "Freezes a player for the one turn time"},
+        {"diamond", "Collect a diamond from the player area"},
+        {"card",    "Collect a card from the player area"},
     };
 
 

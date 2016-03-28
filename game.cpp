@@ -65,6 +65,7 @@ void Game::initBoard()
     seasons[3] = season4;
 
     // Initialization of the players
+    cardsDeck.setFonts(&menuFont);
     PlayerHud playerHud1(&textures, &gameFont, 32,0);
     PlayerHud playerHud2(&textures, &gameFont, 32,1);
     PlayerHud playerHud3(&textures, &gameFont, 32,2);
@@ -131,6 +132,7 @@ void Game::loadAssets()
     int height = menuTxt.getLocalBounds().height;
     menuTxt.setPosition(400-(width/2),300-(height/2)-150);
     menuTxt.setColor(sf::Color(255, 255, 255, 85));
+    cardsDeck.setFonts(&gameFont);
 }
 
 void Game::showMenu()
@@ -255,7 +257,7 @@ Game::Game():
     guiRoundDice(&textures),
     boardDiamonds(&textures),
     commandManager(*this),
-    cardsDeck(&textures)
+    cardsDeck(&textures, &menuFont)
 {
 
     numberFinishedPlayers = 0;

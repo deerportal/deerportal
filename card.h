@@ -1,6 +1,6 @@
 #ifndef CARD_H
 #define CARD_H
-
+#include <string>
 
 class Card
 {
@@ -9,11 +9,7 @@ public:
     int id;
     int elementNumber;
     int amount;
-    enum type {
-        ADD,
-        REMOVE,
-        STOP
-    };
+    std::string cardType;
 };
 
 #endif // CARD_H

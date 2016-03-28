@@ -1,7 +1,12 @@
 #ifndef CARDSLIST_H
 #define CARDSLIST_H
 #include <vector>
+#include <array>
 #include "card.h"
+
+namespace efc {
+    const static int PILE_SIZE = 3;
+}
 
 class CardsList
 {
@@ -10,13 +15,15 @@ public:
     CardsList(int element);
     int amount;
     void addCard(Card card);
-    std::vector<Card*> sd;
+//    std::vector<Card*> sd;
     /*!
      * \brief element Number of the element
      */
+
+    std::array<Card, efc::PILE_SIZE> cardsPile;
+    int currentCard;
     int element; /*!< Number of the element */
 
-    int var;     /*!< Detailed description after the member */
 };
 
 #endif // CARDSLIST_H
