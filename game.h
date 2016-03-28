@@ -48,6 +48,9 @@ public:
     sf::View viewTiles;
     BoardDiamondSeq boardDiamonds;
     PlayerHud players[4];
+    SoundFX sfx;
+    int turn;
+
 
 private:
     void initBoard();
@@ -106,7 +109,6 @@ private:
     GuiChooseBuilding guiSelectBuilding;
     Character character;
 
-    int turn;
     void update(sf::Time frameTime);
     void render();
 
@@ -173,7 +175,6 @@ private:
     RotateElem prevRotateElem;
     void endGame();
 
-    SoundFX sfx;
     float downTimeCounter;
     Command commandManager;
     CardsDeck cardsDeck;

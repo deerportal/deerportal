@@ -20,6 +20,8 @@ public:
 
     void freezePlayer(int playerNumber);
     efc::Game &game;
+
+    void processField(int pos);
 };
 
 #endif // COMMAND_H

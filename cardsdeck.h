@@ -24,6 +24,7 @@ public:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void setTitles();
     void setFonts(sf::Font *gameFont);
+    void nextCard(int pileNumber);
 
 };
 

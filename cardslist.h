@@ -14,7 +14,7 @@ public:
     CardsList(); // To create an array of CardsList
     CardsList(int element);
     int amount;
-    void addCard(Card card);
+
 //    std::vector<Card*> sd;
     /*!
      * \brief element Number of the element
@@ -23,6 +23,7 @@ public:
     std::array<Card, efc::PILE_SIZE> cardsPile;
     int currentCard;
     int element; /*!< Number of the element */
+
 
 };
 

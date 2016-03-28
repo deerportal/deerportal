@@ -63,3 +63,13 @@ void CardsDeck::setFonts(sf::Font *gameFont)
 
     }
 }
+
+void CardsDeck::nextCard(int pileNumber)
+{
+    int currentCard = cardsList[pileNumber].currentCard;
+    currentCard += 1;
+    if (currentCard>efc::PILE_SIZE-1)
+        currentCard = 0;
+
+    setTitles();
+}

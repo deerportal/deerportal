@@ -174,25 +174,7 @@ void Game::handleLeftClick(sf::Vector2f pos,
         if ((mousePos==movements[0]) || (mousePos==movements[1]))
         {
             players[turn].setFigurePos(mousePos);
-
-            if (boardDiamonds.ifFieldIsEmpty(mousePos)==false)
-            {
-                sfx.playCollect();
-                if (boardDiamonds.getNumberForField(mousePos)==4)
-                {
-                    players[turn].cash += 1;
-
-                } else if ((boardDiamonds.getNumberForField(mousePos)!=turn)
-                           && (boardDiamonds.getNumberForField(mousePos)<4))
-                {
-                    commandManager.removeDiamond(boardDiamonds.getNumberForField(mousePos));
-                    std::cout << "REMOVE DIAMOND BITCH" << std::endl;
-                }
-
-                std::cout << "cash " << players[turn].cash << " " << " for " << turn << " " << boardDiamonds.getNumberForField(mousePos) << " result" << std::endl;
-                // After this no more visible
-                boardDiamonds.collectField(mousePos);
-            }
+            commandManager.processField(mousePos);
             int *possibleExit = std::find(std::begin(efc::possibleExits),
                                           std::end(efc::possibleExits), mousePos);
             if (possibleExit != efc::possibleExits+4) {

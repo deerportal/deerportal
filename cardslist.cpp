@@ -13,6 +13,8 @@ CardsList::CardsList(int element)
     this->element = element;
     currentCard = 0;
 }
+
+
 //void CardsList::addCard(Card card)
 //{
 

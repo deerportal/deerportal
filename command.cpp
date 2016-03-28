@@ -56,3 +56,21 @@ void Command::freezePlayer(int playerNumber)
 {
     game.players[playerNumber].frozenLeft += 1;
 }
+
+void Command::processField(int pos)
+{
+    if (game.boardDiamonds.ifFieldIsEmpty(pos)==false)
+    {
+        game.sfx.playCollect();
+        if (game.boardDiamonds.getNumberForField(pos)==4)
+        {
+            game.players[game.turn].cash += 1;
+
+        } else if ((game.boardDiamonds.getNumberForField(pos)!=game.turn)
+                   && (game.boardDiamonds.getNumberForField(pos)<4))
+        {
+            removeDiamond(game.boardDiamonds.getNumberForField(pos));
+        }
+        game.boardDiamonds.collectField(pos);
+    }
+}
