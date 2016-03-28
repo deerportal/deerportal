@@ -25,6 +25,8 @@ public:
     void setTitles();
     void setFonts(sf::Font *gameFont);
     void nextCard(int pileNumber);
+    int getCurrentCard(int pileNumber);
+    std::string getTitle(int pileNumber);
 
 };
 

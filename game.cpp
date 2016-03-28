@@ -369,11 +369,7 @@ void Game::nextRound() {
 
 void Game::nextPlayer(){
 
-    if (players[turn].frozenLeft>0)
-    {
-        players[turn].frozenLeft -= 1;
-        nextPlayer();
-    }
+
 
     if (numberFinishedPlayers==4)
     {
@@ -386,6 +382,12 @@ void Game::nextPlayer(){
     else
         nextRound();
     turn++;
+
+    if (players[turn].frozenLeft>0)
+    {
+        players[turn].frozenLeft -= 1;
+        nextPlayer();
+    }
 
     if ((players[turn].done==true) && (turn<4))
     {

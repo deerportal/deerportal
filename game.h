@@ -52,6 +52,7 @@ public:
     int turn;
 
 
+
 private:
     void initBoard();
     void loadAssets();
@@ -177,8 +178,8 @@ private:
 
     float downTimeCounter;
     Command commandManager;
+public:
     CardsDeck cardsDeck;
-
 };
 }
 #endif // GAME_H

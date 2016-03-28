@@ -17,11 +17,13 @@ public:
      * \param player
      */
     void removeDiamond(int playerNumber);
+    void removeCard(int playerNumber);
 
     void freezePlayer(int playerNumber);
     efc::Game &game;
 
     void processField(int pos);
+    void processCard(int pos);
 };
 
 #endif // COMMAND_H

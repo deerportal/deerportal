@@ -44,10 +44,13 @@ void CardsDeck::setTitles()
 {
     for (int i=0;i<=3;i++)
     {
-        int currentCard = cardsList[i].currentCard;
-        std::string currentText = cardsList[i].cardsPile[currentCard].cardType;
-        std::cout << i << " " << currentCard << " " <<  currentText << std::endl;
-        textPileTitle[i].setString(currentText);
+//        int currentCard = cardsList[i].currentCard;
+//        std::string currentText = cardsList[i].cardsPile[currentCard].cardType;
+//        std::cout << i << " " << currentCard << " " <<  currentText << std::endl;
+        std::string newTitle = getTitle(i);
+        std::cout << "NEW TITLE " << newTitle << std::endl;
+
+        textPileTitle[i].setString(newTitle);
 
 
 
@@ -58,18 +61,29 @@ void CardsDeck::setFonts(sf::Font *gameFont)
 {
     for (int i=0;i<=3;i++)
     {
-
         textPileTitle[i].setFont(*gameFont);
-
     }
 }
 
 void CardsDeck::nextCard(int pileNumber)
 {
-    int currentCard = cardsList[pileNumber].currentCard;
+    int currentCard = getCurrentCard(pileNumber);
     currentCard += 1;
     if (currentCard>efc::PILE_SIZE-1)
         currentCard = 0;
-
+    cardsList[pileNumber].currentCard = currentCard;
     setTitles();
+}
+
+int CardsDeck::getCurrentCard(int pileNumber)
+{
+    int currentCard = cardsList[pileNumber].currentCard;
+    return currentCard;
+}
+
+std::string CardsDeck::getTitle(int pileNumber)
+{
+    std::string currentText = cardsList[pileNumber].cardsPile[getCurrentCard(pileNumber)].cardType;
+    std::cout << "TITLE " << currentText << std::endl;
+    return currentText;
 }
