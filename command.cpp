@@ -12,6 +12,8 @@ Command::Command(efc::Game &currentGame) :
 //    this->game = currentGame;
 }
 
+
+
 void Command::removeDiamond(int playerNumber)
 {
     /*! This should works as following:
@@ -48,4 +50,9 @@ void Command::removeDiamond(int playerNumber)
     }
 
 
+}
+
+void Command::freezePlayer(int playerNumber)
+{
+    game.players[playerNumber].frozenLeft += 1;
 }

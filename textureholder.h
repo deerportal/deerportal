@@ -30,6 +30,13 @@ public:
     sf::Texture textureBoardDiamond;
     sf::Texture textureLetsBegin;
 
+    sf::Texture textureCardBase0;
+    sf::Texture textureCardBase1;
+    sf::Texture textureCardBase2;
+    sf::Texture textureCardBase3;
+
+    std::array<sf::Texture, 4> textureCardBases;
+
     std::map<int, std::map<int, int>> tilesDescription;
     std::map<int, std::string> tilesTxt;
 

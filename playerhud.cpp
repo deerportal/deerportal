@@ -69,7 +69,8 @@ void PlayerHud::updatePlayer(){
 
 }
 
-PlayerHud::PlayerHud()
+PlayerHud::PlayerHud():
+    frozenLeft(0)
 {
 
 }
@@ -88,7 +89,7 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize,
 {
     static int startPlayers[4] = {0,15,240,255};
 
-
+    frozenLeft = 0;
     done = false;
 
     active = false;

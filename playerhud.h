@@ -50,6 +50,8 @@ public:
     void setFigurePos(int pos);
     bool done;
 
+    int frozenLeft;
+
 private:
     sf::Sprite spriteFace;
     sf::Text txtCash;

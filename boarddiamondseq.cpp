@@ -109,7 +109,6 @@ int BoardDiamondSeq::getNumberForField(int pos)
     {
         if (diamonds[i].boardPosition==pos)
         {
-            std::cout << "returns " << diamonds[i].idNumber << std::endl;
             return diamonds[i].idNumber;
         }
     }

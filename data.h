@@ -1,7 +1,13 @@
 #ifndef DATA_H
 #define DATA_H
+#include <map>
+#include <string>
+
+
 #include <string>
 #include <SFML/Graphics.hpp>
+
+
 
 namespace efc {
     extern std::string seasonsNames[4];
@@ -11,6 +17,13 @@ namespace efc {
         DIR_UP,
         DIR_DOWN
     };
+
+    enum cardType {
+        FREEZE,
+        COLLECT_DIAMOND
+    };
+
+
     extern int terrainArray[24];
     extern sf::Color playersColors[4];
     extern std::array<std::array<int,2>,256> boards;
@@ -20,6 +33,12 @@ namespace efc {
     extern std::array<std::array<int,3>,efc::diamondsNumber> DIAMONDS_SETUP;
     extern std::array<std::array<int,39>,4> occupiedFields;
     const static int numberSteps = 39;
+
+    const static std::map<std::string, std::string> cardTypes = {
+        {"freeze",          "Freezes a player for the one turn time"},
+        {"collect_diamond", "Collect a diamond from the player area"},
+    };
+
 
 }
 #endif // DATA_H

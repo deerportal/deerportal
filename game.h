@@ -24,9 +24,9 @@
 #include "rotateelem.h"
 #include "boarddiamondseq.h"
 #include "soundfx.h"
+#include "cardsdeck.h"
 
 //class Command;
-
 
 namespace efc {
 
@@ -47,6 +47,7 @@ public:
     sf::View viewGui;
     sf::View viewTiles;
     BoardDiamondSeq boardDiamonds;
+    PlayerHud players[4];
 
 private:
     void initBoard();
@@ -93,7 +94,6 @@ private:
 
 
     TileMap map;
-    PlayerHud players[4];
 
     int mapSize;
     int level[256];
@@ -176,7 +176,7 @@ private:
     SoundFX sfx;
     float downTimeCounter;
     Command commandManager;
-
+    CardsDeck cardsDeck;
 
 };
 }

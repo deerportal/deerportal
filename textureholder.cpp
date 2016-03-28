@@ -16,6 +16,20 @@ TextureHolder::TextureHolder()
 {
 
 
+
+    if (!textureCardBases[0].loadFromFile("assets/img/card-water-2-diam_m.png"))
+        std::exit(1);
+
+    if (!textureCardBases[1].loadFromFile("assets/img/card-earth-2-diam_m.png"))
+        std::exit(1);
+
+    if (!textureCardBases[2].loadFromFile("assets/img/card-fire-2-diam_m.png"))
+        std::exit(1);
+
+    if (!textureCardBases[3].loadFromFile("assets/img/card-air-2-diam_m.png"))
+        std::exit(1);
+
+
     if (!textureGameBackground.loadFromFile("assets/img/game-background.png"))
         std::exit(1);
 

@@ -17,6 +17,8 @@ public:
      * \param player
      */
     void removeDiamond(int playerNumber);
+
+    void freezePlayer(int playerNumber);
     efc::Game &game;
 };
 

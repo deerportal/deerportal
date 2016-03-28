@@ -181,7 +181,7 @@ void Game::handleLeftClick(sf::Vector2f pos,
                     players[turn].cash += 1;
 
                 } else if ((boardDiamonds.getNumberForField(mousePos)!=turn)
-                        && (boardDiamonds.getNumberForField(mousePos)<4))
+                           && (boardDiamonds.getNumberForField(mousePos)<4))
                 {
                     commandManager.removeDiamond(boardDiamonds.getNumberForField(mousePos));
                     std::cout << "REMOVE DIAMOND BITCH" << std::endl;
@@ -204,8 +204,8 @@ void Game::handleLeftClick(sf::Vector2f pos,
             }
             nextPlayer();
         }
-//        std::string resultCommand = players[turn].getElem(posGui);
-//        command(resultCommand);
+        //        std::string resultCommand = players[turn].getElem(posGui);
+        //        command(resultCommand);
     }
     else if (currentState==state_roll_dice)
     {
@@ -221,7 +221,7 @@ void Game::handleLeftClick(sf::Vector2f pos,
     if (currentState==state_menu)
     {
         downTimeCounter = 0;
-        std::cout << " AA " <<downTimeCounter << std::endl;
+        //        std::cout << " AA " <<downTimeCounter << std::endl;
         hideMenu();
         showGameBoard();
     }
@@ -254,19 +254,12 @@ Game::Game():
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-    commandManager(*this)
+    commandManager(*this),
+    cardsDeck(&textures)
 {
 
-
-//    Command commandManager;
-
-
-
     numberFinishedPlayers = 0;
-
     sf::Clock frameClock;
-
-
     guiRoundDice.active = true;
     showPlayerBoardElems = false;
     window.setVerticalSyncEnabled(true);
@@ -319,15 +312,15 @@ Game::Game():
                 selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
             }
 
-            // Handling mouse click
+            /*!
+             * Handling mouse click
+             */
             if (event.type == sf::Event::MouseButtonReleased)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                     handleLeftClick(localPosition, localPositionGui,
                                     localPositionFull, mousePos);
             }
-
-
         }
 
         update(frameTime);
@@ -353,15 +346,11 @@ void Game::update(sf::Time frameTime) {
             nextRotateElem.update(frameTime);
             nextRotateElem.setColor(turn);
         }
-
-
-
     }
     for (int i=0;i<4;i++)
     {
         players[i].play();
     }
-
 
     for (int i=0;i<4;i++)
     {
@@ -371,16 +360,12 @@ void Game::update(sf::Time frameTime) {
     if (currentState==state_lets_begin)
     {
         downTimeCounter += frameTime.asSeconds();
-        std::cout << downTimeCounter << std::endl;
-
         spriteLestBegin.setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
         if (downTimeCounter>6)
         {
             currentState = state_roll_dice;
         }
-
     }
-
 }
 
 void Game::nextRound() {
@@ -399,11 +384,19 @@ void Game::nextRound() {
 }
 
 void Game::nextPlayer(){
+
+    if (players[turn].frozenLeft>0)
+    {
+        players[turn].frozenLeft -= 1;
+        nextPlayer();
+    }
+
     if (numberFinishedPlayers==4)
     {
         std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
     }
+
     if (turn<4)
         players[turn].updatePlayer();
     else
@@ -420,7 +413,9 @@ void Game::nextPlayer(){
     {
         nextRound();
     }
+
     selector.changeColor(turn);
+
     for (int i=0;i<4;i++)
     {
         if (i==turn)
@@ -431,6 +426,7 @@ void Game::nextPlayer(){
         else
             players[i].setActive(false);
     }
+
     sfxClick.play();
     diceResultPlayer = 6;
     roundDice.setDiceTexture(diceResultPlayer);
@@ -475,6 +471,7 @@ void Game::drawCharacters(){
     window.draw(gameBackground);
     window.setView(viewFull);
     window.draw(spriteBackgroundArt);
+    window.draw(cardsDeck);
     window.draw(roundDice.spriteDice);
     window.setView(viewTiles);
     drawSquares();
@@ -519,6 +516,7 @@ void Game::render()
     } else if (currentState==state_roll_dice) {
         window.setView(viewFull);
         window.draw(spriteBackgroundDark);
+
         window.setView(viewTiles);
         drawBaseGame();
         drawCharacters();
@@ -531,6 +529,7 @@ void Game::render()
     } else if (currentState==state_gui_elem) {
         window.setView(viewFull);
         window.draw(spriteBackgroundDark);
+
         drawBaseGame();
         drawCharacters();
         window.draw(guiSelectBuilding);
@@ -542,6 +541,7 @@ void Game::render()
     }  else if (currentState==state_lets_begin) {
         window.setView(viewFull);
         window.draw(spriteBackgroundDark);
+
         window.setView(viewTiles);
         drawBaseGame();
         drawCharacters();
