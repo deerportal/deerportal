@@ -35,30 +35,30 @@ std::set<int> PlayerHud::getNeighbours(){
         {
             if ((elems.items_map.count(j) == 0) && (terrain.count(j)==0))
             {
-//                std::cout << j << " " << terrain.count(j) << std::endl;
+                //                std::cout << j << " " << terrain.count(j) << std::endl;
                 neighbours.insert(j);
             }
         }
     }
 
-//    // Fill in s1 and s2 with values
-//    std::set<int> result;
-//    std::set_difference(neighbours.begin(), neighbours.end(), terrain.begin(), terrain.end(),
-//                        std::inserter(result, result.end()));
+    //    // Fill in s1 and s2 with values
+    //    std::set<int> result;
+    //    std::set_difference(neighbours.begin(), neighbours.end(), terrain.begin(), terrain.end(),
+    //                        std::inserter(result, result.end()));
 
 
-//    for (int i: result)
-//    {
-//        std::cout << i << std::endl;
-//    }
+    //    for (int i: result)
+    //    {
+    //        std::cout << i << std::endl;
+    //    }
     return neighbours;
 }
 
 void PlayerHud::updateTxt(){
     txtCash.setString(std::to_string(cash));
-//    txtFood.setString(  "Food: " + std::to_string(food));
-//    txtEnergy.setString("Enrg: " + std::to_string(energy));
-//    txtFaith.setString( "Gods: " + std::to_string(faith));
+    //    txtFood.setString(  "Food: " + std::to_string(food));
+    //    txtEnergy.setString("Enrg: " + std::to_string(energy));
+    //    txtFaith.setString( "Gods: " + std::to_string(faith));
 
 }
 
@@ -82,7 +82,7 @@ void PlayerHud::setActive(bool newState){
     {
 
         i.active = newState;
-}
+    }
 }
 
 PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize, int pos)
@@ -188,25 +188,24 @@ void PlayerHud::play()
 void PlayerHud::update(sf::Time deltaTime, std::set<int>& busyTiles)
 {
     updateTxt();
-    for (auto&& i: characters)
+    if (frozenLeft==0)
     {
-
-        sf::Vector2f movement(0.f, 0.f);
-        if  (i.currentAnimationIndex==efc::DIR_LEFT)
-            movement = sf::Vector2f (-10.f, 0.f);
-        else if  (i.currentAnimationIndex==efc::DIR_RIGHT)
-            movement = sf::Vector2f (10.f, 0.f);
-        else if  (i.currentAnimationIndex==efc::DIR_UP)
-            movement = sf::Vector2f (0.f, -10.f);
-        else if  (i.currentAnimationIndex==efc::DIR_DOWN)
-            movement = sf::Vector2f (0.f, 10.f);
-
-//        i.move(movement * deltaTime.asSeconds());
-        i.update(deltaTime, busyTiles);
-
-
+        for (auto&& i: characters)
+        {
+            sf::Vector2f movement(0.f, 0.f);
+            if  (i.currentAnimationIndex==efc::DIR_LEFT)
+                movement = sf::Vector2f (-10.f, 0.f);
+            else if  (i.currentAnimationIndex==efc::DIR_RIGHT)
+                movement = sf::Vector2f (10.f, 0.f);
+            else if  (i.currentAnimationIndex==efc::DIR_UP)
+                movement = sf::Vector2f (0.f, -10.f);
+            else if  (i.currentAnimationIndex==efc::DIR_DOWN)
+                movement = sf::Vector2f (0.f, 10.f);
+            i.update(deltaTime, busyTiles);
+        }
+    } else{
+        characters[0].currentAnimationIndex=efc::DIR_DOWN;
     }
-
 }
 
 std::array<int,2> PlayerHud::getMovements(int diceResult)

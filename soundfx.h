@@ -10,12 +10,15 @@ public:
     SoundFX();
 
     sf::SoundBuffer soundCollectBuffer;
+    sf::SoundBuffer soundCardBuffer;
     sf::Sound soundCollect;
+    sf::Sound soundCard;
     void playCollect();
 
     sf::SoundBuffer soundLetsBeginBuffer;
     sf::Sound soundLetsBegin;
     void playLetsBegin();
+    void playCard();
 };
 
 #endif // SOUNDFX_H

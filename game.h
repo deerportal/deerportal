@@ -178,6 +178,7 @@ private:
 
     float downTimeCounter;
     Command commandManager;
+    sf::Text textLoading;
 public:
     CardsDeck cardsDeck;
 };

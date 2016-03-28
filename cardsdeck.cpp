@@ -36,7 +36,6 @@ void CardsDeck::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
         target.draw(spriteCardBases[i], states);
         target.draw(textPileTitle[i], states);
-
     }
 }
 
@@ -44,16 +43,7 @@ void CardsDeck::setTitles()
 {
     for (int i=0;i<=3;i++)
     {
-//        int currentCard = cardsList[i].currentCard;
-//        std::string currentText = cardsList[i].cardsPile[currentCard].cardType;
-//        std::cout << i << " " << currentCard << " " <<  currentText << std::endl;
-        std::string newTitle = getTitle(i);
-        std::cout << "NEW TITLE " << newTitle << std::endl;
-
-        textPileTitle[i].setString(newTitle);
-
-
-
+        textPileTitle[i].setString(getTitle(i));
     }
 }
 
@@ -84,6 +74,5 @@ int CardsDeck::getCurrentCard(int pileNumber)
 std::string CardsDeck::getTitle(int pileNumber)
 {
     std::string currentText = cardsList[pileNumber].cardsPile[getCurrentCard(pileNumber)].cardType;
-    std::cout << "TITLE " << currentText << std::endl;
     return currentText;
 }

@@ -91,11 +91,11 @@ void Game::setCurrentNeighbours ()
 
 void Game::loadAssets()
 {
-    if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
-        std::exit(1);
+//    if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
+//        std::exit(1);
 
-    if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
-        std::exit(1);
+//    if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
+//        std::exit(1);
 
     if (!gameFont.loadFromFile("assets/fnt/metal-mania.regular.ttf"))
     {
@@ -130,7 +130,7 @@ void Game::loadAssets()
     menuTxt.setString(gameTitle);
     int width = menuTxt.getLocalBounds().width;
     int height = menuTxt.getLocalBounds().height;
-    menuTxt.setPosition(400-(width/2),300-(height/2)-150);
+    menuTxt.setPosition(1050-(width/2),750-(height/2)-150);
     menuTxt.setColor(sf::Color(255, 255, 255, 85));
     cardsDeck.setFonts(&gameFont);
 }
@@ -225,7 +225,6 @@ void Game::hideGameBoard()
 }
 Game::Game():
     screenSize(efc::initScreenX,efc::initScreenY),
-    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewTiles(sf::FloatRect(0, 0, 1360, 768)),
@@ -233,14 +232,26 @@ Game::Game():
     guiSelectBuilding(&textures),
     character(&textures, 3),
     turn(0),
-    gameTitle("pagan   board"),
+    gameTitle("deerportal"),
     roundDice(players),
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
     commandManager(*this),
-    cardsDeck(&textures, &menuFont)
+    cardsDeck(&textures, &menuFont),
+    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer")
+
 {
+
+    textLoading.setString("loading...");
+    textLoading.setFont(menuFont);
+    textLoading.setPosition(200,200);
+    textLoading.setColor(sf::Color::White);
+    textLoading.setCharacterSize(10);
+    window.clear(sf::Color::White);
+    window.draw(textLoading);
+    window.display();
+
 
     numberFinishedPlayers = 0;
     sf::Clock frameClock;
@@ -249,8 +260,23 @@ Game::Game():
     window.setVerticalSyncEnabled(true);
 
     std::srand (time(NULL));
+    window.clear(sf::Color(55,55,55));
+    window.draw(textLoading);
+    window.display();
+
     loadAssets();
+    textLoading.setFont(menuFont);
+    textLoading.setPosition(200,200);
+    textLoading.setColor(sf::Color::White);
+    textLoading.setCharacterSize(10);
+    window.clear(sf::Color::Black);
+    window.draw(textLoading);
+    window.display();
+
     initBoard();
+    window.clear(sf::Color::Black);
+    window.draw(textLoading);
+    window.display();
     showMenu();
     // run the main loop
     while (window.isOpen())
@@ -382,12 +408,8 @@ void Game::nextPlayer(){
     else
         nextRound();
     turn++;
+    std::cout << "NEXT PLAYER " << turn << " " << players[turn].frozenLeft << std::endl;
 
-    if (players[turn].frozenLeft>0)
-    {
-        players[turn].frozenLeft -= 1;
-        nextPlayer();
-    }
 
     if ((players[turn].done==true) && (turn<4))
     {
@@ -398,6 +420,12 @@ void Game::nextPlayer(){
     if ((turn==4) || (turn>4))
     {
         nextRound();
+    }
+
+    if (players[turn].frozenLeft>0)
+    {
+        players[turn].frozenLeft -= 1;
+        nextPlayer();
     }
 
     selector.changeColor(turn);
