@@ -34,8 +34,11 @@ void CardsDeck::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= getTransform();
     for (int i=0;i<=3;i++)
     {
-        target.draw(spriteCardBases[i], states);
-        target.draw(textPileTitle[i], states);
+        if (cardsList[i].invisibleLeft==0.0f)
+        {
+            target.draw(spriteCardBases[i], states);
+            target.draw(textPileTitle[i], states);
+        }
     }
 }
 
@@ -57,6 +60,7 @@ void CardsDeck::setFonts(sf::Font *gameFont)
 
 void CardsDeck::nextCard(int pileNumber)
 {
+    cardsList[pileNumber].invisibleLeft = 1.0f;
     int currentCard = getCurrentCard(pileNumber);
     currentCard += 1;
     if (currentCard>efc::PILE_SIZE-1)
@@ -75,4 +79,22 @@ std::string CardsDeck::getTitle(int pileNumber)
 {
     std::string currentText = cardsList[pileNumber].cardsPile[getCurrentCard(pileNumber)].cardType;
     return currentText;
+}
+
+
+void CardsDeck::update(sf::Time deltaTime)
+{
+    for (int i=0;i<=3;i++)
+    {
+        if (cardsList[i].invisibleLeft>0.0f)
+        {
+            cardsList[i].invisibleLeft -= deltaTime.asSeconds();
+
+        }
+        if (cardsList[i].invisibleLeft<0.0f)
+        {
+            cardsList[i].invisibleLeft = 0.0f;
+        }
+    }
+
 }

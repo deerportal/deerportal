@@ -28,6 +28,7 @@ public:
     int getCurrentCard(int pileNumber);
     std::string getTitle(int pileNumber);
 
+    void update(sf::Time deltaTime);
 };
 
 #endif // CARDSDECK_H

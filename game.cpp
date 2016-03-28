@@ -357,13 +357,11 @@ void Game::update(sf::Time frameTime) {
             nextRotateElem.setColor(turn);
         }
     }
+    cardsDeck.update(frameTime);
     for (int i=0;i<4;i++)
     {
-        players[i].play();
-    }
 
-    for (int i=0;i<4;i++)
-    {
+        players[i].play();
         players[i].update(frameTime, busyTiles);
     }
 
@@ -408,9 +406,6 @@ void Game::nextPlayer(){
     else
         nextRound();
     turn++;
-    std::cout << "NEXT PLAYER " << turn << " " << players[turn].frozenLeft << std::endl;
-
-
     if ((players[turn].done==true) && (turn<4))
     {
         std::cout << "Player " << turn << " is done" << std::endl;

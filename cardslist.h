@@ -25,6 +25,10 @@ public:
     int element; /*!< Number of the element */
 
 
+    float invisibleLeft;
+
+
+
 };
 
 #endif // CARDSLIST_H
