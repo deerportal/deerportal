@@ -185,7 +185,7 @@ void PlayerHud::play()
         i.play();
     }
 }
-void PlayerHud::update(sf::Time deltaTime, std::set<int>& busyTiles)
+void PlayerHud::update(sf::Time deltaTime)
 {
     updateTxt();
     if (frozenLeft==0)
@@ -201,7 +201,7 @@ void PlayerHud::update(sf::Time deltaTime, std::set<int>& busyTiles)
                 movement = sf::Vector2f (0.f, -10.f);
             else if  (i.currentAnimationIndex==efc::DIR_DOWN)
                 movement = sf::Vector2f (0.f, 10.f);
-            i.update(deltaTime, busyTiles);
+            i.update(deltaTime);
         }
     } else{
         characters[0].currentAnimationIndex=efc::DIR_DOWN;

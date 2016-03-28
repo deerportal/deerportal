@@ -30,7 +30,7 @@ public:
 
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    void update(sf::Time deltaTime, std::set<int>& busyTiles);
+//    void update(sf::Time deltaTime, std::set<int>& busyTiles);
 };
 
 #endif // BOARDDIAMOND_H

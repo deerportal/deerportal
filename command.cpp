@@ -111,3 +111,8 @@ void Command::processCard(int pos)
     game.cardsDeck.nextCard(tokenNumber);
     game.sfx.playCard();
 }
+
+int Command::processGui(sf::Vector2f posGui)
+{
+    return posGui.x + posGui.y; /*! TODO: add processing some actions */
+}

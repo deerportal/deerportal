@@ -24,6 +24,9 @@ public:
 
     void processField(int pos);
     void processCard(int pos);
+
+    int processGui(sf::Vector2f posGui);
+
 };
 
 #endif // COMMAND_H

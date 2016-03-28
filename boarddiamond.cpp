@@ -30,9 +30,9 @@ void BoardDiamond::draw(sf::RenderTarget& target, sf::RenderStates states) const
     }
 }
 
-void BoardDiamond::update(sf::Time deltaTime, std::set<int> &busyTiles)
-{
+//void BoardDiamond::update(sf::Time deltaTime, std::set<int> &busyTiles)
+//{
 
-}
+//}
 
 

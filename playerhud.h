@@ -42,7 +42,7 @@ public:
 
     std::vector<Character> characters;
 
-    void update(sf::Time deltaTime, std::set<int> &busyTiles);
+    void update(sf::Time deltaTime);
     void play();
 
     std::set<int> getBusy();

@@ -151,12 +151,12 @@ Character::Character(TextureHolder *textures, int playerNumber):
     setDirIndex(efc::DIR_LEFT);
     setDir();
 
-    sf::Vector2f positions[4] = {
-        sf::Vector2f(0, 0),
-        sf::Vector2f(20, 40),
-        sf::Vector2f(20, 240),
-        sf::Vector2f(40, 240)
-    };
+//    sf::Vector2f positions[4] = {
+//        sf::Vector2f(0, 0),
+//        sf::Vector2f(20, 40),
+//        sf::Vector2f(20, 240),
+//        sf::Vector2f(40, 240)
+//    };
 
     std::array<int, 4> boardPositions{0,15,255-15,255};
 //    std::cout << "define " << playerNumber << std::endl;
@@ -198,7 +198,7 @@ target.draw(animatedSprite, states);
 
 }
 
-void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
+void Character::update(sf::Time deltaTime)
 {
 
 
@@ -209,7 +209,7 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
     sf::Vector2f a(getPosition());
     sf::Vector2i position(efc::getCords(a));
 
-    int charPos = efc::transCords(position);
+//    int charPos = efc::transCords(position);
 
 //    std::cout << a.x << " " << a.y << " " << position.x << " " << position.y << " " << charPos << std::endl;
 
@@ -277,8 +277,8 @@ void Character::update(sf::Time deltaTime, std::set<int> &busyTiles)
     animatedSprite.update(deltaTime);
 
     std::array<int,2> movements(getMovements(diceResult));
-    int left = movements[0];
-    int right = movements[1];
+//    int left = movements[0];
+//    int right = movements[1];
 
 
     if (active==true)

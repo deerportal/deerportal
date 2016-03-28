@@ -170,6 +170,8 @@ void Game::handleLeftClick(sf::Vector2f pos,
                            sf::Vector2f posGui, sf::Vector2f posFull, int mousePos) {
     if (currentState==state_game)
     {
+
+
         std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
         if ((mousePos==movements[0]) || (mousePos==movements[1]))
         {
@@ -178,7 +180,6 @@ void Game::handleLeftClick(sf::Vector2f pos,
             int *possibleExit = std::find(std::begin(efc::possibleExits),
                                           std::end(efc::possibleExits), mousePos);
             if (possibleExit != efc::possibleExits+4) {
-                //                std::cerr << "Found hahahah" << mousePos << std::endl;
                 players[turn].done=true;
                 numberFinishedPlayers += 1;
                 if (numberFinishedPlayers > 3)
@@ -190,6 +191,7 @@ void Game::handleLeftClick(sf::Vector2f pos,
         }
         //        std::string resultCommand = players[turn].getElem(posGui);
         //        command(resultCommand);
+        commandManager.processGui(posGui);
     }
     else if (currentState==state_roll_dice)
     {
@@ -231,15 +233,18 @@ Game::Game():
     selector(efc::TILE_SIZE),
     guiSelectBuilding(&textures),
     character(&textures, 3),
-    turn(0),
     gameTitle("deerportal"),
     roundDice(players),
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
+
+    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
+    turn(0),
+
     commandManager(*this),
-    cardsDeck(&textures, &menuFont),
-    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer")
+    cardsDeck(&textures, &menuFont)
+
 
 {
 
@@ -362,7 +367,7 @@ void Game::update(sf::Time frameTime) {
     {
 
         players[i].play();
-        players[i].update(frameTime, busyTiles);
+        players[i].update(frameTime);
     }
 
     if (currentState==state_lets_begin)

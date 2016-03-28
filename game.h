@@ -36,21 +36,38 @@ extern int initScreenY;
 
 class Game
 {
-
-private:
-    sf::Vector2i screenSize;
-
 public:
-    Game();
-    sf::RenderWindow window;
+    sf::Vector2i screenSize;
     sf::View viewFull;
     sf::View viewGui;
     sf::View viewTiles;
+
+
+private:
+    Selector selector;
+
+    GuiChooseBuilding guiSelectBuilding;
+
+    Character character;
+    std::string gameTitle;
+    RoundDice roundDice;
+
+    int roundNumber;
+
+    GuiRoundDice guiRoundDice;
+
+
+public:
+    Game();
     BoardDiamondSeq boardDiamonds;
+    sf::RenderWindow window;
     PlayerHud players[4];
     SoundFX sfx;
-    int turn;
 
+
+
+public:
+    int turn;
 
 
 private:
@@ -106,20 +123,13 @@ private:
     std::set<int> currentNeighbours;
     void command(std::string command);
     int selectedPos;
-    Selector selector;
-    GuiChooseBuilding guiSelectBuilding;
-    Character character;
 
     void update(sf::Time frameTime);
     void render();
 
-    std::string gameTitle;
-
-    RoundDice roundDice;
-    int roundNumber;
 
 
-    GuiRoundDice guiRoundDice;
+
     void setCurrentNeighbours ();
     void nextPlayer();
 
