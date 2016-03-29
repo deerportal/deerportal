@@ -14,5 +14,21 @@ Features
 * 4 players mode
 * changing seasons
 
-
 SFML, Linux, OSX, Windows.
+
+Installation
+------------
+
+Ubuntu Trusty
+-------------
+-------------
+
+```
+sudo apt-get install libsfml-devl
+git clone https://github.com/bluszcz/deerportal.git
+cd deerportal
+qmake
+make
+make install
+```
+
