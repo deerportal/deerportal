@@ -29,11 +29,12 @@ namespace efc {
     extern std::array<std::array<int,2>,256> boards;
 
     extern int possibleExits[4]; // number of portal's exit where player stops to play
-    const static int diamondsNumber = 56; // number of all cards / diamonds on the board
+    const static int diamondsNumber = 112; // number of all cards / diamonds on the board
     extern std::array<std::array<int,3>,efc::diamondsNumber> DIAMONDS_SETUP;
     extern std::array<std::array<int,39>,4> occupiedFields;
     const static int numberSteps = 39;
     const static int startPlayers[4] = {0,15,255,240};
+    const static int endPlayers[4] = {119,120,135,136};
 
     const static std::map<std::string, std::string> cardTypes = {
         {"stop",    "Freezes a player for the one turn time"},

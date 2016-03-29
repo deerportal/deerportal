@@ -177,9 +177,9 @@ void Game::handleLeftClick(sf::Vector2f pos,
         {
             players[turn].setFigurePos(mousePos);
             commandManager.processField(mousePos);
-            int *possibleExit = std::find(std::begin(efc::possibleExits),
-                                          std::end(efc::possibleExits), mousePos);
-            if (possibleExit != efc::possibleExits+4) {
+            const int *possibleExit = std::find(std::begin(efc::endPlayers),
+                                          std::end(efc::endPlayers), mousePos);
+            if (possibleExit != efc::endPlayers+4) {
                 players[turn].done=true;
                 numberFinishedPlayers += 1;
                 if (numberFinishedPlayers > 3)

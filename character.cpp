@@ -17,35 +17,45 @@ std::array<int,2> Character::getMovements(int howFar)
     if (active==true)
     {
 //        std::cout << "howfar: " <<howFar <<std::endl;
-
-
-
             int indexRight = boardPosition;
             for (int i=boardPosition;i<=boardPosition+howFar-1;i++)
             {
 
+                moveRight = indexRight;
                 if (indexRight==-1)
                     break;
                 indexRight = efc::boards[indexRight][1];
 //                            std::cout << " howfar" << howFar << " index R" << indexRight
 //                                       << " move L " << moveLeft <<  " move R " << moveRight << " dice " << diceResult
 //                                      << std::endl;
+                if (indexRight==-2)
+                {
+                    indexRight = moveRight;
+                    break;
+                }
+
                 if (indexRight==-1)
                     break;
             }
 
             moveRight = indexRight;
 
-
-
             int indexLeft = boardPosition;
             for (int i=boardPosition;i>=boardPosition-howFar+1;i--)
-            {            if (indexLeft==-1)
+            {
+                moveLeft = indexLeft;
+
+                if (indexLeft==-1)
                     break;
                 indexLeft = efc::boards[indexLeft][0];
 //                            std::cout << " howfar" << howFar  << " index l " << indexLeft
 //                                      << " move L " << moveLeft << " move R " << moveRight << " dice " << diceResult
 //                                      << std::endl;
+                if (indexLeft==-2)
+                {
+                    indexLeft = moveLeft;
+                    break;
+                }
                 if (indexLeft==-1)
                     break;
             }
@@ -175,46 +185,21 @@ target.draw(animatedSprite, states);
     {
         if (moveLeft>-1)
         {
-//            std::cout << "draw " << rectangleLeft.getPosition().x <<  " "  << rectangleLeft.getPosition().y << std::endl;
-
             target.draw(leftChar);
-
         }
 
         if (moveRight>-1)
         {
-//            std::cout << "draw R" << rectangleRight.getPosition().x <<  " "  << rectangleRight.getPosition().y << std::endl;
-
-
             target.draw(rightChar);
-
-            //        target.draw(rectangleRight, 4, sf::Quads, states);
-
         }
     }
-
-
-
-
 }
 
 void Character::update(sf::Time deltaTime)
 {
-
-
-
-
-
-
     sf::Vector2f a(getPosition());
     sf::Vector2i position(efc::getCords(a));
-
-//    int charPos = efc::transCords(position);
-
-//    std::cout << a.x << " " << a.y << " " << position.x << " " << position.y << " " << charPos << std::endl;
-
     nextRedirect -= deltaTime.asSeconds();
-
     if (nextRedirect<0)
     {
         int number = rand() % 2;
@@ -285,7 +270,7 @@ void Character::update(sf::Time deltaTime)
     {
         if (moveLeft>-1)
         {
-            sf::Vector2i cordsLeft(efc::transPosition(moveLeft));
+//            sf::Vector2i cordsLeft(efc::transPosition(moveLeft));
             sf::Vector2i neededCords(efc::transPosition(moveLeft));
 
             sf::Vector2f newPos(efc::getScreenPos(neededCords));
@@ -295,7 +280,7 @@ void Character::update(sf::Time deltaTime)
 
         if (moveRight>-1)
         {
-            sf::Vector2i cordsRight(efc::transPosition(moveRight));
+//            sf::Vector2i cordsRight(efc::transPosition(moveRight));
             sf::Vector2i neededCords(efc::transPosition(moveRight));
 
             sf::Vector2f newPos(efc::getScreenPos(neededCords));

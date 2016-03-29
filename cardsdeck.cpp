@@ -60,7 +60,7 @@ void CardsDeck::setFonts(sf::Font *gameFont)
 
 void CardsDeck::nextCard(int pileNumber)
 {
-    cardsList[pileNumber].invisibleLeft = 1.0f;
+    cardsList[pileNumber].invisibleLeft = 0.75f;
     int currentCard = getCurrentCard(pileNumber);
     currentCard += 1;
     if (currentCard>efc::PILE_SIZE-1)

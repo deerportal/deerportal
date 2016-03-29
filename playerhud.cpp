@@ -135,10 +135,10 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize,
     txtNextRound.setPosition(40,(pos*100)+10);
 
 
-    int posX1 = 80;
-    int posX2 = 960;
-    int posY1 = 184;
-    int posY2 = 579;
+    int posX1 = 82;
+    int posX2 = 962;
+    int posY1 = 22;
+    int posY2 = 720;
     std::array<std::array<int,2>,4> textPos =
     {
         {
