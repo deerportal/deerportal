@@ -26,6 +26,7 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont)
             cardsList[i].cardsPile[j].cardType = efc::cardsTypes[j];
         }
         setTitles();
+        cardsList[i].shufflePile();
     }
 }
 

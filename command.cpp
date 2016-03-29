@@ -106,6 +106,7 @@ void Command::processCard(int pos)
         if (cardType == "diamond")
         {
             removeDiamond(game.boardDiamonds.getNumberForField(pos));
+            game.players[game.turn].cash += 1;
 
         } else if (cardType == "stop")
         {
