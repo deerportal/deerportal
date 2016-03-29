@@ -24,11 +24,12 @@ Ubuntu Trusty
 -------------
 
 ```
-sudo apt-get install libsfml-devl
-git clone https://github.com/bluszcz/deerportal.git
-cd deerportal
-qmake
-make
-make install
+$ sudo apt-get install libsfml-devl
+$ git clone https://github.com/bluszcz/deerportal.git
+$ cd deerportal
+$ qmake
+$ make
+$ make install
+$ ../build_release_pagan_board/pagan_board
 ```
 
