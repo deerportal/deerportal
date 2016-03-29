@@ -12,10 +12,6 @@
 #include "character.h"
 #include "data.h"
 
-namespace efc {
-
-
-}
 
 
 class PlayerHud : public sf::Drawable, public sf::Transformable

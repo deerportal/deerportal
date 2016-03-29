@@ -33,9 +33,10 @@ namespace efc {
     extern std::array<std::array<int,3>,efc::diamondsNumber> DIAMONDS_SETUP;
     extern std::array<std::array<int,39>,4> occupiedFields;
     const static int numberSteps = 39;
+    const static int startPlayers[4] = {0,15,255,240};
 
     const static std::map<std::string, std::string> cardTypes = {
-        {"stop",          "Freezes a player for the one turn time"},
+        {"stop",    "Freezes a player for the one turn time"},
         {"diamond", "Collect a diamond from the player area"},
         {"card",    "Collect a card from the player area"},
     };

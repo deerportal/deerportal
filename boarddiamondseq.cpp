@@ -91,6 +91,25 @@ void BoardDiamondSeq::reorder()
 
 }
 
+void BoardDiamondSeq::reorder(int element)
+{
+    srand((unsigned)time(0));
+    int start = element;
+    if (element==2)
+        start = 3;
+    else if (element==3)
+        start = 2;
+
+    int newElement = start;
+
+    for (int i=start*14;i<(efc::diamondsNumber/4)+(start*14);i++)
+    {
+        int step = getRandomPos(newElement);
+        diamonds[i].setBoardPosition(step);
+    }
+
+}
+
 void BoardDiamondSeq::collectField(int pos)
 {
     for (int i=0;  i<efc::diamondsNumber; i++)

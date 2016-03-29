@@ -2,7 +2,7 @@
 
 namespace efc {
 
-std::string seasonsNames[4] = {"spring", "summer", "fall", "winter"};
+std::string seasonsNames[4] = {"winter", "spring", "summer", "fall"};
 
 // This array defines fields occupied by the river
 int terrainArray[24] = {

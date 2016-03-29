@@ -41,6 +41,7 @@ public:
     void collectField(int pos);
     int getNumberForField(int pos);
 
+    void reorder(int element);
 };
 
 #endif // BOARDDIAMONDSEQ_H

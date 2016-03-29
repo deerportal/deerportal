@@ -1,5 +1,8 @@
+#include <algorithm>
+#include <iterator>
 #include "game.h"
 #include "command.h"
+#include "data.h"
 
 Command::Command(efc::Game &currentGame) :
     game(currentGame)
@@ -33,9 +36,8 @@ void Command::removeCard(int playerNumber)
         int elemToRemove = rand() %  numberDiamonds;
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
     }
-
-
 }
+
 void Command::removeDiamond(int playerNumber)
 {
     /*! This should works as following:
@@ -62,8 +64,6 @@ void Command::removeDiamond(int playerNumber)
         int elemToRemove = rand() %  numberDiamonds;
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
     }
-
-
 }
 
 void Command::freezePlayer(int playerNumber)
@@ -73,6 +73,14 @@ void Command::freezePlayer(int playerNumber)
 
 void Command::processField(int pos)
 {
+//    if ()
+    bool startField = std::find(std::begin(efc::startPlayers),
+                            std::end(efc::startPlayers), pos)
+            != std::end(efc::startPlayers);
+
+    if ((startField) && (efc::startPlayers[game.turn]==pos))
+        game.boardDiamonds.reorder(game.turn);
+
     if (game.boardDiamonds.ifFieldIsEmpty(pos)==false)
     {
         game.sfx.playCollect();

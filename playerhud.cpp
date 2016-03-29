@@ -87,20 +87,20 @@ void PlayerHud::setActive(bool newState){
 
 PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize, int pos)
 {
-    static int startPlayers[4] = {0,15,240,255};
+
 
     frozenLeft = 0;
     done = false;
 
     active = false;
     this->textures = textures;
-    Character character(this->textures, pos);
+//    Character character(this->textures, pos);
     characters.push_back(Character (this->textures, pos));
-    efc::BoardElem startElem(textures, startPlayers[pos],444);
-    startElem.setColor(efc::playersColors[pos]);
+//    efc::BoardElem startElem(textures, efc::startPlayers[pos],444);
+//    startElem.setColor(efc::playersColors[pos]);
 
-    elems.items.push_back(startElem);
-    elems.items_map.insert({startPlayers[pos], startElem});
+//    elems.items.push_back(startElem);
+//    elems.items_map.insert({efc::startPlayers[pos], startElem});
     this->faceSize = faceSize;
     spriteFace.setTexture(textures->textureFaces);
     this->pos = pos;
@@ -116,7 +116,6 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize,
     symbol.setScale(sf::Vector2f(0.2f, 0.20f));
     symbol.setColor(sf::Color(25, 25, 25, 105));
     symbol.setPosition(60, (pos*100)+40);
-
 
     food = 0;
     cash = 0;
