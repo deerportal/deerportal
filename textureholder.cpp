@@ -9,7 +9,7 @@ std::set<int> getTerrainSet() {
         terrain.insert(i);
     }
     return terrain;
-};
+}
 
 }
 TextureHolder::TextureHolder()

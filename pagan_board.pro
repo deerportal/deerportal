@@ -75,5 +75,5 @@ HEADERS += \
 
 OTHER_FILES += \
     CREDITS.md
-QMAKE_CXXFLAGS += -std=gnu++0x
+QMAKE_CXXFLAGS += -std=gnu++0x -Wpedantic
 

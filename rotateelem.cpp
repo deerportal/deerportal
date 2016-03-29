@@ -25,8 +25,6 @@ void RotateElem::update(sf::Time deltaTime)
     spriteRotate.rotate(1.0f*speed);
 }
 
-    ;
-
 void RotateElem::setColor(int playerNumber)
 {
     spriteRotate.setColor(efc::playersColors[playerNumber]);

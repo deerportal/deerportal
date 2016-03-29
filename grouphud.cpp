@@ -31,17 +31,17 @@ void GroupHud::setFont(sf::Font *gameFont) {
 void GroupHud::setSeason(int seasonNumber){
    seasonName.setString("Season: " + efc::seasonsNames[seasonNumber]);
 
-};
+}
 
 void GroupHud::setRoundName(int roundNumber){
    roundName.setString("Round: " + std::to_string(roundNumber));
 
-};
+}
 
 void GroupHud::setMonthName(int monthNumber){
    monthName.setString("Month: " + std::to_string(monthNumber));
 
-};
+}
 void GroupHud::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
     states.transform *= getTransform();
