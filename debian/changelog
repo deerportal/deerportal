@@ -1,0 +1,5 @@
+deerportal (0.0.1alpha-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Rafal Zawadzki <bluszcz@devcarpet.net>  Fri, 08 Apr 2016 23:40:21 +0200

@@ -1,0 +1,15 @@
+Source: deerportal
+Section: unknown
+Priority: optional
+Maintainer: Rafal Zawadzki <bluszcz@devcarpet.net>
+Build-Depends: debhelper (>= 8.0.0), qt5-qmake, qt5-default, libsfml-dev
+Standards-Version: 3.9.4
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Git: git://git.debian.org/collab-maint/deerportal.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/deerportal.git;a=summary
+
+Package: deerportal
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
