@@ -9,9 +9,9 @@ void GuiWindow::setTitle(std::string newTitle) {
 
 GuiWindow::GuiWindow(TextureHolder *textures)
 {
-    spriteClose.setTexture(textures->textureGui);
-    spriteClose.setTextureRect(sf::IntRect(0,0,16,16));
-    spriteClose.move(sf::Vector2f(150-16,0));
+//    spriteClose.setTexture(textures->textureGui);
+//    spriteClose.setTextureRect(sf::IntRect(0,0,16,16));
+//    spriteClose.move(sf::Vector2f(150-16,0));
     if (!guiElemFont.loadFromFile("assets/fnt/metal-macabre.regular.ttf"))
     {
         std::exit(1);
@@ -39,12 +39,12 @@ GuiWindow::GuiWindow(){
     setPosition(150, 100);
 }
 
-void GuiWindow::setTextureHolder(TextureHolder *textures)
-{
+//void GuiWindow::setTextureHolder(TextureHolder *textures)
+//{
 
-    spriteClose.setTexture(textures->textureGui);
+////    spriteClose.setTexture(textures->textureGui);
 
-}
+//}
 
 
 void GuiWindow::init(){

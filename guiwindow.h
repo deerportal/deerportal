@@ -9,7 +9,7 @@ class GuiWindow: public Hover
 public:
     GuiWindow(TextureHolder *textures);
     GuiWindow();
-    void setTextureHolder(TextureHolder *textures);
+//    void setTextureHolder(TextureHolder *textures);
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void init();

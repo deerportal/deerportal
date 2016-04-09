@@ -29,7 +29,7 @@ sf::Vector2f getScreenPos(sf::Vector2i cords);
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
-    bool load(TextureHolder *textures, sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height);
+//    bool load(TextureHolder *textures, sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height);
     TileMap();
 
 private:

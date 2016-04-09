@@ -102,20 +102,20 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize,
 //    elems.items.push_back(startElem);
 //    elems.items_map.insert({efc::startPlayers[pos], startElem});
     this->faceSize = faceSize;
-    spriteFace.setTexture(textures->textureFaces);
+//    spriteFace.setTexture(textures->textureFaces);
     this->pos = pos;
 
 
-    symbol.setTexture(this->textures->textureSymbols);
+//    symbol.setTexture(this->textures->textureSymbols);
 
 
-    sf::IntRect symbolsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
+//    sf::IntRect symbolsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
 
 
-    symbol.setTextureRect(symbolsRect[pos]);
-    symbol.setScale(sf::Vector2f(0.2f, 0.20f));
-    symbol.setColor(sf::Color(25, 25, 25, 105));
-    symbol.setPosition(60, (pos*100)+40);
+//    symbol.setTextureRect(symbolsRect[pos]);
+//    symbol.setScale(sf::Vector2f(0.2f, 0.20f));
+//    symbol.setColor(sf::Color(25, 25, 25, 105));
+//    symbol.setPosition(60, (pos*100)+40);
 
     food = 0;
     cash = 0;

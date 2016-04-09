@@ -30,20 +30,20 @@ TextureHolder::TextureHolder()
         std::exit(1);
 
 
-    if (!textureGameBackground.loadFromFile("assets/img/game-background.png"))
-        std::exit(1);
+//    if (!textureGameBackground.loadFromFile("assets/img/game-ackground.png"))
+//        std::exit(1);
 
-    if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
-        std::exit(1);
-    if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
-        std::exit(1);
-    if (!textureGui.loadFromFile("assets/img/gui.png"))
-        std::exit(1);
+//    if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
+//        std::exit(1);
+//    if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
+//        std::exit(1);
+//    if (!textureGui.loadFromFile("assets/img/gui.png"))
+//        std::exit(1);
 
-    if (!textureSymbols.loadFromFile("assets/img/symbols.png"))
-        std::exit(1);
-    if (!textureSeasons.loadFromFile("assets/img/seasons.png"))
-        std::exit(1);
+//    if (!textureSymbols.loadFromFile("assets/img/symbols.png"))
+//        std::exit(1);
+//    if (!textureSeasons.loadFromFile("assets/img/seasons.png"))
+//        std::exit(1);
 
     if (!textureCharacters.loadFromFile("assets/img/characters.png"))
         std::exit(1);
@@ -53,8 +53,8 @@ TextureHolder::TextureHolder()
     if (!textureBoardDiamond.loadFromFile("assets/img/board_diamonds.png"))
         std::exit(1);
 
-    if (!textureMenu.loadFromFile("assets/img/background_new.png"))
-        std::exit(1);
+//    if (!textureMenu.loadFromFile("assets/img/background_new.png"))
+//        std::exit(1);
 
     if (!textureLetsBegin.loadFromFile("assets/img/letsbegin.png"))
         std::exit(1);

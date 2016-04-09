@@ -14,7 +14,6 @@
 #include "playerhud.h"
 #include "textureholder.h"
 #include "hover.h"
-#include "guichoosebuilding.h"
 #include "guiwindow.h"
 #include "rounddice.h"
 #include "guirounddice.h"
@@ -46,7 +45,6 @@ public:
 private:
     Selector selector;
 
-    GuiChooseBuilding guiSelectBuilding;
 
     Character character;
     std::string gameTitle;
@@ -96,7 +94,7 @@ private:
 
     states currentState;
 
-    sf::Texture textureBackground;
+//    sf::Texture textureBackground;
     sf::Sprite spriteBackground;
     sf::Sprite gameBackground;
     sf::Sprite spriteBackgroundDark;
@@ -141,7 +139,7 @@ private:
     //int currentSeason = 0;
 
     sf::Music musicGame;
-    sf::Music musicBackground;
+//    sf::Music musicBackground;
     sf::Music musicMenu;
 
     sf::SoundBuffer sfxClickBuffer;

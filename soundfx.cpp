@@ -2,7 +2,7 @@
 
 SoundFX::SoundFX()
 {
-    if (!soundCollectBuffer.loadFromFile("assets/audio/collect.wav"))
+    if (!soundCollectBuffer.loadFromFile("assets/audio/collect.ogg"))
         exit(-1);
     if (!soundCardBuffer.loadFromFile("assets/audio/card.ogg"))
         exit(-1);

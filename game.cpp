@@ -13,11 +13,11 @@ void Game::initBoard()
     sfxClick.setBuffer(sfxClickBuffer);
     sfxDone.setBuffer(sfxDoneBuffer);
 
-    spriteBackground.setTexture(textureBackground);
+//    spriteBackground.setTexture(textureBackground);
     spriteBackgroundDark.setTexture(textures.backgroundDark);
     spriteBackgroundDark.setPosition(0,0);
 
-    gameBackground.setTexture(textures.textureGameBackground);
+//    gameBackground.setTexture(textures.textureGameBackground);
     spriteLestBegin.setTexture(textures.textureLetsBegin);
     viewTiles.setViewport(sf::FloatRect(0.15f,0.1f, 1.0f, 1.0f));
     viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
@@ -26,43 +26,43 @@ void Game::initBoard()
     groupHud.setSeason(currentSeason);
     groupHud.setRoundName(roundNumber);
 
-    sf::IntRect seasonsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
+//    sf::IntRect seasonsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
 
-    sf::Sprite season1;
-    season1.setTexture(textures.textureSeasons);
-    season1.setTextureRect(seasonsRect[0]);
-    season1.setPosition(0,400);
-    season1.scale(sf::Vector2f(0.25f, 0.25f));
-    season1.move(37.5, 30.5);
-    season1.setColor(sf::Color(0,255,0,80));
-    seasons[0] = season1;
+//    sf::Sprite season1;
+//    season1.setTexture(textures.textureSeasons);
+//    season1.setTextureRect(seasonsRect[0]);
+//    season1.setPosition(0,400);
+//    season1.scale(sf::Vector2f(0.25f, 0.25f));
+//    season1.move(37.5, 30.5);
+//    season1.setColor(sf::Color(0,255,0,80));
+//    seasons[0] = season1;
 
-    sf::Sprite season2;
-    season2.setTexture(textures.textureSeasons);
-    season2.setTextureRect(seasonsRect[1]);
-    season2.setPosition(0,400);
-    season2.scale(sf::Vector2f(0.25f, 0.25f));
-    season2.move(37.5, 30.5);
-    season2.setColor(sf::Color(200,200,50,80));
-    seasons[1] = season2;
+//    sf::Sprite season2;
+//    season2.setTexture(textures.textureSeasons);
+//    season2.setTextureRect(seasonsRect[1]);
+//    season2.setPosition(0,400);
+//    season2.scale(sf::Vector2f(0.25f, 0.25f));
+//    season2.move(37.5, 30.5);
+//    season2.setColor(sf::Color(200,200,50,80));
+//    seasons[1] = season2;
 
-    sf::Sprite season3;
-    season3.setTexture(textures.textureSeasons);
-    season3.setTextureRect(seasonsRect[2]);
-    season3.setPosition(0,400);
-    season3.scale(sf::Vector2f(0.25f, 0.25f));
-    season3.move(37.5, 30.5);
-    season3.setColor(sf::Color(90,90,255,80));
-    seasons[2] = season3;
+//    sf::Sprite season3;
+//    season3.setTexture(textures.textureSeasons);
+//    season3.setTextureRect(seasonsRect[2]);
+//    season3.setPosition(0,400);
+//    season3.scale(sf::Vector2f(0.25f, 0.25f));
+//    season3.move(37.5, 30.5);
+//    season3.setColor(sf::Color(90,90,255,80));
+//    seasons[2] = season3;
 
-    sf::Sprite season4;
-    season4.setTexture(textures.textureSeasons);
-    season4.setTextureRect(seasonsRect[3]);
-    season4.setPosition(0,400);
-    season4.scale(sf::Vector2f(0.25f, 0.25f));
-    season4.move(37.5, 30.5);
-    season4.setColor(sf::Color(255,0,0,80));
-    seasons[3] = season4;
+//    sf::Sprite season4;
+//    season4.setTexture(textures.textureSeasons);
+//    season4.setTextureRect(seasonsRect[3]);
+//    season4.setPosition(0,400);
+//    season4.scale(sf::Vector2f(0.25f, 0.25f));
+//    season4.move(37.5, 30.5);
+//    season4.setColor(sf::Color(255,0,0,80));
+//    seasons[3] = season4;
 
     // Initialization of the players
     cardsDeck.setFonts(&menuFont);
@@ -110,8 +110,8 @@ void Game::loadAssets()
 
     if (!musicGame.openFromFile("assets/audio/game.ogg"))
         std::exit(1);
-    if (!musicBackground.openFromFile("assets/audio/wind2.ogg"))
-        std::exit(1);
+//    if (!musicBackground.openFromFile("assets/audio/wind2.ogg"))
+//        std::exit(1);
     if (!musicMenu.openFromFile("assets/audio/menu.ogg"))
         std::exit(1);
 
@@ -121,8 +121,8 @@ void Game::loadAssets()
 
     if (!sfxDoneBuffer.loadFromFile("assets/audio/done.ogg"))
         std::exit(1);
-    if (!textureBackground.loadFromFile("assets/img/background.png"))
-        std::exit(1);
+//    if (!textureBackground.loadFromFile("assets/img/background.png"))
+//        std::exit(1);
 
     spriteBackgroundArt.setTexture(textureBackgroundArt);
     menuTxt.setFont(menuFont);
@@ -137,10 +137,10 @@ void Game::loadAssets()
 
 void Game::showMenu()
 {
-    musicBackground.play();
-    musicBackground.setLoop(true);
-    menuBackground.setTexture(textures.textureMenu);
-    musicBackground.setVolume(7);
+//    musicBackgroun/*d*/.play();
+//    musicBackground.setLoop(true);
+//    menuBackground.setTexture(textures.textureMenu);
+//    musicBackground.setVolume(7);
     musicMenu.play();
     musicMenu.setLoop(true);
     currentState = state_menu;
@@ -163,7 +163,7 @@ void Game::showGameBoard()
 void Game::endGame()
 {
     currentState = state_end_game;
-    musicBackground.stop();
+//    musicBackground.stop();
 }
 
 void Game::handleLeftClick(sf::Vector2f pos,
@@ -231,7 +231,6 @@ Game::Game():
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewTiles(sf::FloatRect(0, 0, 1360, 768)),
     selector(efc::TILE_SIZE),
-    guiSelectBuilding(&textures),
     character(&textures, 3),
     gameTitle("deerportal"),
     roundDice(players),
@@ -301,15 +300,15 @@ Game::Game():
             int mousePos = efc::transCords(sf::Vector2i(mousePosX, mousePosY));
             if(event.type == sf::Event::Closed)
                 window.close();
-            if (currentState==state_gui_elem)
-            {
-                resultCommand = guiSelectBuilding.getElem(localPositionFull);
-                showPlayerBoardElems = false;
-                if (resultCommand.find("elem_")==0)
-                    command(resultCommand);
-                else
-                    command("hide_gui_elem_description");
-            }
+//            if (currentState==state_gui_elem)
+//            {
+//                resultCommand = guiSelectBuilding.getElem(localPositionFull);
+//                showPlayerBoardElems = false;
+//                if (resultCommand.find("elem_")==0)
+//                    command(resultCommand);
+//                else
+//                    command("hide_gui_elem_description");
+//            }
 
             // Showing mouse hover
             if (currentState==state_game)
@@ -546,7 +545,7 @@ void Game::render()
 
         drawBaseGame();
         drawCharacters();
-        window.draw(guiSelectBuilding);
+//        window.draw(guiSelectBuilding);
         window.setView(viewFull);
         window.draw(groupHud);
 
@@ -576,18 +575,18 @@ void Game::render()
 }
 
 void Game::command(std::string command){
-    if (command=="close_gui")
-    {
-        guiSelectBuilding.active = false;
-        currentState=state_game;
-        sfxClick.play();
-    }
-    if (command=="hide_gui_elem_description")
-    {
-        if (currentState==state_gui_elem) {
-            guiSelectBuilding.descriptionActive = false;
-        }
-    }
+//    if (command=="close_gui")
+//    {
+//        guiSelectBuilding.active = false;
+//        currentState=state_game;
+//        sfxClick.play();
+//    }
+//    if (command=="hide_gui_elem_description")
+//    {
+//        if (currentState==state_gui_elem) {
+//            guiSelectBuilding.descriptionActive = false;
+//        }
+//    }
 
     if (command.find("end_of_round")==0)
     {

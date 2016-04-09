@@ -20,7 +20,7 @@ sf::RectangleShape createNeighbour(int pos) {
 efc::BoardElem::BoardElem(TextureHolder *textures,int pos, int type)
 {
 
-    textureTiles = &textures->textureTiles;
+//    textureTiles = &textures->textureTiles;
     this->pos = pos;
     this->type = type;
 
@@ -29,7 +29,7 @@ efc::BoardElem::BoardElem(TextureHolder *textures,int pos, int type)
     int x_type = type % efc::TILE_BOARD_SIZE;
 
     setPosition(cords.x*efc::TILE_SIZE,cords.y*efc::TILE_SIZE);
-    setTexture(textures->textureTiles);
+//    setTexture(textures->textureTiles);
     setTextureRect(sf::IntRect(x_type*efc::TILE_SIZE, y_type*efc::TILE_SIZE, efc::TILE_SIZE, efc::TILE_SIZE));
 
 

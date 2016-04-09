@@ -18,15 +18,15 @@ class TextureHolder
 {
 public:
     TextureHolder();
-    sf::Texture textureTiles;
-    sf::Texture textureFaces;
-    sf::Texture textureGui;
-    sf::Texture textureMenu;
-    sf::Texture textureSymbols;
-    sf::Texture textureSeasons;
+//    sf::Texture textureTiles;
+//    sf::Texture textureFaces;
+//    sf::Texture textureGui;
+//    sf::Texture textureMenu;
+//    sf::Texture textureSymbols;
+//    sf::Texture textureSeasons;
     sf::Texture backgroundDark;
     sf::Texture textureCharacters;
-    sf::Texture textureGameBackground;
+//    sf::Texture textureGameBackground;
     sf::Texture textureBoardDiamond;
     sf::Texture textureLetsBegin;
 
