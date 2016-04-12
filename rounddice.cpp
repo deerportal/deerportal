@@ -53,14 +53,14 @@ std::string RoundDice::drawRound(){
 
 int RoundDice::throwDice(){
     sfxDice.play();
-    int result = random()%100;
+    int result = rand()%100;
     diceResult = result;
     return result;
 }
 
 int RoundDice::throwDiceSix(){
     sfxDice.play();
-    int result = random()%6;
+    int result = rand()%6;
     diceResultSix = result;
     setDiceTexture();
     return result+1;
