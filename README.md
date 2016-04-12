@@ -34,3 +34,4 @@ $ ../build_release_pagan_board/pagan_board
 ```
 
 We are also providing binary packages in the *Releases* section.
+
