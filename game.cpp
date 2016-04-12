@@ -12,11 +12,9 @@ void Game::initBoard()
 
     sfxClick.setBuffer(sfxClickBuffer);
     sfxDone.setBuffer(sfxDoneBuffer);
-
 //    spriteBackground.setTexture(textureBackground);
     spriteBackgroundDark.setTexture(textures.backgroundDark);
     spriteBackgroundDark.setPosition(0,0);
-
 //    gameBackground.setTexture(textures.textureGameBackground);
     spriteLestBegin.setTexture(textures.textureLetsBegin);
     viewTiles.setViewport(sf::FloatRect(0.15f,0.1f, 1.0f, 1.0f));
@@ -77,7 +75,6 @@ void Game::initBoard()
 
     players[0].setActive(true);
     setCurrentNeighbours();
-
     diceResultPlayer =  6;
     players[turn].characters[0].diceResult = diceResultPlayer;
     roundDice.setColor(turn);
@@ -91,11 +88,6 @@ void Game::setCurrentNeighbours ()
 
 void Game::loadAssets()
 {
-//    if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
-//        std::exit(1);
-
-//    if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
-//        std::exit(1);
 
     if (!gameFont.loadFromFile("assets/fnt/metal-mania.regular.ttf"))
     {
