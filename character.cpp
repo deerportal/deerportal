@@ -74,6 +74,15 @@ std::array<int,2> Character::getMovements(int howFar)
 
 }
 
+void Character::setBoardPosition(int playerNumber)
+{
+    Elem::setBoardPosition(playerNumber);
+    move(0,-20);
+
+}
+
+
+
 void Character::setDir(int direction)
 {
     if (direction==efc::DIR_LEFT)

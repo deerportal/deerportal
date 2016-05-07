@@ -79,7 +79,10 @@ private:
 
     void drawMenu();
     float runningCounter;
+    sf::Sprite playersSprites[4]  ;
     sf::Vector2f getMousePos();
+
+    int playersSpritesCords[4][2];
 
     enum states {
         state_init,
@@ -114,6 +117,8 @@ private:
     sf::Text menuTxt;
 
     sf::Shader shaderBlur;
+    sf::Shader shaderPixel;
+    sf::Shader shaderDark;
 
     TileMap map;
 

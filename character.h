@@ -53,6 +53,9 @@ public:
     bool active;
     bool drawMovements;
 
+    void setBoardPosition(int playerNumber);
+
+
 
 };
 

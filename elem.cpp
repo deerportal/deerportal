@@ -42,4 +42,6 @@ void Elem::setBoardPosition(int boardPosition)
    float newX =  newVecPos.x + (efc::TILE_SIZE/3);
 //   newX = newX - (newSize.width);
    setPosition(newX, newPos.y);
+   move(202,76);
+
 }

@@ -30,7 +30,7 @@ AnimatedSprite::AnimatedSprite(sf::Time frameTime, bool paused, bool looped) :
     m_animation(NULL), m_frameTime(frameTime), m_currentFrame(0), m_isPaused(paused), m_isLooped(looped), m_texture(NULL)
 {
 
-//    setScale(0.9,0.9);
+    setScale(1.9,1.9);
 
 }
 

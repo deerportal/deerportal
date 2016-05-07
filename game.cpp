@@ -101,6 +101,11 @@ void Game::loadAssets()
     if (!shaderBlur.loadFromFile("assets/shaders/blur.frag", sf::Shader::Fragment))
         std::exit(1);
 
+    if (!shaderPixel.loadFromFile("assets/shaders/pixelate.frag", sf::Shader::Fragment))
+        std::exit(1);
+    if (!shaderDark.loadFromFile("assets/shaders/dark.frag", sf::Shader::Fragment))
+        std::exit(1);
+
     if (!textureBackgroundArt.loadFromFile("assets/img/background_land.png"))
         std::exit(1);
 
@@ -129,6 +134,18 @@ void Game::loadAssets()
     menuTxt.setPosition(1050-(width/2),750-(height/2)-150);
     menuTxt.setColor(sf::Color(255, 255, 255, 85));
     cardsDeck.setFonts(&gameFont);
+
+
+
+    for (int i=0;i<4;i++)
+    {
+         playersSprites[i].setTexture(textureBackgroundArt);
+        playersSprites[i].setTextureRect(sf::IntRect(playersSpritesCords[i][0],
+                                         playersSpritesCords[i][1], 280, 280));
+        playersSprites[i].setPosition(playersSpritesCords[i][0], playersSpritesCords[i][1]);
+    }
+
+
 }
 
 void Game::showMenu()
@@ -242,7 +259,14 @@ Game::Game():
 
 
 {
-
+    playersSpritesCords[0][0] = 202;
+    playersSpritesCords[0][1] = 76;
+    playersSpritesCords[1][0] = 562;
+    playersSpritesCords[1][1] = 76;
+    playersSpritesCords[3][0] = 202;
+    playersSpritesCords[3][1] = 436;
+    playersSpritesCords[2][0] = 562;
+    playersSpritesCords[2][1] = 436;
     textLoading.setString("loading...");
     textLoading.setFont(menuFont);
     textLoading.setPosition(200,200);
@@ -278,7 +302,6 @@ Game::Game():
     renderTexture.clear(sf::Color::Black);
     renderTexture.draw(textLoading);
     renderTexture.display();
-
 
 
     showMenu();
@@ -488,16 +511,27 @@ void Game::drawBaseGame()
 void Game::drawCharacters(float deltaTime){
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
 
-    shaderBlur.setParameter("blur_radius", sin(runningCounter) );
+    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
 
     renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
+    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
+    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
+    shaderBlur.setParameter("blur_radius", 0.5);
+//    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
+//    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
+    shaderPixel.setParameter("pixel_threshold", 0.05);
+
     renderTexture.draw(spriteBackgroundArt);
-    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 128));
-    renderTexture.draw(spriteBackgroundArt, &shaderBlur);
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
 
-
+    for (int i=0;i<4;i++)
+    {
+         if (turn==i)
+         renderTexture.draw(playersSprites[i]);
+         else
+             renderTexture.draw(playersSprites[i], &shaderDark);
+    }
     renderTexture.draw(cardsDeck);
     renderTexture.draw(roundDice.spriteDice);
     renderTexture.setView(viewTiles);
@@ -511,6 +545,10 @@ void Game::drawCharacters(float deltaTime){
         if (currentMovements[0]>-1)
             renderTexture.draw(prevRotateElem);
     }
+
+    renderTexture.setView(viewFull);
+
+
     for (int i=0;i<4;i++)
     {
         for (auto&& j: players[i].characters)
@@ -534,7 +572,9 @@ void Game::render(float deltaTime)
     {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 2);
+
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
+
         renderTexture.setView(viewTiles);
         drawBaseGame();
         drawCharacters(deltaTime);
@@ -569,6 +609,8 @@ void Game::render(float deltaTime)
         renderTexture.draw(groupHud);
 
     }  else if (currentState==state_menu) {
+        shaderBlur.setParameter("blur_radius", 15);
+        renderTexture.draw(menuTxt, &shaderBlur);
         renderTexture.draw(menuTxt);
 //        window.draw(menuTxt);
     }  else if (currentState==state_lets_begin) {
@@ -597,6 +639,7 @@ void Game::render(float deltaTime)
     renderSprite.setTexture(renderTexture.getTexture());
 
     shaderBlur.setParameter("blur_radius", sin(deltaTime)*0.015);
+    shaderBlur.setParameter("blur_radius", 0.0003);
     window.draw(renderSprite, &shaderBlur);
 
     window.display();

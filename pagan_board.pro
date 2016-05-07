@@ -76,5 +76,7 @@ OTHER_FILES += \
 QMAKE_CXXFLAGS += -std=gnu++0x -Wpedantic
 
 DISTFILES += \
-    assets/shaders/blur.frag
+    assets/shaders/blur.frag \
+    assets/shaders/pixelate.frag \
+    assets/shaders/dark.frag
 
