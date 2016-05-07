@@ -97,6 +97,10 @@ void Game::loadAssets()
     {
         std::exit(1);
     }
+
+    if (!shaderBlur.loadFromFile("assets/shaders/blur.frag", sf::Shader::Fragment))
+        std::exit(1);
+
     if (!textureBackgroundArt.loadFromFile("assets/img/background_land.png"))
         std::exit(1);
 
@@ -244,11 +248,12 @@ Game::Game():
     textLoading.setPosition(200,200);
     textLoading.setColor(sf::Color::White);
     textLoading.setCharacterSize(10);
-    window.clear(sf::Color::White);
-    window.draw(textLoading);
-    window.display();
+    renderTexture.create(1360,768);
+    renderTexture.clear(sf::Color::White);
+    renderTexture.draw(textLoading);
+    renderTexture.display();
 
-
+    renderSprite.setTexture(renderTexture.getTexture());
     numberFinishedPlayers = 0;
     sf::Clock frameClock;
     guiRoundDice.active = true;
@@ -257,7 +262,7 @@ Game::Game():
 
     std::srand (time(NULL));
     window.clear(sf::Color(55,55,55));
-    window.draw(textLoading);
+    renderTexture.draw(textLoading);
     window.display();
 
     loadAssets();
@@ -265,15 +270,21 @@ Game::Game():
     textLoading.setPosition(200,200);
     textLoading.setColor(sf::Color::White);
     textLoading.setCharacterSize(10);
-    window.clear(sf::Color::Black);
-    window.draw(textLoading);
+    renderTexture.clear(sf::Color::Black);
+    renderTexture.draw(textLoading);
     window.display();
 
     initBoard();
-    window.clear(sf::Color::Black);
-    window.draw(textLoading);
-    window.display();
+    renderTexture.clear(sf::Color::Black);
+    renderTexture.draw(textLoading);
+    renderTexture.display();
+
+
+
     showMenu();
+
+
+
     // run the main loop
     while (window.isOpen())
     {
@@ -330,11 +341,12 @@ Game::Game():
         }
 
         update(frameTime);
-        render();
+        render(frameTime.asSeconds());
     }
 }
 
 void Game::update(sf::Time frameTime) {
+    runningCounter += frameTime.asSeconds();
     if (currentState==state_game)
     {
         std::array<int,2> currentMovements = players[turn].getMovements(diceResultPlayer);
@@ -446,48 +458,58 @@ void Game::nextPlayer(){
 void Game::drawPlayersGui(){
     for (int i=0;i<4;i++)
     {
-        window.draw(players[i]);
+        renderTexture.draw(players[i]);
     }
 }
 
 void Game::drawSquares() {
     if (showPlayerBoardElems)
     {
-        window.draw(selector);
+        renderTexture.draw(selector);
     }
 
 }
 
 void Game::drawBaseGame()
 {
-    window.setView(viewTiles);
+
+
+    renderTexture.setView(viewTiles);
     //    window.draw(map);
     for (int i=0;i<4;i++)
     {
-        window.draw(players[i].elems);
+        renderTexture.draw(players[i].elems);
     }
     drawSquares();
-    window.setView(viewGui);
-    window.setView(viewTiles);
+    renderTexture.setView(viewGui);
+    renderTexture.setView(viewTiles);
 }
 
-void Game::drawCharacters(){
-    window.setView(viewTiles); // Yeah Katia's inspiration
-    window.draw(gameBackground);
-    window.setView(viewFull);
-    window.draw(spriteBackgroundArt);
-    window.draw(cardsDeck);
-    window.draw(roundDice.spriteDice);
-    window.setView(viewTiles);
+void Game::drawCharacters(float deltaTime){
+    renderTexture.setView(viewTiles); // Yeah Katia's inspiration
+
+    shaderBlur.setParameter("blur_radius", sin(runningCounter) );
+
+    renderTexture.draw(gameBackground);
+    renderTexture.setView(viewFull);
+    renderTexture.draw(spriteBackgroundArt);
+    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 128));
+    renderTexture.draw(spriteBackgroundArt, &shaderBlur);
+    spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
+
+
+    renderTexture.draw(cardsDeck);
+    renderTexture.draw(roundDice.spriteDice);
+    renderTexture.setView(viewTiles);
     drawSquares();
 
     if (currentState==state_game)
     {
         std::array<int,2> currentMovements = players[turn].characters[0].getMovements(diceResultPlayer);
         if (currentMovements[1]>-1)
-            window.draw(nextRotateElem);
+            renderTexture.draw(nextRotateElem);
         if (currentMovements[0]>-1)
-            window.draw(prevRotateElem);
+            renderTexture.draw(prevRotateElem);
     }
     for (int i=0;i<4;i++)
     {
@@ -497,72 +519,86 @@ void Game::drawCharacters(){
                 j.drawMovements = true;
             else
                 j.drawMovements = false;
-            window.draw(j);
+            renderTexture.draw(j);
         }
     }
 }
 
-void Game::render()
+
+
+void Game::render(float deltaTime)
 {
     window.clear();
+    renderTexture.clear();
     if (currentState==state_game)
     {
-        window.setView(viewFull);
-        window.draw(spriteBackgroundDark);
-        window.setView(viewTiles);
+        renderTexture.setView(viewFull);
+        shaderBlur.setParameter("blur_radius", 2);
+        renderTexture.draw(spriteBackgroundDark, &shaderBlur);
+        renderTexture.setView(viewTiles);
         drawBaseGame();
-        drawCharacters();
-        window.draw(boardDiamonds);
-        window.setView(viewFull);
+        drawCharacters(deltaTime);
+        renderTexture.draw(boardDiamonds);
+        renderTexture.setView(viewFull);
         drawPlayersGui();
-        window.setView(viewFull);
-        window.draw(groupHud);
+        renderTexture.setView(viewFull);
+        renderTexture.draw(groupHud);
 
     } else if (currentState==state_roll_dice) {
-        window.setView(viewFull);
-        window.draw(spriteBackgroundDark);
-
-        window.setView(viewTiles);
+        renderTexture.setView(viewFull);
+        shaderBlur.setParameter("blur_radius", 2);
+        renderTexture.draw(spriteBackgroundDark, &shaderBlur);
+        renderTexture.setView(viewTiles);
         drawBaseGame();
-        drawCharacters();
-        window.draw(boardDiamonds);
-        window.setView(viewFull);
+        drawCharacters(deltaTime);
+        renderTexture.draw(boardDiamonds);
+        renderTexture.setView(viewFull);
         drawPlayersGui();
-        window.setView(viewFull);
-        window.draw(groupHud);
+        renderTexture.setView(viewFull);
+        renderTexture.draw(groupHud);
 
     } else if (currentState==state_gui_elem) {
-        window.setView(viewFull);
-        window.draw(spriteBackgroundDark);
+        renderTexture.setView(viewFull);
+        shaderBlur.setParameter("blur_radius", 2);
+        renderTexture.draw(spriteBackgroundDark, &shaderBlur);
 
         drawBaseGame();
-        drawCharacters();
+        drawCharacters(deltaTime);
 //        window.draw(guiSelectBuilding);
-        window.setView(viewFull);
-        window.draw(groupHud);
+        renderTexture.setView(viewFull);
+        renderTexture.draw(groupHud);
 
     }  else if (currentState==state_menu) {
-        window.draw(menuTxt);
+        renderTexture.draw(menuTxt);
+//        window.draw(menuTxt);
     }  else if (currentState==state_lets_begin) {
-        window.setView(viewFull);
-        window.draw(spriteBackgroundDark);
-
-        window.setView(viewTiles);
+        renderTexture.setView(viewFull);
+        shaderBlur.setParameter("blur_radius", 2);
+        renderTexture.draw(spriteBackgroundDark, &shaderBlur);
+        renderTexture.setView(viewTiles);
         drawBaseGame();
-        drawCharacters();
-        window.draw(boardDiamonds);
-        window.setView(viewFull);
+        drawCharacters(deltaTime);
+        renderTexture.draw(boardDiamonds);
+        renderTexture.setView(viewFull);
         drawPlayersGui();
-        window.draw(spriteLestBegin);
+        renderTexture.draw(spriteLestBegin);
 
     } else if (currentState==state_gui_end_round){
-        window.setView(viewFull);
-        window.draw(spriteBackgroundDark);
+        renderTexture.setView(viewFull);
+        renderTexture.draw(spriteBackgroundDark);
         drawBaseGame();
-        window.draw(guiRoundDice);
-        window.setView(viewFull);
-        window.draw(groupHud);
+        renderTexture.draw(guiRoundDice);
+        renderTexture.setView(viewFull);
+        renderTexture.draw(groupHud);
     }
+
+
+    renderTexture.display();
+    renderSprite.setTexture(renderTexture.getTexture());
+
+    shaderBlur.setParameter("blur_radius", sin(deltaTime)*0.015);
+    window.draw(renderSprite, &shaderBlur);
+
     window.display();
 }
 

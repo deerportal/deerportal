@@ -59,6 +59,9 @@ public:
     Game();
     BoardDiamondSeq boardDiamonds;
     sf::RenderWindow window;
+    sf::RenderTexture renderTexture;
+    sf::Sprite renderSprite;
+
     PlayerHud players[4];
     SoundFX sfx;
 
@@ -75,7 +78,7 @@ private:
     void drawSquares();
 
     void drawMenu();
-
+    float runningCounter;
     sf::Vector2f getMousePos();
 
     enum states {
@@ -110,7 +113,7 @@ private:
     sf::Font menuFont;
     sf::Text menuTxt;
 
-
+    sf::Shader shaderBlur;
 
     TileMap map;
 
@@ -123,7 +126,7 @@ private:
     int selectedPos;
 
     void update(sf::Time frameTime);
-    void render();
+    void render(float deltaTime);
 
 
 
@@ -172,7 +175,7 @@ private:
     Animation* currentAnimation;
     AnimatedSprite animatedSprite;
 
-    void drawCharacters();
+    void drawCharacters(float deltaTime);
     void handleLeftClick(sf::Vector2f pos,
                          sf::Vector2f posGui, sf::Vector2f posFull, int mousePos);
 

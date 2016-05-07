@@ -75,3 +75,6 @@ OTHER_FILES += \
     CREDITS.md
 QMAKE_CXXFLAGS += -std=gnu++0x -Wpedantic
 
+DISTFILES += \
+    assets/shaders/blur.frag
+
