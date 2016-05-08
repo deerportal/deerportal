@@ -40,6 +40,10 @@ public:
     std::map<int, std::map<int, int>> tilesDescription;
     std::map<int, std::string> tilesTxt;
 
+    sf::Texture  cardsTextures[4][4];
+
+
+
 };
 
 #endif // TEXTUREHOLDER_H

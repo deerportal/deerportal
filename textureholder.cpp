@@ -16,6 +16,26 @@ TextureHolder::TextureHolder()
 {
 
 
+    std::string cardsImages[4][4]  = {
+        {"card-air-2-diam.png", "card-air-diam.png",  "card-air-remove-card.png", "card-air-stop.png"},
+        {"card-earth-2-diam.png","card-earth-diam.png","card-earth-remove-card.png","card-earth-stop.png"},
+        {"card-fire-2-diam.png",  "card-fire-diam.png","card-fire-remove-card.png", "card-fire-stop.png"},
+        {"card-water-2-diam.png", "card-water-diam.png","card-water-remove-card.png","card-water-stop.png"}
+    };
+
+
+    for (int i=0;i<4;i++)
+    {
+        for (int j=0;j<4;j++)
+        {
+            if(!cardsTextures[i][j].loadFromFile("assets/img/cards/"+cardsImages[i][j]))
+            {
+                std::exit(1);
+            }
+        }
+    }
+
+
 
     if (!textureCardBases[0].loadFromFile("assets/img/card-water-2-diam_m.png"))
         std::exit(1);
