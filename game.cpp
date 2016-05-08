@@ -232,6 +232,15 @@ void Game::handleLeftClick(sf::Vector2f pos,
         std::string resultCommand = guiRoundDice.getElem(pos);
         command(resultCommand);
     }
+
+    if (currentState==state_lets_begin)
+    {
+        if (downTimeCounter>1)
+        {
+            currentState = state_roll_dice;
+        }
+
+    }
 }
 
 void Game::hideGameBoard()
@@ -377,6 +386,8 @@ void Game::update(sf::Time frameTime) {
         {
             prevRotateElem.spriteRotate.setPosition(players[turn].characters[0].leftChar.getPosition());
             prevRotateElem.spriteRotate.move(4,16);
+            prevRotateElem.spriteRotate.move(-202,-76);
+
             prevRotateElem.update(frameTime);
             prevRotateElem.setColor(turn);
         }
@@ -384,6 +395,7 @@ void Game::update(sf::Time frameTime) {
         {
             nextRotateElem.spriteRotate.setPosition(players[turn].characters[0].rightChar.getPosition());
             nextRotateElem.spriteRotate.move(4,16);
+            nextRotateElem.spriteRotate.move(-202,-76);
             nextRotateElem.update(frameTime);
             nextRotateElem.setColor(turn);
         }
@@ -400,7 +412,7 @@ void Game::update(sf::Time frameTime) {
     {
         downTimeCounter += frameTime.asSeconds();
         spriteLestBegin.setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
-        if (downTimeCounter>1)
+        if (downTimeCounter>5)
         {
             currentState = state_roll_dice;
         }
@@ -625,21 +637,22 @@ void Game::render(float deltaTime)
 //        window.draw(menuTxt);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
-        shaderBlur.setParameter("blur_radius", 2);
+        shaderBlur.setParameter("blur_radius", 4);
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
         renderTexture.setView(viewTiles);
         drawBaseGame();
         drawCharacters(deltaTime);
-        renderTexture.draw(boardDiamonds);
+        renderTexture.draw(boardDiamonds, &shaderBlur);
         renderTexture.setView(viewFull);
         drawPlayersGui();
-        renderTexture.draw(spriteLestBegin);
+        renderTexture.draw(spriteLestBegin,&shaderBlur);
 
     } else if (currentState==state_gui_end_round){
         renderTexture.setView(viewFull);
         renderTexture.draw(spriteBackgroundDark);
         drawBaseGame();
-        renderTexture.draw(guiRoundDice);
+        shaderBlur.setParameter("blur_radius", 0.05);
+        renderTexture.draw(guiRoundDice, &shaderBlur);
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
     }

@@ -161,8 +161,8 @@ Character::Character(TextureHolder *textures, int playerNumber):
     leftChar.scale(0.75,0.75);
     rightChar.scale(0.75,0.75);
 
-//    leftChar.move(202,76);
-//    rightChar.move(202,76);
+    leftChar.move(202,76);
+    rightChar.move(202,76);
 
     animations[efc::DIR_LEFT] = walkingAnimationLeft;
     animations[efc::DIR_RIGHT] = walkingAnimationRight;
@@ -288,6 +288,7 @@ void Character::update(sf::Time deltaTime)
             sf::Vector2f newPos(efc::getScreenPos(neededCords));
             leftChar.setPosition(newPos.x+efc::TILE_SIZE/4,newPos.y);
 
+            leftChar.move(202,76);
         }
 
 
@@ -298,6 +299,7 @@ void Character::update(sf::Time deltaTime)
 
             sf::Vector2f newPos(efc::getScreenPos(neededCords));
             rightChar.setPosition(newPos.x+efc::TILE_SIZE/4,newPos.y);
+            rightChar.move(202,76);
 
         }
 
