@@ -9,7 +9,7 @@
 #include "card.h"
 
 namespace efc {
-    const static int PILE_SIZE = 3;
+    const static int PILE_SIZE = 4;
 }
 
 class CardsList

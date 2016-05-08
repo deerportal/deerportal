@@ -8,7 +8,7 @@
 
 namespace efc {
 const static std::array<std::string, efc::PILE_SIZE> cardsTypes = {
-    "stop", "card", "diamond"
+    "stop", "card", "diamond", "diamond x 2"
 };
 }
 

@@ -115,6 +115,13 @@ void Command::processCard(int pos)
         {
             removeCard(game.boardDiamonds.getNumberForField(pos));
 
+        } else if (cardType == "diamond x 2")
+        {
+            removeDiamond(game.boardDiamonds.getNumberForField(pos));
+            game.players[game.turn].cash += 1;
+            removeDiamond(game.boardDiamonds.getNumberForField(pos));
+            game.players[game.turn].cash += 1;
+
         }
     }
     game.cardsDeck.nextCard(tokenNumber);

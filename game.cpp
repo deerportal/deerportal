@@ -650,6 +650,13 @@ void Game::drawCharacters(float deltaTime){
 
     }
     renderTexture.draw(cardsDeck);
+    if (currentState==state_roll_dice)
+    {
+        spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
+        shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.5)/4);
+        renderTexture.draw(roundDice.spriteDice, &shaderBlur);
+    }
+    else
     renderTexture.draw(roundDice.spriteDice);
     renderTexture.setView(viewTiles);
     drawSquares();
