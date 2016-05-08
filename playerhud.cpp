@@ -216,3 +216,10 @@ void PlayerHud::setFigurePos(int pos)
 {
     characters[0].setBoardPosition(pos);
 }
+
+void PlayerHud::restartPlayer(){
+    food = 0;
+    cash = 0;
+    energy = 0;
+    faith = 0;
+}

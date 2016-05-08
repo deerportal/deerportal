@@ -48,6 +48,9 @@ public:
 
     int frozenLeft;
 
+    void restartPlayer();
+
+
 private:
     sf::Sprite spriteFace;
     sf::Text txtCash;

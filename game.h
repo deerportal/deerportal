@@ -40,6 +40,7 @@ public:
     sf::View viewFull;
     sf::View viewGui;
     sf::View viewTiles;
+    void setTxtEndGameAmount();
 
 
 private:
@@ -73,6 +74,7 @@ public:
 
 private:
     void initBoard();
+    void restartGame();
     void loadAssets();
     void drawPlayersGui();
     void drawSquares();
@@ -114,7 +116,10 @@ private:
     sf::Texture textureFaces;
     sf::Font gameFont;
     sf::Font menuFont;
+//    sf::Font endGameFont;
     sf::Text menuTxt;
+    sf::Text endGameTxt;
+    sf::Text endGameTxtAmount[4];
 
     sf::Shader shaderBlur;
     sf::Shader shaderPixel;

@@ -7,6 +7,34 @@ int initScreenY = 768;
 int currentSeason = 1;
 int month = 0;
 
+
+void Game::setTxtEndGameAmount(){
+
+
+    std::string elementNames[4] = {"Water","Earth", "Fire", "Air"};
+
+    int width=1360;
+    int height = 768;
+
+    int separator = 40;
+
+    for (int i=0;i<4;i++)
+    {
+        std::string label = elementNames[i]+ " " + std::to_string(players[i].cash);
+        endGameTxtAmount[i].setString(label);
+        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
+
+
+
+        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator));
+
+    }
+
+
+
+
+}
+
 void Game::initBoard()
 {
 
@@ -64,6 +92,37 @@ void Game::initBoard()
 
     // Initialization of the players
     cardsDeck.setFonts(&menuFont);
+    restartGame();
+
+
+    for (int i=0;i<4;i++)
+    {
+        endGameTxtAmount[i].setFont(gameFont);
+        endGameTxtAmount[i].setCharacterSize(25);
+
+
+    }
+
+    endGameTxt.setFont(gameFont);
+    endGameTxt.setString("Game Over");
+    endGameTxt.setCharacterSize(30);
+
+
+    sf::FloatRect ss = endGameTxt.getLocalBounds();
+
+
+
+    endGameTxt.setPosition((1360/2)-(ss.width/2),0);
+
+    setTxtEndGameAmount();
+//    endGameTxt.set
+//    endGameTxt.setScale(2,2);
+
+}
+
+void Game::restartGame()
+{
+
     PlayerHud playerHud1(&textures, &gameFont, 32,0);
     PlayerHud playerHud2(&textures, &gameFont, 32,1);
     PlayerHud playerHud3(&textures, &gameFont, 32,2);
@@ -72,14 +131,22 @@ void Game::initBoard()
     players[1] = playerHud2;
     players[3] = playerHud3;
     players[2] = playerHud4;
-
     players[0].setActive(true);
     setCurrentNeighbours();
     diceResultPlayer =  6;
     players[turn].characters[0].diceResult = diceResultPlayer;
     roundDice.setColor(turn);
-}
 
+    for (int i=0;i<4;i++)
+    {
+       players[i].restartPlayer();
+
+    }
+    turn = 0;
+    currentSeason = 1;
+    month = 0;
+
+}
 
 void Game::setCurrentNeighbours ()
 {
@@ -97,6 +164,8 @@ void Game::loadAssets()
     {
         std::exit(1);
     }
+
+
 
     if (!shaderBlur.loadFromFile("assets/shaders/blur.frag", sf::Shader::Fragment))
         std::exit(1);
@@ -176,6 +245,8 @@ void Game::showGameBoard()
 void Game::endGame()
 {
     currentState = state_end_game;
+    downTimeCounter = 0;
+    setTxtEndGameAmount();
 //    musicBackground.stop();
 }
 
@@ -241,6 +312,18 @@ void Game::handleLeftClick(sf::Vector2f pos,
         }
 
     }
+
+    if (currentState==state_end_game)
+    {
+        if (downTimeCounter>2)
+        {
+            currentState = state_menu;
+            restartGame();
+        }
+
+    }
+
+
 }
 
 void Game::hideGameBoard()
@@ -417,6 +500,13 @@ void Game::update(sf::Time frameTime) {
             currentState = state_roll_dice;
         }
     }
+
+    if (currentState==state_end_game)
+    {
+        downTimeCounter += frameTime.asSeconds();
+
+    }
+
 }
 
 void Game::nextRound() {
@@ -667,7 +757,14 @@ void Game::render(float deltaTime)
  else if (currentState==state_end_game){
     renderTexture.setView(viewFull);
     renderTexture.draw(spriteBackgroundDark);
-    drawBaseGame();
+    renderTexture.draw(spriteLestBegin,&shaderBlur);
+    renderTexture.draw(endGameTxt);
+
+    for (int i=0;i<4;i++){
+        renderTexture.draw(endGameTxtAmount[i]);
+    }
+
+//    drawBaseGame();
 
     }
 
