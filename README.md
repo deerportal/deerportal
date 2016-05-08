@@ -5,6 +5,7 @@ Deerportal
 
 Deerportal is a game which utilize  board and card games mechanisms. World of the game is driven by four classical elemets.
 
+Homepage: https://devcarpet.net/deerportal/
 
 Collect the diamonds, execute actions on cards and survive the chaos of nature! Compete against 3 other players.
 
