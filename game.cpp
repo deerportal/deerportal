@@ -169,7 +169,7 @@ void Game::showGameBoard()
     musicGame.play();
     musicGame.setLoop(true);
     sfx.playLetsBegin();
-    std::cout << "lets begin" << std::endl;
+//    std::cout << "lets begin" << std::endl;
     currentState = state_lets_begin;
 }
 
@@ -314,7 +314,7 @@ Game::Game():
 
 
     showMenu();
-
+//    currentState = state_end_game; //TODO: hacky debug hy
 
 
     // run the main loop
@@ -436,12 +436,18 @@ void Game::nextRound() {
 
 void Game::nextPlayer(){
 
+    if (currentState==state_end_game)
+    {
+        return;
+    }
+
 
 
     if (numberFinishedPlayers==4)
     {
         std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
+
     }
 
     if (turn<4)
@@ -451,7 +457,7 @@ void Game::nextPlayer(){
     turn++;
     if ((players[turn].done==true) && (turn<4))
     {
-        std::cout << "Player " << turn << " is done" << std::endl;
+//        std::cout << "Player " << turn << " is done" << std::endl;
         nextPlayer();
     }
 
@@ -656,6 +662,16 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
     }
+
+
+ else if (currentState==state_end_game){
+    renderTexture.setView(viewFull);
+    renderTexture.draw(spriteBackgroundDark);
+    drawBaseGame();
+
+    }
+
+
 
 
     renderTexture.display();

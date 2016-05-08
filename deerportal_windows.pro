@@ -1,5 +1,4 @@
 TEMPLATE = app
-CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += c++11
@@ -33,13 +32,12 @@ SOURCES += main.cpp \
     cardsdeck.cpp
 
 #LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
-DESTDIR = ../build_release_pagan_board
+DESTDIR = ../build_release_deerportal_win32
 
 LIBS +=  -lsfml-system-s -lsfml-window-s   -lsfml-graphics-s -lsfml-audio-s -ljpeg -ljpeg -lglew32 -lfreetype -lgdi32 -lopengl32  -lwinmm -lbz2 -lpng -lOpenAL32 -lFLAC -lharfbuzz -lglib-2.0  -lintl -liconv -lgio-2.0 -lmingw32  -lm -luser32 -lgdi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32  -lwinmm -ldxguid -ltiff -llzma -ljpeg -lz -lGLEW -lopengl32  -lgmp -lnettle -lws2_32 -lsndfile -lwinpthread -lpthread -lole32  -lvorbisfile -lvorbisenc -lvorbis -logg -lsfml-system-s   -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid 
 DEFINES += "SFML_STATIC" "GLEW_STATIC=1" "AL_LIBTYPE_STATIC=1"
 INCLUDEPATH += .
-LIBPATH     += ~/repo/mxe/usr/i686-w64-mingw32.static/lib/ /home/bluszcz/repo/mxe/usr/lib/gcc/i686-w64-mingw32.static/4.9.3/
-
+LIBPATH     += ~/opt/mxe/usr/i686-w64-mingw32.static/lib/ ~/opt/mxe/usr/lib/gcc/i686-w64-mingw32.static/4.9.3/
 
 assets.path    = $${DESTDIR}/assets
 assets.files   = assets/*
@@ -87,6 +85,8 @@ DISTFILES += \
     assets/shaders/pixelate.frag \
     assets/shaders/dark.frag
 
-QMAKE_CXXFLAGS += -std=gnu++0x -Wpedantic
-QMAKE_LFLAGS = -static -static-libgcc -static-libstdc++
-
+QMAKE_CXXFLAGS += -std=gnu++0x -Wpedantic -mwindows
+QMAKE_LFLAGS = -static -static-libgcc -static-libstdc++ -mwindows
+TARGET = "Deer Portal"
+win32:RC_ICONS += windows.ico
+win32:RC_FILE += DeerPortal.rc

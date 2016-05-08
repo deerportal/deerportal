@@ -30,6 +30,6 @@ void SoundFX::playCard()
 
 void SoundFX::playLetsBegin()
 {
-    std::cout << "playing.... begin lets" << std::endl;
+//    std::cout << "playing.... begin lets" << std::endl;
     soundLetsBegin.play();
 }
