@@ -1,4 +1,5 @@
 #include "game.h"
+#include "particle.h"
 
 namespace efc {
 
@@ -347,10 +348,20 @@ Game::Game():
     turn(0),
 
     commandManager(*this),
-    cardsDeck(&textures, &menuFont)
-
+    cardsDeck(&textures, &menuFont),
+    particleSystem( 430, 230)
 
 {
+
+
+    //particleSystem.setPosition( width/2, height/2 );
+    //particleSystem.setGravity( 1.0f, 1.0f );
+    //particleSystem.setParticleSpeed( 80.0f );
+    particleSystem.setDissolve( true );
+    particleSystem.setDissolutionRate( 10 );
+    particleSystem.setShape( Shape::CIRCLE );
+
+    particleSystem.fuel( 1000 );
     playersSpritesCords[0][0] = 202;
     playersSpritesCords[0][1] = 76;
     playersSpritesCords[1][0] = 562;
@@ -407,8 +418,48 @@ Game::Game():
         std::string resultCommand = "";
         // handle events
         sf::Event event;
+        float xpos = 320.0f;
+        float ypos = 240.0f;
+        float xgrv = 0.0f;
+        float ygrv = 0.0f;
+
+
+
         while (window.pollEvent(event))
         {
+
+
+            switch (event.type) {
+                case sf::Event::Closed:
+                    window.close(); break;
+                case sf::Event::KeyPressed:
+                    if(event.key.code == sf::Keyboard::Escape )
+                        window.close();
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
+                        particleSystem.fuel( 200/* * window.getFrameTime() */);
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
+                        particleSystem.setPosition( --xpos, ypos );
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
+                        particleSystem.setPosition( ++xpos, ypos );
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
+                        particleSystem.setPosition( xpos, --ypos );
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
+                        particleSystem.setPosition( xpos, ++ypos );
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
+                        particleSystem.setGravity( --xgrv * 0.1f, ygrv * 0.1f);
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
+                        particleSystem.setGravity( ++xgrv * 0.1f, ygrv * 0.1f );
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) )
+                        particleSystem.setGravity( xgrv * 0.1f, --ygrv * 0.1f );
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) )
+                        particleSystem.setGravity( xgrv * 0.1f, ++ygrv * 0.1f );
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::G ) )
+                        particleSystem.setGravity( 0.0f, 0.0f );
+                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::P ) )
+                        particleSystem.setPosition( 320.0f, 240.0f );
+                    break;
+    }
+
             sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
             sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
             sf::Vector2f localPositionGui = window.mapPixelToCoords(localPositionTmp,viewGui);
@@ -784,6 +835,13 @@ void Game::render(float deltaTime)
     shaderBlur.setParameter("blur_radius", sin(deltaTime)*0.015);
     shaderBlur.setParameter("blur_radius", 0.0003);
     window.draw(renderSprite, &shaderBlur);
+
+
+      particleSystem.remove();
+      particleSystem.update();
+      particleSystem.render();
+      window.draw( particleSystem.getSprite() );
+
 
     window.display();
 }

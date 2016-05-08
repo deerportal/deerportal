@@ -25,6 +25,7 @@
 #include "soundfx.h"
 #include "cardsdeck.h"
 #include "calendar.h"
+#include "particle.h"
 //class Command;
 
 namespace efc {
@@ -138,6 +139,7 @@ private:
     void update(sf::Time frameTime);
     void render(float deltaTime);
 
+    ParticleSystem particleSystem;
 
 
 

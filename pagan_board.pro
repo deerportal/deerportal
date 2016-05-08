@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     pile.cpp \
     cardslist.cpp \
     command.cpp \
-    cardsdeck.cpp
+    cardsdeck.cpp \
+    particlesystem.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -68,7 +69,8 @@ HEADERS += \
     cardslist.h \
     command.h \
     cardsdeck.h \
-    calendar.h
+    calendar.h \
+    particle.h
 
 
 OTHER_FILES += \
