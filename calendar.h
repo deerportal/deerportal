@@ -68,6 +68,19 @@ static std::array<std::array<std::string,3>,59> PAGAN_HOLIDAYS = {{ {"01", "02",
  {"12", "21", "Festival of Beiwe / Nertha / Alban Athuan"},
  {"12", "21", "Yule (Norse for wheel) - Germanic 12-day feast"}}};
 
-
+static std::string getHoliday(int month, int day)
+{
+    for (int i=0;i<59;i++)
+    {
+        if (month==std::stoi(PAGAN_HOLIDAYS[i][0]))
+        {
+            if (day==std::stoi(PAGAN_HOLIDAYS[i][1]))
+            {
+                return PAGAN_HOLIDAYS[i][2];
+            }
+        }
+    }
+    return "";
+}
 
 #endif /* !_calendar_pagan_ */

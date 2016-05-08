@@ -400,7 +400,7 @@ void Game::update(sf::Time frameTime) {
     {
         downTimeCounter += frameTime.asSeconds();
         spriteLestBegin.setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
-        if (downTimeCounter>6)
+        if (downTimeCounter>1)
         {
             currentState = state_roll_dice;
         }
