@@ -68,7 +68,8 @@ HEADERS += \
     pile.h \
     cardslist.h \
     command.h \
-    cardsdeck.h
+    cardsdeck.h \
+    calendar.pagan
 
 
 OTHER_FILES += \

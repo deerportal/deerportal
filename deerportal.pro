@@ -61,7 +61,6 @@ HEADERS += \
     hover.h \
     guiwindow.h \
     purchaseguielem.h \
-    guichoosebuilding.h \
     elemsdescription.h \
     rounddice.h \
     guirounddice.h \
@@ -80,6 +79,7 @@ HEADERS += \
     cardslist.h \
     command.h \
     cardsdeck.h
+    calendar.pagan
 
 
 OTHER_FILES += \

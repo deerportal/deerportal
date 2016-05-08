@@ -24,7 +24,7 @@
 #include "boarddiamondseq.h"
 #include "soundfx.h"
 #include "cardsdeck.h"
-
+#include "calendar.pagan"
 //class Command;
 
 namespace efc {

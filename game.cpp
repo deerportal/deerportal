@@ -520,17 +520,26 @@ void Game::drawCharacters(float deltaTime){
     shaderBlur.setParameter("blur_radius", 0.5);
 //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
 //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
-    shaderPixel.setParameter("pixel_threshold", 0.05);
+    shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.05));
 
     renderTexture.draw(spriteBackgroundArt);
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
+    shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.05)/2);
 
     for (int i=0;i<4;i++)
     {
+
+        sf::RectangleShape rectangle(sf::Vector2f(284, 284));
+        rectangle.setPosition(playersSpritesCords[i][0]-2,playersSpritesCords[i][1]-2);
+        rectangle.setFillColor(sf::Color(0, 0, 0,55));
+        renderTexture.draw(rectangle);
          if (turn==i)
          renderTexture.draw(playersSprites[i]);
          else
-             renderTexture.draw(playersSprites[i], &shaderDark);
+             renderTexture.draw(playersSprites[i], &shaderBlur);
+
+
+
     }
     renderTexture.draw(cardsDeck);
     renderTexture.draw(roundDice.spriteDice);
@@ -547,6 +556,7 @@ void Game::drawCharacters(float deltaTime){
     }
 
     renderTexture.setView(viewFull);
+    shaderBlur.setParameter("blur_radius", 0.005);
 
 
     for (int i=0;i<4;i++)
@@ -557,7 +567,7 @@ void Game::drawCharacters(float deltaTime){
                 j.drawMovements = true;
             else
                 j.drawMovements = false;
-            renderTexture.draw(j);
+            renderTexture.draw(j, &shaderBlur);
         }
     }
 }
