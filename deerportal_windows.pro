@@ -32,7 +32,7 @@ SOURCES += main.cpp \
     cardsdeck.cpp
 
 #LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
-DESTDIR = ../build_release_deerportal_win32
+DESTDIR = builds/build_release_deerportal_win32
 
 LIBS +=  -lsfml-system-s -lsfml-window-s   -lsfml-graphics-s -lsfml-audio-s -ljpeg -ljpeg -lglew32 -lfreetype -lgdi32 -lopengl32  -lwinmm -lbz2 -lpng -lOpenAL32 -lFLAC -lharfbuzz -lglib-2.0  -lintl -liconv -lgio-2.0 -lmingw32  -lm -luser32 -lgdi32 -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32  -lwinmm -ldxguid -ltiff -llzma -ljpeg -lz -lGLEW -lopengl32  -lgmp -lnettle -lws2_32 -lsndfile -lwinpthread -lpthread -lole32  -lvorbisfile -lvorbisenc -lvorbis -logg -lsfml-system-s   -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid 
 DEFINES += "SFML_STATIC" "GLEW_STATIC=1" "AL_LIBTYPE_STATIC=1"
