@@ -41,7 +41,7 @@ DEFINES += "SFML_STATIC" "GLEW_STATIC=1" "AL_LIBTYPE_STATIC=1"
 INCLUDEPATH += .
 LIBPATH     += ~/opt/mxe/usr/i686-w64-mingw32.static/lib/ ~/opt/mxe/usr/lib/gcc/i686-w64-mingw32.static/4.9.3/
 
-assets.path    = $${DESTDIR}/assets
+assets.path    = $${DESTDIR}/assets/
 assets.files   = assets/*
 
 INSTALLS        += assets
