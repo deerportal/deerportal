@@ -35,8 +35,7 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont)
 
         cardsList[i].shufflePile();
         nextCard(i);
-
-//        setTitles();
+        setTitles(i);
 
 
     }
@@ -57,12 +56,13 @@ void CardsDeck::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void CardsDeck::setTitles(int number)
 {
+      int cardTypeInt = getCardTypeInt(number);
 
-        textPileTitle[number].setString(efc::cardsTypes[number]);
-        int val = cardsList[number].currentCard;
-        std::cout <<number<< " << hjehe >> " << getTitle(number) << " " << val << std::endl;
+        textPileTitle[number].setString(efc::cardsTypes[cardTypeInt]);
+//        int val = getCardTypeInt(number);
+        std::cout <<number<< " << hjehe >> " << getTitle(number) << " " << cardTypeInt << std::endl;
 
-        spriteCardBases[number].setTexture(textures->cardsTextures[number][val]);
+        spriteCardBases[number].setTexture(textures->cardsTextures[number][cardTypeInt]);
 
 }
 
