@@ -32,10 +32,10 @@ TextureHolder::TextureHolder()
         {
             if(!cardsTextures[i][j].loadFromFile("assets/img/cards/"+cardsImages[i][j]))
             {
-                std::cout << "assets/img/cards/" << cardsImages[i][j];
+//                std::cout << "assets/img/cards/" << cardsImages[i][j];
                 std::exit(1);
             } else {
-                std::cout << "assets/img/cards/" << cardsImages[i][j] << " ok " << i << " " <<  j << " " << std::endl;
+//                std::cout << "assets/img/cards/" << cardsImages[i][j] << " ok " << i << " " <<  j << " " << std::endl;
             }
         }
     }

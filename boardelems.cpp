@@ -34,7 +34,6 @@ void BoardElems::draw(sf::RenderTarget& target, sf::RenderStates states) const
                 }
             }
         }
-//        std::cout << "POS: "<< i.getPosition().x << " " << i.getPosition().y << std::endl;
     }
     if (active==true)
     {

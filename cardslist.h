@@ -9,13 +9,13 @@
 #include "card.h"
 
 namespace efc {
-    const static std::array<int,32> cardsDistributio2n = {
+    const static std::array<int,32> cardsDistribution = {
         0,0,0,0,0,0,0,0,
         1,1,1,1,1,1,1,1,
         2,2,2,2,2,2,2,2,2,2,
         3,3,3,3,3,3
     };
-    const static std::array<int,2> cardsDistribution = {
+    const static std::array<int,2> cardsDistributionDebug = {
         2,3
     };
     const static int PILE_SIZE = efc::cardsDistribution.size();

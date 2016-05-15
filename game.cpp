@@ -45,7 +45,7 @@ void Game::initBoard()
     int month = now->tm_mon + 1;
     int day = now->tm_mday;
     paganHolidayString =  getHoliday(month, day);
-    std::cout << "HOLIDAY"<< paganHolidayString << std::endl;
+//    std::cout << "HOLIDAY"<< paganHolidayString << std::endl;
     paganHolidayTxt.setString(paganHolidayString);
 
 
@@ -600,7 +600,7 @@ void Game::nextPlayer(){
 
     if (numberFinishedPlayers==4)
     {
-        std::cout << "Everybody Finished!!!" << std::endl;
+//        std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
 
     }

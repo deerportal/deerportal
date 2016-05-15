@@ -25,7 +25,6 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *comma
         {
 
             int cardTypeInt = efc::cardsDistribution[j];
-            std::cout << cardTypeInt << std::endl;
 
             cardsList[i].cardsPile[j].cardType = efc::cardsTypes[cardTypeInt];
             cardsList[i].cardsPile[j].cardTypeInt = cardTypeInt;
@@ -109,7 +108,6 @@ void CardsDeck::nextCard(int pileNumber)
         } else
         {
             currentCard += 1;
-            std::cout << currentCard << " ccard" << std::endl;
             if ((currentCard>3) || (currentCard<0))
                 currentCard = 0;
             cardsList[pileNumber].currentCard = currentCard;
