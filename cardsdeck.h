@@ -8,15 +8,7 @@
 #include "command.h"
 
 
-namespace efc {
-const static std::array<std::string, 4> cardsTypes = {
-    "stop", "card", "diamond", "diamond x 2"
-};
 
-
-
-
-}
 
 class CardsDeck: public sf::Drawable, public sf::Transformable
 {

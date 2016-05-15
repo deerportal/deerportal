@@ -33,9 +33,10 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *comma
         }
 
 
-    reloadCards();
 
     }
+    reloadCards();
+
 }
 
 void CardsDeck::reloadCards(){

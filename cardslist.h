@@ -1,7 +1,6 @@
 #ifndef CARDSLIST_H
 #define CARDSLIST_H
 #include <vector>
-#include <array>
 #include <iostream>     // std::cout
 #include <algorithm>    // std::shuffle
 #include <random>       // std::default_random_engine
