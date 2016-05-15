@@ -2,6 +2,8 @@
 #define GAME_H
 #include <stdlib.h>
 #include <iostream>
+#include <ctime>
+
 #include <time.h>       /* time */
 
 #include <SFML/Window.hpp>
@@ -50,6 +52,7 @@ private:
 
     Character character;
     std::string gameTitle;
+    std::string paganHolidayString;
     RoundDice roundDice;
 
     int roundNumber;
@@ -121,6 +124,7 @@ private:
     sf::Text menuTxt;
     sf::Text endGameTxt;
     sf::Text endGameTxtAmount[4];
+    sf::Text paganHolidayTxt;
 
     sf::Shader shaderBlur;
     sf::Shader shaderPixel;

@@ -39,6 +39,16 @@ void Game::setTxtEndGameAmount(){
 void Game::initBoard()
 {
 
+
+    time_t t = time(0);
+    struct tm * now = localtime( & t );
+    int month = now->tm_mon + 1;
+    int day = now->tm_mday;
+    paganHolidayString =  getHoliday(month, day);
+    std::cout << "HOLIDAY"<< paganHolidayString << std::endl;
+    paganHolidayTxt.setString(paganHolidayString);
+
+
     sfxClick.setBuffer(sfxClickBuffer);
     sfxDone.setBuffer(sfxDoneBuffer);
 //    spriteBackground.setTexture(textureBackground);
@@ -205,6 +215,9 @@ void Game::loadAssets()
     menuTxt.setColor(sf::Color(255, 255, 255, 85));
     cardsDeck.setFonts(&gameFont);
 
+    paganHolidayTxt.setFont(menuFont);
+    paganHolidayTxt.setCharacterSize(20);
+    paganHolidayTxt.setPosition(20,20);
 
 
     for (int i=0;i<4;i++)
@@ -788,6 +801,7 @@ void Game::render(float deltaTime)
         shaderBlur.setParameter("blur_radius", 15);
         renderTexture.draw(menuTxt, &shaderBlur);
         renderTexture.draw(menuTxt);
+        renderTexture.draw(paganHolidayTxt);
 //        window.draw(menuTxt);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
