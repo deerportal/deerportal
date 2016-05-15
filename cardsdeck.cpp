@@ -33,12 +33,19 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont)
 
         }
 
-        cardsList[i].shufflePile();
-//        nextCard(i);
-        setTitles(i);
 
+    reloadCards();
 
     }
+}
+
+void CardsDeck::reloadCards(){
+     for (int i=0;i<=3;i++)
+     {
+
+        cardsList[i].shufflePile();
+        setTitles(i);
+     }
 }
 
 void CardsDeck::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -20,6 +20,7 @@ CardsList::CardsList(int element)
 
 void CardsList::shufflePile()
 {
+    active = true;
     std::srand(std::time(0));
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 

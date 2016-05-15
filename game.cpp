@@ -156,7 +156,7 @@ void Game::restartGame()
     turn = 0;
     currentSeason = 1;
     month = 0;
-
+    cardsDeck.reloadCards();
 }
 
 void Game::setCurrentNeighbours ()

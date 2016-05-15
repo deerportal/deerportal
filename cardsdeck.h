@@ -36,6 +36,7 @@ public:
     void update(sf::Time deltaTime);
     int getCardTypeInt(int pileNumber);
     void setTitles(int number);
+    void reloadCards();
 };
 
 #endif // CARDSDECK_H
