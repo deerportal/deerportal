@@ -1,6 +1,9 @@
 Artwork
 =======
 
+Katia
+-----
+
 *Fantasy book* http://opengameart.org/content/fantasy-book
 
 by yd, Public Domain CC0[^cc0].
