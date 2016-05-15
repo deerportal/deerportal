@@ -151,6 +151,7 @@ void Game::restartGame()
     for (int i=0;i<4;i++)
     {
        players[i].restartPlayer();
+       boardDiamonds.reorder(i);
 
     }
     turn = 0;
