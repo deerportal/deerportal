@@ -11,12 +11,7 @@ const static std::array<std::string, 4> cardsTypes = {
     "stop", "card", "diamond", "diamond x 2"
 };
 
-const static std::array<int,32> cardsDistribution = {
-    0,0,0,0,0,0,0,0,
-    1,1,1,1,1,1,1,1,
-    2,2,2,2,2,2,2,2,2,2,
-    3,3,3,3,3,3
-};
+
 
 
 }

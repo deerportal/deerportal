@@ -34,7 +34,7 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont)
         }
 
         cardsList[i].shufflePile();
-        nextCard(i);
+//        nextCard(i);
         setTitles(i);
 
 
@@ -46,7 +46,7 @@ void CardsDeck::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= getTransform();
     for (int i=0;i<=3;i++)
     {
-        if (cardsList[i].invisibleLeft==0.0f)
+        if ((cardsList[i].invisibleLeft==0.0f) and (cardsList[i].active))
         {
             target.draw(spriteCardBases[i], states);
             target.draw(textPileTitle[i], states);
@@ -60,7 +60,7 @@ void CardsDeck::setTitles(int number)
 
         textPileTitle[number].setString(efc::cardsTypes[cardTypeInt]);
 //        int val = getCardTypeInt(number);
-        std::cout <<number<< " << hjehe >> " << getTitle(number) << " " << cardTypeInt << std::endl;
+
 
         spriteCardBases[number].setTexture(textures->cardsTextures[number][cardTypeInt]);
 
@@ -89,14 +89,25 @@ void CardsDeck::setFonts(sf::Font *gameFont)
 
 void CardsDeck::nextCard(int pileNumber)
 {
-    cardsList[pileNumber].invisibleLeft = 0.75f;
-    int currentCard = getCurrentCard(pileNumber);
-    currentCard += 1;
-    std::cout << currentCard << " ccard" << std::endl;
-    if ((currentCard>3) || (currentCard<0))
-        currentCard = 0;
-    cardsList[pileNumber].currentCard = currentCard;
-    setTitles(pileNumber);
+    if (cardsList[pileNumber].active)
+    {
+        cardsList[pileNumber].invisibleLeft = 0.75f;
+        int currentCard = getCurrentCard(pileNumber);
+
+        if (currentCard>=efc::cardsDistribution.size()-1)
+        {
+            cardsList[pileNumber].active = false;
+
+        } else
+        {
+            currentCard += 1;
+            std::cout << currentCard << " ccard" << std::endl;
+            if ((currentCard>3) || (currentCard<0))
+                currentCard = 0;
+            cardsList[pileNumber].currentCard = currentCard;
+            setTitles(pileNumber);
+        }
+    }
 //    setSprites(pileNumber);
 }
 

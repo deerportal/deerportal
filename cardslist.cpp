@@ -3,7 +3,8 @@
 
 CardsList::CardsList():
     currentCard(0),
-    invisibleLeft(0)
+    invisibleLeft(0),
+    active(true)
 {
 
 }
@@ -13,7 +14,7 @@ CardsList::CardsList(int element)
     amount = 32; //TODO: ???
     this->element = element;
     currentCard = 0;
-    invisibleLeft = 0.0f;
+    invisibleLeft = 0.0f; // Transparency for effect
 
 }
 
