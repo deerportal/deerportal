@@ -10,6 +10,8 @@ namespace efc {
 const static std::array<std::string, efc::PILE_SIZE> cardsTypes = {
     "stop", "card", "diamond", "diamond x 2"
 };
+
+
 }
 
 class CardsDeck: public sf::Drawable, public sf::Transformable
@@ -22,13 +24,17 @@ public:
     TextureHolder *textures;
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-    void setTitles();
+//    void setTitles();
+    void setSprites(int number);
     void setFonts(sf::Font *gameFont);
     void nextCard(int pileNumber);
     int getCurrentCard(int pileNumber);
     std::string getTitle(int pileNumber);
 
     void update(sf::Time deltaTime);
+    int getCardTypeInt(int pileNumber);
+    void setTitles(int number);
 };
 
 #endif // CARDSDECK_H
+

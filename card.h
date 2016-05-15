@@ -10,6 +10,7 @@ public:
     int elementNumber;
     int amount;
     std::string cardType;
+    int cardTypeInt;
 };
 
 #endif // CARD_H

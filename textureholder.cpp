@@ -1,3 +1,4 @@
+#include <iostream>
 #include "textureholder.h"
 
 namespace efc {
@@ -14,11 +15,15 @@ std::set<int> getTerrainSet() {
 }
 TextureHolder::TextureHolder()
 {
+    //     "stop", "card", "diamond", "diamond x 2"
+
     std::string cardsImages[4][4]  = {
-        {"card-air-2-diam.png", "card-air-diam.png",  "card-air-remove-card.png", "card-air-stop.png"},
-        {"card-earth-2-diam.png","card-earth-diam.png","card-earth-remove-card.png","card-earth-stop.png"},
-        {"card-fire-2-diam.png",  "card-fire-diam.png","card-fire-remove-card.png", "card-fire-stop.png"},
-        {"card-water-2-diam.png", "card-water-diam.png","card-water-remove-card.png","card-water-stop.png"}
+        {"card-water-stop.small.png", "card-water-remove-card.small.png","card-water-diam.small.png",  "card-water-2-diam.small.png" },
+        {"card-earth-stop.small.png", "card-earth-remove-card.small.png","card-earth-diam.small.png",  "card-earth-2-diam.small.png"},
+        {"card-fire-stop.small.png",   "card-fire-remove-card.small.png","card-fire-diam.small.png",   "card-fire-2-diam.small.png"},
+        {"card-air-stop.small.png",    "card-air-remove-card.small.png", "card-air-diam.small.png",    "card-air-2-diam.small.png" }
+
+
     };
 
     for (int i=0;i<4;i++)
@@ -27,7 +32,10 @@ TextureHolder::TextureHolder()
         {
             if(!cardsTextures[i][j].loadFromFile("assets/img/cards/"+cardsImages[i][j]))
             {
+                std::cout << "assets/img/cards/" << cardsImages[i][j];
                 std::exit(1);
+            } else {
+                std::cout << "assets/img/cards/" << cardsImages[i][j] << " ok " << i << " " <<  j << " " << std::endl;
             }
         }
     }

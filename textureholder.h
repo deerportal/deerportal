@@ -40,7 +40,7 @@ public:
     std::map<int, std::map<int, int>> tilesDescription;
     std::map<int, std::string> tilesTxt;
 
-    sf::Texture  cardsTextures[4][4];
+    std::array<std::array<sf::Texture,4>,4>  cardsTextures;
 
 
 

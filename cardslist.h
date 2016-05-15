@@ -24,7 +24,7 @@ public:
      * \brief element Number of the element
      */
 
-    std::array<Card, efc::PILE_SIZE> cardsPile;
+    std::array<Card, 4> cardsPile;
     int currentCard;
     int element; /*!< Number of the element */
 

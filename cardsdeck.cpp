@@ -14,19 +14,29 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont)
     this->textures = textures;
     for (int i=0;i<=3;i++)
     {
-        spriteCardBases[i].setTexture(this->textures->textureCardBases[i]);
+//        spriteCardBases[i].setTexture(this->textures->textureCardBases[i]);
         spriteCardBases[i].setPosition(cardsPos[i][0],cardsPos[i][1]);
 
         textPileTitle[i].setFont(*gameFont);
         textPileTitle[i].setCharacterSize(10);
         textPileTitle[i].setPosition(cardsPos[i][0]+10,cardsPos[i][1]+100);
 
-        for (int j=0;j<efc::PILE_SIZE;j++)
+        for (int j=0;j<3;j++)
         {
+            std::cout << j << std::endl;
+
             cardsList[i].cardsPile[j].cardType = efc::cardsTypes[j];
+            cardsList[i].cardsPile[j].cardTypeInt = j;
+            spriteCardBases[i].setTexture(this->textures->cardsTextures[i][j]);
+
         }
-        setTitles();
+
         cardsList[i].shufflePile();
+        nextCard(i);
+
+//        setTitles();
+
+
     }
 }
 
@@ -43,12 +53,28 @@ void CardsDeck::draw(sf::RenderTarget& target, sf::RenderStates states) const
     }
 }
 
-void CardsDeck::setTitles()
+void CardsDeck::setTitles(int number)
 {
-    for (int i=0;i<=3;i++)
-    {
-        textPileTitle[i].setString(getTitle(i));
-    }
+
+        textPileTitle[number].setString(efc::cardsTypes[number]);
+        int val = cardsList[number].currentCard;
+        std::cout <<number<< " << hjehe >> " << getTitle(number) << " " << val << std::endl;
+
+        spriteCardBases[number].setTexture(textures->cardsTextures[number][val]);
+
+}
+
+void CardsDeck::setSprites(int number)
+{
+//    for (int i=0;i<=3;i++)
+//    {
+//        int val = getCardTypeInt(i);
+//        std::string title = getTitle(i);
+//        std::cout <<i<< " << hjehe >> " << val << std::endl;
+
+//        sf::Texture tmpText = textures->cardsTextures[i][val];
+//        spriteCardBases[i].setTexture(tmpText);
+//    }
 }
 
 void CardsDeck::setFonts(sf::Font *gameFont)
@@ -64,10 +90,12 @@ void CardsDeck::nextCard(int pileNumber)
     cardsList[pileNumber].invisibleLeft = 0.75f;
     int currentCard = getCurrentCard(pileNumber);
     currentCard += 1;
-    if (currentCard>efc::PILE_SIZE-1)
+    std::cout << currentCard << " ccard" << std::endl;
+    if ((currentCard>3) || (currentCard<0))
         currentCard = 0;
     cardsList[pileNumber].currentCard = currentCard;
-    setTitles();
+    setTitles(pileNumber);
+//    setSprites(pileNumber);
 }
 
 int CardsDeck::getCurrentCard(int pileNumber)
@@ -78,10 +106,15 @@ int CardsDeck::getCurrentCard(int pileNumber)
 
 std::string CardsDeck::getTitle(int pileNumber)
 {
-    std::string currentText = cardsList[pileNumber].cardsPile[getCurrentCard(pileNumber)].cardType;
+    std::string currentText = efc::cardsTypes[getCardTypeInt(pileNumber)];
     return currentText;
 }
 
+int CardsDeck::getCardTypeInt(int pileNumber)
+{
+    int result = cardsList[pileNumber].cardsPile[getCurrentCard(pileNumber)].cardTypeInt;
+    return result;
+}
 
 void CardsDeck::update(sf::Time deltaTime)
 {
