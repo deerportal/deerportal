@@ -1,10 +1,10 @@
 #include "cardsdeck.h"
 
-CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont)
+CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *command)
 {
 
 
-
+    commandManager=command;
     std::array<std::array<int,2>,4> cardsPos = {
         {
             {1087,95}, {1225, 95}, {1225, 277}, {1087, 277}
@@ -104,6 +104,7 @@ void CardsDeck::nextCard(int pileNumber)
         if (currentCard>=efc::cardsDistribution.size()-1)
         {
             cardsList[pileNumber].active = false;
+            commandManager->removeAllCardElement(pileNumber);
 
         } else
         {

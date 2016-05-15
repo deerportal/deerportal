@@ -38,6 +38,30 @@ void Command::removeCard(int playerNumber)
     }
 }
 
+void Command::removeAllCardElement(int elementNumber)
+{
+    /*! This should works as following:
+     * - iterate over BoardDiamondSeq
+     * - find diamonds belonging to the playerNumber
+     * - create an array from the aboves
+     * - get a random element
+     * - remove from the board - set not active
+     */
+
+    std::vector<int> diamonds;
+    for (auto&& i: game.boardDiamonds.diamonds)
+    {
+        int cardElementNumber = i.idNumber;
+        if ((i.boardPosition>-1) && (cardElementNumber==elementNumber))
+        {
+            i.boardPosition=-1;
+        };
+
+
+    }
+
+}
+
 void Command::removeDiamond(int playerNumber)
 {
     /*! This should works as following:

@@ -361,7 +361,7 @@ Game::Game():
     turn(0),
 
     commandManager(*this),
-    cardsDeck(&textures, &menuFont),
+    cardsDeck(&textures, &menuFont,&commandManager),
     particleSystem( 430, 230)
 
 {

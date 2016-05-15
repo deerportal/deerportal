@@ -27,6 +27,7 @@ public:
 
     int processGui(sf::Vector2f posGui);
 
+    void removeAllCardElement(int elementNumber);
 };
 
 #endif // COMMAND_H

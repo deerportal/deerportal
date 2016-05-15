@@ -5,6 +5,8 @@
 #include <iostream>
 #include "textureholder.h"
 #include "cardslist.h"
+#include "command.h"
+
 
 namespace efc {
 const static std::array<std::string, 4> cardsTypes = {
@@ -19,12 +21,13 @@ const static std::array<std::string, 4> cardsTypes = {
 class CardsDeck: public sf::Drawable, public sf::Transformable
 {
 public:
-    CardsDeck(TextureHolder *textures, sf::Font *gameFont);
+    CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *command);
     std::array<CardsList, 4> cardsList;
     std::array<sf::Sprite, 4> spriteCardBases;
     std::array<sf::Text, 4> textPileTitle;
     TextureHolder *textures;
 
+    Command *commandManager;
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 //    void setTitles();
     void setSprites(int number);
