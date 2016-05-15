@@ -10,7 +10,7 @@ CardsList::CardsList():
 
 CardsList::CardsList(int element)
 {
-    amount = 32;
+    amount = 32; //TODO: ???
     this->element = element;
     currentCard = 0;
     invisibleLeft = 0.0f;

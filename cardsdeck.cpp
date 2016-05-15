@@ -21,13 +21,15 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont)
         textPileTitle[i].setCharacterSize(10);
         textPileTitle[i].setPosition(cardsPos[i][0]+10,cardsPos[i][1]+100);
 
-        for (int j=0;j<3;j++)
+        for (int j=0;j<efc::cardsDistribution.size();j++)
         {
-            std::cout << j << std::endl;
 
-            cardsList[i].cardsPile[j].cardType = efc::cardsTypes[j];
-            cardsList[i].cardsPile[j].cardTypeInt = j;
-            spriteCardBases[i].setTexture(this->textures->cardsTextures[i][j]);
+            int cardTypeInt = efc::cardsDistribution[j];
+            std::cout << cardTypeInt << std::endl;
+
+            cardsList[i].cardsPile[j].cardType = efc::cardsTypes[cardTypeInt];
+            cardsList[i].cardsPile[j].cardTypeInt = cardTypeInt;
+            spriteCardBases[i].setTexture(this->textures->cardsTextures[i][cardTypeInt]);
 
         }
 

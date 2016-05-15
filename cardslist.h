@@ -9,7 +9,7 @@
 #include "card.h"
 
 namespace efc {
-    const static int PILE_SIZE = 4;
+    const static int PILE_SIZE = 32;
 }
 
 class CardsList
@@ -24,7 +24,7 @@ public:
      * \brief element Number of the element
      */
 
-    std::array<Card, 4> cardsPile;
+    std::array<Card, efc::PILE_SIZE> cardsPile;
     int currentCard;
     int element; /*!< Number of the element */
 

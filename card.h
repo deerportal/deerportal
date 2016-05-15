@@ -7,7 +7,7 @@ class Card
 public:
     Card();
     int id;
-    int elementNumber;
+    int elementNumber; //location
     int amount;
     std::string cardType;
     int cardTypeInt;
