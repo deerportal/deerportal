@@ -43,5 +43,5 @@ Windows
 
 * https://devcarpet.net/deerportal/downloads/windows/
 
-**Developed with [Devcarpet](https://devcarpet.net) platform**
+**Developed with [Devcarpet](https://devcarpet.net) platform.**
 
