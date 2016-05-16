@@ -2,6 +2,8 @@
 
 BoardDiamond::BoardDiamond()
 {
+    idNumber = 0;
+    playerNumber = 0;
 }
 
 BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,
