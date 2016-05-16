@@ -15,7 +15,7 @@ void Game::setTxtEndGameAmount(){
     std::string elementNames[4] = {"Water","Earth", "Fire", "Air"};
 
     int width=1360;
-    int height = 768;
+//    int height = 768;
 
     int separator = 40;
 
@@ -441,8 +441,6 @@ Game::Game():
 
         while (window.pollEvent(event))
         {
-
-
             switch (event.type) {
                 case sf::Event::Closed:
                     window.close(); break;
@@ -472,6 +470,9 @@ Game::Game():
                     if( sf::Keyboard::isKeyPressed( sf::Keyboard::P ) )
                         particleSystem.setPosition( 320.0f, 240.0f );
                     break;
+                default:
+                    break;
+
     }
 
             sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
