@@ -192,8 +192,7 @@ private:
     AnimatedSprite animatedSprite;
 
     void drawCharacters();
-    void handleLeftClick(sf::Vector2f pos,
-                         sf::Vector2f posGui, sf::Vector2f posFull, int mousePos);
+    void handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos);
 
     std::set<int> busyTiles;
 

@@ -266,8 +266,7 @@ void Game::endGame()
 //    musicBackground.stop();
 }
 
-void Game::handleLeftClick(sf::Vector2f pos,
-                           sf::Vector2f posGui, sf::Vector2f posFull, int mousePos) {
+void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) {
     if (currentState==state_game)
     {
 
@@ -291,7 +290,7 @@ void Game::handleLeftClick(sf::Vector2f pos,
         }
         //        std::string resultCommand = players[turn].getElem(posGui);
         //        command(resultCommand);
-        commandManager.processGui(posGui);
+//        commandManager.processGui(posGui);
     }
     else if (currentState==state_roll_dice)
     {
@@ -479,7 +478,7 @@ Game::Game():
 
             sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
             sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
-            sf::Vector2f localPositionGui = window.mapPixelToCoords(localPositionTmp,viewGui);
+//            sf::Vector2f localPositionGui = window.mapPixelToCoords(localPositionTmp,viewGui);
             sf::Vector2f localPositionFull = window.mapPixelToCoords(localPositionTmp,viewFull);
             int mousePosX = (int)localPosition.x / efc::TILE_SIZE;
             int mousePosY = (int)localPosition.y / efc::TILE_SIZE;
@@ -518,7 +517,7 @@ Game::Game():
             if (event.type == sf::Event::MouseButtonReleased)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
-                    handleLeftClick(localPosition, localPositionGui,
+                    handleLeftClick(localPosition,
                                     localPositionFull, mousePos);
             }
         }

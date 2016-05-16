@@ -25,7 +25,7 @@ public:
     void processField(int pos);
     void processCard(int pos);
 
-    int processGui(sf::Vector2f posGui);
+//    int processGui(sf::Vector2f posGui);
 
     void removeAllCardElement(int elementNumber);
 };
