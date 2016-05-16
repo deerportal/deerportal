@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     cardslist.cpp \
     command.cpp \
     cardsdeck.cpp \
-    particlesystem.cpp
+    particlesystem.cpp \
+    calendar.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board

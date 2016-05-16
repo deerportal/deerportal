@@ -30,8 +30,8 @@ SOURCES += main.cpp \
     cardslist.cpp \
     command.cpp \
     cardsdeck.cpp \
-    particlesystem.cpp
-
+    particlesystem.cpp \
+    calendar.cpp
 
 #LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = builds/build_release_deerportal_win32

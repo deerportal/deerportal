@@ -1,5 +1,6 @@
 #include "game.h"
 #include "particle.h"
+#include "calendar.h"
 
 namespace efc {
 
@@ -361,6 +362,7 @@ Game::Game():
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
     particleSystem( 430, 230),
+
 
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager)
