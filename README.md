@@ -23,9 +23,9 @@ SFML, Linux, OSX, Windows.
 
 Installation
 ------------
+------------
 
 Ubuntu Trusty
--------------
 -------------
 
 ```
@@ -38,7 +38,10 @@ $ make install
 $ ../build_release_pagan_board/pagan_board
 ```
 
-We are also providing binary packages in the *Releases* section.
+Windows
+-------
+
+* https://devcarpet.net/deerportal/downloads/windows/
 
 **Developed with [Devcarpet](https://devcarpet.net) platform**
 
