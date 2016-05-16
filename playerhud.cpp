@@ -72,6 +72,26 @@ void PlayerHud::updatePlayer(){
 PlayerHud::PlayerHud():
     frozenLeft(0)
 {
+    pos = 0;
+    cash = 0;
+    energy = 0;
+    food = 0;
+    faith = 0;
+    active = false;
+    done = false;
+    tileSize = 0;
+
+
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::pos' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::cash' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::energy' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::food' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::faith' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::active' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::done' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::faceSize' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::tileSize' is not initialized in the constructor.
+//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::textures' is not initialized in the constructor.
 
 }
 
