@@ -682,7 +682,7 @@ void Game::drawBaseGame()
     renderTexture.setView(viewTiles);
 }
 
-void Game::drawCharacters(float deltaTime){
+void Game::drawCharacters(){
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
 
     shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
@@ -768,7 +768,7 @@ void Game::render(float deltaTime)
 
         renderTexture.setView(viewTiles);
         drawBaseGame();
-        drawCharacters(deltaTime);
+        drawCharacters();
         renderTexture.draw(boardDiamonds);
         renderTexture.setView(viewFull);
         drawPlayersGui();
@@ -781,7 +781,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
         renderTexture.setView(viewTiles);
         drawBaseGame();
-        drawCharacters(deltaTime);
+        drawCharacters();
         renderTexture.draw(boardDiamonds);
         renderTexture.setView(viewFull);
         drawPlayersGui();
@@ -794,7 +794,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
 
         drawBaseGame();
-        drawCharacters(deltaTime);
+        drawCharacters();
 //        window.draw(guiSelectBuilding);
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
@@ -811,7 +811,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
         renderTexture.setView(viewTiles);
         drawBaseGame();
-        drawCharacters(deltaTime);
+        drawCharacters();
         renderTexture.draw(boardDiamonds, &shaderBlur);
         renderTexture.setView(viewFull);
         drawPlayersGui();
