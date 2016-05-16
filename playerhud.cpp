@@ -80,7 +80,7 @@ PlayerHud::PlayerHud():
     active = false;
     done = false;
     tileSize = 0;
-
+    textures = nullptr;
 
 //    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::pos' is not initialized in the constructor.
 //    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::cash' is not initialized in the constructor.
@@ -105,7 +105,7 @@ void PlayerHud::setActive(bool newState){
     }
 }
 
-PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize, int pos)
+PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos)
 {
 
 
@@ -121,7 +121,7 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int faceSize,
 
 //    elems.items.push_back(startElem);
 //    elems.items_map.insert({efc::startPlayers[pos], startElem});
-    this->faceSize = faceSize;
+//    this->faceSize = faceSize;
 //    spriteFace.setTexture(textures->textureFaces);
     this->pos = pos;
 

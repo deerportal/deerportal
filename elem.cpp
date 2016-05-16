@@ -2,7 +2,7 @@
 
 Elem::Elem()
 {
-
+    boardPosition = -1;
 }
 
 /*!

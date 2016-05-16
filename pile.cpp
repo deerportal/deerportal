@@ -2,5 +2,5 @@
 
 Pile::Pile()
 {
-
+    elementNumber = 0;
 }

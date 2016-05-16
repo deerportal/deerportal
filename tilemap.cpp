@@ -117,6 +117,8 @@ std::set<int>  getNeighbours(int pos) {
 
 TileMap::TileMap()
 {
+    textures = nullptr;
+    m_tileset = nullptr;
 }
 
 //bool TileMap::load(TextureHolder *textures, sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height)

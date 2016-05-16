@@ -25,7 +25,7 @@ efc::BoardElem::BoardElem(int pos, int type)
     int x_type = type % efc::TILE_BOARD_SIZE;
     setPosition(cords.x*efc::TILE_SIZE,cords.y*efc::TILE_SIZE);
     setTextureRect(sf::IntRect(x_type*efc::TILE_SIZE, y_type*efc::TILE_SIZE, efc::TILE_SIZE, efc::TILE_SIZE));
-
+    textureTiles = nullptr;
 }
 
 

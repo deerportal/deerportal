@@ -136,10 +136,10 @@ void Game::initBoard()
 void Game::restartGame()
 {
 
-    PlayerHud playerHud1(&textures, &gameFont, 32,0);
-    PlayerHud playerHud2(&textures, &gameFont, 32,1);
-    PlayerHud playerHud3(&textures, &gameFont, 32,2);
-    PlayerHud playerHud4(&textures, &gameFont, 32,3);
+    PlayerHud playerHud1(&textures, &gameFont,0);
+    PlayerHud playerHud2(&textures, &gameFont,1);
+    PlayerHud playerHud3(&textures, &gameFont,2);
+    PlayerHud playerHud4(&textures, &gameFont,3);
     players[0] = playerHud1;
     players[1] = playerHud2;
     players[3] = playerHud3;
@@ -431,7 +431,7 @@ Game::Game():
     while (window.isOpen())
     {
         sf::Time frameTime = frameClock.restart();
-        std::string resultCommand = "";
+//        std::string resultCommand = "";
         // handle events
         sf::Event event;
         float xpos = 320.0f;
@@ -579,7 +579,7 @@ void Game::update(sf::Time frameTime) {
 
 void Game::nextRound() {
     turn = 0;
-    std::string result = roundDice.drawRound();
+//    std::string result = roundDice.drawRound();
     roundNumber += 1;
     month++;
     if (month==13)
@@ -878,7 +878,7 @@ void Game::command(std::string command){
 //        }
 //    }
 
-    if (command.find("end_of_round")==0)
+    if (command.compare("end_of_round")==0)
     {
         std::string subResult = command.substr(13);
         guiRoundDice.active = true;

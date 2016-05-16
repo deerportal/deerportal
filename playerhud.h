@@ -18,7 +18,7 @@ class PlayerHud : public sf::Drawable, public sf::Transformable
 {
 public:
     PlayerHud();
-    PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int tileSize, int pos);
+    PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     std::set<int> getNeighbours();
     int pos;
@@ -52,13 +52,13 @@ public:
 
 
 private:
-    sf::Sprite spriteFace;
+//    sf::Sprite spriteFace;
     sf::Text txtCash;
     sf::Text txtEnergy;
     sf::Text txtFood;
     sf::Text txtFaith;
     sf::Text txtNextRound;
-    int faceSize;
+//    int faceSize;
     int tileSize;
     TextureHolder *textures;
     sf::RectangleShape rectangle;
