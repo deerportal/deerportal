@@ -22,7 +22,6 @@ public:
     Command *commandManager;
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 //    void setTitles();
-    void setSprites(int number);
     void setFonts(sf::Font *gameFont);
     void nextCard(int pileNumber);
     int getCurrentCard(int pileNumber);

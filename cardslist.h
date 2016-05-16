@@ -36,11 +36,9 @@ public:
     std::array<Card, efc::PILE_SIZE> cardsPile;
     int currentCard;
     int element; /*!< Number of the element */
-    bool active;
-
     float invisibleLeft;
+    bool active;
     void shufflePile();
-
 
 };
 

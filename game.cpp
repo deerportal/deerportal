@@ -360,10 +360,10 @@ Game::Game():
 
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
+    particleSystem( 430, 230),
 
     commandManager(*this),
-    cardsDeck(&textures, &menuFont,&commandManager),
-    particleSystem( 430, 230)
+    cardsDeck(&textures, &menuFont,&commandManager)
 
 {
 

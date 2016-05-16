@@ -21,7 +21,7 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *comma
         textPileTitle[i].setCharacterSize(10);
         textPileTitle[i].setPosition(cardsPos[i][0]+10,cardsPos[i][1]+100);
 
-        for (int j=0;j<efc::cardsDistribution.size();j++)
+        for (unsigned int j=0;j<efc::cardsDistribution.size();j++)
         {
 
             int cardTypeInt = efc::cardsDistribution[j];
@@ -73,18 +73,7 @@ void CardsDeck::setTitles(int number)
 
 }
 
-void CardsDeck::setSprites(int number)
-{
-//    for (int i=0;i<=3;i++)
-//    {
-//        int val = getCardTypeInt(i);
-//        std::string title = getTitle(i);
-//        std::cout <<i<< " << hjehe >> " << val << std::endl;
 
-//        sf::Texture tmpText = textures->cardsTextures[i][val];
-//        spriteCardBases[i].setTexture(tmpText);
-//    }
-}
 
 void CardsDeck::setFonts(sf::Font *gameFont)
 {
@@ -99,7 +88,7 @@ void CardsDeck::nextCard(int pileNumber)
     if (cardsList[pileNumber].active)
     {
         cardsList[pileNumber].invisibleLeft = 0.75f;
-        int currentCard = getCurrentCard(pileNumber);
+        unsigned int currentCard = getCurrentCard(pileNumber);
 
         if (currentCard>=efc::cardsDistribution.size()-1)
         {
@@ -109,7 +98,7 @@ void CardsDeck::nextCard(int pileNumber)
         } else
         {
             currentCard += 1;
-            if ((currentCard>3) || (currentCard<0))
+            if (currentCard>3)
                 currentCard = 0;
             cardsList[pileNumber].currentCard = currentCard;
             setTitles(pileNumber);
