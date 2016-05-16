@@ -35,7 +35,7 @@ public:
 
     void reorder();
 
-    bool ifFieldIsEmpty(int pos, int element);
+//    bool ifFieldIsEmpty(int pos, int element);
     bool ifFieldIsEmpty(int pos);
 
     void collectField(int pos);

@@ -32,16 +32,16 @@ std::array<int,efc::diamondsNumber> BoardDiamondSeq::getBoardPositions()
     return results;
 }
 
-bool BoardDiamondSeq::ifFieldIsEmpty(int pos, int element)
-{
-    for (int i=element*efc::diamondsNumber/4;i<(efc::diamondsNumber/4)+(element*efc::diamondsNumber/4);i++)
-    {
-        if (diamonds[i].boardPosition==pos)
-            return false;
-    }
-    return true;
+//bool BoardDiamondSeq::ifFieldIsEmpty(int pos, int element)
+//{
+//    for (int i=element*efc::diamondsNumber/4;i<(efc::diamondsNumber/4)+(element*efc::diamondsNumber/4);i++)
+//    {
+//        if (diamonds[i].boardPosition==pos)
+//            return false;
+//    }
+//    return true;
 
-}
+//}
 
 bool BoardDiamondSeq::ifFieldIsEmpty(int pos)
 {

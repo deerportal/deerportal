@@ -12,6 +12,7 @@ sf::RectangleShape createNeighbour(int pos) {
     rectangle.setPosition(cords.x*efc::TILE_SIZE, cords.y*efc::TILE_SIZE);
     return rectangle;
 
+
 }
 }
 

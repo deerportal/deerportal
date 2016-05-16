@@ -4,6 +4,7 @@ BoardDiamond::BoardDiamond()
 {
     idNumber = 0;
     playerNumber = 0;
+    textures = nullptr;
 }
 
 BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,

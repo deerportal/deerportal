@@ -28,6 +28,7 @@ void Game::setTxtEndGameAmount(){
 
 
 
+
         endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator));
 
     }
