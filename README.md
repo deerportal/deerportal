@@ -30,7 +30,7 @@ Ubuntu Trusty
 
 ```
 $ sudo apt-get install libsfml-devl
-$ git clone https://github.com/bluszcz/deerportal.git
+$ git clone https://github.com/deerportal/deerportal.git
 $ cd deerportal
 $ qmake -f pagan_board.pro
 $ make
