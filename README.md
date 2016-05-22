@@ -1,4 +1,4 @@
-[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)[![Build Status](https://travis-ci.org/deerportal/deerportal.svg?branch=master)](https://travis-ci.org/deerportal/deerportal)
+[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)[![Build Status](https://travis-ci.org/deerportal/deerportal.svg?branch=master)](https://travis-ci.org/deerportal/deerportal) [![Build Status](https://semaphoreci.com/api/v1/bluszcz/deerportal/branches/master/badge.svg)](https://semaphoreci.com/bluszcz/deerportal)
 
 presents
 
