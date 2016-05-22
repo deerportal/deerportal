@@ -10,7 +10,7 @@ class Command
 {
 public:
 //    Command();
-    Command(efc::Game &currentGame);
+    explicit Command(efc::Game &currentGame);
 
     /*!
      * \brief Removes a diamond from the player's field.

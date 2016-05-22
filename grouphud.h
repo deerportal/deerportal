@@ -9,7 +9,7 @@ namespace efc {
 class GroupHud: public sf::Drawable, public sf::Transformable
 {
 public:
-    GroupHud( sf::Font *gameFont);
+    explicit GroupHud( sf::Font *gameFont);
     GroupHud();
     void setFont(sf::Font *gameFont);
     sf::Text seasonName;

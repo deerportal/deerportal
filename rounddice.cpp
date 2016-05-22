@@ -9,10 +9,10 @@ RoundDice::RoundDice(PlayerHud (&players)[4])
     if (!sfxDiceBuffer.loadFromFile("assets/audio/dice.ogg"))
         std::exit(1);
 
-    if (!textureDices.loadFromFile("assets/img/dicesWhite.png"))
+    if (!textureDice.loadFromFile("assets/img/diceWhite.png"))
         std::exit(1);
 
-    spriteDice.setTexture(textureDices);
+    spriteDice.setTexture(textureDice);
 
     sfxDice.setBuffer(sfxDiceBuffer);
     sfxDice.setVolume(12);

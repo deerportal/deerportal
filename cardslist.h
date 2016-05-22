@@ -25,8 +25,8 @@ class CardsList
 {
 public:
     CardsList(); // To create an array of CardsList
-    CardsList(int element);
-    int amount;
+    explicit CardsList(int element);
+//    int amount;
 
 //    std::vector<Card*> sd;
     /*!

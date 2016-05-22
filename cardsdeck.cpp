@@ -18,7 +18,7 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *comma
         spriteCardBases[i].setPosition(cardsPos[i][0],cardsPos[i][1]);
 
         textPileTitle[i].setFont(*gameFont);
-        textPileTitle[i].setCharacterSize(10);
+        textPileTitle[i].setCharacterSize(16);
         textPileTitle[i].setPosition(cardsPos[i][0]+10,cardsPos[i][1]+100);
 
         for (unsigned int j=0;j<efc::cardsDistribution.size();j++)

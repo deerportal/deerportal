@@ -5,7 +5,7 @@
 class GuiRoundDice : public GuiWindow
 {
 public:
-    GuiRoundDice(TextureHolder *textures);
+    explicit GuiRoundDice(TextureHolder *textures);
 };
 
 #endif // GUIROUNDDICE_H

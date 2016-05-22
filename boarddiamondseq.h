@@ -25,7 +25,7 @@
 class BoardDiamondSeq : public sf::Drawable, public sf::Transformable
 {
 public:
-    BoardDiamondSeq(TextureHolder *textures);
+    explicit BoardDiamondSeq(TextureHolder *textures);
     TextureHolder *textures;
     BoardDiamond diamonds[efc::diamondsNumber];
 

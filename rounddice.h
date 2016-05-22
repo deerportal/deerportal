@@ -10,7 +10,7 @@
 class RoundDice
 {
 public:
-    RoundDice(PlayerHud (&players)[4]);
+    explicit RoundDice(PlayerHud (&players)[4]);
     PlayerHud *playersHud;
 
 
@@ -18,7 +18,7 @@ public:
     int diceResult;
     int diceResultSix;
     int throwDiceSix();
-    sf::Texture textureDices;
+    sf::Texture textureDice;
     sf::Sprite spriteDice;
     void setDiceTexture();
     void setDiceTexture(int diceResult);

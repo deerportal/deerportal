@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     command.cpp \
     cardsdeck.cpp \
     particlesystem.cpp \
-    calendar.cpp
+    calendar.cpp \
+    bubble.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -71,7 +72,8 @@ HEADERS += \
     command.h \
     cardsdeck.h \
     calendar.h \
-    particle.h
+    particle.h \
+    bubble.h
 
 
 OTHER_FILES += \

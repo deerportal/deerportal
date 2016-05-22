@@ -3,15 +3,17 @@
 
 CardsList::CardsList():
     currentCard(0),
+    element(0),
     invisibleLeft(0),
     active(true)
 {
 
 }
 
-CardsList::CardsList(int element)
+CardsList::CardsList(int element):
+    active(true)
 {
-    amount = 32; //TODO: ???
+//    amount = 32; //TODO: ???
     this->element = element;
     currentCard = 0;
     invisibleLeft = 0.0f; // Transparency for effect

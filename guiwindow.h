@@ -7,7 +7,7 @@
 class GuiWindow: public Hover
 {
 public:
-    GuiWindow(TextureHolder *textures);
+    explicit GuiWindow(TextureHolder *textures);
     GuiWindow();
 //    void setTextureHolder(TextureHolder *textures);
 
@@ -18,7 +18,7 @@ public:
     std::string title;
     std::string description;
     sf::Text guiTitleTxt;
-    sf::Texture* textureGui;
+//    sf::Texture* textureGui;
 
     sf::Sprite bgdDark;
 

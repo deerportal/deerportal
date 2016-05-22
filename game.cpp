@@ -25,10 +25,6 @@ void Game::setTxtEndGameAmount(){
         std::string label = elementNames[i]+ " " + std::to_string(players[i].cash);
         endGameTxtAmount[i].setString(label);
         sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
-
-
-
-
         endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator));
 
     }
@@ -104,7 +100,7 @@ void Game::initBoard()
 //    seasons[3] = season4;
 
     // Initialization of the players
-    cardsDeck.setFonts(&menuFont);
+    cardsDeck.setFonts(&gameFont);
     restartGame();
 
 
