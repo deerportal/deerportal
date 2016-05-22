@@ -45,7 +45,7 @@ std::string RoundDice::drawRound(){
         return "end_of_round_extra_energy";
     } else
     {
-        eventExtraCash();
+//        eventExtraCash();
         return "end_of_round_extra_cash";
     }
     return "end_of_round_"+std::to_string(diceResult);
@@ -66,11 +66,11 @@ int RoundDice::throwDiceSix(){
     return result+1;
 }
 
-void RoundDice::eventExtraCash(){
+//void RoundDice::eventExtraCash(){
 
-//    for (int i=0;i<4;i++)
-//    {
-//        playersHud[i].cash += 20;
-//        playersHud[i].updateTxt();
-//    }
-}
+////    for (int i=0;i<4;i++)
+////    {
+////        playersHud[i].cash += 20;
+////        playersHud[i].updateTxt();
+////    }
+//}

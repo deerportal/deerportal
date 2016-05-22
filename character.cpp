@@ -7,12 +7,15 @@
 std::array<int,2> Character::getMovements(int howFar)
 {
 
-    std::array<int,2> myArray;
+
 
     if (howFar==7)
     {
-        return std::array<int,2> {-1,-1};
+        return std::array<int,2> {{-1,-1}};
     }
+
+    std::array<int,2> myArray;
+
 
     if (active==true)
     {
