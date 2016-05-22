@@ -18,6 +18,7 @@ ParticleSystem::ParticleSystem( int width, int height )
 ParticleSystem::~ParticleSystem()
 {
     for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); it++ )
+        for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); it++ )
     {
         delete *it;
     }
