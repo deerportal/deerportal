@@ -690,7 +690,7 @@ void Game::drawBaseGame()
 void Game::drawCharacters(){
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
 
-    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
+    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01f) );
 
     renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
@@ -699,11 +699,11 @@ void Game::drawCharacters(){
     shaderBlur.setParameter("blur_radius", 0.5);
 //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
 //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
-    shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.05));
+    shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.05f));
 
     renderTexture.draw(spriteBackgroundArt);
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
-    shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.05)/2);
+    shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.05f)/2);
 
 //    for (int i=0;i<4;i++)
 //    {
@@ -724,7 +724,7 @@ void Game::drawCharacters(){
     if (currentState==state_roll_dice)
     {
         spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
-        shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.5)/4);
+        shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.5f)/4);
         renderTexture.draw(roundDice.spriteDice, &shaderBlur);
     }
     else
@@ -742,7 +742,7 @@ void Game::drawCharacters(){
     }
 
     renderTexture.setView(viewFull);
-    shaderBlur.setParameter("blur_radius", 0.005);
+    shaderBlur.setParameter("blur_radius", 0.005f);
 
 
     for (int i=0;i<4;i++)
@@ -831,7 +831,7 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         renderTexture.draw(spriteBackgroundDark);
         drawBaseGame();
-        shaderBlur.setParameter("blur_radius", 0.05);
+        shaderBlur.setParameter("blur_radius", 0.05f);
         renderTexture.draw(guiRoundDice, &shaderBlur);
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
@@ -858,8 +858,8 @@ void Game::render(float deltaTime)
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
 
-    shaderBlur.setParameter("blur_radius", sin(deltaTime)*0.015);
-    shaderBlur.setParameter("blur_radius", 0.0003);
+    shaderBlur.setParameter("blur_radius", sin(deltaTime)*0.015f);
+    shaderBlur.setParameter("blur_radius", 0.0003f);
     window.draw(renderSprite, &shaderBlur);
 
 
