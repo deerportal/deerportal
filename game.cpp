@@ -707,7 +707,6 @@ void Game::drawCharacters(){
 
 //    for (int i=0;i<4;i++)
 //    {
-
 //        sf::RectangleShape rectangle(sf::Vector2f(284, 284));
 //        rectangle.setPosition(playersSpritesCords[i][0]-2,playersSpritesCords[i][1]-2);
 //        rectangle.setFillColor(sf::Color(0, 0, 0,55));
@@ -716,9 +715,6 @@ void Game::drawCharacters(){
 //         renderTexture.draw(playersSprites[i]);
 //         else
 //             renderTexture.draw(playersSprites[i], &shaderBlur);
-
-
-
 //    }
     renderTexture.draw(cardsDeck);
     if (currentState==state_roll_dice)
