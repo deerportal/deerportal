@@ -125,8 +125,8 @@ void Game::initBoard()
     endGameTxt.setPosition((1360/2)-(ss.width/2),0);
 
     setTxtEndGameAmount();
-    bubble.setPosition(players[turn].characters[0].getPosition().x-40,
-            players[turn].characters[0].getPosition().y-60);
+    bubble.setPosition(players[turn].characters[0].getPosition().x-30,
+            players[turn].characters[0].getPosition().y-45);
 //    endGameTxt.set
 //    endGameTxt.setScale(2,2);
 
@@ -653,8 +653,8 @@ void Game::nextPlayer(){
     currentState = state_roll_dice;
     bubble.state = BubbleState::DICE;
     roundDice.setColor(turn);
-    bubble.setPosition(players[turn].characters[0].getPosition().x-40,
-            players[turn].characters[0].getPosition().y-60);
+    bubble.setPosition(players[turn].characters[0].getPosition().x-30,
+            players[turn].characters[0].getPosition().y-45);
 }
 
 void Game::drawPlayersGui(){
