@@ -8,13 +8,16 @@ std::array<int,2> Character::getMovements(int howFar)
 {
 
 
+    std::array<int,2> myArray = {{-1,-1}};
+
 
     if (howFar==7)
     {
-        return std::array<int,2> {{-1,-1}};
+
+        return myArray;
     }
 
-    std::array<int,2> myArray;
+//    std::array<int,2> myArray;
 
 
     if (active==true)
