@@ -22,7 +22,6 @@ std::array<int,2> Character::getMovements(int howFar)
 
     if (active==true)
     {
-//        std::cout << "howfar: " <<howFar <<std::endl;
             int indexRight = boardPosition;
             for (int i=boardPosition;i<=boardPosition+howFar-1;i++)
             {
@@ -31,9 +30,6 @@ std::array<int,2> Character::getMovements(int howFar)
                 if (indexRight==-1)
                     break;
                 indexRight = efc::boards[indexRight][1];
-//                            std::cout << " howfar" << howFar << " index R" << indexRight
-//                                       << " move L " << moveLeft <<  " move R " << moveRight << " dice " << diceResult
-//                                      << std::endl;
                 if (indexRight==-2)
                 {
                     indexRight = moveRight;
@@ -54,9 +50,6 @@ std::array<int,2> Character::getMovements(int howFar)
                 if (indexLeft==-1)
                     break;
                 indexLeft = efc::boards[indexLeft][0];
-//                            std::cout << " howfar" << howFar  << " index l " << indexLeft
-//                                      << " move L " << moveLeft << " move R " << moveRight << " dice " << diceResult
-//                                      << std::endl;
                 if (indexLeft==-2)
                 {
                     indexLeft = moveLeft;
@@ -69,11 +62,11 @@ std::array<int,2> Character::getMovements(int howFar)
 
 
 
-        myArray = {moveLeft,moveRight};
+        myArray = {{moveLeft,moveRight}};
     }
     else
     {
-        myArray = {-1,-1};
+        myArray = {{-1,-1}};
     }
 //    std::cout << "howfar: " <<howFar << std::endl;
     return myArray;
@@ -112,8 +105,8 @@ void Character::play()
 {
     //    animatedSprite.play(*currentAnimation);
     animatedSprite.play(animations[currentAnimationIndex]);
-    sf::Vector2f a(getPosition());
-    sf::Vector2i position(efc::getCords(a));
+//    sf::Vector2f a(getPosition());
+//    sf::Vector2i position(efc::getCords(a));
 
 //    std::cout << a.x << "    " << a.y << "           "
 //              << position.x << "       " << position.y << " pos > "
@@ -121,7 +114,7 @@ void Character::play()
 }
 
 Character::Character(TextureHolder *textures, int playerNumber):
-    animatedSprite(sf::seconds(0.2), true, false),
+    animatedSprite(sf::seconds(0.2f), true, false),
     nextRedirect(0.f)
 {
 
