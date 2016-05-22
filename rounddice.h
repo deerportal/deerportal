@@ -31,7 +31,7 @@ private:
 
     int diceSize;
 
-    void eventExtraCash();
+//    void eventExtraCash();
 
     sf::SoundBuffer sfxDiceBuffer;
     sf::Sound sfxDice;

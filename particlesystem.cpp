@@ -17,8 +17,8 @@ ParticleSystem::ParticleSystem( int width, int height )
 
 ParticleSystem::~ParticleSystem()
 {
-    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); it++ )
-        for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); it++ )
+    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
+        for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
     {
         delete *it;
     }
@@ -27,9 +27,10 @@ ParticleSystem::~ParticleSystem()
 void ParticleSystem::fuel( int particles )
 {
     float angle;
-    Particle* particle;
+
     for( int i = 0; i < particles; i++ )
     {
+        Particle* particle;
         particle = new Particle();
         particle->pos.x = m_position.x;
         particle->pos.y = m_position.y;
@@ -67,7 +68,7 @@ void ParticleSystem::update()
 {
     float time = m_clock.restart().asSeconds();
 
-    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); it++ )
+    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
     {
         (*it)->vel.x += m_gravity.x * time;
         (*it)->vel.y += m_gravity.y * time;
@@ -88,7 +89,7 @@ void ParticleSystem::update()
 
 void ParticleSystem::render()
 {
-    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); it++ )
+    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
     {
         m_image.setPixel( (int)(*it)->pos.x, (int)(*it)->pos.y, (*it)->color );
     }
@@ -97,7 +98,7 @@ void ParticleSystem::render()
 
 void ParticleSystem::remove()
 {
-    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); it++ )
+    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
     {
         m_image.setPixel( (int)(*it)->pos.x, (int)(*it)->pos.y, m_transparent );
     }
