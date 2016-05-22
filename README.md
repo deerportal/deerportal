@@ -1,4 +1,4 @@
-[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)
+[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)[![Build Status](https://travis-ci.org/deerportal/deerportal.svg?branch=master)](https://travis-ci.org/deerportal/deerportal)
 
 presents
 
