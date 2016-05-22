@@ -179,7 +179,7 @@ Character::Character(TextureHolder *textures, int playerNumber):
 //        sf::Vector2f(40, 240)
 //    };
 
-    std::array<int, 4> boardPositions{0,15,255-15,255};
+    std::array<int, 4> boardPositions{{0,15,255-15,255}};
 //    std::cout << "define " << playerNumber << std::endl;
     setBoardPosition(boardPositions[playerNumber]);
 
@@ -272,7 +272,7 @@ void Character::update(sf::Time deltaTime)
     }
     animatedSprite.update(deltaTime);
 
-    std::array<int,2> movements(getMovements(diceResult));
+//    std::array<int,2> movements(getMovements(diceResult));
 //    int left = movements[0];
 //    int right = movements[1];
 
