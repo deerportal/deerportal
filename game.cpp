@@ -2,6 +2,7 @@
 #include "particle.h"
 #include "calendar.h"
 
+
 namespace efc {
 
 int initScreenX = 1360;
@@ -124,6 +125,8 @@ void Game::initBoard()
     endGameTxt.setPosition((1360/2)-(ss.width/2),0);
 
     setTxtEndGameAmount();
+    bubble.setPosition(players[turn].characters[0].getPosition().x-40,
+            players[turn].characters[0].getPosition().y-60);
 //    endGameTxt.set
 //    endGameTxt.setScale(2,2);
 
@@ -296,7 +299,8 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         {
             diceResultPlayer = roundDice.throwDiceSix();
             players[turn].characters[0].diceResult=diceResultPlayer;
-            currentState=state_game;
+            currentState = state_game;
+            bubble.state = BubbleState::MOVE;
         }
     }
 
@@ -362,7 +366,6 @@ Game::Game():
 
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager)
-
 {
 
 
@@ -562,6 +565,7 @@ void Game::update(sf::Time frameTime) {
         if (downTimeCounter>5)
         {
             currentState = state_roll_dice;
+            bubble.state = BubbleState::DICE;
         }
     }
 
@@ -647,7 +651,10 @@ void Game::nextPlayer(){
     groupHud.setSeason(currentSeason);
     groupHud.setMonthName(month%4);
     currentState = state_roll_dice;
+    bubble.state = BubbleState::DICE;
     roundDice.setColor(turn);
+    bubble.setPosition(players[turn].characters[0].getPosition().x-40,
+            players[turn].characters[0].getPosition().y-60);
 }
 
 void Game::drawPlayersGui(){
@@ -698,21 +705,21 @@ void Game::drawCharacters(){
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
     shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.05)/2);
 
-    for (int i=0;i<4;i++)
-    {
+//    for (int i=0;i<4;i++)
+//    {
 
-        sf::RectangleShape rectangle(sf::Vector2f(284, 284));
-        rectangle.setPosition(playersSpritesCords[i][0]-2,playersSpritesCords[i][1]-2);
-        rectangle.setFillColor(sf::Color(0, 0, 0,55));
-        renderTexture.draw(rectangle);
-         if (turn==i)
-         renderTexture.draw(playersSprites[i]);
-         else
-             renderTexture.draw(playersSprites[i], &shaderBlur);
+//        sf::RectangleShape rectangle(sf::Vector2f(284, 284));
+//        rectangle.setPosition(playersSpritesCords[i][0]-2,playersSpritesCords[i][1]-2);
+//        rectangle.setFillColor(sf::Color(0, 0, 0,55));
+//        renderTexture.draw(rectangle);
+//         if (turn==i)
+//         renderTexture.draw(playersSprites[i]);
+//         else
+//             renderTexture.draw(playersSprites[i], &shaderBlur);
 
 
 
-    }
+//    }
     renderTexture.draw(cardsDeck);
     if (currentState==state_roll_dice)
     {
@@ -768,6 +775,8 @@ void Game::render(float deltaTime)
         drawBaseGame();
         drawCharacters();
         renderTexture.draw(boardDiamonds);
+        renderTexture.draw(bubble);
+
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
@@ -780,7 +789,10 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewTiles);
         drawBaseGame();
         drawCharacters();
+
         renderTexture.draw(boardDiamonds);
+        renderTexture.draw(bubble);
+
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);

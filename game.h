@@ -28,6 +28,7 @@
 #include "cardsdeck.h"
 #include "calendar.h"
 #include "particle.h"
+#include "bubble.h"
 //class Command;
 
 namespace efc {
@@ -207,6 +208,9 @@ private:
     sf::Text textLoading;
 public:
     CardsDeck cardsDeck;
+
+private:
+    Bubble bubble;
 };
 }
 #endif // GAME_H

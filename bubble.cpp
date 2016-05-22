@@ -3,17 +3,24 @@
 Bubble::Bubble():
     state(BubbleState::DICE)
 {
-    sf::Texture texture;
-    sf::Sprite sprite;
+    spritesBubbles = {{spriteDice, spriteFootSteps}};
 
-    if (!texture.loadFromFile("assets/img/bubble_dice.png"))
+    if (!textureDice.loadFromFile("assets/img/bubble_dice.png"))
         std::exit(1);
 
-    sprite.setTexture(texture);
-    sprites[0] = sprite;
-
-    if (!texture.loadFromFile("assets/img/bubble_footsteps.png"))
+    if (!textureFootSteps.loadFromFile("assets/img/bubble_footsteps.png"))
         std::exit(1);
-    sprite.setTexture(texture);
-    sprites[1] = sprite;
+
+    spritesBubbles[0].setTexture(textureDice);
+    spritesBubbles[1].setTexture(textureFootSteps);
+
+//    sprites[0] = spriteDice;
+//    sprites[1] = spriteFootSteps;
+//
+}
+
+
+void Bubble::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    states.transform *= getTransform();
+    target.draw(spritesBubbles[state], states);
 }
