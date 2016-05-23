@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=DeerPortal
+Comment=Board Game Driven By Classical Elements
+Exec=/opt/deerportal/DeerPortal.sh
+Icon=/usr/share/icons/hicolor/512x512/apps/deerportal.png
+Path=/opt/deerportal
+Terminal=false
+Type=Application
+Categories=Game;BoardGame;

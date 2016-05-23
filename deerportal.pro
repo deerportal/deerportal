@@ -31,7 +31,11 @@ SOURCES += main.cpp \
     pile.cpp \
     cardslist.cpp \
     command.cpp \
-    cardsdeck.cpp
+    cardsdeck.cpp \
+    particlesystem.cpp \
+    calendar.cpp \
+    bubble.cpp
+
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 
@@ -39,6 +43,9 @@ DESTDIR = debian/deerportal/opt/deerportal/
 
 assets.path    = /opt/deerportal/assets
 assets.files   = assets/*
+
+startfile.path    = /opt/deerportal/
+startfile.files   = DeerPortal.sh
 
 desktop.path = /usr/share/applications
 desktop.files = deerportal.desktop
@@ -49,6 +56,7 @@ icon.files = assets/img/deerportal.png
 INSTALLS        += assets
 INSTALLS        += desktop
 INSTALLS        += icon
+INSTALLS	+= startfile
 
 HEADERS += \
     game.h \
@@ -78,8 +86,12 @@ HEADERS += \
     pile.h \
     cardslist.h \
     command.h \
-    cardsdeck.h
-    calendar.pagan
+    cardsdeck.h \
+    calendar.h \
+    particle.h \
+    bubble.h
+
+
 
 
 OTHER_FILES += \

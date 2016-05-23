@@ -1,4 +1,12 @@
-deerportal (0.0.2alpha) UNRELEASED; urgency=medium
+deerportal (0.0.3-alpha) unstable; urgency=medium
+
+  * Bubbles
+  * Clean up 
+
+ -- Rafal Zawadzki <bluszcz@devcarpet.net>  Sat, 09 Apr 2016 04:10:42 +0200
+
+
+deerportal (0.0.2alpha) unstable; urgency=medium
 
   * New upstream release
   * Clean up 
