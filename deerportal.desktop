@@ -2,8 +2,8 @@
 Name=DeerPortal
 Comment=Board Game Driven By Classical Elements
 Exec=/opt/deerportal/DeerPortal.sh
-Icon=/tmp/deerportal/debian/deerportal/usr/share/icons/hicolor/512x512/apps/deerportal.png
+Icon=/usr/share/icons/hicolor/512x512/apps/deerportal.png
 Path=/opt/deerportal
 Terminal=false
-Type=Game
+Type=Application
 Categories=Game;BoardGame;
