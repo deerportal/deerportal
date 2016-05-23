@@ -38,8 +38,15 @@ $ make install
 $ ../build_release_pagan_board/pagan_board
 ```
 
-Windows
--------
+Download
+--------
+
+In our [releases](https://github.com/deerportal/deerportal/releases) section we are providing compiled binaries for Ubuntu (Trusty, Xenial) and Windows.
+
+Development windows builds
+--------------------------
+
+Following has been created using our Jenkins based Continous Integration,
 
 * https://devcarpet.net/deerportal/downloads/windows/
 
