@@ -44,6 +44,9 @@ DESTDIR = debian/deerportal/opt/deerportal/
 assets.path    = /opt/deerportal/assets
 assets.files   = assets/*
 
+startfile.path    = /opt/deerportal/
+startfile.files   = DeerPortal.sh
+
 desktop.path = /usr/share/applications
 desktop.files = deerportal.desktop
 
@@ -53,6 +56,7 @@ icon.files = assets/img/deerportal.png
 INSTALLS        += assets
 INSTALLS        += desktop
 INSTALLS        += icon
+INSTALLS	+= startfile
 
 HEADERS += \
     game.h \
