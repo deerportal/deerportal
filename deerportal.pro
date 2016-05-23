@@ -31,7 +31,11 @@ SOURCES += main.cpp \
     pile.cpp \
     cardslist.cpp \
     command.cpp \
-    cardsdeck.cpp
+    cardsdeck.cpp \
+    particlesystem.cpp \
+    calendar.cpp \
+    bubble.cpp
+
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 
@@ -78,8 +82,12 @@ HEADERS += \
     pile.h \
     cardslist.h \
     command.h \
-    cardsdeck.h
-    calendar.pagan
+    cardsdeck.h \
+    calendar.h \
+    particle.h \
+    bubble.h
+
+
 
 
 OTHER_FILES += \
