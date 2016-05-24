@@ -11,8 +11,8 @@ namespace efc {
     const static std::array<int,32> cardsDistribution = {
         0,0,0,0,0,0,0,0,
         1,1,1,1,1,1,1,1,
-        2,2,2,2,2,2,2,2,2,2,
-        3,3,3,3,3,3
+        2,2,2,2,2,2,2,2,
+        3,3,3,3,3,3,3,3,
     };
     const static std::array<int,2> cardsDistributionDebug = {
         2,3

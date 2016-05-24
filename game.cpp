@@ -208,7 +208,7 @@ void Game::loadAssets()
 //        std::exit(1);
 
     spriteBackgroundArt.setTexture(textureBackgroundArt);
-    menuTxt.setFont(menuFont);
+    menuTxt.setFont(gameFont);
     menuTxt.setCharacterSize(60);
     menuTxt.setString(gameTitle);
     int width = menuTxt.getLocalBounds().width;
@@ -217,7 +217,7 @@ void Game::loadAssets()
     menuTxt.setColor(sf::Color(255, 255, 255, 85));
     cardsDeck.setFonts(&gameFont);
 
-    paganHolidayTxt.setFont(menuFont);
+    paganHolidayTxt.setFont(gameFont);
     paganHolidayTxt.setCharacterSize(20);
     paganHolidayTxt.setPosition(20,20);
 
