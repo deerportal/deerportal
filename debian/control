@@ -13,5 +13,5 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: A board game driven by the classical elements.
  Deer Portal is a board game where you can experience madness of being ex pagan
- who wants to be become an ancient Deer God. To achieve this, you have two play
+ who wants to be become an ancient Deer God. To achieve this, you have to play
  a dreadful game where classical elements are involved. Reach portal or die.
