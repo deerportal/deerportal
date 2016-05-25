@@ -18,7 +18,7 @@ struct ResultTable
     ResultTable(int number,int result) : playerNumber(number), playerResult(result) {}
     bool operator < (const ResultTable& otherResult) const
     {
-        return (playerNumber < otherResult.playerNumber);
+        return (playerResult > otherResult.playerResult);
     }
 };
 
@@ -33,21 +33,43 @@ void Game::setTxtEndGameAmount(){
     int separator = 40;
     std::array<ResultTable, 4> results = {
         {
-            ResultTable(0,0),
-            ResultTable(0,0),
-            ResultTable(0,0),
-            ResultTable(0,0)
+            ResultTable(0,players[0].cash),
+            ResultTable(1,players[1].cash),
+            ResultTable(2,players[2].cash),
+            ResultTable(3,players[3].cash)
         }
     };
 
 //    std::array <int, 4> results = {{players[0].cash,players[1].cash,players[2].cash,players[3].cash}};
 
+
+
+std::vector < ResultTable > resultsVector;
+for (int i=0;i<4;i++)
+{
+    resultsVector.push_back(results[i]);
+};
+
+std::sort(resultsVector.begin(), resultsVector.end());
+
+
     for (int i=0;i<4;i++)
     {
-        std::string label = elementNames[i]+ " " + std::to_string(players[i].cash);
+
+        int playerNumber = resultsVector[i].playerNumber;
+        std::string elementName = elementNames[playerNumber];
+
+        std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
         endGameTxtAmount[i].setString(label);
         sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
         endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator));
+
+
+
+//        std::string label = elementNames[i]+ " " + std::to_string(players[i].cash);
+//        endGameTxtAmount[i].setString(label);
+//        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
+//        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator));
 
     }
 
