@@ -18,15 +18,15 @@ License for the audio: https://creativecommons.org/licenses/by/4.0/
 Extra audio and gfx
 -------------------
 
-*Dices* https://www.freesound.org/people/qubodup/sounds/189321/
+* *Dices* https://www.freesound.org/people/qubodup/sounds/189321/
 
 by qubodup
 
-*Collect Done * https://www.freesound.org/people/suntemple/sounds/241809/
+* *Collect Done * https://www.freesound.org/people/suntemple/sounds/241809/
 
 by suntemple
 
-*db16 RPG Character Sprites* http://opengameart.org/content/db16-rpg-character-sprites
+* *db16 RPG Character Sprites* http://opengameart.org/content/db16-rpg-character-sprites
 
 by usr_share
 
