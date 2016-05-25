@@ -5,7 +5,7 @@ presents
 Deerportal
 -----------
 
-![DeerPortal Game play](https://bluszcz.net/projects/games/deerportal/selection_754.png/image_view_fullscreen)
+![DeerPortal Game play](https://bluszcz.net/projects/games/deerportal/selection_754.png/@@images/image.png)
 
 Deerportal is a game which utilize  board and card games mechanisms. World of the game is driven by four classical elemets.
 
