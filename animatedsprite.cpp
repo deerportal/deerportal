@@ -30,8 +30,10 @@ AnimatedSprite::AnimatedSprite(sf::Time frameTime, bool paused, bool looped) :
     m_animation(NULL), m_frameTime(frameTime), m_currentFrame(0), m_isPaused(paused), m_isLooped(looped), m_texture(NULL)
 {
 
-    setScale(1.9,1.9);
+//    setScale(1.9,1.9);
 
+    setFrameTime(sf::seconds(0.5f));
+    setFrameTime(sf::seconds(0.5f));
 }
 
 void AnimatedSprite::setAnimation(const Animation& animation)

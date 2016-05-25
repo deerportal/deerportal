@@ -740,10 +740,10 @@ void Game::drawCharacters(){
     renderTexture.setView(viewFull);
     renderTexture.draw(spriteBackgroundArt,  &shaderDark);
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
-    shaderBlur.setParameter("blur_radius", 0.5);
+    shaderBlur.setParameter("blur_radius", 0.01);
 //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
 //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
-    shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.05f));
+    shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.005f));
 
     renderTexture.draw(spriteBackgroundArt);
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
@@ -793,7 +793,9 @@ void Game::drawCharacters(){
                 j.drawMovements = true;
             else
                 j.drawMovements = false;
-            renderTexture.draw(j, &shaderBlur);
+            renderTexture.draw(j);
+//            renderTexture.draw(j, &shaderBlur);
+
         }
     }
 }

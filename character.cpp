@@ -120,7 +120,7 @@ Character::Character(TextureHolder *textures, int playerNumber):
 
     drawMovements = false;
     this->textures = textures;
-    int offset = playerNumber*16;
+    int offset = playerNumber*32;
     active = false;
 
 
@@ -129,30 +129,29 @@ Character::Character(TextureHolder *textures, int playerNumber):
     rectangleRight.setFillColor(sf::Color(240, 240, 240,98));
     rectangleRight.setOutlineColor(sf::Color(24,40,24, 90));
 
+    int charWidth = 32;
+    int charHeight = 58;
 
 
     walkingAnimationDown.setSpriteSheet(textures->textureCharacters);
-    walkingAnimationDown.addFrame(sf::IntRect(offset, 0, 16, 24));
-    walkingAnimationDown.addFrame(sf::IntRect(offset, 24, 16, 24));
+    walkingAnimationDown.addFrame(sf::IntRect(offset, 0, charWidth, charHeight));
+    walkingAnimationDown.addFrame(sf::IntRect(offset, 58, charWidth, charHeight));
 
     walkingAnimationRight.setSpriteSheet(textures->textureCharacters);
-    walkingAnimationRight.addFrame(sf::IntRect(offset, 48, 16, 24));
-    walkingAnimationRight.addFrame(sf::IntRect(offset, 72, 16, 24));
+    walkingAnimationRight.addFrame(sf::IntRect(offset, 116, charWidth, charHeight));
+    walkingAnimationRight.addFrame(sf::IntRect(offset, 174, charWidth, charHeight));
 
     walkingAnimationLeft.setSpriteSheet(textures->textureCharacters);
-    walkingAnimationLeft.addFrame(sf::IntRect(offset, 96, 16, 24));
-    walkingAnimationLeft.addFrame(sf::IntRect(offset, 120, 16, 24));
+    walkingAnimationLeft.addFrame(sf::IntRect(offset, 232, charWidth, charHeight));
+    walkingAnimationLeft.addFrame(sf::IntRect(offset, 290, charWidth, charHeight));
 
     walkingAnimationUp.setSpriteSheet(textures->textureCharacters);
-    walkingAnimationUp.addFrame(sf::IntRect(offset, 144, 16, 24));
-    walkingAnimationUp.addFrame(sf::IntRect(offset, 168, 16, 24));
+    walkingAnimationUp.addFrame(sf::IntRect(offset, 348, charWidth, charHeight));
+    walkingAnimationUp.addFrame(sf::IntRect(offset, 406, charWidth, charHeight));
 
     currentAnimation = &walkingAnimationRight;
-
-
     leftChar.setTexture(textures->textureCharacters);
     leftChar.setTextureRect(sf::IntRect(offset, 96, 16, 24));
-
 
     rightChar.setTexture(textures->textureCharacters);
     rightChar.setTextureRect(sf::IntRect(offset, 48, 16, 24));
@@ -172,25 +171,15 @@ Character::Character(TextureHolder *textures, int playerNumber):
     setDirIndex(efc::DIR_LEFT);
     setDir();
 
-//    sf::Vector2f positions[4] = {
-//        sf::Vector2f(0, 0),
-//        sf::Vector2f(20, 40),
-//        sf::Vector2f(20, 240),
-//        sf::Vector2f(40, 240)
-//    };
-
     std::array<int, 4> boardPositions{{0,15,255-15,255}};
-//    std::cout << "define " << playerNumber << std::endl;
     setBoardPosition(boardPositions[playerNumber]);
-
-
 }
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 
     states.transform *= getTransform();
-target.draw(animatedSprite, states);
+    target.draw(animatedSprite, states);
 
     if ((active==true) && (drawMovements==true))
     {
@@ -271,11 +260,6 @@ void Character::update(sf::Time deltaTime)
         }
     }
     animatedSprite.update(deltaTime);
-
-//    std::array<int,2> movements(getMovements(diceResult));
-//    int left = movements[0];
-//    int right = movements[1];
-
 
     if (active==true)
     {
