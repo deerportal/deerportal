@@ -7,7 +7,7 @@ Deerportal
 
 ![DeerPortal Game play](https://bluszcz.net/projects/games/deerportal/selection_754.png/@@images/image.png)
 
-Deerportal is a game which utilize  board and card games mechanisms. World of the game is driven by four classical elemets.
+Deerportal is a open source hybrid game which utilize  board and card games mechanisms. World of the game is driven by four classical elemets along with Almighty Deer God.
 
 Homepage: https://devcarpet.net/deerportal/
 
