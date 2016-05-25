@@ -618,6 +618,7 @@ void Game::update(sf::Time frameTime) {
 
     }
 
+    bubble.update(frameTime);
 }
 
 void Game::nextRound() {
