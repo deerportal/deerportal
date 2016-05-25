@@ -18,6 +18,7 @@ Features
 
 * 4 players mode
 * changing seasons
+* open source (zlib / cc-by 4.0)
 
 SFML, Linux, OSX, Windows.
 
