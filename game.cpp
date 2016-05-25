@@ -11,6 +11,18 @@ int currentSeason = 1;
 int month = 0;
 
 
+struct ResultTable
+{
+    int playerNumber;
+    int playerResult;
+    ResultTable(int number,int result) : playerNumber(number), playerResult(result) {}
+    bool operator < (const ResultTable& otherResult) const
+    {
+        return (playerNumber < otherResult.playerNumber);
+    }
+};
+
+
 void Game::setTxtEndGameAmount(){
 
 
@@ -18,8 +30,17 @@ void Game::setTxtEndGameAmount(){
 
     int width=1360;
 //    int height = 768;
-
     int separator = 40;
+    std::array<ResultTable, 4> results = {
+        {
+            ResultTable(0,0),
+            ResultTable(0,0),
+            ResultTable(0,0),
+            ResultTable(0,0)
+        }
+    };
+
+//    std::array <int, 4> results = {{players[0].cash,players[1].cash,players[2].cash,players[3].cash}};
 
     for (int i=0;i<4;i++)
     {
