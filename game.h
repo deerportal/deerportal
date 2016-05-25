@@ -107,21 +107,16 @@ private:
 
     states currentState;
 
-//    sf::Texture textureBackground;
     sf::Sprite spriteBackground;
     sf::Sprite gameBackground;
     sf::Sprite spriteBackgroundDark;
-
     sf::Sprite spriteLestBegin;
-
     sf::Texture textureBackgroundArt;
     sf::Sprite spriteBackgroundArt;
-
     sf::Texture textureTiles;
     sf::Texture textureFaces;
     sf::Font gameFont;
     sf::Font menuFont;
-//    sf::Font endGameFont;
     sf::Text menuTxt;
     sf::Text endGameTxt;
     sf::Text endGameTxtAmount[4];
@@ -146,8 +141,6 @@ private:
 
     ParticleSystem particleSystem;
 
-
-
     void setCurrentNeighbours ();
     void nextPlayer();
 
@@ -156,10 +149,8 @@ private:
 
     sf::Sprite menuBackground;
     sf::Sprite seasons[4];
-    //int currentSeason = 0;
 
     sf::Music musicGame;
-//    sf::Music musicBackground;
     sf::Music musicMenu;
 
     sf::SoundBuffer sfxClickBuffer;

@@ -19,7 +19,10 @@ public:
     std::array<sf::Sprite,2> spritesBubbles;
     BubbleState state;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
+    void update(sf::Time deltaTime);
+    float timeCounter;
+    float posY;
+    void setPosition(float x, float y);
 
 };
 
