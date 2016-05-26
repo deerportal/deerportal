@@ -344,6 +344,8 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
             players[turn].characters[0].diceResult=diceResultPlayer;
             currentState = state_game;
             bubble.state = BubbleState::MOVE;
+            nextRotateElem.reset();
+            prevRotateElem.reset();
         }
     }
 
@@ -578,7 +580,9 @@ void Game::update(sf::Time frameTime) {
         if (currentMovements[0]>-1)
         {
             prevRotateElem.spriteRotate.setPosition(players[turn].characters[0].leftChar.getPosition());
-            prevRotateElem.spriteRotate.move(4,16);
+            prevRotateElem.spriteRotate.move(10,20);
+
+            // Modificator to fit on the bigger view
             prevRotateElem.spriteRotate.move(-202,-76);
 
             prevRotateElem.update(frameTime);
@@ -587,7 +591,9 @@ void Game::update(sf::Time frameTime) {
         if (currentMovements[1]>-1)
         {
             nextRotateElem.spriteRotate.setPosition(players[turn].characters[0].rightChar.getPosition());
-            nextRotateElem.spriteRotate.move(4,16);
+            nextRotateElem.spriteRotate.move(10,20);
+
+            // Modificator to fit on the bigger view
             nextRotateElem.spriteRotate.move(-202,-76);
             nextRotateElem.update(frameTime);
             nextRotateElem.setColor(turn);
@@ -729,17 +735,13 @@ void Game::drawBaseGame()
     drawSquares();
     renderTexture.setView(viewGui);
     renderTexture.setView(viewTiles);
-}
-
-void Game::drawCharacters(){
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
-
     shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01f) );
 
     renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
-    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
-    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
+//    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
+//    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
     shaderBlur.setParameter("blur_radius", 0.01);
 //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
 //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
@@ -772,13 +774,24 @@ void Game::drawCharacters(){
     renderTexture.setView(viewTiles);
     drawSquares();
 
+}
+
+void Game::drawCharacters(){
+
+
     if (currentState==state_game)
     {
         std::array<int,2> currentMovements = players[turn].characters[0].getMovements(diceResultPlayer);
         if (currentMovements[1]>-1)
-            renderTexture.draw(nextRotateElem);
+        {
+            if (nextRotateElem.active)
+                renderTexture.draw(nextRotateElem);
+        }
         if (currentMovements[0]>-1)
-            renderTexture.draw(prevRotateElem);
+        {
+            if (prevRotateElem.active)
+                renderTexture.draw(prevRotateElem);
+        }
     }
 
     renderTexture.setView(viewFull);
@@ -811,10 +824,17 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 2);
 
-        renderTexture.draw(spriteBackgroundDark, &shaderBlur);
+        renderTexture.draw(spriteBackgroundDark);
+
+
+
+
 
         renderTexture.setView(viewTiles);
         drawBaseGame();
+        renderTexture.setView(viewFull);
+        renderTexture.draw(groupHud);
+        renderTexture.setView(viewTiles);
         drawCharacters();
         renderTexture.draw(boardDiamonds);
         renderTexture.draw(bubble);
@@ -822,23 +842,26 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
-        renderTexture.draw(groupHud);
+//        renderTexture.draw(groupHud);
 
     } else if (currentState==state_roll_dice) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 2);
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
+
         renderTexture.setView(viewTiles);
         drawBaseGame();
+        renderTexture.setView(viewFull);
+        renderTexture.draw(groupHud);
+        renderTexture.setView(viewTiles);
         drawCharacters();
-
         renderTexture.draw(boardDiamonds);
         renderTexture.draw(bubble);
 
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
-        renderTexture.draw(groupHud);
+//        renderTexture.draw(groupHud);
 
     } else if (currentState==state_gui_elem) {
         renderTexture.setView(viewFull);

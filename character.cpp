@@ -150,14 +150,7 @@ Character::Character(TextureHolder *textures, int playerNumber):
     walkingAnimationUp.addFrame(sf::IntRect(offset, 406, charWidth, charHeight));
 
     currentAnimation = &walkingAnimationRight;
-    leftChar.setTexture(textures->textureCharacters);
-    leftChar.setTextureRect(sf::IntRect(offset, 96, 16, 24));
 
-    rightChar.setTexture(textures->textureCharacters);
-    rightChar.setTextureRect(sf::IntRect(offset, 48, 16, 24));
-
-    leftChar.scale(0.75,0.75);
-    rightChar.scale(0.75,0.75);
 
     leftChar.move(202,76);
     rightChar.move(202,76);
@@ -166,7 +159,6 @@ Character::Character(TextureHolder *textures, int playerNumber):
     animations[efc::DIR_RIGHT] = walkingAnimationRight;
     animations[efc::DIR_UP] = walkingAnimationUp;
     animations[efc::DIR_DOWN] = walkingAnimationDown;
-
 
     setDirIndex(efc::DIR_LEFT);
     setDir();
@@ -177,22 +169,8 @@ Character::Character(TextureHolder *textures, int playerNumber):
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-
     states.transform *= getTransform();
     target.draw(animatedSprite, states);
-
-    if ((active==true) && (drawMovements==true))
-    {
-        if (moveLeft>-1)
-        {
-            target.draw(leftChar);
-        }
-
-        if (moveRight>-1)
-        {
-            target.draw(rightChar);
-        }
-    }
 }
 
 void Character::update(sf::Time deltaTime)

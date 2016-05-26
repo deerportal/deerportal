@@ -48,7 +48,6 @@ void Command::removeAllCardElement(int elementNumber)
      * - remove from the board - set not active
      */
 
-//    std::vector<int> diamonds;
     for (auto&& i: game.boardDiamonds.diamonds)
     {
         int cardElementNumber = i.idNumber;

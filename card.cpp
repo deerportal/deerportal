@@ -7,6 +7,4 @@ Card::Card():
     id = -1;
     amount = -1;
     cardTypeInt = 0;
-
-
 }
