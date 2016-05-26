@@ -1,6 +1,8 @@
 #include "rotateelem.h"
 
-RotateElem::RotateElem()
+RotateElem::RotateElem():
+    timeCounter(0),
+    active(true)
 {
     if (!textureRotate.loadFromFile("assets/img/rotate.png"))
         std::exit(1);
@@ -8,6 +10,8 @@ RotateElem::RotateElem()
     spriteRotate.setTexture(textureRotate);
     spriteRotate.scale(0.7f,0.7f);
     spriteRotate.setOrigin(32, 32);
+
+
 
 }
 
@@ -23,6 +27,23 @@ void RotateElem::update(sf::Time deltaTime)
     speed = 0.05f/deltaTime.asSeconds();
 
     spriteRotate.rotate(1.0f*speed);
+
+    timeCounter += deltaTime.asSeconds();
+
+    if (timeCounter>0.40f)
+    {
+        if (active)
+        {
+            active = false;
+
+        } else {
+            active = true;
+        };
+        timeCounter = 0;
+    }
+
+
+
 }
 
 void RotateElem::setColor(int playerNumber)

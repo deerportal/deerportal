@@ -781,9 +781,15 @@ void Game::drawCharacters(){
     {
         std::array<int,2> currentMovements = players[turn].characters[0].getMovements(diceResultPlayer);
         if (currentMovements[1]>-1)
-            renderTexture.draw(nextRotateElem);
+        {
+            if (nextRotateElem.active)
+                renderTexture.draw(nextRotateElem);
+        }
         if (currentMovements[0]>-1)
-            renderTexture.draw(prevRotateElem);
+        {
+            if (prevRotateElem.active)
+                renderTexture.draw(prevRotateElem);
+        }
     }
 
     renderTexture.setView(viewFull);

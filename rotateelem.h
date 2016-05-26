@@ -13,6 +13,9 @@ public:
     sf::Texture textureRotate;
     sf::Sprite spriteRotate;
     void setColor(int playerNumber);
+
+    float timeCounter;
+    bool active;
 };
 
 #endif // ROTATEELEM_H
