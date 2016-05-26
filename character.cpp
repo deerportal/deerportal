@@ -167,7 +167,6 @@ Character::Character(TextureHolder *textures, int playerNumber):
     animations[efc::DIR_UP] = walkingAnimationUp;
     animations[efc::DIR_DOWN] = walkingAnimationDown;
 
-
     setDirIndex(efc::DIR_LEFT);
     setDir();
 
@@ -177,22 +176,8 @@ Character::Character(TextureHolder *textures, int playerNumber):
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-
     states.transform *= getTransform();
     target.draw(animatedSprite, states);
-
-    if ((active==true) && (drawMovements==true))
-    {
-        if (moveLeft>-1)
-        {
-            target.draw(leftChar);
-        }
-
-        if (moveRight>-1)
-        {
-            target.draw(rightChar);
-        }
-    }
 }
 
 void Character::update(sf::Time deltaTime)
