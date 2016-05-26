@@ -16,6 +16,7 @@ public:
 
     float timeCounter;
     bool active;
+    void reset();
 };
 
 #endif // ROTATEELEM_H

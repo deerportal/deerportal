@@ -344,6 +344,8 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
             players[turn].characters[0].diceResult=diceResultPlayer;
             currentState = state_game;
             bubble.state = BubbleState::MOVE;
+            nextRotateElem.reset();
+            prevRotateElem.reset();
         }
     }
 
