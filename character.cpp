@@ -150,14 +150,7 @@ Character::Character(TextureHolder *textures, int playerNumber):
     walkingAnimationUp.addFrame(sf::IntRect(offset, 406, charWidth, charHeight));
 
     currentAnimation = &walkingAnimationRight;
-    leftChar.setTexture(textures->textureCharacters);
-    leftChar.setTextureRect(sf::IntRect(offset, 96, 16, 24));
 
-    rightChar.setTexture(textures->textureCharacters);
-    rightChar.setTextureRect(sf::IntRect(offset, 48, 16, 24));
-
-    leftChar.scale(0.75,0.75);
-    rightChar.scale(0.75,0.75);
 
     leftChar.move(202,76);
     rightChar.move(202,76);

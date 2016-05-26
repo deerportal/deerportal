@@ -578,7 +578,9 @@ void Game::update(sf::Time frameTime) {
         if (currentMovements[0]>-1)
         {
             prevRotateElem.spriteRotate.setPosition(players[turn].characters[0].leftChar.getPosition());
-            prevRotateElem.spriteRotate.move(4,16);
+            prevRotateElem.spriteRotate.move(10,20);
+
+            // Modificator to fit on the bigger view
             prevRotateElem.spriteRotate.move(-202,-76);
 
             prevRotateElem.update(frameTime);
@@ -587,7 +589,9 @@ void Game::update(sf::Time frameTime) {
         if (currentMovements[1]>-1)
         {
             nextRotateElem.spriteRotate.setPosition(players[turn].characters[0].rightChar.getPosition());
-            nextRotateElem.spriteRotate.move(4,16);
+            nextRotateElem.spriteRotate.move(10,20);
+
+            // Modificator to fit on the bigger view
             nextRotateElem.spriteRotate.move(-202,-76);
             nextRotateElem.update(frameTime);
             nextRotateElem.setColor(turn);

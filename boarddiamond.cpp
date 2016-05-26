@@ -21,21 +21,13 @@ BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,
     setBoardPosition(boardPosition);
 }
 
-
-
 void BoardDiamond::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     if (boardPosition>-1)
     {
         states.transform *= getTransform();
-        sf::Vector2f where(getPosition());
         target.draw(spriteHolder, states);
     }
 }
-
-//void BoardDiamond::update(sf::Time deltaTime, std::set<int> &busyTiles)
-//{
-
-//}
 
 

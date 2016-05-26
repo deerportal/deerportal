@@ -6,7 +6,7 @@ RotateElem::RotateElem()
         std::exit(1);
 
     spriteRotate.setTexture(textureRotate);
-    spriteRotate.scale(0.4f,0.4f);
+    spriteRotate.scale(0.7f,0.7f);
     spriteRotate.setOrigin(32, 32);
 
 }
@@ -27,5 +27,6 @@ void RotateElem::update(sf::Time deltaTime)
 
 void RotateElem::setColor(int playerNumber)
 {
-    spriteRotate.setColor(efc::playersColors[playerNumber]);
+//    spriteRotate.setColor(efc::playersColors[playerNumber]);
+    spriteRotate.setColor(sf::Color::White);
 }
