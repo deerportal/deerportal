@@ -323,6 +323,12 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
                                           std::end(efc::endPlayers), mousePos);
             if (possibleExit != efc::endPlayers+4) {
                 players[turn].done=true;
+
+                if (numberFinishedPlayers == 0)
+                {
+                    startDeerMode();
+                }
+
                 numberFinishedPlayers += 1;
                 if (numberFinishedPlayers > 3)
                     endGame();
@@ -403,24 +409,18 @@ Game::Game():
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
     particleSystem( 430, 230),
-
-
     commandManager(*this),
-    cardsDeck(&textures, &menuFont,&commandManager)
+    cardsDeck(&textures, &menuFont,&commandManager),
+    deerModeCounter(4),
+    deerModeActive(false)
 {
-
-
-    //particleSystem.setPosition( width/2, height/2 );
-    //particleSystem.setGravity( 1.0f, 1.0f );
-    //particleSystem.setParticleSpeed( 80.0f );
+    // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
     particleSystem.setDissolutionRate( 10 );
     particleSystem.setShape( Shape::CIRCLE );
-
     particleSystem.fuel( 1000 );
     playersSpritesCords[0][0] = 202;
     playersSpritesCords[0][1] = 76;
@@ -466,16 +466,15 @@ Game::Game():
     renderTexture.draw(textLoading);
     renderTexture.display();
 
-
     showMenu();
-//    currentState = state_end_game; //TODO: hacky debug hy
+    //    currentState = state_end_game; //TODO: hacky debug hy
 
 
     // run the main loop
     while (window.isOpen())
     {
         sf::Time frameTime = frameClock.restart();
-//        std::string resultCommand = "";
+
         // handle events
         sf::Event event;
         float xpos = 320.0f;
@@ -530,15 +529,6 @@ Game::Game():
             int mousePos = efc::transCords(sf::Vector2i(mousePosX, mousePosY));
             if(event.type == sf::Event::Closed)
                 window.close();
-//            if (currentState==state_gui_elem)
-//            {
-//                resultCommand = guiSelectBuilding.getElem(localPositionFull);
-//                showPlayerBoardElems = false;
-//                if (resultCommand.find("elem_")==0)
-//                    command(resultCommand);
-//                else
-//                    command("hide_gui_elem_description");
-//            }
 
             // Showing mouse hover
             if (currentState==state_game)
@@ -566,7 +556,6 @@ Game::Game():
                                     localPositionFull, mousePos);
             }
         }
-
         update(frameTime);
         render(frameTime.asSeconds());
     }
@@ -727,7 +716,6 @@ void Game::drawBaseGame()
 
 
     renderTexture.setView(viewTiles);
-    //    window.draw(map);
     for (int i=0;i<4;i++)
     {
         renderTexture.draw(players[i].elems);
@@ -751,17 +739,6 @@ void Game::drawBaseGame()
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
     shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.05f)/2);
 
-//    for (int i=0;i<4;i++)
-//    {
-//        sf::RectangleShape rectangle(sf::Vector2f(284, 284));
-//        rectangle.setPosition(playersSpritesCords[i][0]-2,playersSpritesCords[i][1]-2);
-//        rectangle.setFillColor(sf::Color(0, 0, 0,55));
-//        renderTexture.draw(rectangle);
-//         if (turn==i)
-//         renderTexture.draw(playersSprites[i]);
-//         else
-//             renderTexture.draw(playersSprites[i], &shaderBlur);
-//    }
     renderTexture.draw(cardsDeck);
     if (currentState==state_roll_dice)
     {
@@ -825,11 +802,6 @@ void Game::render(float deltaTime)
         shaderBlur.setParameter("blur_radius", 2);
 
         renderTexture.draw(spriteBackgroundDark);
-
-
-
-
-
         renderTexture.setView(viewTiles);
         drawBaseGame();
         renderTexture.setView(viewFull);
@@ -861,8 +833,6 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
-//        renderTexture.draw(groupHud);
-
     } else if (currentState==state_gui_elem) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 2);
@@ -913,12 +883,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(endGameTxtAmount[i]);
     }
 
-//    drawBaseGame();
-
     }
-
-
-
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
@@ -928,29 +893,16 @@ void Game::render(float deltaTime)
     window.draw(renderSprite, &shaderBlur);
 
 
-      particleSystem.remove();
-      particleSystem.update();
-      particleSystem.render();
-      window.draw( particleSystem.getSprite() );
+    particleSystem.remove();
+    particleSystem.update();
+    particleSystem.render();
+    window.draw( particleSystem.getSprite() );
 
 
     window.display();
 }
 
 void Game::command(std::string command){
-//    if (command=="close_gui")
-//    {
-//        guiSelectBuilding.active = false;
-//        currentState=state_game;
-//        sfxClick.play();
-//    }
-//    if (command=="hide_gui_elem_description")
-//    {
-//        if (currentState==state_gui_elem) {
-//            guiSelectBuilding.descriptionActive = false;
-//        }
-//    }
-
     if (command.compare("end_of_round")==0)
     {
         std::string subResult = command.substr(13);
@@ -969,6 +921,13 @@ sf::Vector2f Game::getMousePos(){
     sf::Vector2f mousePosition(window.mapPixelToCoords(mousePosTmp,viewTiles));
     return mousePosition;
 }
+
+
+void Game::startDeerMode() {
+    deerModeActive = true;
+    deerModeCounter = 16;
+}
+
 
 
 }
