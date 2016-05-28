@@ -40,7 +40,9 @@ bool Command::removeCard(int playerNumber)
     {
         int elemToRemove = rand() %  numberDiamonds;
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
+        return true;
     }
+    return false;
 }
 
 void Command::removeAllCardElement(int elementNumber)
