@@ -1,5 +1,14 @@
 deerportal (0.0.3-alpha) unstable; urgency=medium
 
+  * Deer Mode
+  * Clean up 
+  * Animated Characters
+
+ -- Rafal Zawadzki <bluszcz@devcarpet.net>  Sat, 28 May 2016 04:42:42 +0200
+
+
+deerportal (0.0.3-alpha) unstable; urgency=medium
+
   * Bubbles
   * Clean up 
 
