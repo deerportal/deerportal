@@ -8,6 +8,9 @@
 #include "tilemap.h"
 #include "elem.h"
 
+/*!
+ * \brief The Character class
+ */
 class Character: public Elem
 {
 public:
