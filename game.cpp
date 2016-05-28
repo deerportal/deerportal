@@ -307,6 +307,7 @@ void Game::endGame()
 {
     currentState = state_end_game;
     downTimeCounter = 0;
+    numberFinishedPlayers = 4;
     setTxtEndGameAmount();
 //    musicBackground.stop();
 }
@@ -660,9 +661,10 @@ void Game::nextPlayer(){
 
     }
 
-    if (deerModeCounter==0)
+    if (deerModeCounter<0)
     {
         endGame();
+        return ;
     }
 
     if ((players[turn].done==true) && (turn<4))
@@ -708,8 +710,14 @@ void Game::nextPlayer(){
     {
         groupHud.setDeerModeActive();
         int number = (deerModeCounter/4);
+
         if (deerModeCounter<16)
             number += 1;
+        if (number<0)
+        {
+            endGame();
+            return;
+        }
         groupHud.setDeerModeCounter(number);
     }
     currentState = state_roll_dice;
