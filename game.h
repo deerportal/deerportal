@@ -199,9 +199,12 @@ private:
     sf::Text textLoading;
 public:
     CardsDeck cardsDeck;
+    void startDeerMode();
 
 private:
     Bubble bubble;
+    int deerModeCounter;
+    bool deerModeActive;
 };
 }
 #endif // GAME_H
