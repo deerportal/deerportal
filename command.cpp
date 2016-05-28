@@ -103,6 +103,18 @@ void Command::freezePlayer(int playerNumber)
     game.players[playerNumber].frozenLeft += 1;
 }
 
+void Command::removeAllItems(int playerNumber)
+{
+    for (auto&& i: game.boardDiamonds.diamonds)
+    {
+        int itemPlayerNumber = i.playerNumber;
+        if ((i.boardPosition>-1) && (itemPlayerNumber==playerNumber))
+        {
+            i.boardPosition=-1;
+        };
+    }
+}
+
 /*!
  * \brief Command::processField when the player enters the field
  * \param pos
