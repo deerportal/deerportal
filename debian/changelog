@@ -1,9 +1,10 @@
-deerportal (0.0.5-alphaubuntu1) UNRELEASED; urgency=medium
+deerportal (0.0.5-alphaubuntu6) UNRELEASED; urgency=medium
 
-  * asdads 
-  * 
+  * Removing all items after player reaches the portal
+  * Clean up
+  * Bug fix for game crash while taking more items than available 
 
- -- Rafal Zawadzki <bluszcz@taller>  Sat, 28 May 2016 12:43:17 +0200
+ -- Rafal Zawadzki <bluszcz@taller>  Sun, 29 May 2016 00:35:01 +0200
 
 deerportal (0.0.4-alpha) unstable; urgency=medium
 
