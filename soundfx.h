@@ -4,6 +4,9 @@
 
 #include <SFML/Audio.hpp>
 
+/*!
+ * \brief The SoundFX various sounds
+ */
 class SoundFX
 {
 public:

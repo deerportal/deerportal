@@ -12,7 +12,7 @@ public:
 
     sf::Texture textureRotate;
     sf::Sprite spriteRotate;
-    void setColor(int playerNumber);
+    void setColor();
 
     float timeCounter;
     bool active;

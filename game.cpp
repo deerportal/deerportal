@@ -202,6 +202,8 @@ void Game::restartGame()
     currentSeason = 1;
     month = 0;
     cardsDeck.reloadCards();
+    deerModeActive = false;
+    deerModeCounter = 16;
 }
 
 void Game::setCurrentNeighbours ()
@@ -575,7 +577,7 @@ void Game::update(sf::Time frameTime) {
             prevRotateElem.spriteRotate.move(-202,-76);
 
             prevRotateElem.update(frameTime);
-            prevRotateElem.setColor(turn);
+            prevRotateElem.setColor();
         }
         if (currentMovements[1]>-1)
         {
@@ -585,7 +587,7 @@ void Game::update(sf::Time frameTime) {
             // Modificator to fit on the bigger view
             nextRotateElem.spriteRotate.move(-202,-76);
             nextRotateElem.update(frameTime);
-            nextRotateElem.setColor(turn);
+            nextRotateElem.setColor();
         }
     }
     cardsDeck.update(frameTime);
@@ -652,6 +654,17 @@ void Game::nextPlayer(){
     else
         nextRound();
     turn++;
+    if (deerModeActive)
+    {
+        deerModeCounter -= 1;
+
+    }
+
+    if (deerModeCounter==0)
+    {
+        endGame();
+    }
+
     if ((players[turn].done==true) && (turn<4))
     {
 //        std::cout << "Player " << turn << " is done" << std::endl;
@@ -687,8 +700,18 @@ void Game::nextPlayer(){
     roundDice.setDiceTexture(diceResultPlayer);
     players[turn].characters[0].diceResult = diceResultPlayer;
     groupHud.setRoundName(roundNumber);
-    groupHud.setSeason(currentSeason);
-    groupHud.setMonthName(month%4);
+    if (deerModeActive==false)
+    {
+        groupHud.setSeason(currentSeason);
+        groupHud.setMonthName(month%4);
+    } else
+    {
+        groupHud.setDeerModeActive();
+        int number = (deerModeCounter/4);
+        if (deerModeCounter<16)
+            number += 1;
+        groupHud.setDeerModeCounter(number);
+    }
     currentState = state_roll_dice;
     bubble.state = BubbleState::DICE;
     roundDice.setColor(turn);
