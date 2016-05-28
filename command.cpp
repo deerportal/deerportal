@@ -80,7 +80,7 @@ void Command::removeDiamond(int playerNumber)
         }
     }
     int numberDiamonds = diamonds.size();
-    if (numberDiamonds>=0)
+    if (numberDiamonds>0)
     {
         int elemToRemove = rand() %  numberDiamonds;
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
