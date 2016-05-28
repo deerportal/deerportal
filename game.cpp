@@ -31,6 +31,7 @@ void Game::setTxtEndGameAmount(){
 
     int width=1360;
     //    int height = 768;
+    int startHeight = 100;
     int separator = 40;
     std::array<ResultTable, 4> results = {
         {
@@ -56,7 +57,7 @@ void Game::setTxtEndGameAmount(){
         std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
         endGameTxtAmount[i].setString(label);
         sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
-        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator));
+        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator)+startHeight);
     }
 
 
@@ -329,6 +330,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
                 //               std::cerr << "Not found" << std::endl;
             }
             nextPlayer();
+            return;
         }
         //        std::string resultCommand = players[turn].getElem(posGui);
         //        command(resultCommand);
