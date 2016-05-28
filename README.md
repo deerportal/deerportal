@@ -47,7 +47,7 @@ In our [releases](https://github.com/deerportal/deerportal/releases) section we 
 Development windows builds
 --------------------------
 
-Following has been created using our Jenkins based Continous Integration,
+Following doxygen api docs has been created using our Jenkins based Continous Integration:
 
 * https://devcarpet.net/deerportal/downloads/windows/
 
