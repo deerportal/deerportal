@@ -619,13 +619,6 @@ void Game::update(sf::Time frameTime) {
 }
 
 void Game::nextRound() {
-
-    if (deerModeActive)
-    {
-        deerModeCounter -= 1;
-
-    }
-
     turn = 0;
 //    std::string result = roundDice.drawRound();
     roundNumber += 1;
@@ -661,6 +654,11 @@ void Game::nextPlayer(){
     else
         nextRound();
     turn++;
+    if (deerModeActive)
+    {
+        deerModeCounter -= 1;
+
+    }
 
     if (deerModeCounter==0)
     {
@@ -702,14 +700,17 @@ void Game::nextPlayer(){
     roundDice.setDiceTexture(diceResultPlayer);
     players[turn].characters[0].diceResult = diceResultPlayer;
     groupHud.setRoundName(roundNumber);
-    if (deerModeActive==true)
+    if (deerModeActive==false)
     {
         groupHud.setSeason(currentSeason);
         groupHud.setMonthName(month%4);
     } else
     {
         groupHud.setDeerModeActive();
-        groupHud.setDeerModeCounter(deerModeCounter);
+        int number = (deerModeCounter/4);
+        if (deerModeCounter<16)
+            number += 1;
+        groupHud.setDeerModeCounter(number);
     }
     currentState = state_roll_dice;
     bubble.state = BubbleState::DICE;
