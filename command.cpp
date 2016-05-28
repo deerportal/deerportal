@@ -40,7 +40,9 @@ bool Command::removeCard(int playerNumber)
     {
         int elemToRemove = rand() %  numberDiamonds;
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
+        return true;
     }
+    return false;
 }
 
 void Command::removeAllCardElement(int elementNumber)
@@ -101,6 +103,18 @@ bool Command::removeDiamond(int playerNumber)
 void Command::freezePlayer(int playerNumber)
 {
     game.players[playerNumber].frozenLeft += 1;
+}
+
+void Command::removeAllItems(int playerNumber)
+{
+    for (auto&& i: game.boardDiamonds.diamonds)
+    {
+        int itemPlayerNumber = i.playerNumber;
+        if ((i.boardPosition>-1) && (itemPlayerNumber==playerNumber))
+        {
+            i.boardPosition=-1;
+        };
+    }
 }
 
 /*!

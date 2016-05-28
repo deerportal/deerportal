@@ -316,7 +316,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
                                                 std::end(efc::endPlayers), mousePos);
             if (possibleExit != efc::endPlayers+4) {
                 players[turn].done=true;
-
+                commandManager.removeAllItems(turn);
                 if (numberFinishedPlayers == 0)
                 {
                     startDeerMode();
@@ -625,7 +625,6 @@ void Game::nextRound() {
 }
 
 void Game::nextPlayer(){
-
     if (currentState==state_end_game)
     {
         return;

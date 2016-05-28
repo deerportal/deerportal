@@ -18,8 +18,8 @@ public:
      */
     bool removeDiamond(int playerNumber);
     bool removeCard(int playerNumber);
-
     void freezePlayer(int playerNumber);
+    void removeAllItems(int playerNumber);
     efc::Game &game;
 
     void processField(int pos);
