@@ -51,5 +51,9 @@ Following has been created using our Jenkins based Continous Integration,
 
 * https://devcarpet.net/deerportal/downloads/windows/
 
-**Developed with [Devcarpet](https://devcarpet.net) platform.**
+Developer documentation
+-----------------------
 
+https://devcarpet.net/deerportal/downloads/docs/html/
+
+**Developed with [Devcarpet](https://devcarpet.net) platform.**
