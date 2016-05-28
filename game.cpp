@@ -202,6 +202,8 @@ void Game::restartGame()
     currentSeason = 1;
     month = 0;
     cardsDeck.reloadCards();
+    deerModeActive = false;
+    deerModeCounter = 16;
 }
 
 void Game::setCurrentNeighbours ()
@@ -617,6 +619,13 @@ void Game::update(sf::Time frameTime) {
 }
 
 void Game::nextRound() {
+
+    if (deerModeActive)
+    {
+        deerModeCounter -= 1;
+
+    }
+
     turn = 0;
 //    std::string result = roundDice.drawRound();
     roundNumber += 1;
@@ -652,6 +661,12 @@ void Game::nextPlayer(){
     else
         nextRound();
     turn++;
+
+    if (deerModeCounter==0)
+    {
+        endGame();
+    }
+
     if ((players[turn].done==true) && (turn<4))
     {
 //        std::cout << "Player " << turn << " is done" << std::endl;
@@ -687,8 +702,15 @@ void Game::nextPlayer(){
     roundDice.setDiceTexture(diceResultPlayer);
     players[turn].characters[0].diceResult = diceResultPlayer;
     groupHud.setRoundName(roundNumber);
-    groupHud.setSeason(currentSeason);
-    groupHud.setMonthName(month%4);
+    if (deerModeActive==true)
+    {
+        groupHud.setSeason(currentSeason);
+        groupHud.setMonthName(month%4);
+    } else
+    {
+        groupHud.setDeerModeActive();
+        groupHud.setDeerModeCounter(deerModeCounter);
+    }
     currentState = state_roll_dice;
     bubble.state = BubbleState::DICE;
     roundDice.setColor(turn);

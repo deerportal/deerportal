@@ -14,7 +14,6 @@ GroupHud::GroupHud(){
 }
 
 void GroupHud::setFont(sf::Font *gameFont) {
-    move(440,12);
     seasonName.setFont(*gameFont);
     roundName.setFont(*gameFont);
     monthName.setFont(*gameFont);
@@ -23,20 +22,38 @@ void GroupHud::setFont(sf::Font *gameFont) {
     roundName.setCharacterSize(30);
     monthName.setCharacterSize(30);
     roundName.setColor(sf::Color(255,255,250));
-    roundName.move(30, 700);
 //    monthName.move(400, 0);
     setMonthName(1);
 }
 
 void GroupHud::setSeason(int seasonNumber){
    seasonName.setString("Season: " + efc::seasonsNames[seasonNumber]);
+   setPosition(440,12);
+
 
 }
 
+void GroupHud::setDeerModeActive(){
+   seasonName.setString("Deer Mode");
+   setPosition(455,12);
+
+
+}
 void GroupHud::setRoundName(int roundNumber){
    roundName.setString("Round: " + std::to_string(roundNumber));
+   roundName.setPosition(30, 700);
 
 }
+
+
+
+void GroupHud::setDeerModeCounter(int deerModeCounter)
+{
+    roundName.setString(std::to_string(deerModeCounter));
+    roundName.setPosition(50, 700);
+}
+
+//void
 
 void GroupHud::setMonthName(int monthNumber){
    monthName.setString("Month: " + std::to_string(monthNumber));

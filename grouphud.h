@@ -24,6 +24,8 @@ public:
     void setMonthName(int monthNumber);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+    void setDeerModeCounter(int deerModeCounter);
+    void setDeerModeActive();
 };
 
 }
