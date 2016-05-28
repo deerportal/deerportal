@@ -36,7 +36,9 @@ namespace efc {
 extern int initScreenX;
 extern int initScreenY;
 
-
+/*!
+ * \brief Game is a main class of the Deer Portal - contains most logic but also rendering.
+ */
 class Game
 {
 public:

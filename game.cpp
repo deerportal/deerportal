@@ -575,7 +575,7 @@ void Game::update(sf::Time frameTime) {
             prevRotateElem.spriteRotate.move(-202,-76);
 
             prevRotateElem.update(frameTime);
-            prevRotateElem.setColor(turn);
+            prevRotateElem.setColor();
         }
         if (currentMovements[1]>-1)
         {
@@ -585,7 +585,7 @@ void Game::update(sf::Time frameTime) {
             // Modificator to fit on the bigger view
             nextRotateElem.spriteRotate.move(-202,-76);
             nextRotateElem.update(frameTime);
-            nextRotateElem.setColor(turn);
+            nextRotateElem.setColor();
         }
     }
     cardsDeck.update(frameTime);
