@@ -10,7 +10,9 @@ int initScreenY = 768;
 int currentSeason = 1;
 int month = 0;
 
-
+/*!
+ * \brief The ResultTable struct contains data for the end of the game screen.
+ */
 struct ResultTable
 {
     int playerNumber;
@@ -21,15 +23,14 @@ struct ResultTable
         return (playerResult > otherResult.playerResult);
     }
 };
-
-
+/*!
+ * \brief Game::setTxtEndGameAmount orders the results text for the end of the game.
+ */
 void Game::setTxtEndGameAmount(){
-
-
     std::string elementNames[4] = {"Water","Earth", "Fire", "Air"};
 
     int width=1360;
-//    int height = 768;
+    //    int height = 768;
     int separator = 40;
     std::array<ResultTable, 4> results = {
         {
@@ -40,37 +41,22 @@ void Game::setTxtEndGameAmount(){
         }
     };
 
-//    std::array <int, 4> results = {{players[0].cash,players[1].cash,players[2].cash,players[3].cash}};
+    std::vector < ResultTable > resultsVector;
+    for (int i=0;i<4;i++)
+    {
+        resultsVector.push_back(results[i]);
+    };
 
-
-
-std::vector < ResultTable > resultsVector;
-for (int i=0;i<4;i++)
-{
-    resultsVector.push_back(results[i]);
-};
-
-std::sort(resultsVector.begin(), resultsVector.end());
-
+    std::sort(resultsVector.begin(), resultsVector.end());
 
     for (int i=0;i<4;i++)
     {
-
         int playerNumber = resultsVector[i].playerNumber;
         std::string elementName = elementNames[playerNumber];
-
         std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
         endGameTxtAmount[i].setString(label);
         sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
         endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator));
-
-
-
-//        std::string label = elementNames[i]+ " " + std::to_string(players[i].cash);
-//        endGameTxtAmount[i].setString(label);
-//        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
-//        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator));
-
     }
 
 
@@ -81,22 +67,20 @@ std::sort(resultsVector.begin(), resultsVector.end());
 void Game::initBoard()
 {
 
-
     time_t t = time(0);
     struct tm * now = localtime( & t );
     int month = now->tm_mon + 1;
     int day = now->tm_mday;
     paganHolidayString =  getHoliday(month, day);
-//    std::cout << "HOLIDAY"<< paganHolidayString << std::endl;
+    //    std::cout << "HOLIDAY"<< paganHolidayString << std::endl;
     paganHolidayTxt.setString(paganHolidayString);
-
 
     sfxClick.setBuffer(sfxClickBuffer);
     sfxDone.setBuffer(sfxDoneBuffer);
-//    spriteBackground.setTexture(textureBackground);
+    //    spriteBackground.setTexture(textureBackground);
     spriteBackgroundDark.setTexture(textures.backgroundDark);
     spriteBackgroundDark.setPosition(0,0);
-//    gameBackground.setTexture(textures.textureGameBackground);
+    //    gameBackground.setTexture(textures.textureGameBackground);
     spriteLestBegin.setTexture(textures.textureLetsBegin);
     viewTiles.setViewport(sf::FloatRect(0.15f,0.1f, 1.0f, 1.0f));
     viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
@@ -105,43 +89,43 @@ void Game::initBoard()
     groupHud.setSeason(currentSeason);
     groupHud.setRoundName(roundNumber);
 
-//    sf::IntRect seasonsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
+    //    sf::IntRect seasonsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
 
-//    sf::Sprite season1;
-//    season1.setTexture(textures.textureSeasons);
-//    season1.setTextureRect(seasonsRect[0]);
-//    season1.setPosition(0,400);
-//    season1.scale(sf::Vector2f(0.25f, 0.25f));
-//    season1.move(37.5, 30.5);
-//    season1.setColor(sf::Color(0,255,0,80));
-//    seasons[0] = season1;
+    //    sf::Sprite season1;
+    //    season1.setTexture(textures.textureSeasons);
+    //    season1.setTextureRect(seasonsRect[0]);
+    //    season1.setPosition(0,400);
+    //    season1.scale(sf::Vector2f(0.25f, 0.25f));
+    //    season1.move(37.5, 30.5);
+    //    season1.setColor(sf::Color(0,255,0,80));
+    //    seasons[0] = season1;
 
-//    sf::Sprite season2;
-//    season2.setTexture(textures.textureSeasons);
-//    season2.setTextureRect(seasonsRect[1]);
-//    season2.setPosition(0,400);
-//    season2.scale(sf::Vector2f(0.25f, 0.25f));
-//    season2.move(37.5, 30.5);
-//    season2.setColor(sf::Color(200,200,50,80));
-//    seasons[1] = season2;
+    //    sf::Sprite season2;
+    //    season2.setTexture(textures.textureSeasons);
+    //    season2.setTextureRect(seasonsRect[1]);
+    //    season2.setPosition(0,400);
+    //    season2.scale(sf::Vector2f(0.25f, 0.25f));
+    //    season2.move(37.5, 30.5);
+    //    season2.setColor(sf::Color(200,200,50,80));
+    //    seasons[1] = season2;
 
-//    sf::Sprite season3;
-//    season3.setTexture(textures.textureSeasons);
-//    season3.setTextureRect(seasonsRect[2]);
-//    season3.setPosition(0,400);
-//    season3.scale(sf::Vector2f(0.25f, 0.25f));
-//    season3.move(37.5, 30.5);
-//    season3.setColor(sf::Color(90,90,255,80));
-//    seasons[2] = season3;
+    //    sf::Sprite season3;
+    //    season3.setTexture(textures.textureSeasons);
+    //    season3.setTextureRect(seasonsRect[2]);
+    //    season3.setPosition(0,400);
+    //    season3.scale(sf::Vector2f(0.25f, 0.25f));
+    //    season3.move(37.5, 30.5);
+    //    season3.setColor(sf::Color(90,90,255,80));
+    //    seasons[2] = season3;
 
-//    sf::Sprite season4;
-//    season4.setTexture(textures.textureSeasons);
-//    season4.setTextureRect(seasonsRect[3]);
-//    season4.setPosition(0,400);
-//    season4.scale(sf::Vector2f(0.25f, 0.25f));
-//    season4.move(37.5, 30.5);
-//    season4.setColor(sf::Color(255,0,0,80));
-//    seasons[3] = season4;
+    //    sf::Sprite season4;
+    //    season4.setTexture(textures.textureSeasons);
+    //    season4.setTextureRect(seasonsRect[3]);
+    //    season4.setPosition(0,400);
+    //    season4.scale(sf::Vector2f(0.25f, 0.25f));
+    //    season4.move(37.5, 30.5);
+    //    season4.setColor(sf::Color(255,0,0,80));
+    //    seasons[3] = season4;
 
     // Initialization of the players
     cardsDeck.setFonts(&gameFont);
@@ -170,11 +154,14 @@ void Game::initBoard()
     setTxtEndGameAmount();
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
-//    endGameTxt.set
-//    endGameTxt.setScale(2,2);
+    //    endGameTxt.set
+    //    endGameTxt.setScale(2,2);
 
 }
 
+/*!
+ * \brief Game::restartGame sets all the variables to the default value
+ */
 void Game::restartGame()
 {
 
@@ -194,8 +181,8 @@ void Game::restartGame()
 
     for (int i=0;i<4;i++)
     {
-       players[i].restartPlayer();
-       boardDiamonds.reorder(i);
+        players[i].restartPlayer();
+        boardDiamonds.reorder(i);
 
     }
     turn = 0;
@@ -211,6 +198,9 @@ void Game::setCurrentNeighbours ()
     currentNeighbours = players[turn].getNeighbours();
 }
 
+/*!
+ * \brief Game::loadAssets
+ */
 void Game::loadAssets()
 {
 
@@ -238,8 +228,8 @@ void Game::loadAssets()
 
     if (!musicGame.openFromFile("assets/audio/game.ogg"))
         std::exit(1);
-//    if (!musicBackground.openFromFile("assets/audio/wind2.ogg"))
-//        std::exit(1);
+    //    if (!musicBackground.openFromFile("assets/audio/wind2.ogg"))
+    //        std::exit(1);
     if (!musicMenu.openFromFile("assets/audio/menu.ogg"))
         std::exit(1);
 
@@ -249,8 +239,8 @@ void Game::loadAssets()
 
     if (!sfxDoneBuffer.loadFromFile("assets/audio/done.ogg"))
         std::exit(1);
-//    if (!textureBackground.loadFromFile("assets/img/background.png"))
-//        std::exit(1);
+    //    if (!textureBackground.loadFromFile("assets/img/background.png"))
+    //        std::exit(1);
 
     spriteBackgroundArt.setTexture(textureBackgroundArt);
     menuTxt.setFont(gameFont);
@@ -269,7 +259,7 @@ void Game::loadAssets()
 
     for (int i=0;i<4;i++)
     {
-         playersSprites[i].setTexture(textureBackgroundArt);
+        playersSprites[i].setTexture(textureBackgroundArt);
         playersSprites[i].setTextureRect(sf::IntRect(playersSpritesCords[i][0],
                                          playersSpritesCords[i][1], 280, 280));
         playersSprites[i].setPosition(playersSpritesCords[i][0], playersSpritesCords[i][1]);
@@ -280,10 +270,6 @@ void Game::loadAssets()
 
 void Game::showMenu()
 {
-//    musicBackgroun/*d*/.play();
-//    musicBackground.setLoop(true);
-//    menuBackground.setTexture(textures.textureMenu);
-//    musicBackground.setVolume(7);
     musicMenu.play();
     musicMenu.setLoop(true);
     currentState = state_menu;
@@ -299,7 +285,7 @@ void Game::showGameBoard()
     musicGame.play();
     musicGame.setLoop(true);
     sfx.playLetsBegin();
-//    std::cout << "lets begin" << std::endl;
+    //    std::cout << "lets begin" << std::endl;
     currentState = state_lets_begin;
 }
 
@@ -309,21 +295,25 @@ void Game::endGame()
     downTimeCounter = 0;
     numberFinishedPlayers = 4;
     setTxtEndGameAmount();
-//    musicBackground.stop();
+    //    musicBackground.stop();
 }
 
+/*!
+ * \brief Game::handleLeftClick
+ * \param pos
+ * \param posFull
+ * \param mousePos
+ */
 void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) {
     if (currentState==state_game)
     {
-
-
         std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
         if ((mousePos==movements[0]) || (mousePos==movements[1]))
         {
             players[turn].setFigurePos(mousePos);
             commandManager.processField(mousePos);
             const int *possibleExit = std::find(std::begin(efc::endPlayers),
-                                          std::end(efc::endPlayers), mousePos);
+                                                std::end(efc::endPlayers), mousePos);
             if (possibleExit != efc::endPlayers+4) {
                 players[turn].done=true;
 
@@ -342,7 +332,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         }
         //        std::string resultCommand = players[turn].getElem(posGui);
         //        command(resultCommand);
-//        commandManager.processGui(posGui);
+        //        commandManager.processGui(posGui);
     }
     else if (currentState==state_roll_dice)
     {
@@ -490,42 +480,42 @@ Game::Game():
         while (window.pollEvent(event))
         {
             switch (event.type) {
-                case sf::Event::Closed:
-                    window.close(); break;
-                case sf::Event::KeyPressed:
-                    if(event.key.code == sf::Keyboard::Escape )
-                        window.close();
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
-                        particleSystem.fuel( 200/* * window.getFrameTime() */);
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
-                        particleSystem.setPosition( --xpos, ypos );
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
-                        particleSystem.setPosition( ++xpos, ypos );
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
-                        particleSystem.setPosition( xpos, --ypos );
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
-                        particleSystem.setPosition( xpos, ++ypos );
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
-                        particleSystem.setGravity( --xgrv * 0.1f, ygrv * 0.1f);
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
-                        particleSystem.setGravity( ++xgrv * 0.1f, ygrv * 0.1f );
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) )
-                        particleSystem.setGravity( xgrv * 0.1f, --ygrv * 0.1f );
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) )
-                        particleSystem.setGravity( xgrv * 0.1f, ++ygrv * 0.1f );
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::G ) )
-                        particleSystem.setGravity( 0.0f, 0.0f );
-                    if( sf::Keyboard::isKeyPressed( sf::Keyboard::P ) )
-                        particleSystem.setPosition( 320.0f, 240.0f );
-                    break;
-                default:
-                    break;
+            case sf::Event::Closed:
+                window.close(); break;
+            case sf::Event::KeyPressed:
+                if(event.key.code == sf::Keyboard::Escape )
+                    window.close();
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
+                    particleSystem.fuel( 200/* * window.getFrameTime() */);
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
+                    particleSystem.setPosition( --xpos, ypos );
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
+                    particleSystem.setPosition( ++xpos, ypos );
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
+                    particleSystem.setPosition( xpos, --ypos );
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
+                    particleSystem.setPosition( xpos, ++ypos );
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
+                    particleSystem.setGravity( --xgrv * 0.1f, ygrv * 0.1f);
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
+                    particleSystem.setGravity( ++xgrv * 0.1f, ygrv * 0.1f );
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) )
+                    particleSystem.setGravity( xgrv * 0.1f, --ygrv * 0.1f );
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) )
+                    particleSystem.setGravity( xgrv * 0.1f, ++ygrv * 0.1f );
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::G ) )
+                    particleSystem.setGravity( 0.0f, 0.0f );
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::P ) )
+                    particleSystem.setPosition( 320.0f, 240.0f );
+                break;
+            default:
+                break;
 
-    }
+            }
 
             sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
             sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
-//            sf::Vector2f localPositionGui = window.mapPixelToCoords(localPositionTmp,viewGui);
+            //            sf::Vector2f localPositionGui = window.mapPixelToCoords(localPositionTmp,viewGui);
             sf::Vector2f localPositionFull = window.mapPixelToCoords(localPositionTmp,viewFull);
             int mousePosX = (int)localPosition.x / efc::TILE_SIZE;
             int mousePosY = (int)localPosition.y / efc::TILE_SIZE;
@@ -621,7 +611,7 @@ void Game::update(sf::Time frameTime) {
 
 void Game::nextRound() {
     turn = 0;
-//    std::string result = roundDice.drawRound();
+    //    std::string result = roundDice.drawRound();
     roundNumber += 1;
     month++;
     if (month==13)
@@ -645,7 +635,7 @@ void Game::nextPlayer(){
 
     if (numberFinishedPlayers==4)
     {
-//        std::cout << "Everybody Finished!!!" << std::endl;
+        //        std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
 
     }
@@ -669,7 +659,7 @@ void Game::nextPlayer(){
 
     if ((players[turn].done==true) && (turn<4))
     {
-//        std::cout << "Player " << turn << " is done" << std::endl;
+        //        std::cout << "Player " << turn << " is done" << std::endl;
         nextPlayer();
     }
 
@@ -744,8 +734,6 @@ void Game::drawSquares() {
 
 void Game::drawBaseGame()
 {
-
-
     renderTexture.setView(viewTiles);
     for (int i=0;i<4;i++)
     {
@@ -759,11 +747,11 @@ void Game::drawBaseGame()
 
     renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
-//    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
-//    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
+    //    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
+    //    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
     shaderBlur.setParameter("blur_radius", 0.01);
-//    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
-//    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
+    //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
+    //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
     shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.005f));
 
     renderTexture.draw(spriteBackgroundArt);
@@ -778,7 +766,7 @@ void Game::drawBaseGame()
         renderTexture.draw(roundDice.spriteDice, &shaderBlur);
     }
     else
-    renderTexture.draw(roundDice.spriteDice);
+        renderTexture.draw(roundDice.spriteDice);
     renderTexture.setView(viewTiles);
     drawSquares();
 
@@ -815,7 +803,7 @@ void Game::drawCharacters(){
             else
                 j.drawMovements = false;
             renderTexture.draw(j);
-//            renderTexture.draw(j, &shaderBlur);
+            //            renderTexture.draw(j, &shaderBlur);
 
         }
     }
@@ -845,7 +833,7 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
-//        renderTexture.draw(groupHud);
+        //        renderTexture.draw(groupHud);
 
     } else if (currentState==state_roll_dice) {
         renderTexture.setView(viewFull);
@@ -871,7 +859,7 @@ void Game::render(float deltaTime)
 
         drawBaseGame();
         drawCharacters();
-//        window.draw(guiSelectBuilding);
+        //        window.draw(guiSelectBuilding);
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
 
@@ -880,7 +868,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(menuTxt, &shaderBlur);
         renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
-//        window.draw(menuTxt);
+        //        window.draw(menuTxt);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 4);
@@ -904,15 +892,15 @@ void Game::render(float deltaTime)
     }
 
 
- else if (currentState==state_end_game){
-    renderTexture.setView(viewFull);
-    renderTexture.draw(spriteBackgroundDark);
-    renderTexture.draw(spriteLestBegin,&shaderBlur);
-    renderTexture.draw(endGameTxt);
+    else if (currentState==state_end_game){
+        renderTexture.setView(viewFull);
+        renderTexture.draw(spriteBackgroundDark);
+        renderTexture.draw(spriteLestBegin,&shaderBlur);
+        renderTexture.draw(endGameTxt);
 
-    for (int i=0;i<4;i++){
-        renderTexture.draw(endGameTxtAmount[i]);
-    }
+        for (int i=0;i<4;i++){
+            renderTexture.draw(endGameTxtAmount[i]);
+        }
 
     }
 
@@ -954,6 +942,9 @@ sf::Vector2f Game::getMousePos(){
 }
 
 
+/*!
+ * \brief Game::startDeerMode launches last episode of the game
+ */
 void Game::startDeerMode() {
     deerModeActive = true;
     deerModeCounter = 16;

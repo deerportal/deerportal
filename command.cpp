@@ -10,7 +10,12 @@ Command::Command(efc::Game &currentGame) :
 
 }
 
-void Command::removeCard(int playerNumber)
+/*!
+ * \brief Command::removeCard
+ * \param playerNumber number of the player which cards will be removed
+ * \return
+ */
+bool Command::removeCard(int playerNumber)
 {
     /*! This should works as following:
      * - iterate over BoardDiamondSeq
@@ -31,7 +36,7 @@ void Command::removeCard(int playerNumber)
         }
     }
     int numberDiamonds = diamonds.size();
-    if (numberDiamonds>=0)
+    if (numberDiamonds>0)
     {
         int elemToRemove = rand() %  numberDiamonds;
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
@@ -58,8 +63,12 @@ void Command::removeAllCardElement(int elementNumber)
     }
 
 }
-
-void Command::removeDiamond(int playerNumber)
+/*!
+ * \brief Command::removeDiamond
+ * \param playerNumber
+ * \return if diamond had been removed
+ */
+bool Command::removeDiamond(int playerNumber)
 {
     /*! This should works as following:
      * - iterate over BoardDiamondSeq
@@ -80,11 +89,13 @@ void Command::removeDiamond(int playerNumber)
         }
     }
     int numberDiamonds = diamonds.size();
-    if (numberDiamonds>=0)
+    if (numberDiamonds>0)
     {
         int elemToRemove = rand() %  numberDiamonds;
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
+        return true;
     }
+    return false;
 }
 
 void Command::freezePlayer(int playerNumber)
@@ -92,9 +103,12 @@ void Command::freezePlayer(int playerNumber)
     game.players[playerNumber].frozenLeft += 1;
 }
 
+/*!
+ * \brief Command::processField when the player enters the field
+ * \param pos
+ */
 void Command::processField(int pos)
 {
-//    if ()
     bool startField = std::find(std::begin(efc::startPlayers),
                             std::end(efc::startPlayers), pos)
             != std::end(efc::startPlayers);
@@ -118,6 +132,10 @@ void Command::processField(int pos)
     }
 }
 
+/*!
+ * \brief Command::processCard when the user enters the field
+ * \param pos
+ */
 void Command::processCard(int pos)
 {
     int tokenNumber = game.boardDiamonds.getNumberForField(pos);
@@ -138,10 +156,10 @@ void Command::processCard(int pos)
 
         } else if (cardType == "diamond x 2")
         {
-            removeDiamond(game.boardDiamonds.getNumberForField(pos));
-            game.players[game.turn].cash += 1;
-            removeDiamond(game.boardDiamonds.getNumberForField(pos));
-            game.players[game.turn].cash += 1;
+            if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
+                game.players[game.turn].cash += 1;
+            if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
+                game.players[game.turn].cash += 1;
 
         }
     }
