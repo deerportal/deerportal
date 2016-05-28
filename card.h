@@ -16,6 +16,9 @@ const static std::array<std::array<std::string,4>,4> cardsTitles =  {
 
 };
 }
+/*!
+ * \brief The Card definition
+ */
 class Card
 {
 public:

@@ -5,7 +5,9 @@
 #include <SFML/System.hpp>
 
 namespace efc {
-
+/*!
+ * \brief The GroupHud is a drawable type describing a season and a round.
+ */
 class GroupHud: public sf::Drawable, public sf::Transformable
 {
 public:

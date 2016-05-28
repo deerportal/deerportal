@@ -13,9 +13,12 @@ std::set<int> getTerrainSet();
 }
 
 
-
+/*!
+ * \brief The TextureHolder contains most textures.
+ */
 class TextureHolder
 {
+
 public:
     TextureHolder();
 //    sf::Texture textureTiles;

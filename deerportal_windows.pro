@@ -12,7 +12,6 @@ SOURCES += main.cpp \
     textureholder.cpp \
     hover.cpp \
     guiwindow.cpp \
-    purchaseguielem.cpp \
     rounddice.cpp \
     guirounddice.cpp \
     grouphud.cpp \
@@ -57,7 +56,6 @@ HEADERS += \
     textureholder.h \
     hover.h \
     guiwindow.h \
-    purchaseguielem.h \
     elemsdescription.h \
     rounddice.h \
     guirounddice.h \
