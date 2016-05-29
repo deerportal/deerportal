@@ -44,6 +44,15 @@ Download
 
 In our [releases](https://github.com/deerportal/deerportal/releases) section we are providing compiled binaries for Ubuntu (Trusty, Xenial) and Windows.
 
+Ubuntu apt repo
+---------------
+
+If you want to have an easy installation via system apt, add one of the folowing (depends on your distro) to your /etc/apt/sources.list
+```
+deb http://deb.devcarpet.net/ubuntu trusty main
+deb http://deb.devcarpet.net/ubuntu xenial main
+```
+
 Development windows builds
 --------------------------
 
