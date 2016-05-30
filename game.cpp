@@ -17,10 +17,23 @@ struct ResultTable
 {
     int playerNumber;
     int playerResult;
-    ResultTable(int number,int result) : playerNumber(number), playerResult(result) {}
+    bool reachedPortal;
+    bool reachedPortalFirst;
+    ResultTable(int number,int result, bool portal, bool portalFirst) :
+        playerNumber(number), playerResult(result), reachedPortal(portal), reachedPortalFirst(portalFirst) {}
     bool operator < (const ResultTable& otherResult) const
     {
-        return (playerResult > otherResult.playerResult);
+        if ((playerResult!=otherResult.playerResult) || ((reachedPortal==false) && (otherResult.reachedPortal==false)))
+            return (playerResult > otherResult.playerResult);
+        else if (reachedPortalFirst==true){
+            return true;
+
+    } else
+        {
+            return false;
+        }
+
+                    ;
     }
 };
 /*!
@@ -35,10 +48,10 @@ void Game::setTxtEndGameAmount(){
     int separator = 40;
     std::array<ResultTable, 4> results = {
         {
-            ResultTable(0,players[0].cash),
-            ResultTable(1,players[1].cash),
-            ResultTable(2,players[2].cash),
-            ResultTable(3,players[3].cash)
+            ResultTable(0,players[0].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
+            ResultTable(1,players[1].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
+            ResultTable(2,players[2].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
+            ResultTable(3,players[3].cash, players[0].reachedPortal,players[0].reachedPortalFirst)
         }
     };
 
@@ -183,6 +196,7 @@ void Game::restartGame()
     for (int i=0;i<4;i++)
     {
         players[i].restartPlayer();
+        players[i].reachedPortal = false;
         boardDiamonds.reorder(i);
 
     }
@@ -192,6 +206,7 @@ void Game::restartGame()
     cardsDeck.reloadCards();
     deerModeActive = false;
     deerModeCounter = 16;
+
 }
 
 void Game::setCurrentNeighbours ()
@@ -317,9 +332,11 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
                                                 std::end(efc::endPlayers), mousePos);
             if (possibleExit != efc::endPlayers+4) {
                 players[turn].done=true;
+                players[turn].reachedPortal=true;
                 commandManager.removeAllItems(turn);
                 if (numberFinishedPlayers == 0)
                 {
+                    players[turn].reachedPortalFirst=true;
                     startDeerMode();
                 }
 
@@ -900,7 +917,8 @@ void Game::render(float deltaTime)
         renderTexture.draw(endGameTxt);
 
         for (int i=0;i<4;i++){
-            renderTexture.draw(endGameTxtAmount[i]);
+            if (players[i].reachedPortal)
+                renderTexture.draw(endGameTxtAmount[i]);
         }
 
     }
@@ -953,6 +971,7 @@ void Game::startDeerMode() {
 
 
 
-}
+};
+
 
 
