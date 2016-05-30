@@ -722,7 +722,7 @@ void Game::drawBaseGame()
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
     shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01f) );
 
-//    renderTexture.draw(gameBackground);
+    //    renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
     //    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
     //    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
@@ -788,11 +788,9 @@ void Game::render(float deltaTime)
 {
     window.clear();
     renderTexture.clear();
-    if (currentState==state_game)
+    if ((currentState==state_game) or (currentState==state_roll_dice))
     {
         renderTexture.setView(viewFull);
-        shaderBlur.setParameter("blur_radius", 2);
-
         renderTexture.draw(spriteBackgroundDark);
         renderTexture.setView(viewTiles);
         drawBaseGame();
@@ -802,26 +800,6 @@ void Game::render(float deltaTime)
         drawCharacters();
         renderTexture.draw(boardDiamonds);
         renderTexture.draw(bubble);
-
-        renderTexture.setView(viewFull);
-        drawPlayersGui();
-        renderTexture.setView(viewFull);
-        //        renderTexture.draw(groupHud);
-
-    } else if (currentState==state_roll_dice) {
-        renderTexture.setView(viewFull);
-        shaderBlur.setParameter("blur_radius", 2);
-        renderTexture.draw(spriteBackgroundDark, &shaderBlur);
-
-        renderTexture.setView(viewTiles);
-        drawBaseGame();
-        renderTexture.setView(viewFull);
-        renderTexture.draw(groupHud);
-        renderTexture.setView(viewTiles);
-        drawCharacters();
-        renderTexture.draw(boardDiamonds);
-        renderTexture.draw(bubble);
-
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
@@ -829,10 +807,8 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 2);
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
-
         drawBaseGame();
         drawCharacters();
-        //        window.draw(guiSelectBuilding);
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
 
@@ -841,7 +817,6 @@ void Game::render(float deltaTime)
         renderTexture.draw(menuTxt, &shaderBlur);
         renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
-        //        window.draw(menuTxt);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 4);
