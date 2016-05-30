@@ -28,12 +28,12 @@ struct ResultTable
         else if (reachedPortalFirst==true){
             return true;
 
-    } else
+        } else
         {
             return false;
         }
 
-                    ;
+        ;
     }
 };
 /*!
@@ -91,10 +91,8 @@ void Game::initBoard()
 
     sfxClick.setBuffer(sfxClickBuffer);
     sfxDone.setBuffer(sfxDoneBuffer);
-    //    spriteBackground.setTexture(textureBackground);
     spriteBackgroundDark.setTexture(textures.backgroundDark);
     spriteBackgroundDark.setPosition(0,0);
-    //    gameBackground.setTexture(textures.textureGameBackground);
     spriteLestBegin.setTexture(textures.textureLetsBegin);
     viewTiles.setViewport(sf::FloatRect(0.15f,0.1f, 1.0f, 1.0f));
     viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
@@ -103,45 +101,6 @@ void Game::initBoard()
     groupHud.setSeason(currentSeason);
     groupHud.setRoundName(roundNumber);
 
-    //    sf::IntRect seasonsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
-
-    //    sf::Sprite season1;
-    //    season1.setTexture(textures.textureSeasons);
-    //    season1.setTextureRect(seasonsRect[0]);
-    //    season1.setPosition(0,400);
-    //    season1.scale(sf::Vector2f(0.25f, 0.25f));
-    //    season1.move(37.5, 30.5);
-    //    season1.setColor(sf::Color(0,255,0,80));
-    //    seasons[0] = season1;
-
-    //    sf::Sprite season2;
-    //    season2.setTexture(textures.textureSeasons);
-    //    season2.setTextureRect(seasonsRect[1]);
-    //    season2.setPosition(0,400);
-    //    season2.scale(sf::Vector2f(0.25f, 0.25f));
-    //    season2.move(37.5, 30.5);
-    //    season2.setColor(sf::Color(200,200,50,80));
-    //    seasons[1] = season2;
-
-    //    sf::Sprite season3;
-    //    season3.setTexture(textures.textureSeasons);
-    //    season3.setTextureRect(seasonsRect[2]);
-    //    season3.setPosition(0,400);
-    //    season3.scale(sf::Vector2f(0.25f, 0.25f));
-    //    season3.move(37.5, 30.5);
-    //    season3.setColor(sf::Color(90,90,255,80));
-    //    seasons[2] = season3;
-
-    //    sf::Sprite season4;
-    //    season4.setTexture(textures.textureSeasons);
-    //    season4.setTextureRect(seasonsRect[3]);
-    //    season4.setPosition(0,400);
-    //    season4.scale(sf::Vector2f(0.25f, 0.25f));
-    //    season4.move(37.5, 30.5);
-    //    season4.setColor(sf::Color(255,0,0,80));
-    //    seasons[3] = season4;
-
-    // Initialization of the players
     cardsDeck.setFonts(&gameFont);
     restartGame();
 
@@ -763,7 +722,7 @@ void Game::drawBaseGame()
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
     shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01f) );
 
-    renderTexture.draw(gameBackground);
+//    renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
     //    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
     //    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
@@ -791,8 +750,6 @@ void Game::drawBaseGame()
 }
 
 void Game::drawCharacters(){
-
-
     if (currentState==state_game)
     {
         std::array<int,2> currentMovements = players[turn].characters[0].getMovements(diceResultPlayer);
@@ -807,11 +764,8 @@ void Game::drawCharacters(){
                 renderTexture.draw(prevRotateElem);
         }
     }
-
     renderTexture.setView(viewFull);
     shaderBlur.setParameter("blur_radius", 0.005f);
-
-
     for (int i=0;i<4;i++)
     {
         for (auto&& j: players[i].characters)
@@ -822,13 +776,14 @@ void Game::drawCharacters(){
                 j.drawMovements = false;
             renderTexture.draw(j);
             //            renderTexture.draw(j, &shaderBlur);
-
         }
     }
 }
 
-
-
+/*!
+ * \brief Game::render main function responsible for drawing all elements
+ * \param deltaTime
+ */
 void Game::render(float deltaTime)
 {
     window.clear();
@@ -908,8 +863,6 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
     }
-
-
     else if (currentState==state_end_game){
         renderTexture.setView(viewFull);
         renderTexture.draw(spriteBackgroundDark);
@@ -920,12 +873,10 @@ void Game::render(float deltaTime)
             if (players[i].reachedPortal)
                 renderTexture.draw(endGameTxtAmount[i]);
         }
-
     }
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
-
     shaderBlur.setParameter("blur_radius", sin(deltaTime)*0.015f);
     shaderBlur.setParameter("blur_radius", 0.0003f);
     window.draw(renderSprite, &shaderBlur);
@@ -954,13 +905,6 @@ void Game::command(std::string command){
 
 }
 
-sf::Vector2f Game::getMousePos(){
-    sf::Vector2i mousePosTmp(sf::Mouse::getPosition(window));
-    sf::Vector2f mousePosition(window.mapPixelToCoords(mousePosTmp,viewTiles));
-    return mousePosition;
-}
-
-
 /*!
  * \brief Game::startDeerMode launches last episode of the game
  */
@@ -968,10 +912,7 @@ void Game::startDeerMode() {
     deerModeActive = true;
     deerModeCounter = 16;
 }
-
-
-
-};
+}
 
 
 
