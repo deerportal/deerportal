@@ -50,6 +50,8 @@ public:
 
     void restartPlayer();
 
+    bool reachedPortal;
+    bool reachedPortalFirst;
 
 private:
 //    sf::Sprite spriteFace;

@@ -70,7 +70,9 @@ void PlayerHud::updatePlayer(){
 }
 
 PlayerHud::PlayerHud():
-    frozenLeft(0)
+    frozenLeft(0),
+    reachedPortal(false),
+    reachedPortalFirst(false)
 {
     pos = 0;
     cash = 0;
@@ -105,7 +107,10 @@ void PlayerHud::setActive(bool newState){
     }
 }
 
-PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos)
+PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos):
+    reachedPortal(false),
+    reachedPortalFirst(false)
+
 {
 
 

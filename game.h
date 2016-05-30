@@ -48,20 +48,14 @@ public:
     sf::View viewTiles;
     void setTxtEndGameAmount();
 
-
 private:
     Selector selector;
-
-
     Character character;
     std::string gameTitle;
     std::string paganHolidayString;
     RoundDice roundDice;
-
     int roundNumber;
-
     GuiRoundDice guiRoundDice;
-
 
 public:
     Game();
@@ -69,15 +63,9 @@ public:
     sf::RenderWindow window;
     sf::RenderTexture renderTexture;
     sf::Sprite renderSprite;
-
     PlayerHud players[4];
     SoundFX sfx;
-
-
-
-public:
     int turn;
-
 
 private:
     void initBoard();
@@ -85,12 +73,9 @@ private:
     void loadAssets();
     void drawPlayersGui();
     void drawSquares();
-
     void drawMenu();
     float runningCounter;
     sf::Sprite playersSprites[4]  ;
-    sf::Vector2f getMousePos();
-
     int playersSpritesCords[4][2];
 
     enum states {
@@ -106,11 +91,8 @@ private:
         state_end_game,
         state_quit
     };
-
     states currentState;
 
-    sf::Sprite spriteBackground;
-    sf::Sprite gameBackground;
     sf::Sprite spriteBackgroundDark;
     sf::Sprite spriteLestBegin;
     sf::Texture textureBackgroundArt;
@@ -123,13 +105,9 @@ private:
     sf::Text endGameTxt;
     sf::Text endGameTxtAmount[4];
     sf::Text paganHolidayTxt;
-
     sf::Shader shaderBlur;
     sf::Shader shaderPixel;
     sf::Shader shaderDark;
-
-    TileMap map;
-
     int mapSize;
     int level[256];
     int levelElems[256];
@@ -145,7 +123,6 @@ private:
 
     void setCurrentNeighbours ();
     void nextPlayer();
-
     void nextRound();
 
 
