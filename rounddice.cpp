@@ -63,6 +63,7 @@ int RoundDice::throwDiceSix(){
     int result = rand()%6;
     diceResultSix = result;
     setDiceTexture();
+    return 26;
     return result+1;
 }
 

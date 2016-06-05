@@ -49,9 +49,9 @@ void Game::setTxtEndGameAmount(){
     std::array<ResultTable, 4> results = {
         {
             ResultTable(0,players[0].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
-            ResultTable(1,players[1].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
-            ResultTable(2,players[2].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
-            ResultTable(3,players[3].cash, players[0].reachedPortal,players[0].reachedPortalFirst)
+            ResultTable(1,players[1].cash, players[1].reachedPortal,players[1].reachedPortalFirst),
+            ResultTable(2,players[2].cash, players[2].reachedPortal,players[2].reachedPortalFirst),
+            ResultTable(3,players[3].cash, players[3].reachedPortal,players[3].reachedPortalFirst)
         }
     };
 
@@ -157,6 +157,21 @@ void Game::initBoard()
             players[turn].characters[0].getPosition().y-45);
     //    endGameTxt.set
     //    endGameTxt.setScale(2,2);
+
+
+
+    txtSurvivorsLabel.setString("Deer Mode Survivors");
+    txtSurvivorsLabel.setFont(gameFont);
+    txtSurvivorsLabel.setCharacterSize(30);
+    sf::FloatRect rectSurvivors = txtSurvivorsLabel.getLocalBounds();
+    txtSurvivorsLabel.setPosition((1360/2)-(rectSurvivors.width/2),200);
+
+    txtLoosersLabel.setString("Digested by The Elements");
+    txtLoosersLabel.setFont(gameFont);
+    txtLoosersLabel.setCharacterSize(30);
+    sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
+    txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
+
 
 }
 
@@ -448,21 +463,8 @@ Game::Game():
     renderTexture.draw(textLoading);
     renderTexture.display();
 
-    txtSurvivorsLabel.setFont(gameFont);
-    txtLoosersLabel.setFont(gameFont);
-
-    txtSurvivorsLabel.setCharacterSize(30);
-    txtLoosersLabel.setCharacterSize(30);
 
 
-
-    txtSurvivorsLabel.setString("Deer Mode Survivors");
-    sf::FloatRect rectSurvivors = txtSurvivorsLabel.getLocalBounds();
-    txtSurvivorsLabel.setPosition((1360/2)-(rectSurvivors.width/2),200);
-
-    txtLoosersLabel.setString("Digested by The Elements");
-    sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
-    txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
 
     renderSprite.setTexture(renderTexture.getTexture());
     numberFinishedPlayers = 0;
