@@ -26,11 +26,11 @@ struct ResultTable
         if ((playerResult!=otherResult.playerResult) || ((reachedPortal==false) && (otherResult.reachedPortal==false)))
             return (playerResult > otherResult.playerResult);
         else if (reachedPortalFirst==true){
-            return false;
+            return true;
 
         } else
         {
-            return true;
+            return false;
         }
 
         ;
@@ -72,13 +72,15 @@ void Game::setTxtEndGameAmount(){
     txtWinner.setCharacterSize(40);
     for (int i=0;i<4;i++)
     {
+
+
+//        std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
+//        endGameTxtAmount[i].setString(label);
+//        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
+//        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator)+startHeight);
+
         int playerNumber = resultsVector[i].playerNumber;
         std::string elementName = elementNames[playerNumber];
-        std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
-        endGameTxtAmount[i].setString(label);
-        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
-        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator)+startHeight);
-
         sf::Text tmpText;
         tmpText.setFont(gameFont);
         tmpText.setCharacterSize(25);
@@ -89,20 +91,29 @@ void Game::setTxtEndGameAmount(){
 
 
 
-        if (results[i].reachedPortal==true)
+        if (players[playerNumber].reachedPortal==true)
         {
-            tmpText.setPosition((1360/2)-(rectTxt.width/2),240+(i*separator));
+            int counter = txtSurvivors.size();
+
+            tmpText.setPosition((1360/2)-(rectTxt.width/2),200+(counter*separator));
             txtSurvivors.push_back(tmpText);
         } else
         {
-            tmpText.setPosition((1360/2)-(rectTxt.width/2),540+(i*separator));
+            int counter = txtLoosers.size();
+
+            tmpText.setPosition((1360/2)-(rectTxt.width/2),540+(counter*separator));
             txtLoosers.push_back(tmpText);
         }
 
     }
-
-
-
+    if (txtSurvivors.size()>0)
+    {
+        txtWinner.setString("Winner: " + txtSurvivors[0].getString());
+        txtSurvivors.erase(txtSurvivors.begin()+0);
+    }
+    txtWinner.setCharacterSize(40);
+    sf::FloatRect rectTxt = txtWinner.getLocalBounds();
+    txtWinner.setPosition((1360/2)-(rectTxt.width/2),120);
 
 }
 
@@ -150,7 +161,7 @@ void Game::initBoard()
 
 
 
-    endGameTxt.setPosition((1360/2)-(ss.width/2),0);
+    endGameTxt.setPosition((1360/2)-(ss.width/2),60);
 
     setTxtEndGameAmount();
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
@@ -160,7 +171,7 @@ void Game::initBoard()
 
 
 
-    txtSurvivorsLabel.setString("Deer Mode Survivors");
+    txtSurvivorsLabel.setString("Survivors");
     txtSurvivorsLabel.setFont(gameFont);
     txtSurvivorsLabel.setCharacterSize(30);
     sf::FloatRect rectSurvivors = txtSurvivorsLabel.getLocalBounds();
