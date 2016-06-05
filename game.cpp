@@ -56,13 +56,20 @@ void Game::setTxtEndGameAmount(){
     };
 
     std::vector < ResultTable > resultsVector;
+    txtSurvivors.clear();
+    txtLoosers.clear();
+
     for (int i=0;i<4;i++)
     {
         resultsVector.push_back(results[i]);
+
     };
 
-    std::sort(resultsVector.begin(), resultsVector.end());
 
+
+    std::sort(resultsVector.begin(), resultsVector.end());
+    txtWinner.setFont(gameFont);
+    txtWinner.setCharacterSize(40);
     for (int i=0;i<4;i++)
     {
         int playerNumber = resultsVector[i].playerNumber;
@@ -71,6 +78,27 @@ void Game::setTxtEndGameAmount(){
         endGameTxtAmount[i].setString(label);
         sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
         endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator)+startHeight);
+
+        sf::Text tmpText;
+        tmpText.setFont(gameFont);
+        tmpText.setCharacterSize(25);
+        tmpText.setString(elementName+ " " + std::to_string(players[playerNumber].cash));
+
+
+        sf::FloatRect rectTxt = tmpText.getLocalBounds();
+
+
+
+        if (results[i].reachedPortal==true)
+        {
+            tmpText.setPosition((1360/2)-(rectTxt.width/2),240+(i*separator));
+            txtSurvivors.push_back(tmpText);
+        } else
+        {
+            tmpText.setPosition((1360/2)-(rectTxt.width/2),540+(i*separator));
+            txtLoosers.push_back(tmpText);
+        }
+
     }
 
 
@@ -419,6 +447,23 @@ Game::Game():
     renderTexture.clear(sf::Color::White);
     renderTexture.draw(textLoading);
     renderTexture.display();
+
+    txtSurvivorsLabel.setFont(gameFont);
+    txtLoosersLabel.setFont(gameFont);
+
+    txtSurvivorsLabel.setCharacterSize(30);
+    txtLoosersLabel.setCharacterSize(30);
+
+    txtSurvivorsLabel.setString("Deer Mode Survivors");
+    txtLoosersLabel.setString("Digested by The Elements");
+
+
+
+    sf::FloatRect rectSurvivors = txtSurvivorsLabel.getLocalBounds();
+    txtLoosersLabel.setPosition((1360/2)-(rectSurvivors.width/2),200);
+
+    sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
+    txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
 
     renderSprite.setTexture(renderTexture.getTexture());
     numberFinishedPlayers = 0;
@@ -888,9 +933,19 @@ void Game::render(float deltaTime)
         renderTexture.draw(spriteLestBegin,&shaderBlur);
         renderTexture.draw(endGameTxt);
 
-        for (int i=0;i<4;i++){
-            if (players[i].reachedPortal)
-                renderTexture.draw(endGameTxtAmount[i]);
+//        for (int i=0;i<4;i++){
+//            if (players[i].reachedPortal)
+//                renderTexture.draw(endGameTxtAmount[i]);
+//        }
+
+        renderTexture.draw(txtWinner);
+        renderTexture.draw(txtSurvivorsLabel);
+        for (int i=0; i<txtSurvivors.size();i++) {
+            renderTexture.draw(txtSurvivors[i]);
+        }
+        renderTexture.draw(txtLoosersLabel);
+        for (int i=0; i<txtLoosers.size();i++) {
+            renderTexture.draw(txtLoosers[i]);
         }
     }
 
