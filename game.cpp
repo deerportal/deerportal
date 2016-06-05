@@ -26,11 +26,11 @@ struct ResultTable
         if ((playerResult!=otherResult.playerResult) || ((reachedPortal==false) && (otherResult.reachedPortal==false)))
             return (playerResult > otherResult.playerResult);
         else if (reachedPortalFirst==true){
-            return false;
+            return true;
 
         } else
         {
-            return true;
+            return false;
         }
 
         ;
@@ -44,37 +44,76 @@ void Game::setTxtEndGameAmount(){
 
     int width=1360;
     //    int height = 768;
-    int startHeight = 100;
+//    int startHeight = 100;
     int separator = 40;
     std::array<ResultTable, 4> results = {
         {
             ResultTable(0,players[0].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
-            ResultTable(1,players[1].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
-            ResultTable(2,players[2].cash, players[0].reachedPortal,players[0].reachedPortalFirst),
-            ResultTable(3,players[3].cash, players[0].reachedPortal,players[0].reachedPortalFirst)
+            ResultTable(1,players[1].cash, players[1].reachedPortal,players[1].reachedPortalFirst),
+            ResultTable(2,players[2].cash, players[2].reachedPortal,players[2].reachedPortalFirst),
+            ResultTable(3,players[3].cash, players[3].reachedPortal,players[3].reachedPortalFirst)
         }
     };
 
     std::vector < ResultTable > resultsVector;
+    txtSurvivors.clear();
+    txtLoosers.clear();
+
     for (int i=0;i<4;i++)
     {
         resultsVector.push_back(results[i]);
+
     };
 
-    std::sort(resultsVector.begin(), resultsVector.end());
 
+
+    std::sort(resultsVector.begin(), resultsVector.end());
+    txtWinner.setFont(gameFont);
+    txtWinner.setCharacterSize(40);
     for (int i=0;i<4;i++)
     {
+
+
+//        std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
+//        endGameTxtAmount[i].setString(label);
+//        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
+//        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator)+startHeight);
+
         int playerNumber = resultsVector[i].playerNumber;
         std::string elementName = elementNames[playerNumber];
-        std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
-        endGameTxtAmount[i].setString(label);
-        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
-        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator)+startHeight);
+        sf::Text tmpText;
+        tmpText.setFont(gameFont);
+        tmpText.setCharacterSize(25);
+        tmpText.setString(elementName+ " " + std::to_string(players[playerNumber].cash));
+
+
+        sf::FloatRect rectTxt = tmpText.getLocalBounds();
+
+
+
+        if (players[playerNumber].reachedPortal==true)
+        {
+            int counter = txtSurvivors.size();
+
+            tmpText.setPosition((1360/2)-(rectTxt.width/2),200+(counter*separator));
+            txtSurvivors.push_back(tmpText);
+        } else
+        {
+            int counter = txtLoosers.size();
+
+            tmpText.setPosition((width/2)-(rectTxt.width/2),540+(counter*separator));
+            txtLoosers.push_back(tmpText);
+        }
+
     }
-
-
-
+    if (txtSurvivors.size()>0)
+    {
+        txtWinner.setString("Winner: " + txtSurvivors[0].getString());
+        txtSurvivors.erase(txtSurvivors.begin()+0);
+    }
+    txtWinner.setCharacterSize(40);
+    sf::FloatRect rectTxt = txtWinner.getLocalBounds();
+    txtWinner.setPosition((1360/2)-(rectTxt.width/2),120);
 
 }
 
@@ -122,13 +161,28 @@ void Game::initBoard()
 
 
 
-    endGameTxt.setPosition((1360/2)-(ss.width/2),0);
+    endGameTxt.setPosition((1360/2)-(ss.width/2),60);
 
     setTxtEndGameAmount();
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
     //    endGameTxt.set
     //    endGameTxt.setScale(2,2);
+
+
+
+    txtSurvivorsLabel.setString("Survivors");
+    txtSurvivorsLabel.setFont(gameFont);
+    txtSurvivorsLabel.setCharacterSize(30);
+    sf::FloatRect rectSurvivors = txtSurvivorsLabel.getLocalBounds();
+    txtSurvivorsLabel.setPosition((1360/2)-(rectSurvivors.width/2),200);
+
+    txtLoosersLabel.setString("Digested by The Elements");
+    txtLoosersLabel.setFont(gameFont);
+    txtLoosersLabel.setCharacterSize(30);
+    sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
+    txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
+
 
 }
 
@@ -420,6 +474,9 @@ Game::Game():
     renderTexture.draw(textLoading);
     renderTexture.display();
 
+
+
+
     renderSprite.setTexture(renderTexture.getTexture());
     numberFinishedPlayers = 0;
     sf::Clock frameClock;
@@ -621,17 +678,22 @@ void Game::nextRound() {
  */
 void Game::nextPlayer(){
 
+    // End of game - we don't calculate more players
     if (currentState==state_end_game)
     {
         return;
     }
 
+    // End of game - we don't calculate more players
     if (numberFinishedPlayers==4)
     {
         //        std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
         return ;
     }
+
+    // Update old player
+
     players[turn].updatePlayer();
     if (turn>2)
     {
@@ -640,6 +702,23 @@ void Game::nextPlayer(){
     }
 
     turn++;
+
+
+//    if (players[turn].done==true)
+//    {
+//        //        std::cout << "Player " << turn << " is done" << std::endl;
+//        nextPlayer();
+//        return;
+//    }
+
+
+
+
+
+    launchNextPlayer();
+
+}
+void Game::launchNextPlayer(){
     if (deerModeActive)
     {
         deerModeCounter -= 1;
@@ -651,20 +730,13 @@ void Game::nextPlayer(){
         endGame();
         return ;
     }
-
+    // Just control
     if (players[turn].done==true)
     {
         //        std::cout << "Player " << turn << " is done" << std::endl;
         nextPlayer();
         return;
     }
-
-//    if ((turn==4) || (turn>4))
-//    {
-//        nextRound();
-//        return;
-//    }
-
 
     // Frozen player
     if (players[turn].frozenLeft>0)
@@ -674,24 +746,6 @@ void Game::nextPlayer(){
         return;
     }
 
-//    // If player is done - next player
-//    if (players[turn].done==true)
-//    {
-//        nextPlayer();
-//        return;
-//    }
-
-    launchNextPlayer();
-
-}
-void Game::launchNextPlayer(){
-    // Just control
-    if (players[turn].done==true)
-    {
-        //        std::cout << "Player " << turn << " is done" << std::endl;
-        nextPlayer();
-        return;
-    }
 
     // Here we process new player
 
@@ -888,10 +942,21 @@ void Game::render(float deltaTime)
         renderTexture.draw(spriteLestBegin,&shaderBlur);
         renderTexture.draw(endGameTxt);
 
-        for (int i=0;i<4;i++){
-            if (players[i].reachedPortal)
-                renderTexture.draw(endGameTxtAmount[i]);
+//        for (int i=0;i<4;i++){
+//            if (players[i].reachedPortal)
+//                renderTexture.draw(endGameTxtAmount[i]);
+//        }
+
+        renderTexture.draw(txtWinner);
+        renderTexture.draw(txtSurvivorsLabel);
+        for (unsigned int i=0; i<txtSurvivors.size();i++) {
+            renderTexture.draw(txtSurvivors[i]);
         }
+        renderTexture.draw(txtLoosersLabel);
+        for (unsigned int i=0; i<txtLoosers.size();i++) {
+            renderTexture.draw(txtLoosers[i]);
+        }
+
     }
 
     renderTexture.display();

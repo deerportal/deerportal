@@ -181,6 +181,14 @@ public:
     CardsDeck cardsDeck;
     void startDeerMode();
 
+    sf::Text txtWinner;
+
+    sf::Text txtSurvivorsLabel;
+    sf::Text txtLoosersLabel;
+    std::vector<sf::Text> txtSurvivors;
+    std::vector<sf::Text> txtLoosers;
+
+
 private:
     Bubble bubble;
     int deerModeCounter;
