@@ -965,7 +965,6 @@ void Game::render(float deltaTime)
     shaderBlur.setParameter("blur_radius", 0.0003f);
     window.draw(renderSprite, &shaderBlur);
 
-
     particleSystem.remove();
     particleSystem.update();
     particleSystem.render();
