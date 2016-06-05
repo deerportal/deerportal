@@ -78,8 +78,8 @@ TextureHolder::TextureHolder()
     if (!textureBoardDiamond.loadFromFile("assets/img/board_diamonds.png"))
         std::exit(1);
 
-//    if (!textureMenu.loadFromFile("assets/img/background_new.png"))
-//        std::exit(1);
+    if (!textureMenu.loadFromFile("assets/img/dp_intro_menu.png"))
+        std::exit(1);
 
     if (!textureLetsBegin.loadFromFile("assets/img/letsbegin.png"))
         std::exit(1);

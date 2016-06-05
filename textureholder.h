@@ -24,7 +24,7 @@ public:
 //    sf::Texture textureTiles;
 //    sf::Texture textureFaces;
 //    sf::Texture textureGui;
-//    sf::Texture textureMenu;
+    sf::Texture textureMenu;
 //    sf::Texture textureSymbols;
 //    sf::Texture textureSeasons;
     sf::Texture backgroundDark;

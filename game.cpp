@@ -248,6 +248,7 @@ void Game::loadAssets()
         std::exit(1);
     }
 
+    menuBackground.setTexture(textures.textureMenu);
 
 
     if (!shaderBlur.loadFromFile("assets/shaders/blur.frag", sf::Shader::Fragment))
@@ -912,8 +913,9 @@ void Game::render(float deltaTime)
 
     }  else if (currentState==state_menu) {
         shaderBlur.setParameter("blur_radius", 15);
-        renderTexture.draw(menuTxt, &shaderBlur);
-        renderTexture.draw(menuTxt);
+        renderTexture.draw(menuBackground);
+//        renderTexture.draw(menuTxt, &shaderBlur);
+//        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
