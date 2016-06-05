@@ -44,7 +44,7 @@ void Game::setTxtEndGameAmount(){
 
     int width=1360;
     //    int height = 768;
-    int startHeight = 100;
+//    int startHeight = 100;
     int separator = 40;
     std::array<ResultTable, 4> results = {
         {
@@ -101,7 +101,7 @@ void Game::setTxtEndGameAmount(){
         {
             int counter = txtLoosers.size();
 
-            tmpText.setPosition((1360/2)-(rectTxt.width/2),540+(counter*separator));
+            tmpText.setPosition((width/2)-(rectTxt.width/2),540+(counter*separator));
             txtLoosers.push_back(tmpText);
         }
 
@@ -949,11 +949,11 @@ void Game::render(float deltaTime)
 
         renderTexture.draw(txtWinner);
         renderTexture.draw(txtSurvivorsLabel);
-        for (int i=0; i<txtSurvivors.size();i++) {
+        for (unsigned int i=0; i<txtSurvivors.size();i++) {
             renderTexture.draw(txtSurvivors[i]);
         }
         renderTexture.draw(txtLoosersLabel);
-        for (int i=0; i<txtLoosers.size();i++) {
+        for (unsigned int i=0; i<txtLoosers.size();i++) {
             renderTexture.draw(txtLoosers[i]);
         }
 
