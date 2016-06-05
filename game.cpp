@@ -454,14 +454,13 @@ Game::Game():
     txtSurvivorsLabel.setCharacterSize(30);
     txtLoosersLabel.setCharacterSize(30);
 
+
+
     txtSurvivorsLabel.setString("Deer Mode Survivors");
-    txtLoosersLabel.setString("Digested by The Elements");
-
-
-
     sf::FloatRect rectSurvivors = txtSurvivorsLabel.getLocalBounds();
-    txtLoosersLabel.setPosition((1360/2)-(rectSurvivors.width/2),200);
+    txtSurvivorsLabel.setPosition((1360/2)-(rectSurvivors.width/2),200);
 
+    txtLoosersLabel.setString("Digested by The Elements");
     sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
     txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
 
@@ -666,17 +665,22 @@ void Game::nextRound() {
  */
 void Game::nextPlayer(){
 
+    // End of game - we don't calculate more players
     if (currentState==state_end_game)
     {
         return;
     }
 
+    // End of game - we don't calculate more players
     if (numberFinishedPlayers==4)
     {
         //        std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
         return ;
     }
+
+    // Update old player
+
     players[turn].updatePlayer();
     if (turn>2)
     {
@@ -685,6 +689,23 @@ void Game::nextPlayer(){
     }
 
     turn++;
+
+
+//    if (players[turn].done==true)
+//    {
+//        //        std::cout << "Player " << turn << " is done" << std::endl;
+//        nextPlayer();
+//        return;
+//    }
+
+
+
+
+
+    launchNextPlayer();
+
+}
+void Game::launchNextPlayer(){
     if (deerModeActive)
     {
         deerModeCounter -= 1;
@@ -696,20 +717,13 @@ void Game::nextPlayer(){
         endGame();
         return ;
     }
-
+    // Just control
     if (players[turn].done==true)
     {
         //        std::cout << "Player " << turn << " is done" << std::endl;
         nextPlayer();
         return;
     }
-
-//    if ((turn==4) || (turn>4))
-//    {
-//        nextRound();
-//        return;
-//    }
-
 
     // Frozen player
     if (players[turn].frozenLeft>0)
@@ -719,24 +733,6 @@ void Game::nextPlayer(){
         return;
     }
 
-//    // If player is done - next player
-//    if (players[turn].done==true)
-//    {
-//        nextPlayer();
-//        return;
-//    }
-
-    launchNextPlayer();
-
-}
-void Game::launchNextPlayer(){
-    // Just control
-    if (players[turn].done==true)
-    {
-        //        std::cout << "Player " << turn << " is done" << std::endl;
-        nextPlayer();
-        return;
-    }
 
     // Here we process new player
 
@@ -947,6 +943,7 @@ void Game::render(float deltaTime)
         for (int i=0; i<txtLoosers.size();i++) {
             renderTexture.draw(txtLoosers[i]);
         }
+
     }
 
     renderTexture.display();
