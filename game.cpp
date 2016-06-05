@@ -26,11 +26,11 @@ struct ResultTable
         if ((playerResult!=otherResult.playerResult) || ((reachedPortal==false) && (otherResult.reachedPortal==false)))
             return (playerResult > otherResult.playerResult);
         else if (reachedPortalFirst==true){
-            return true;
+            return false;
 
         } else
         {
-            return false;
+            return true;
         }
 
         ;
@@ -156,15 +156,21 @@ void Game::restartGame()
     {
         players[i].restartPlayer();
         players[i].reachedPortal = false;
+
         boardDiamonds.reorder(i);
+        bubble.setPosition(players[i].characters[0].getPosition().x-30,
+                players[i].characters[0].getPosition().y-45);
+        players[i].done=false;
 
     }
+    numberFinishedPlayers = 0;
     turn = 0;
     currentSeason = 1;
     month = 0;
     cardsDeck.reloadCards();
     deerModeActive = false;
     deerModeCounter = 16;
+    launchNextPlayer();
 
 }
 
@@ -301,7 +307,10 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
                 numberFinishedPlayers += 1;
                 if (numberFinishedPlayers > 3)
+                {
                     endGame();
+                    return;
+                }
             } else {
                 //               std::cerr << "Not found" << std::endl;
             }
@@ -587,6 +596,9 @@ void Game::update(sf::Time frameTime) {
     bubble.update(frameTime);
 }
 
+/*!
+ * \brief Game::nextRound is happening each every 4 months
+ */
 void Game::nextRound() {
     turn = 0;
     //    std::string result = roundDice.drawRound();
@@ -598,29 +610,35 @@ void Game::nextRound() {
         currentSeason++;
     if (currentSeason>3)
         currentSeason=0;
-    if (players[turn].done==true)
-        nextPlayer();
+//    if (players[turn].done==true)
+//        nextPlayer();
+
+    launchNextPlayer();
 }
 
+/*!
+ * \brief Game::nextPlayer calculates which player should play
+ */
 void Game::nextPlayer(){
+
     if (currentState==state_end_game)
     {
         return;
     }
 
-
-
     if (numberFinishedPlayers==4)
     {
         //        std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
-
+        return ;
+    }
+    players[turn].updatePlayer();
+    if (turn>2)
+    {
+        nextRound();
+        return;
     }
 
-    if (turn<4)
-        players[turn].updatePlayer();
-    else
-        nextRound();
     turn++;
     if (deerModeActive)
     {
@@ -634,25 +652,50 @@ void Game::nextPlayer(){
         return ;
     }
 
-    if ((players[turn].done==true) && (turn<4))
+    if (players[turn].done==true)
     {
         //        std::cout << "Player " << turn << " is done" << std::endl;
         nextPlayer();
+        return;
     }
 
-    if ((turn==4) || (turn>4))
-    {
-        nextRound();
-    }
+//    if ((turn==4) || (turn>4))
+//    {
+//        nextRound();
+//        return;
+//    }
 
+
+    // Frozen player
     if (players[turn].frozenLeft>0)
     {
         players[turn].frozenLeft -= 1;
         nextPlayer();
+        return;
     }
 
-    selector.changeColor(turn);
+//    // If player is done - next player
+//    if (players[turn].done==true)
+//    {
+//        nextPlayer();
+//        return;
+//    }
 
+    launchNextPlayer();
+
+}
+void Game::launchNextPlayer(){
+    // Just control
+    if (players[turn].done==true)
+    {
+        //        std::cout << "Player " << turn << " is done" << std::endl;
+        nextPlayer();
+        return;
+    }
+
+    // Here we process new player
+
+    selector.changeColor(turn);
     for (int i=0;i<4;i++)
     {
         if (i==turn)
@@ -667,6 +710,7 @@ void Game::nextPlayer(){
     sfxClick.play();
     diceResultPlayer = 6;
     roundDice.setDiceTexture(diceResultPlayer);
+
     players[turn].characters[0].diceResult = diceResultPlayer;
     groupHud.setRoundName(roundNumber);
     if (deerModeActive==false)

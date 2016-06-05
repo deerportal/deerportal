@@ -123,6 +123,7 @@ private:
 
     void setCurrentNeighbours ();
     void nextPlayer();
+    void launchNextPlayer();
     void nextRound();
 
 
