@@ -26,11 +26,11 @@ struct ResultTable
         if ((playerResult!=otherResult.playerResult) || ((reachedPortal==false) && (otherResult.reachedPortal==false)))
             return (playerResult > otherResult.playerResult);
         else if (reachedPortalFirst==true){
-            return true;
+            return false;
 
         } else
         {
-            return false;
+            return true;
         }
 
         ;
@@ -301,7 +301,10 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
                 numberFinishedPlayers += 1;
                 if (numberFinishedPlayers > 3)
+                {
                     endGame();
+                    return;
+                }
             } else {
                 //               std::cerr << "Not found" << std::endl;
             }
@@ -587,6 +590,9 @@ void Game::update(sf::Time frameTime) {
     bubble.update(frameTime);
 }
 
+/*!
+ * \brief Game::nextRound is happening each every 4 months
+ */
 void Game::nextRound() {
     turn = 0;
     //    std::string result = roundDice.drawRound();
@@ -602,25 +608,27 @@ void Game::nextRound() {
         nextPlayer();
 }
 
+/*!
+ * \brief Game::nextPlayer calculates which player should play
+ */
 void Game::nextPlayer(){
     if (currentState==state_end_game)
     {
         return;
     }
 
-
-
     if (numberFinishedPlayers==4)
     {
         //        std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
-
+        return ;
     }
 
     if (turn<4)
         players[turn].updatePlayer();
     else
         nextRound();
+
     turn++;
     if (deerModeActive)
     {
