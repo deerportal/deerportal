@@ -1,11 +1,12 @@
-deerportal (0.6.0-betaubuntu1) UNRELEASED; urgency=low
+deerportal (0.6.0-betaubuntu1) trusty; urgency=low
 
   * New end game screen
   * Fixed several bugs
   * Fixed sorting order
   * Simply AI - playing with computer
+  * New graphics - Deer God and rendered title screen
 
- -- Rafal Zawadzki <bluszcz@devcarpet.net>  Sun, 05 Jun 2016 23:57:35 +0200
+ -- Rafal Zawadzki <bluszcz@devcarpet.net>  Mon, 06 Jun 2016 23:44:00 +0200
 
 deerportal (0.0.5-alphaubuntu6) trusty; urgency=medium
 
