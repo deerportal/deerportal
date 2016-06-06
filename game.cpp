@@ -44,7 +44,7 @@ void Game::setTxtEndGameAmount(){
 
     int width=1360;
     //    int height = 768;
-//    int startHeight = 100;
+    //    int startHeight = 100;
     int separator = 40;
     std::array<ResultTable, 4> results = {
         {
@@ -132,15 +132,16 @@ void Game::initBoard()
 
     cardsDeck.setFonts(&gameFont);
     restartGame();
+    launchNextPlayer();
 
 
-//    for (int i=0;i<4;i++)
-//    {
-//        endGameTxtAmount[i].setFont(gameFont);
-//        endGameTxtAmount[i].setCharacterSize(25);
+    //    for (int i=0;i<4;i++)
+    //    {
+    //        endGameTxtAmount[i].setFont(gameFont);
+    //        endGameTxtAmount[i].setCharacterSize(25);
 
 
-//    }
+    //    }
 
     endGameTxt.setFont(gameFont);
     endGameTxt.setString("End of the Game");
@@ -215,7 +216,6 @@ void Game::restartGame()
     cardsDeck.reloadCards();
     deerModeActive = false;
     deerModeCounter = 16;
-    launchNextPlayer();
 
 }
 
@@ -316,7 +316,7 @@ void Game::showGameBoard()
     sfx.playLetsBegin();
     //    std::cout << "lets begin" << std::endl;
     currentState = state_setup_players;
-//    currentState = state_lets_begin;
+    //    currentState = state_lets_begin;
 }
 
 void Game::endGame()
@@ -390,34 +390,22 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
     if (currentState==state_setup_players)
     {
-        std::array<std::array<int,2>,4> spriteHumanPos =
-        {
-            {
-                {{220,450}}, {{1050,450}},
-                {{140,600}}, {{1110, 600}}
-            }
-        };
-
-
-
         for (int i=0;i<4;i++)
         {
             sf::IntRect spriteHumanRect(players[i].spriteAI.getGlobalBounds());
             if (spriteHumanRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
-
             {
                 players[i].swapHuman();
             }
         }
-
         sf::IntRect startGameRect(580,640,180,80);
         if (startGameRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
         {
             currentState=state_roll_dice;
+            launchNextPlayer();
+            return;
         }
-
     }
-
     else if (currentState==state_roll_dice)
     {
         if (players[turn].human){
@@ -434,6 +422,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         downTimeCounter = 0;
         hideMenu();
         showGameBoard();
+        return;
     }
 
     if (currentState==state_gui_end_round)
@@ -449,6 +438,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
             currentState = state_roll_dice;
             restartGame();
+            launchNextPlayer();
             return;
         }
     }
@@ -459,6 +449,8 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         {
             currentState = state_menu;
             restartGame();
+            return ;
+            //            restartGame();
         }
     }
 
@@ -742,8 +734,8 @@ void Game::nextRound() {
         currentSeason++;
     if (currentSeason>3)
         currentSeason=0;
-//    if (players[turn].done==true)
-//        nextPlayer();
+    //    if (players[turn].done==true)
+    //        nextPlayer();
 
     launchNextPlayer();
 }
@@ -779,12 +771,12 @@ void Game::nextPlayer(){
     turn++;
 
 
-//    if (players[turn].done==true)
-//    {
-//        //        std::cout << "Player " << turn << " is done" << std::endl;
-//        nextPlayer();
-//        return;
-//    }
+    //    if (players[turn].done==true)
+    //    {
+    //        //        std::cout << "Player " << turn << " is done" << std::endl;
+    //        nextPlayer();
+    //        return;
+    //    }
 
 
 
@@ -984,7 +976,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(spriteDeerGod);
         for (int i=0;i<4;i++)
         {
-                renderTexture.draw(players[i].spriteAI);
+            renderTexture.draw(players[i].spriteAI);
         }
     } else if (currentState==state_gui_elem) {
         renderTexture.setView(viewFull);
@@ -998,8 +990,8 @@ void Game::render(float deltaTime)
     }  else if (currentState==state_menu) {
         shaderBlur.setParameter("blur_radius", 15);
         renderTexture.draw(menuBackground);
-//        renderTexture.draw(menuTxt, &shaderBlur);
-//        renderTexture.draw(menuTxt);
+        //        renderTexture.draw(menuTxt, &shaderBlur);
+        //        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
@@ -1028,10 +1020,10 @@ void Game::render(float deltaTime)
         renderTexture.draw(spriteLestBegin,&shaderBlur);
         renderTexture.draw(endGameTxt);
 
-//        for (int i=0;i<4;i++){
-//            if (players[i].reachedPortal)
-//                renderTexture.draw(endGameTxtAmount[i]);
-//        }
+        //        for (int i=0;i<4;i++){
+        //            if (players[i].reachedPortal)
+        //                renderTexture.draw(endGameTxtAmount[i]);
+        //        }
 
         renderTexture.draw(txtWinner);
         renderTexture.draw(txtSurvivorsLabel);
