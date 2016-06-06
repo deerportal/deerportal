@@ -134,16 +134,16 @@ void Game::initBoard()
     restartGame();
 
 
-    for (int i=0;i<4;i++)
-    {
-        endGameTxtAmount[i].setFont(gameFont);
-        endGameTxtAmount[i].setCharacterSize(25);
+//    for (int i=0;i<4;i++)
+//    {
+//        endGameTxtAmount[i].setFont(gameFont);
+//        endGameTxtAmount[i].setCharacterSize(25);
 
 
-    }
+//    }
 
     endGameTxt.setFont(gameFont);
-    endGameTxt.setString("Game Over");
+    endGameTxt.setString("End of the Game");
     endGameTxt.setCharacterSize(30);
 
 
@@ -210,6 +210,7 @@ void Game::restartGame()
     numberFinishedPlayers = 0;
     turn = 0;
     currentSeason = 1;
+    roundNumber = 1;
     month = 0;
     cardsDeck.reloadCards();
     deerModeActive = false;
@@ -372,19 +373,25 @@ void Game::playerMakeMove(int mousePos) {
 void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) {
     if (currentState==state_game)
     {
-        std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
-        if ((mousePos==movements[0]) || (mousePos==movements[1]))
+        if (players[turn].human)
         {
-            playerMakeMove(mousePos);
+            std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
+            if ((mousePos==movements[0]) || (mousePos==movements[1]))
+            {
+                playerMakeMove(mousePos);
+
+            }
         }
     }
 
     else if (currentState==state_roll_dice)
     {
-        sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
-        if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
-        {
-            throwDiceMove();
+        if (players[turn].human){
+            sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
+            if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+            {
+                throwDiceMove();
+            }
         }
     }
 
@@ -405,7 +412,10 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
     {
         if (downTimeCounter>1)
         {
+
             currentState = state_roll_dice;
+            restartGame();
+            return;
         }
     }
 
@@ -587,9 +597,53 @@ Game::Game():
 
 void Game::update(sf::Time frameTime) {
     runningCounter += frameTime.asSeconds();
+
+    cpuTimeThinking -= frameTime.asSeconds();
+
+    if (currentState==state_roll_dice)
+    {
+        if ((cpuTimeThinking<0) && (players[turn].human==false))
+        {
+            cpuTimeThinking = 1;
+            throwDiceMove();
+        }
+    }
+
     if (currentState==state_game)
     {
         std::array<int,2> currentMovements = players[turn].getMovements(diceResultPlayer);
+
+        if ((cpuTimeThinking<0) &&  (players[turn].human==false))
+        {
+            std::vector<int> listRandomPos;
+
+
+
+            if (currentMovements[0]>-1) {
+                listRandomPos.push_back(currentMovements[0]);
+
+            }
+            if (currentMovements[1]>-1) {
+                listRandomPos.push_back(currentMovements[1]);
+
+            }
+
+            unsigned int sizeRndPos = listRandomPos.size();
+            if (sizeRndPos==0) {
+
+            } else if  (sizeRndPos==1) {
+                playerMakeMove(listRandomPos[0]);
+
+            } else if (sizeRndPos==2) {
+                int randPos = rand() % 2;
+                playerMakeMove(listRandomPos[randPos]);
+            }
+
+        }
+
+
+
+
         if (currentMovements[0]>-1)
         {
             prevRotateElem.spriteRotate.setPosition(players[turn].characters[0].leftChar.getPosition());
@@ -777,6 +831,9 @@ void Game::launchNextPlayer(){
     roundDice.setColor(turn);
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
+
+    cpuTimeThinking = 1;
+
 }
 
 void Game::drawPlayersGui(){

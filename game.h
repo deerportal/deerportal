@@ -191,6 +191,9 @@ public:
 
     void throwDiceMove();
     void playerMakeMove(int mousePos);
+
+    float cpuTimeThinking;
+
 private:
     Bubble bubble;
     int deerModeCounter;
