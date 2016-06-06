@@ -1,3 +1,10 @@
+deerportal (0.6.0-betaubuntu2) trusty; urgency=medium
+
+  * New dice - from Katia
+  * Updated background 
+
+ -- Rafal Zawadzki <bluszcz@taller>  Tue, 07 Jun 2016 00:26:08 +0200
+
 deerportal (0.6.0-betaubuntu1) trusty; urgency=low
 
   * New end game screen
@@ -5,8 +12,6 @@ deerportal (0.6.0-betaubuntu1) trusty; urgency=low
   * Fixed sorting order
   * Simply AI - playing with computer
   * New graphics - Deer God and rendered title screen
-  * New dice - from Katia
-  * Updated background
 
  -- Rafal Zawadzki <bluszcz@devcarpet.net>  Mon, 06 Jun 2016 23:44:00 +0200
 
