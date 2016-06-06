@@ -89,6 +89,8 @@ Each player who is active (didn't reach Hoofltar yet, nor is being paused) has t
 
 There can be only one winner, a player having highest number of the collected diamonds. If there is a draw, award goes for the player who reached portal first. Winner is being transformed into a Deer God. Rest of survivors are becoming his monks, the believers to spread the word. Ones who didn't survive, became a first heritage and a foundation of the new philosophy. 
 
+![DeerPortal Poster](https://bluszcz.net/projects/games/deerportal/poster01.png/@@images/image.png)
+
 ##Credits
 
 
