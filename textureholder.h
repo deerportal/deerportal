@@ -38,6 +38,11 @@ public:
     sf::Texture textureCardBase2;
     sf::Texture textureCardBase3;
 
+    sf::Texture textureButtonCpu;
+    sf::Texture textureButtonHuman;
+
+    sf::Texture textureDeerGod;
+
     std::array<sf::Texture, 4> textureCardBases;
 
     std::map<int, std::map<int, int>> tilesDescription;
