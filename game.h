@@ -63,7 +63,7 @@ public:
     sf::RenderWindow window;
     sf::RenderTexture renderTexture;
     sf::Sprite renderSprite;
-    PlayerHud players[4];
+    Player players[4];
     SoundFX sfx;
     int turn;
 
@@ -81,6 +81,7 @@ private:
     enum states {
         state_init,
         state_menu,
+        state_setup_players,
         state_lets_begin,
         state_roll_dice,
         state_game,
@@ -93,6 +94,7 @@ private:
     };
     states currentState;
 
+    sf::Sprite spriteDeerGod;
     sf::Sprite spriteBackgroundDark;
     sf::Sprite spriteLestBegin;
     sf::Texture textureBackgroundArt;
@@ -188,6 +190,11 @@ public:
     std::vector<sf::Text> txtSurvivors;
     std::vector<sf::Text> txtLoosers;
 
+
+    void throwDiceMove();
+    void playerMakeMove(int mousePos);
+
+    float cpuTimeThinking;
 
 private:
     Bubble bubble;

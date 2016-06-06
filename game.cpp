@@ -44,7 +44,7 @@ void Game::setTxtEndGameAmount(){
 
     int width=1360;
     //    int height = 768;
-//    int startHeight = 100;
+    //    int startHeight = 100;
     int separator = 40;
     std::array<ResultTable, 4> results = {
         {
@@ -73,23 +73,13 @@ void Game::setTxtEndGameAmount(){
     for (int i=0;i<4;i++)
     {
 
-
-//        std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
-//        endGameTxtAmount[i].setString(label);
-//        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
-//        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator)+startHeight);
-
         int playerNumber = resultsVector[i].playerNumber;
         std::string elementName = elementNames[playerNumber];
         sf::Text tmpText;
         tmpText.setFont(gameFont);
         tmpText.setCharacterSize(25);
         tmpText.setString(elementName+ " " + std::to_string(players[playerNumber].cash));
-
-
         sf::FloatRect rectTxt = tmpText.getLocalBounds();
-
-
 
         if (players[playerNumber].reachedPortal==true)
         {
@@ -142,18 +132,19 @@ void Game::initBoard()
 
     cardsDeck.setFonts(&gameFont);
     restartGame();
+    launchNextPlayer();
 
 
-    for (int i=0;i<4;i++)
-    {
-        endGameTxtAmount[i].setFont(gameFont);
-        endGameTxtAmount[i].setCharacterSize(25);
+    //    for (int i=0;i<4;i++)
+    //    {
+    //        endGameTxtAmount[i].setFont(gameFont);
+    //        endGameTxtAmount[i].setCharacterSize(25);
 
 
-    }
+    //    }
 
     endGameTxt.setFont(gameFont);
-    endGameTxt.setString("Game Over");
+    endGameTxt.setString("End of the Game");
     endGameTxt.setCharacterSize(30);
 
 
@@ -192,10 +183,10 @@ void Game::initBoard()
 void Game::restartGame()
 {
 
-    PlayerHud playerHud1(&textures, &gameFont,0);
-    PlayerHud playerHud2(&textures, &gameFont,1);
-    PlayerHud playerHud3(&textures, &gameFont,2);
-    PlayerHud playerHud4(&textures, &gameFont,3);
+    Player playerHud1(&textures, &gameFont,0);
+    Player playerHud2(&textures, &gameFont,1);
+    Player playerHud3(&textures, &gameFont,2);
+    Player playerHud4(&textures, &gameFont,3);
     players[0] = playerHud1;
     players[1] = playerHud2;
     players[3] = playerHud3;
@@ -220,11 +211,11 @@ void Game::restartGame()
     numberFinishedPlayers = 0;
     turn = 0;
     currentSeason = 1;
+    roundNumber = 1;
     month = 0;
     cardsDeck.reloadCards();
     deerModeActive = false;
     deerModeCounter = 16;
-    launchNextPlayer();
 
 }
 
@@ -250,6 +241,8 @@ void Game::loadAssets()
 
     menuBackground.setTexture(textures.textureMenu);
 
+
+    spriteDeerGod.setTexture(textures.textureDeerGod);
 
     if (!shaderBlur.loadFromFile("assets/shaders/blur.frag", sf::Shader::Fragment))
         std::exit(1);
@@ -322,7 +315,8 @@ void Game::showGameBoard()
     musicGame.setLoop(true);
     sfx.playLetsBegin();
     //    std::cout << "lets begin" << std::endl;
-    currentState = state_lets_begin;
+    currentState = state_setup_players;
+    //    currentState = state_lets_begin;
 }
 
 void Game::endGame()
@@ -334,6 +328,45 @@ void Game::endGame()
     //    musicBackground.stop();
 }
 
+void Game::throwDiceMove() {
+    // Throw a dice action
+    diceResultPlayer = roundDice.throwDiceSix();
+    players[turn].characters[0].diceResult=diceResultPlayer;
+    currentState = state_game;
+    bubble.state = BubbleState::MOVE;
+    nextRotateElem.reset();
+    prevRotateElem.reset();
+}
+/*!
+ * \brief Game::playerMakeMove move the player into the position on the map
+ * \param mousePos
+ */
+void Game::playerMakeMove(int mousePos) {
+    players[turn].setFigurePos(mousePos);
+    commandManager.processField(mousePos);
+    const int *possibleExit = std::find(std::begin(efc::endPlayers),
+                                        std::end(efc::endPlayers), mousePos);
+    if (possibleExit != efc::endPlayers+4) {
+        players[turn].done=true;
+        players[turn].reachedPortal=true;
+        commandManager.removeAllItems(turn);
+        if (numberFinishedPlayers == 0)
+        {
+            players[turn].reachedPortalFirst=true;
+            startDeerMode();
+        }
+
+        numberFinishedPlayers += 1;
+        if (numberFinishedPlayers > 3)
+        {
+            endGame();
+            return;
+        }
+    }
+    nextPlayer();
+    return;
+}
+
 /*!
  * \brief Game::handleLeftClick
  * \param pos
@@ -343,62 +376,54 @@ void Game::endGame()
 void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) {
     if (currentState==state_game)
     {
-        std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
-        if ((mousePos==movements[0]) || (mousePos==movements[1]))
+        if (players[turn].human)
         {
-            players[turn].setFigurePos(mousePos);
-            commandManager.processField(mousePos);
-            const int *possibleExit = std::find(std::begin(efc::endPlayers),
-                                                std::end(efc::endPlayers), mousePos);
-            if (possibleExit != efc::endPlayers+4) {
-                players[turn].done=true;
-                players[turn].reachedPortal=true;
-                commandManager.removeAllItems(turn);
-                if (numberFinishedPlayers == 0)
-                {
-                    players[turn].reachedPortalFirst=true;
-                    startDeerMode();
-                }
+            std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
+            if ((mousePos==movements[0]) || (mousePos==movements[1]))
+            {
+                playerMakeMove(mousePos);
 
-                numberFinishedPlayers += 1;
-                if (numberFinishedPlayers > 3)
-                {
-                    endGame();
-                    return;
-                }
-            } else {
-                //               std::cerr << "Not found" << std::endl;
             }
-            nextPlayer();
+        }
+    }
+
+
+    if (currentState==state_setup_players)
+    {
+        for (int i=0;i<4;i++)
+        {
+            sf::IntRect spriteHumanRect(players[i].spriteAI.getGlobalBounds());
+            if (spriteHumanRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+            {
+                players[i].swapHuman();
+            }
+        }
+        sf::IntRect startGameRect(580,640,180,80);
+        if (startGameRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+        {
+            currentState=state_roll_dice;
+            launchNextPlayer();
             return;
         }
-        //        std::string resultCommand = players[turn].getElem(posGui);
-        //        command(resultCommand);
-        //        commandManager.processGui(posGui);
     }
     else if (currentState==state_roll_dice)
     {
-        sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
-        if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
-        {
-            diceResultPlayer = roundDice.throwDiceSix();
-            players[turn].characters[0].diceResult=diceResultPlayer;
-            currentState = state_game;
-            bubble.state = BubbleState::MOVE;
-            nextRotateElem.reset();
-            prevRotateElem.reset();
+        if (players[turn].human){
+            sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
+            if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+            {
+                throwDiceMove();
+            }
         }
     }
 
     if (currentState==state_menu)
     {
         downTimeCounter = 0;
-        //        std::cout << " AA " <<downTimeCounter << std::endl;
         hideMenu();
         showGameBoard();
+        return;
     }
-
-
 
     if (currentState==state_gui_end_round)
     {
@@ -410,9 +435,12 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
     {
         if (downTimeCounter>1)
         {
-            currentState = state_roll_dice;
-        }
 
+            currentState = state_roll_dice;
+            restartGame();
+            launchNextPlayer();
+            return;
+        }
     }
 
     if (currentState==state_end_game)
@@ -421,8 +449,9 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         {
             currentState = state_menu;
             restartGame();
+            return ;
+            //            restartGame();
         }
-
     }
 
 
@@ -475,9 +504,6 @@ Game::Game():
     renderTexture.draw(textLoading);
     renderTexture.display();
 
-
-
-
     renderSprite.setTexture(renderTexture.getTexture());
     numberFinishedPlayers = 0;
     sf::Clock frameClock;
@@ -505,8 +531,6 @@ Game::Game():
     renderTexture.display();
 
     showMenu();
-    //    currentState = state_end_game; //TODO: hacky debug hy
-
 
     // run the main loop
     while (window.isOpen())
@@ -519,8 +543,6 @@ Game::Game():
         float ypos = 240.0f;
         float xgrv = 0.0f;
         float ygrv = 0.0f;
-
-
 
         while (window.pollEvent(event))
         {
@@ -601,9 +623,53 @@ Game::Game():
 
 void Game::update(sf::Time frameTime) {
     runningCounter += frameTime.asSeconds();
+
+    cpuTimeThinking -= frameTime.asSeconds();
+
+    if (currentState==state_roll_dice)
+    {
+        if ((cpuTimeThinking<0) && (players[turn].human==false))
+        {
+            cpuTimeThinking = 1;
+            throwDiceMove();
+        }
+    }
+
     if (currentState==state_game)
     {
         std::array<int,2> currentMovements = players[turn].getMovements(diceResultPlayer);
+
+        if ((cpuTimeThinking<0) &&  (players[turn].human==false))
+        {
+            std::vector<int> listRandomPos;
+
+
+
+            if (currentMovements[0]>-1) {
+                listRandomPos.push_back(currentMovements[0]);
+
+            }
+            if (currentMovements[1]>-1) {
+                listRandomPos.push_back(currentMovements[1]);
+
+            }
+
+            unsigned int sizeRndPos = listRandomPos.size();
+            if (sizeRndPos==0) {
+
+            } else if  (sizeRndPos==1) {
+                playerMakeMove(listRandomPos[0]);
+
+            } else if (sizeRndPos==2) {
+                int randPos = rand() % 2;
+                playerMakeMove(listRandomPos[randPos]);
+            }
+
+        }
+
+
+
+
         if (currentMovements[0]>-1)
         {
             prevRotateElem.spriteRotate.setPosition(players[turn].characters[0].leftChar.getPosition());
@@ -668,8 +734,8 @@ void Game::nextRound() {
         currentSeason++;
     if (currentSeason>3)
         currentSeason=0;
-//    if (players[turn].done==true)
-//        nextPlayer();
+    //    if (players[turn].done==true)
+    //        nextPlayer();
 
     launchNextPlayer();
 }
@@ -705,12 +771,12 @@ void Game::nextPlayer(){
     turn++;
 
 
-//    if (players[turn].done==true)
-//    {
-//        //        std::cout << "Player " << turn << " is done" << std::endl;
-//        nextPlayer();
-//        return;
-//    }
+    //    if (players[turn].done==true)
+    //    {
+    //        //        std::cout << "Player " << turn << " is done" << std::endl;
+    //        nextPlayer();
+    //        return;
+    //    }
 
 
 
@@ -791,6 +857,9 @@ void Game::launchNextPlayer(){
     roundDice.setColor(turn);
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
+
+    cpuTimeThinking = 1;
+
 }
 
 void Game::drawPlayersGui(){
@@ -902,6 +971,13 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
+    } else if (currentState==state_setup_players) {
+        renderTexture.setView(viewFull);
+        renderTexture.draw(spriteDeerGod);
+        for (int i=0;i<4;i++)
+        {
+            renderTexture.draw(players[i].spriteAI);
+        }
     } else if (currentState==state_gui_elem) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 2);
@@ -914,8 +990,8 @@ void Game::render(float deltaTime)
     }  else if (currentState==state_menu) {
         shaderBlur.setParameter("blur_radius", 15);
         renderTexture.draw(menuBackground);
-//        renderTexture.draw(menuTxt, &shaderBlur);
-//        renderTexture.draw(menuTxt);
+        //        renderTexture.draw(menuTxt, &shaderBlur);
+        //        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
@@ -944,10 +1020,10 @@ void Game::render(float deltaTime)
         renderTexture.draw(spriteLestBegin,&shaderBlur);
         renderTexture.draw(endGameTxt);
 
-//        for (int i=0;i<4;i++){
-//            if (players[i].reachedPortal)
-//                renderTexture.draw(endGameTxtAmount[i]);
-//        }
+        //        for (int i=0;i<4;i++){
+        //            if (players[i].reachedPortal)
+        //                renderTexture.draw(endGameTxtAmount[i]);
+        //        }
 
         renderTexture.draw(txtWinner);
         renderTexture.draw(txtSurvivorsLabel);

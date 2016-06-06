@@ -84,6 +84,17 @@ TextureHolder::TextureHolder()
     if (!textureLetsBegin.loadFromFile("assets/img/letsbegin.png"))
         std::exit(1);
 
+
+    if (!textureButtonCpu.loadFromFile("assets/img/button-cpu.png"))
+        std::exit(1);
+
+    if (!textureButtonHuman.loadFromFile("assets/img/button-human.png"))
+        std::exit(1);
+
+    if (!textureDeerGod.loadFromFile("assets/img/deer-god.png"))
+        std::exit(1);
+
+
     int defaultArray[5][8] = {
         //Cash   Food    Energy  Faith
         {10, 2,  0,  0,  0,  0,  0,  0}, // base

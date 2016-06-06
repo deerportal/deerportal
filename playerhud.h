@@ -14,11 +14,11 @@
 
 
 
-class PlayerHud : public sf::Drawable, public sf::Transformable
+class Player : public sf::Drawable, public sf::Transformable
 {
 public:
-    PlayerHud();
-    PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos);
+    Player();
+    Player(TextureHolder *textures,  sf::Font *gameFont, int pos);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     std::set<int> getNeighbours();
     int pos;
@@ -53,6 +53,16 @@ public:
     bool reachedPortal;
     bool reachedPortalFirst;
 
+    bool human;
+
+    sf::Sprite spriteAI;
+    void setSpriteAI();
+
+    void setHuman(bool newHuman);
+
+    int number;
+
+    void swapHuman();
 private:
 //    sf::Sprite spriteFace;
     sf::Text txtCash;
@@ -69,6 +79,8 @@ private:
     sf::Sprite symbol;
 
     std::set<int> getTerrainSet();
+
+
 
 };
 

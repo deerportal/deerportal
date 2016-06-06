@@ -4,7 +4,7 @@
 
 
 
-std::set<int> PlayerHud::getTerrainSet(){
+std::set<int> Player::getTerrainSet(){
     std::set<int> terrain;
     for (int i: efc::terrainArray)
     {
@@ -13,7 +13,7 @@ std::set<int> PlayerHud::getTerrainSet(){
     return terrain;
 
 }
-std::set<int> PlayerHud::getBusy(){
+std::set<int> Player::getBusy(){
 
     std::set<int> busyTiles;
     for (std::pair<int, efc::BoardElem> i: elems.items_map)
@@ -24,55 +24,38 @@ std::set<int> PlayerHud::getBusy(){
     return busyTiles;
 }
 
-std::set<int> PlayerHud::getNeighbours(){
+std::set<int> Player::getNeighbours(){
     std::set<int> neighbours;
     for (std::pair<int, efc::BoardElem> i: elems.items_map)
     {
         std::set<int> terrain = getTerrainSet();
-
         std::set<int>  neighboursVector(efc::getNeighbours(i.second.pos));
         for (int j: neighboursVector)
         {
             if ((elems.items_map.count(j) == 0) && (terrain.count(j)==0))
             {
-                //                std::cout << j << " " << terrain.count(j) << std::endl;
                 neighbours.insert(j);
             }
         }
     }
 
-    //    // Fill in s1 and s2 with values
-    //    std::set<int> result;
-    //    std::set_difference(neighbours.begin(), neighbours.end(), terrain.begin(), terrain.end(),
-    //                        std::inserter(result, result.end()));
-
-
-    //    for (int i: result)
-    //    {
-    //        std::cout << i << std::endl;
-    //    }
     return neighbours;
 }
 
-void PlayerHud::updateTxt(){
+void Player::updateTxt(){
     txtCash.setString(std::to_string(cash));
-    //    txtFood.setString(  "Food: " + std::to_string(food));
-    //    txtEnergy.setString("Enrg: " + std::to_string(energy));
-    //    txtFaith.setString( "Gods: " + std::to_string(faith));
-
 }
 
 
-void PlayerHud::updatePlayer(){
-
+void Player::updatePlayer(){
     updateTxt();
-
 }
 
-PlayerHud::PlayerHud():
+Player::Player():
     frozenLeft(0),
     reachedPortal(false),
-    reachedPortalFirst(false)
+    reachedPortalFirst(false),
+    human(false)
 {
     pos = 0;
     cash = 0;
@@ -83,21 +66,11 @@ PlayerHud::PlayerHud():
     done = false;
     tileSize = 0;
     textures = nullptr;
-
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::pos' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::cash' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::energy' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::food' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::faith' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::active' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::done' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::faceSize' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::tileSize' is not initialized in the constructor.
-//    unchanged	playerhud.cpp	72	warning	uninitMemberVar	false	Member variable 'PlayerHud::textures' is not initialized in the constructor.
-
+    number = 0;
+//    setSpriteAI();
 }
 
-void PlayerHud::setActive(bool newState){
+void Player::setActive(bool newState){
     active = newState;
     elems.active = newState;
     for (auto&& i: characters)
@@ -107,12 +80,13 @@ void PlayerHud::setActive(bool newState){
     }
 }
 
-PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos):
+Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
     reachedPortal(false),
-    reachedPortalFirst(false)
+    reachedPortalFirst(false),
+    human(false)
 
 {
-
+    number = playerNumber;
 
     frozenLeft = 0;
     done = false;
@@ -120,7 +94,7 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos):
     active = false;
     this->textures = textures;
 //    Character character(this->textures, pos);
-    characters.push_back(Character (this->textures, pos));
+    characters.push_back(Character (this->textures, playerNumber));
 //    efc::BoardElem startElem(textures, efc::startPlayers[pos],444);
 //    startElem.setColor(efc::playersColors[pos]);
 
@@ -128,7 +102,7 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos):
 //    elems.items_map.insert({efc::startPlayers[pos], startElem});
 //    this->faceSize = faceSize;
 //    spriteFace.setTexture(textures->textureFaces);
-    this->pos = pos;
+    this->pos = playerNumber;
 
 
 //    symbol.setTexture(this->textures->textureSymbols);
@@ -157,7 +131,7 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos):
     txtNextRound.setFont(*gameFont);
     txtNextRound.setString("End Turn");
     txtNextRound.setCharacterSize(12);
-    txtNextRound.setPosition(40,(pos*100)+10);
+    txtNextRound.setPosition(40,(playerNumber*100)+10);
 
 
     int posX1 = 82;
@@ -172,12 +146,14 @@ PlayerHud::PlayerHud(TextureHolder *textures,  sf::Font *gameFont, int pos):
         }
     };
 
-    txtCash.setPosition(textPos[pos][0],textPos[pos][1] );
+    txtCash.setPosition(textPos[playerNumber][0],textPos[playerNumber][1] );
     buttons.insert({"end_turn",rectangle});
+
+    setSpriteAI();
 
 }
 
-std::string PlayerHud::getElem(sf::Vector2f mousePosition) {
+std::string Player::getElem(sf::Vector2f mousePosition) {
     std::string result = "";
     sf::Vector2f hoverPos = getPosition();
     for (std::pair<std::string, sf::RectangleShape> i: buttons)
@@ -197,19 +173,19 @@ std::string PlayerHud::getElem(sf::Vector2f mousePosition) {
     return result;
 }
 
-void PlayerHud::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
     target.draw(txtCash, states);
 }
-void PlayerHud::play()
+void Player::play()
 {
     for (auto&& i: characters)
     {
         i.play();
     }
 }
-void PlayerHud::update(sf::Time deltaTime)
+void Player::update(sf::Time deltaTime)
 {
     updateTxt();
     if (frozenLeft==0)
@@ -232,19 +208,58 @@ void PlayerHud::update(sf::Time deltaTime)
     }
 }
 
-std::array<int,2> PlayerHud::getMovements(int diceResult)
+std::array<int,2> Player::getMovements(int diceResult)
 {
     return characters[0].getMovements(diceResult);
 }
 
-void PlayerHud::setFigurePos(int pos)
+void Player::setFigurePos(int pos)
 {
     characters[0].setBoardPosition(pos);
 }
 
-void PlayerHud::restartPlayer(){
+void Player::restartPlayer(){
     food = 0;
     cash = 0;
     energy = 0;
     faith = 0;
+}
+
+void Player::setHuman(bool newHuman)
+{
+    human = newHuman;
+    setSpriteAI();
+}
+
+void Player::swapHuman()
+{
+    if (human)
+    {
+        setHuman(false);
+        return;
+    }  else {
+        setHuman(true);
+        return;
+    }
+}
+
+void Player::setSpriteAI()
+{
+    if (human)
+        spriteAI.setTexture(textures->textureButtonHuman);
+    else
+        spriteAI.setTexture(textures->textureButtonCpu);
+
+
+    std::array<std::array<int,2>,4> spriteHumanPos =
+    {
+        {
+            {{220,450}}, {{1050,450}},
+            {{140,600}}, {{1110, 600}}
+        }
+    };
+
+    sf::Vector2f spriteHumanPosNew(spriteHumanPos[number][0],spriteHumanPos[number][1]);
+    spriteAI.setPosition(spriteHumanPosNew);
+
 }
