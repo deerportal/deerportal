@@ -18,8 +18,6 @@ License for the audio: https://creativecommons.org/licenses/by/4.0/
 Extra audio and gfx
 -------------------
 
-* *Dices* https://www.freesound.org/people/qubodup/sounds/189321/ by qubodup
-
 * *Collect Done* https://www.freesound.org/people/suntemple/sounds/241809/ by suntemple
 
 * *Collected Item* https://www.freesound.org/people/limetoe/sounds/238855/ limetoe
