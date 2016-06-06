@@ -10,8 +10,8 @@
 class RoundDice
 {
 public:
-    explicit RoundDice(PlayerHud (&players)[4]);
-    PlayerHud *playersHud;
+    explicit RoundDice(Player (&players)[4]);
+    Player *playersHud;
 
 
     std::string drawRound();

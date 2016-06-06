@@ -73,23 +73,13 @@ void Game::setTxtEndGameAmount(){
     for (int i=0;i<4;i++)
     {
 
-
-//        std::string label = elementName+ " " + std::to_string(players[playerNumber].cash);
-//        endGameTxtAmount[i].setString(label);
-//        sf::FloatRect ss = endGameTxtAmount[i].getLocalBounds();
-//        endGameTxtAmount[i].setPosition((width/2)-(ss.width/2),separator+(i*separator)+startHeight);
-
         int playerNumber = resultsVector[i].playerNumber;
         std::string elementName = elementNames[playerNumber];
         sf::Text tmpText;
         tmpText.setFont(gameFont);
         tmpText.setCharacterSize(25);
         tmpText.setString(elementName+ " " + std::to_string(players[playerNumber].cash));
-
-
         sf::FloatRect rectTxt = tmpText.getLocalBounds();
-
-
 
         if (players[playerNumber].reachedPortal==true)
         {
@@ -192,10 +182,10 @@ void Game::initBoard()
 void Game::restartGame()
 {
 
-    PlayerHud playerHud1(&textures, &gameFont,0);
-    PlayerHud playerHud2(&textures, &gameFont,1);
-    PlayerHud playerHud3(&textures, &gameFont,2);
-    PlayerHud playerHud4(&textures, &gameFont,3);
+    Player playerHud1(&textures, &gameFont,0);
+    Player playerHud2(&textures, &gameFont,1);
+    Player playerHud3(&textures, &gameFont,2);
+    Player playerHud4(&textures, &gameFont,3);
     players[0] = playerHud1;
     players[1] = playerHud2;
     players[3] = playerHud3;
@@ -334,6 +324,45 @@ void Game::endGame()
     //    musicBackground.stop();
 }
 
+void Game::throwDiceMove() {
+    // Throw a dice action
+    diceResultPlayer = roundDice.throwDiceSix();
+    players[turn].characters[0].diceResult=diceResultPlayer;
+    currentState = state_game;
+    bubble.state = BubbleState::MOVE;
+    nextRotateElem.reset();
+    prevRotateElem.reset();
+}
+/*!
+ * \brief Game::playerMakeMove move the player into the position on the map
+ * \param mousePos
+ */
+void Game::playerMakeMove(int mousePos) {
+    players[turn].setFigurePos(mousePos);
+    commandManager.processField(mousePos);
+    const int *possibleExit = std::find(std::begin(efc::endPlayers),
+                                        std::end(efc::endPlayers), mousePos);
+    if (possibleExit != efc::endPlayers+4) {
+        players[turn].done=true;
+        players[turn].reachedPortal=true;
+        commandManager.removeAllItems(turn);
+        if (numberFinishedPlayers == 0)
+        {
+            players[turn].reachedPortalFirst=true;
+            startDeerMode();
+        }
+
+        numberFinishedPlayers += 1;
+        if (numberFinishedPlayers > 3)
+        {
+            endGame();
+            return;
+        }
+    }
+    nextPlayer();
+    return;
+}
+
 /*!
  * \brief Game::handleLeftClick
  * \param pos
@@ -346,59 +375,25 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         std::array<int,2> movements = players[turn].getMovements(diceResultPlayer);
         if ((mousePos==movements[0]) || (mousePos==movements[1]))
         {
-            players[turn].setFigurePos(mousePos);
-            commandManager.processField(mousePos);
-            const int *possibleExit = std::find(std::begin(efc::endPlayers),
-                                                std::end(efc::endPlayers), mousePos);
-            if (possibleExit != efc::endPlayers+4) {
-                players[turn].done=true;
-                players[turn].reachedPortal=true;
-                commandManager.removeAllItems(turn);
-                if (numberFinishedPlayers == 0)
-                {
-                    players[turn].reachedPortalFirst=true;
-                    startDeerMode();
-                }
-
-                numberFinishedPlayers += 1;
-                if (numberFinishedPlayers > 3)
-                {
-                    endGame();
-                    return;
-                }
-            } else {
-                //               std::cerr << "Not found" << std::endl;
-            }
-            nextPlayer();
-            return;
+            playerMakeMove(mousePos);
         }
-        //        std::string resultCommand = players[turn].getElem(posGui);
-        //        command(resultCommand);
-        //        commandManager.processGui(posGui);
     }
+
     else if (currentState==state_roll_dice)
     {
         sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
         if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
         {
-            diceResultPlayer = roundDice.throwDiceSix();
-            players[turn].characters[0].diceResult=diceResultPlayer;
-            currentState = state_game;
-            bubble.state = BubbleState::MOVE;
-            nextRotateElem.reset();
-            prevRotateElem.reset();
+            throwDiceMove();
         }
     }
 
     if (currentState==state_menu)
     {
         downTimeCounter = 0;
-        //        std::cout << " AA " <<downTimeCounter << std::endl;
         hideMenu();
         showGameBoard();
     }
-
-
 
     if (currentState==state_gui_end_round)
     {
@@ -412,7 +407,6 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         {
             currentState = state_roll_dice;
         }
-
     }
 
     if (currentState==state_end_game)
@@ -422,7 +416,6 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
             currentState = state_menu;
             restartGame();
         }
-
     }
 
 
@@ -475,9 +468,6 @@ Game::Game():
     renderTexture.draw(textLoading);
     renderTexture.display();
 
-
-
-
     renderSprite.setTexture(renderTexture.getTexture());
     numberFinishedPlayers = 0;
     sf::Clock frameClock;
@@ -505,8 +495,6 @@ Game::Game():
     renderTexture.display();
 
     showMenu();
-    //    currentState = state_end_game; //TODO: hacky debug hy
-
 
     // run the main loop
     while (window.isOpen())
@@ -519,8 +507,6 @@ Game::Game():
         float ypos = 240.0f;
         float xgrv = 0.0f;
         float ygrv = 0.0f;
-
-
 
         while (window.pollEvent(event))
         {

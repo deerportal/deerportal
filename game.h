@@ -63,7 +63,7 @@ public:
     sf::RenderWindow window;
     sf::RenderTexture renderTexture;
     sf::Sprite renderSprite;
-    PlayerHud players[4];
+    Player players[4];
     SoundFX sfx;
     int turn;
 
@@ -189,6 +189,8 @@ public:
     std::vector<sf::Text> txtLoosers;
 
 
+    void throwDiceMove();
+    void playerMakeMove(int mousePos);
 private:
     Bubble bubble;
     int deerModeCounter;

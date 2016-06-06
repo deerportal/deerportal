@@ -1,6 +1,6 @@
 #include "rounddice.h"
 
-RoundDice::RoundDice(PlayerHud (&players)[4])
+RoundDice::RoundDice(Player (&players)[4])
 {
     playersHud = players;
     diceResult = 1;
