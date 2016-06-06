@@ -14,6 +14,8 @@ One of the authors of the game, during his buddhist journey trough Japan has vis
 
 Transform yourself into a **Deer Lesser God** by reaching the **Hoof Portal** and collecting most diamonds.
 
+![DeerPortal MultiPlayer Mode](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_771.png/@@images/image.png)
+
 ##Game setup
 
 A gameboard is split into four areas, each under control of one of the classical element.
