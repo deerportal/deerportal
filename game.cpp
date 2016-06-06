@@ -908,7 +908,7 @@ void Game::drawBaseGame()
     {
         spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
         shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.5f)/4);
-        renderTexture.draw(roundDice.spriteDice, &shaderBlur);
+        renderTexture.draw(roundDice.spriteDice);
     }
     else
         renderTexture.draw(roundDice.spriteDice);

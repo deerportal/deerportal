@@ -5,6 +5,8 @@ deerportal (0.6.0-betaubuntu1) trusty; urgency=low
   * Fixed sorting order
   * Simply AI - playing with computer
   * New graphics - Deer God and rendered title screen
+  * New dice - from Katia
+  * Updated background
 
  -- Rafal Zawadzki <bluszcz@devcarpet.net>  Mon, 06 Jun 2016 23:44:00 +0200
 
