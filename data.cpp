@@ -1,5 +1,5 @@
 #include <data.h>
-
+#include <array>
 namespace efc {
 
 std::string seasonsNames[4] = {"winter", "spring", "summer", "fall"};

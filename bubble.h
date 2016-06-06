@@ -1,6 +1,6 @@
 #ifndef BUBBLE_H
 #define BUBBLE_H
-
+#include <array>
 #include <SFML/Graphics.hpp>
 
 enum BubbleState {DICE=0, MOVE=1};

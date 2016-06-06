@@ -1,5 +1,5 @@
 #include "bubble.h"
-
+#include <cmath>
 Bubble::Bubble():
     state(BubbleState::DICE),
     timeCounter(0),
