@@ -242,6 +242,8 @@ void Game::loadAssets()
     menuBackground.setTexture(textures.textureMenu);
 
 
+    spriteDeerGod.setTexture(textures.textureDeerGod);
+
     if (!shaderBlur.loadFromFile("assets/shaders/blur.frag", sf::Shader::Fragment))
         std::exit(1);
 
@@ -313,7 +315,8 @@ void Game::showGameBoard()
     musicGame.setLoop(true);
     sfx.playLetsBegin();
     //    std::cout << "lets begin" << std::endl;
-    currentState = state_lets_begin;
+    currentState = state_setup_players;
+//    currentState = state_lets_begin;
 }
 
 void Game::endGame()
@@ -382,6 +385,37 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
             }
         }
+    }
+
+
+    if (currentState==state_setup_players)
+    {
+        std::array<std::array<int,2>,4> spriteHumanPos =
+        {
+            {
+                {{220,450}}, {{1050,450}},
+                {{140,600}}, {{1110, 600}}
+            }
+        };
+
+
+
+        for (int i=0;i<4;i++)
+        {
+            sf::IntRect spriteHumanRect(players[i].spriteAI.getGlobalBounds());
+            if (spriteHumanRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+
+            {
+                players[i].swapHuman();
+            }
+        }
+
+        sf::IntRect startGameRect(580,640,180,80);
+        if (startGameRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+        {
+            currentState=state_roll_dice;
+        }
+
     }
 
     else if (currentState==state_roll_dice)
@@ -945,6 +979,13 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
+    } else if (currentState==state_setup_players) {
+        renderTexture.setView(viewFull);
+        renderTexture.draw(spriteDeerGod);
+        for (int i=0;i<4;i++)
+        {
+                renderTexture.draw(players[i].spriteAI);
+        }
     } else if (currentState==state_gui_elem) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 2);

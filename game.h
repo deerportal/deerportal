@@ -81,6 +81,7 @@ private:
     enum states {
         state_init,
         state_menu,
+        state_setup_players,
         state_lets_begin,
         state_roll_dice,
         state_game,
@@ -93,6 +94,7 @@ private:
     };
     states currentState;
 
+    sf::Sprite spriteDeerGod;
     sf::Sprite spriteBackgroundDark;
     sf::Sprite spriteLestBegin;
     sf::Texture textureBackgroundArt;

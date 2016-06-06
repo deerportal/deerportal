@@ -66,6 +66,8 @@ Player::Player():
     done = false;
     tileSize = 0;
     textures = nullptr;
+    number = 0;
+//    setSpriteAI();
 }
 
 void Player::setActive(bool newState){
@@ -78,12 +80,13 @@ void Player::setActive(bool newState){
     }
 }
 
-Player::Player(TextureHolder *textures,  sf::Font *gameFont, int pos):
+Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
     reachedPortal(false),
-    reachedPortalFirst(false)
+    reachedPortalFirst(false),
+    human(false)
 
 {
-
+    number = playerNumber;
 
     frozenLeft = 0;
     done = false;
@@ -91,7 +94,7 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int pos):
     active = false;
     this->textures = textures;
 //    Character character(this->textures, pos);
-    characters.push_back(Character (this->textures, pos));
+    characters.push_back(Character (this->textures, playerNumber));
 //    efc::BoardElem startElem(textures, efc::startPlayers[pos],444);
 //    startElem.setColor(efc::playersColors[pos]);
 
@@ -99,7 +102,7 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int pos):
 //    elems.items_map.insert({efc::startPlayers[pos], startElem});
 //    this->faceSize = faceSize;
 //    spriteFace.setTexture(textures->textureFaces);
-    this->pos = pos;
+    this->pos = playerNumber;
 
 
 //    symbol.setTexture(this->textures->textureSymbols);
@@ -128,7 +131,7 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int pos):
     txtNextRound.setFont(*gameFont);
     txtNextRound.setString("End Turn");
     txtNextRound.setCharacterSize(12);
-    txtNextRound.setPosition(40,(pos*100)+10);
+    txtNextRound.setPosition(40,(playerNumber*100)+10);
 
 
     int posX1 = 82;
@@ -143,8 +146,10 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int pos):
         }
     };
 
-    txtCash.setPosition(textPos[pos][0],textPos[pos][1] );
+    txtCash.setPosition(textPos[playerNumber][0],textPos[playerNumber][1] );
     buttons.insert({"end_turn",rectangle});
+
+    setSpriteAI();
 
 }
 
@@ -218,4 +223,43 @@ void Player::restartPlayer(){
     cash = 0;
     energy = 0;
     faith = 0;
+}
+
+void Player::setHuman(bool newHuman)
+{
+    human = newHuman;
+    setSpriteAI();
+}
+
+void Player::swapHuman()
+{
+    if (human)
+    {
+        setHuman(false);
+        return;
+    }  else {
+        setHuman(true);
+        return;
+    }
+}
+
+void Player::setSpriteAI()
+{
+    if (human)
+        spriteAI.setTexture(textures->textureButtonHuman);
+    else
+        spriteAI.setTexture(textures->textureButtonCpu);
+
+
+    std::array<std::array<int,2>,4> spriteHumanPos =
+    {
+        {
+            {{220,450}}, {{1050,450}},
+            {{140,600}}, {{1110, 600}}
+        }
+    };
+
+    sf::Vector2f spriteHumanPosNew(spriteHumanPos[number][0],spriteHumanPos[number][1]);
+    spriteAI.setPosition(spriteHumanPosNew);
+
 }

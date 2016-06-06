@@ -55,6 +55,14 @@ public:
 
     bool human;
 
+    sf::Sprite spriteAI;
+    void setSpriteAI();
+
+    void setHuman(bool newHuman);
+
+    int number;
+
+    void swapHuman();
 private:
 //    sf::Sprite spriteFace;
     sf::Text txtCash;
@@ -71,6 +79,8 @@ private:
     sf::Sprite symbol;
 
     std::set<int> getTerrainSet();
+
+
 
 };
 
