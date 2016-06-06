@@ -4,3 +4,8 @@ enfucraft.pro.user
 Makefile
 docs/
 pagan_board.pro.user
+*.swo
+*.swp
+*.Release
+*.Debug
+*.debhelper.log
