@@ -1,26 +1,24 @@
-= **Deer Portal** =
+#Deer Portal
 
-= Introduction =
-
-[[image:icon.png]]
+##Introduction
 
 A computer multiplayer board game driven by the four classical elements. For 0-4 players. Game takes place in an ancient world where Almighty Deer God is protecting all the compassionate creatures.
 
-**Disclaimer: **Both, manual and a game are under active development, in first place manual may not reflects all features available in the game yet
+*Disclaimer*: Both, manual and a game are under active development, in first place manual may not reflects all features available in the game yet
 
-=== History of the game ===
+###History of the game
 
 One of the authors of the game, during his buddhist journey trough Japan has visited a "deer temple", (% style="color: inherit; font-family: inherit; font-size: inherit; line-height: 1.428571429; background-color: inherit;" %)Tōdai-ji in Nara. After spending several nights there, he left a place with a mission - to deliver this game to spread the word about the Deer.
 
-== Goal of the game ==
+##Goal of the game
 
 Transform yourself into a **Deer Lesser God** by reaching the **Hoof Portal **and collecting most diamonds**.**
 
-== Game setup ==
+##Game setup
 
 A gameboard is split into four areas, each under control of one of the classical element.
 
-=== Classical elements ===
+###Classical elements
 
 * Water (blue) 
 * Earth (green)
@@ -28,7 +26,7 @@ A gameboard is split into four areas, each under control of one of the classical
 * Air (yellow)
 
 
-=== Players ===
+###Players
 
 There are four players, each one being leaded / mentored by one of the classical element. They are able to:
 
