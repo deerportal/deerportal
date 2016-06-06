@@ -47,10 +47,19 @@ In our [releases](https://github.com/deerportal/deerportal/releases) section we 
 Ubuntu apt repo
 ---------------
 
-If you want to have an easy installation via system apt, add one of the folowing (depends on your distro) to your /etc/apt/sources.list
+If you want to have an easy installation via system apt, add one of the folowing (depends on your distro) to your /etc/apt/sources.list, if you have Trusty 14.04
 ```
 deb http://deb.devcarpet.net/ubuntu trusty main
+```
+or for Xenial 16.04
+```
 deb http://deb.devcarpet.net/ubuntu xenial main
+```
+
+and later:
+```
+sudo apt-get update
+sudo apt-get install deerportal
 ```
 
 Development windows builds
