@@ -86,7 +86,7 @@ There can be only one winner, a player having highest number of the collected di
 ##Credits
 
 
-* **bluszcz: **game design, code, audio
-* **ukata: **game design, visual art
+* **bluszcz**: game design, code, audio
+* **ukata**: game design, visual art
 
  
