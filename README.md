@@ -28,8 +28,7 @@ Installation
 ------------
 ------------
 
-Ubuntu Trusty
--------------
+#### Ubuntu Trusty - Xenial
 
 ```
 $ sudo apt-get install libsfml-devl
@@ -41,8 +40,7 @@ $ make install
 $ ../build_release_pagan_board/pagan_board
 ```
 
-Mac OSX
---------
+#### Mac OSX
 
 You should have first installed SFML with dependencies: http://www.sfml-dev.org/tutorials/2.3/start-osx.php, thank you can do following:
 
