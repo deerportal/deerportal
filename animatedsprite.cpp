@@ -25,6 +25,7 @@
 // further modificated. Thank you Foaly.
 
 #include "animatedsprite.h"
+#include <cmath>
 
 AnimatedSprite::AnimatedSprite(sf::Time frameTime, bool paused, bool looped) :
     m_animation(NULL), m_frameTime(frameTime), m_currentFrame(0), m_isPaused(paused), m_isLooped(looped), m_texture(NULL)
@@ -96,8 +97,8 @@ sf::FloatRect AnimatedSprite::getLocalBounds() const
 {
     sf::IntRect rect = m_animation->getFrame(m_currentFrame);
 
-    float width = static_cast<float>(std::abs(rect.width));
-    float height = static_cast<float>(std::abs(rect.height));
+    float width = static_cast<float>(std::fabs(rect.width));
+    float height = static_cast<float>(std::fabs(rect.height));
 
     return sf::FloatRect(0.f, 0.f, width, height);
 }
