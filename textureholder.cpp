@@ -94,6 +94,8 @@ TextureHolder::TextureHolder()
     if (!textureDeerGod.loadFromFile("assets/img/deer-god.png"))
         std::exit(1);
 
+    if (!textureBigDiamond.loadFromFile("assets/img/diamond-big.png"))
+        std::exit(1);
 
     int defaultArray[5][8] = {
         //Cash   Food    Energy  Faith

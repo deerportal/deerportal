@@ -197,6 +197,9 @@ public:
     float cpuTimeThinking;
     Banner banner;
 
+    sf::Sprite spriteBigDiamond;
+    bool bigDiamondActive;
+
 private:
     Bubble bubble;
     int deerModeCounter;

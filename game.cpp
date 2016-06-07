@@ -131,6 +131,8 @@ void Game::initBoard()
     groupHud.setRoundName(roundNumber);
 
     cardsDeck.setFonts(&gameFont);
+    spriteBigDiamond.setTexture(textures.textureBigDiamond);
+    spriteBigDiamond.setPosition(474,342);
     restartGame();
     launchNextPlayer();
 
@@ -353,6 +355,10 @@ void Game::playerMakeMove(int mousePos) {
         if (numberFinishedPlayers == 0)
         {
             players[turn].reachedPortalFirst=true;
+            int turnover =  (rand() %  2)+5;
+
+            players[turn].cash += turnover;
+            players[turn].updatePlayer();
             startDeerMode();
         }
 
@@ -401,6 +407,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         sf::IntRect startGameRect(580,640,180,80);
         if (startGameRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
         {
+            bigDiamondActive = true;
             banner.setText("start game");
             currentState=state_roll_dice;
             launchNextPlayer();
@@ -481,7 +488,8 @@ Game::Game():
     cardsDeck(&textures, &menuFont,&commandManager),
     deerModeCounter(4),
     deerModeActive(false),
-    banner(&gameFont)
+    banner(&gameFont),
+    bigDiamondActive(false)
 {
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
@@ -1039,8 +1047,12 @@ void Game::render(float deltaTime)
         }
 
     }
+    if (bigDiamondActive)
+        renderTexture.draw(spriteBigDiamond);
     if (banner.active)
         renderTexture.draw(banner);
+
+
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
@@ -1078,6 +1090,7 @@ void Game::startDeerMode() {
     deerModeActive = true;
     deerModeCounter = 16;
     banner.setText("deer mode");
+    bigDiamondActive = false;
 
 }
 }
