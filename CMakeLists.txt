@@ -7,6 +7,7 @@ find_package(SFML 2.1 COMPONENTS graphics window audio system REQUIRED)
 set(SOURCES
 	animatedsprite.cpp
 	animation.cpp
+        banner.cpp
 	boarddiamond.cpp
 	boarddiamondseq.cpp
 	boardelem.cpp

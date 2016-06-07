@@ -401,6 +401,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         sf::IntRect startGameRect(580,640,180,80);
         if (startGameRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
         {
+            banner.setText("start game");
             currentState=state_roll_dice;
             launchNextPlayer();
             return;
@@ -479,7 +480,8 @@ Game::Game():
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
     deerModeCounter(4),
-    deerModeActive(false)
+    deerModeActive(false),
+    banner(&gameFont)
 {
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
@@ -622,6 +624,7 @@ Game::Game():
 }
 
 void Game::update(sf::Time frameTime) {
+    banner.update(frameTime);
     runningCounter += frameTime.asSeconds();
 
     cpuTimeThinking -= frameTime.asSeconds();
@@ -1036,6 +1039,8 @@ void Game::render(float deltaTime)
         }
 
     }
+    if (banner.active)
+        renderTexture.draw(banner);
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
@@ -1072,6 +1077,8 @@ void Game::command(std::string command){
 void Game::startDeerMode() {
     deerModeActive = true;
     deerModeCounter = 16;
+    banner.setText("deer mode");
+
 }
 }
 

@@ -128,7 +128,11 @@ void Command::processField(int pos)
             != std::end(efc::startPlayers);
 
     if ((startField) && (efc::startPlayers[game.turn]==pos))
+    {
+        game.banner.setText("meditation");
+
         game.boardDiamonds.reorder(game.turn);
+    }
 
     if (game.boardDiamonds.ifFieldIsEmpty(pos)==false)
     {
