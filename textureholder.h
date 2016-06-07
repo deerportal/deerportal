@@ -4,7 +4,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "data.h"
-
+#include <array>
 
 namespace efc {
 

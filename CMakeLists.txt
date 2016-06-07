@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 project(deerportal)
 
@@ -41,7 +41,8 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 	set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -static-libgcc -static-libgcc")
 endif()
-
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
 include_directories(${SFML_INCLUDE_DIR})
 add_executable(deerportal ${SOURCES})
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED 11)
 target_link_libraries(deerportal ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})

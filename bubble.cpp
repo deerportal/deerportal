@@ -1,5 +1,7 @@
 #include <cmath>
+#include <array>
 #include "bubble.h"
+
 
 Bubble::Bubble():
     state(BubbleState::DICE),

@@ -1,3 +1,4 @@
+#include <array>
 #include "data.h"
 
 namespace efc {
