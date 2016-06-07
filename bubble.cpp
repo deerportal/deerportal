@@ -1,3 +1,4 @@
+#include <cmath>
 #include "bubble.h"
 
 Bubble::Bubble():
@@ -16,9 +17,6 @@ Bubble::Bubble():
     spritesBubbles[0].setTexture(textureDice);
     spritesBubbles[1].setTexture(textureFootSteps);
 
-//    sprites[0] = spriteDice;
-//    sprites[1] = spriteFootSteps;
-//
 }
 
 void  Bubble::setPosition(float x, float y) {

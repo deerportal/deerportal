@@ -141,8 +141,8 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
     std::array<std::array<int,2>,4> textPos =
     {
         {
-            {{posX1,posY1}}, {posX2,posY1},
-            {{posX1,posY2}}, {posX2, posY2}
+            {{posX1,posY1}}, {{posX2,posY1}},
+            {{posX1,posY2}}, {{posX2, posY2}}
         }
     };
 

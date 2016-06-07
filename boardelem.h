@@ -18,16 +18,6 @@ public:
     int type;
 
     sf::Texture* textureTiles;
-private:
-
-//    const sf::Texture* textureElem;
-    static const sf::Texture& textureElem2;
-
-
-
-
-//    TextureHolder *textures;
-//    TextureHolder myHolder;
 };
 }
 

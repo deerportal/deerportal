@@ -7,7 +7,7 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *comma
     commandManager=command;
     std::array<std::array<int,2>,4> cardsPos = {
         {
-            {1087,95}, {1225, 95}, {1225, 277}, {1087, 277}
+            {{1087,95}}, {{1225, 95}}, {{1225, 277}}, {{1087, 277}}
     }
     };
 
