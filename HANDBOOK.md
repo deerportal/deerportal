@@ -82,7 +82,10 @@ Each player who is active (didn't reach Hoofltar yet, nor is being paused) has t
 * Collects the diamond - if there was one 
 * Meditates - if the field was a starter place for the character
 * Collects the rune and executes the card - if run was on the field
-* Dedicates himself to the Almighty Deer God - finishes the game
+* Moves to the Deer God kingdom - by entering the portal. 
+
+If the player entered portal as the first one - he does start Deer Mode and gets awarded with the few diamonds.
+
 
 
 ##End of the game
