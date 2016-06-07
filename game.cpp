@@ -1,6 +1,7 @@
 #include "game.h"
 #include "particle.h"
 #include "calendar.h"
+#include <algorithm>
 
 
 namespace efc {
@@ -133,6 +134,7 @@ void Game::initBoard()
     cardsDeck.setFonts(&gameFont);
     spriteBigDiamond.setTexture(textures.textureBigDiamond);
     spriteBigDiamond.setPosition(474,342);
+    spriteBigDiamond.setColor(sf::Color (255, 255, 255,196));
     restartGame();
     launchNextPlayer();
 
@@ -316,7 +318,7 @@ void Game::showGameBoard()
     musicGame.play();
     musicGame.setLoop(true);
     sfx.playLetsBegin();
-    //    std::cout << "lets begin" << std::endl;
+
     currentState = state_setup_players;
     //    currentState = state_lets_begin;
 }
@@ -371,6 +373,37 @@ void Game::playerMakeMove(int mousePos) {
     }
     nextPlayer();
     return;
+}
+
+int Game::mostDiamonds()
+{
+
+    std::array<int,4> results = {players[0].cash,players[1].cash,players[2].cash,players[3].cash};
+
+    auto minmax = std::minmax_element(std::begin(results), std::end(results));
+
+    std::cout << "max element " << *(minmax.second) << "\n";
+
+    int maxResult = *(minmax.second);
+
+    int result = 0;
+    int pos = -1;
+    for (int i=0; i<4;i++)
+    {
+        if (players[i].cash == maxResult)
+        {
+            result += 1;
+            pos = i;
+        }
+    };
+
+    if (result==1)
+    {
+        return pos;
+    }
+
+    return -1;
+
 }
 
 /*!
@@ -489,7 +522,9 @@ Game::Game():
     deerModeCounter(4),
     deerModeActive(false),
     banner(&gameFont),
-    bigDiamondActive(false)
+    bigDiamondActive(false),
+    oscilator(-1),
+    oscilatorInc(true)
 {
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
@@ -637,6 +672,26 @@ void Game::update(sf::Time frameTime) {
 
     cpuTimeThinking -= frameTime.asSeconds();
 
+
+    if (oscilatorInc)
+    {
+        oscilator += frameTime.asSeconds();
+    } else {
+        oscilator -= frameTime.asSeconds();
+    }
+
+    if (oscilator<-1)
+        oscilatorInc = true;
+
+    if (oscilator>1)
+        oscilatorInc = false;
+
+
+    float modifier = sin(oscilator/2.5)*30.0f;
+    spriteBigDiamond.setPosition(474,342+modifier);
+
+
+
     if (currentState==state_roll_dice)
     {
         if ((cpuTimeThinking<0) && (players[turn].human==false))
@@ -672,8 +727,25 @@ void Game::update(sf::Time frameTime) {
                 playerMakeMove(listRandomPos[0]);
 
             } else if (sizeRndPos==2) {
-                int randPos = rand() % 2;
-                playerMakeMove(listRandomPos[randPos]);
+
+                if (deerModeActive)
+                {
+                    std::cout<<"goes deermode"<<std::endl;
+                    playerMakeMove(listRandomPos[1]);
+                } else
+                {
+                    if (players[turn].reachPortalMode == true)
+                    {
+                        std::cout<<"goes portal"<<std::endl;
+                        playerMakeMove(listRandomPos[1]);
+                    }
+                    else
+                    {
+                        int randPos = rand() % 2;
+                        std::cout<<"goes collect"<<std::endl;
+                        playerMakeMove(listRandomPos[randPos]);
+                    };
+                }
             }
 
         }
@@ -729,6 +801,8 @@ void Game::update(sf::Time frameTime) {
     }
 
     bubble.update(frameTime);
+
+
 }
 
 /*!
@@ -870,6 +944,13 @@ void Game::launchNextPlayer(){
             players[turn].characters[0].getPosition().y-45);
 
     cpuTimeThinking = 1;
+    if (mostDiamonds()==turn)
+    {
+        players[turn].reachPortalMode = true;
+    } else {
+        players[turn].reachPortalMode = false;
+
+    }
 
 }
 

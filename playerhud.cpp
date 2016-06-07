@@ -55,7 +55,8 @@ Player::Player():
     frozenLeft(0),
     reachedPortal(false),
     reachedPortalFirst(false),
-    human(false)
+    human(false),
+    reachPortalMode(false)
 {
     pos = 0;
     cash = 0;
@@ -67,7 +68,6 @@ Player::Player():
     tileSize = 0;
     textures = nullptr;
     number = 0;
-//    setSpriteAI();
 }
 
 void Player::setActive(bool newState){
@@ -83,8 +83,8 @@ void Player::setActive(bool newState){
 Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
     reachedPortal(false),
     reachedPortalFirst(false),
-    human(false)
-
+    human(false),
+    reachPortalMode(false)
 {
     number = playerNumber;
 
@@ -93,28 +93,9 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
 
     active = false;
     this->textures = textures;
-//    Character character(this->textures, pos);
     characters.push_back(Character (this->textures, playerNumber));
-//    efc::BoardElem startElem(textures, efc::startPlayers[pos],444);
-//    startElem.setColor(efc::playersColors[pos]);
 
-//    elems.items.push_back(startElem);
-//    elems.items_map.insert({efc::startPlayers[pos], startElem});
-//    this->faceSize = faceSize;
-//    spriteFace.setTexture(textures->textureFaces);
     this->pos = playerNumber;
-
-
-//    symbol.setTexture(this->textures->textureSymbols);
-
-
-//    sf::IntRect symbolsRect[4] = {sf::IntRect(0,0,255,255), sf::IntRect(256,0,512,255), sf::IntRect(0,255, 255, 512), sf::IntRect(255,255,512, 512)};
-
-
-//    symbol.setTextureRect(symbolsRect[pos]);
-//    symbol.setScale(sf::Vector2f(0.2f, 0.20f));
-//    symbol.setColor(sf::Color(25, 25, 25, 105));
-//    symbol.setPosition(60, (pos*100)+40);
 
     food = 0;
     cash = 0;
