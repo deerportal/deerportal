@@ -31,7 +31,9 @@ SOURCES += main.cpp \
     cardsdeck.cpp \
     particlesystem.cpp \
     calendar.cpp \
-    bubble.cpp
+    bubble.cpp \
+    banner.cpp
+
 
 #LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = builds/build_release_deerportal_win32
@@ -76,7 +78,8 @@ HEADERS += \
     cardsdeck.h \
     calendar.h \
     particle.h \
-    bubble.cpp
+    bubble.h \
+    banner.h
 
 
 OTHER_FILES += \

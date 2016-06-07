@@ -33,7 +33,9 @@ SOURCES += main.cpp \
     cardsdeck.cpp \
     particlesystem.cpp \
     calendar.cpp \
-    bubble.cpp
+    bubble.cpp \
+    banner.cpp
+
 
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
@@ -87,7 +89,8 @@ HEADERS += \
     cardsdeck.h \
     calendar.h \
     particle.h \
-    bubble.h
+    bubble.h \
+    banner.h
 
 
 

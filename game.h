@@ -30,7 +30,7 @@
 #include "particle.h"
 #include "bubble.h"
 //class Command;
-
+#include "banner.h"
 namespace efc {
 
 extern int initScreenX;
@@ -195,6 +195,7 @@ public:
     void playerMakeMove(int mousePos);
 
     float cpuTimeThinking;
+    Banner banner;
 
 private:
     Bubble bubble;
