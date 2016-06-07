@@ -27,6 +27,7 @@ SFML, Linux, OSX, Windows.
 ## Installation
 ### Compilation
 
+
 #### Ubuntu Trusty - Xenial
 
 ```
@@ -37,6 +38,18 @@ $ qmake -makefile pagan_board.pro
 $ make
 $ make install
 $ ../build_release_pagan_board/pagan_board
+```
+
+#### Debian 
+
+If you would like to see Deer Portal in Debian repositories, there is an opened bug: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=826612 - please help :)
+
+To make deb package locally:
+
+```
+$ git clone https://github.com/deerportal/deerportal.git
+$ cd deerportal
+$ fakeroot debian/rules binary
 ```
 
 #### Mac OSX
