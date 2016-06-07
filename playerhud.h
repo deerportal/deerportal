@@ -63,6 +63,8 @@ public:
     int number;
 
     void swapHuman();
+    bool reachPortalMode;
+
 private:
 //    sf::Sprite spriteFace;
     sf::Text txtCash;
@@ -79,7 +81,6 @@ private:
     sf::Sprite symbol;
 
     std::set<int> getTerrainSet();
-
 
 
 };

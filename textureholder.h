@@ -50,7 +50,7 @@ public:
 
     std::array<std::array<sf::Texture,4>,4>  cardsTextures;
 
-
+    sf::Texture textureBigDiamond;
 
 };
 

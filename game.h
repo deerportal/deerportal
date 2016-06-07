@@ -75,6 +75,8 @@ private:
     void drawSquares();
     void drawMenu();
     float runningCounter;
+    float oscilator;
+    bool oscilatorInc;
     sf::Sprite playersSprites[4]  ;
     int playersSpritesCords[4][2];
 
@@ -196,6 +198,11 @@ public:
 
     float cpuTimeThinking;
     Banner banner;
+
+    sf::Sprite spriteBigDiamond;
+    bool bigDiamondActive;
+
+    int mostDiamonds();
 
 private:
     Bubble bubble;
