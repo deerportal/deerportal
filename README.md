@@ -42,6 +42,19 @@ $ make install
 $ ../build_release_pagan_board/pagan_board
 ```
 
+Mac OSX
+--------
+
+You should have first installed SFML with dependencies: http://www.sfml-dev.org/tutorials/2.3/start-osx.php, thank you can do following:
+
+```
+$ git clone https://github.com/deerportal/deerportal.git
+$ cd deerportal
+$ cmake .
+$ make
+$ ./deerportal
+```
+
 Download
 --------
 
