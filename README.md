@@ -99,3 +99,5 @@ Following doxygen api docs has been created using our Jenkins based Continous In
 * https://devcarpet.net/deerportal/downloads/docs/html/
 
 **Developed with [Devcarpet](https://devcarpet.net) platform.**
+
+![SFML GAME](https://bluszcz.net/projects/games/deerportal/sfml-logo-small.png/@@images/image.png)
