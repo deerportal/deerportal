@@ -24,9 +24,8 @@ SFML, Linux, OSX, Windows.
 
 ![DeerPortal MultiPlayer Mode](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_771.png/@@images/image.png)
 
-Installation
-------------
-------------
+## Installation
+### Compilation
 
 #### Ubuntu Trusty - Xenial
 
@@ -52,13 +51,13 @@ $ make
 $ ./deerportal
 ```
 
-Download
---------
+### Binary download
+
 
 In our [releases](https://github.com/deerportal/deerportal/releases) section we are providing compiled binaries for Ubuntu (Trusty, Xenial) and Windows.
 
-Ubuntu apt repo
----------------
+#### Ubuntu apt repo
+
 
 If you want to have an easy installation via system apt, add one of the folowing (depends on your distro) to your /etc/apt/sources.list, if you have Trusty 14.04
 ```
@@ -75,13 +74,12 @@ sudo apt-get update
 sudo apt-get install deerportal
 ```
 
-Development windows builds
---------------------------
+#### Development windows builds
 
 * https://devcarpet.net/deerportal/downloads/windows/
 
-Developer documentation
------------------------
+#### Developer documentation
+
 
 Following doxygen api docs has been created using our Jenkins based Continous Integration:
 
