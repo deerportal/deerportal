@@ -31,6 +31,7 @@
 #include "bubble.h"
 //class Command;
 #include "banner.h"
+#include "credits.h"
 namespace efc {
 
 extern int initScreenX;
@@ -203,6 +204,8 @@ public:
     bool bigDiamondActive;
 
     int mostDiamonds();
+
+    Credits credits;
 
 private:
     Bubble bubble;

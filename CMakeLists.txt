@@ -19,6 +19,7 @@ set(SOURCES
 	cardslist.cpp
 	character.cpp
 	command.cpp
+	credits.cpp
 	data.cpp
 	elem.cpp
 	game.cpp

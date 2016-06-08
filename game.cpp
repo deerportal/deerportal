@@ -177,6 +177,7 @@ void Game::initBoard()
     txtLoosersLabel.setCharacterSize(30);
     sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
     txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
+    credits.setTxt(0);
 
 
 }
@@ -524,7 +525,8 @@ Game::Game():
     banner(&gameFont),
     bigDiamondActive(false),
     oscilator(-1),
-    oscilatorInc(true)
+    oscilatorInc(true),
+    credits(&gameFont)
 {
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
@@ -668,6 +670,7 @@ Game::Game():
 
 void Game::update(sf::Time frameTime) {
     banner.update(frameTime);
+    credits.update(frameTime);
     runningCounter += frameTime.asSeconds();
 
     cpuTimeThinking -= frameTime.asSeconds();
@@ -1080,11 +1083,14 @@ void Game::render(float deltaTime)
         renderTexture.draw(groupHud);
 
     }  else if (currentState==state_menu) {
-        shaderBlur.setParameter("blur_radius", 15);
+
+
+//        shaderBlur.setParameter("blur_radius", 15);
         renderTexture.draw(menuBackground);
-        //        renderTexture.draw(menuTxt, &shaderBlur);
+//        //        renderTexture.draw(menuTxt, &shaderBlur);
         //        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
+        renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 4);
@@ -1175,6 +1181,7 @@ void Game::startDeerMode() {
 
 }
 }
+
 
 
 
