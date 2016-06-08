@@ -375,7 +375,7 @@ void Game::playerMakeMove(int mousePos) {
     return;
 }
 
-int Game::mostDiamonds()
+int Game::mostDiamonds() const
 {
 
     std::array<int,4> results = {{players[0].cash,players[1].cash,players[2].cash,players[3].cash}};
@@ -498,10 +498,6 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
 }
 
-void Game::hideGameBoard()
-{
-    musicGame.play();
-}
 Game::Game():
     screenSize(efc::initScreenX,efc::initScreenY),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),

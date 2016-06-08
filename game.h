@@ -148,7 +148,6 @@ private:
 
     void hideMenu();
     void showGameBoard();
-    void hideGameBoard();
 
 
     GroupHud groupHud;
@@ -203,7 +202,7 @@ public:
     sf::Sprite spriteBigDiamond;
     bool bigDiamondActive;
 
-    int mostDiamonds();
+    int mostDiamonds() const;
 
     Credits credits;
 
