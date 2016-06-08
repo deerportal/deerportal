@@ -6,7 +6,7 @@
 class Credits: public sf::Drawable, public sf::Transformable
 {
 public:
-    Credits(sf::Font *gameFont);
+    explicit Credits(sf::Font *gameFont);
     void update(sf::Time frameTime);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

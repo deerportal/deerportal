@@ -116,7 +116,6 @@ void Game::initBoard()
     int month = now->tm_mon + 1;
     int day = now->tm_mday;
     paganHolidayString =  getHoliday(month, day);
-    //    std::cout << "HOLIDAY"<< paganHolidayString << std::endl;
     paganHolidayTxt.setString(paganHolidayString);
 
     sfxClick.setBuffer(sfxClickBuffer);
@@ -379,7 +378,7 @@ void Game::playerMakeMove(int mousePos) {
 int Game::mostDiamonds()
 {
 
-    std::array<int,4> results = {players[0].cash,players[1].cash,players[2].cash,players[3].cash};
+    std::array<int,4> results = {{players[0].cash,players[1].cash,players[2].cash,players[3].cash}};
 
     auto minmax = std::minmax_element(std::begin(results), std::end(results));
 
@@ -517,16 +516,21 @@ Game::Game():
     boardDiamonds(&textures),
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
+    oscilator(-1),
+    oscilatorInc(true),
+
+
     particleSystem( 430, 230),
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
-    deerModeCounter(4),
-    deerModeActive(false),
+
     banner(&gameFont),
     bigDiamondActive(false),
-    oscilator(-1),
-    oscilatorInc(true),
-    credits(&gameFont)
+    credits(&gameFont),
+    deerModeCounter(4),
+
+    deerModeActive(false)
+
 {
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
@@ -733,7 +737,6 @@ void Game::update(sf::Time frameTime) {
 
                 if (deerModeActive)
                 {
-                    std::cout<<"goes deermode"<<std::endl;
                     playerMakeMove(listRandomPos[1]);
                 } else
                 {
@@ -741,13 +744,10 @@ void Game::update(sf::Time frameTime) {
 
                     if (players[turn].reachPortalMode == true)
                     {
-                        std::cout<<"goes portal"<<std::endl;
                         playerMakeMove(listRandomPos[1]);
                     }
                     else
                     {
-
-
                         if (boardDiamonds.ifFieldIsEmpty(listRandomPos[1])==false)
                         {
                             playerMakeMove(listRandomPos[1]);
@@ -760,17 +760,13 @@ void Game::update(sf::Time frameTime) {
                             return;
 
                         }
-
                         if ((boardDiamonds.ifFieldIsEmpty(listRandomPos[0])==false) && (boardDiamonds.ifFieldIsEmpty(listRandomPos[1])==false))
 
                         {
                             playerMakeMove(listRandomPos[1]);
                             return;
                         }
-
-
                         int randPos = rand() % 2;
-                        std::cout<<"goes collect"<<std::endl;
                         playerMakeMove(listRandomPos[randPos]);
                     };
                 }
