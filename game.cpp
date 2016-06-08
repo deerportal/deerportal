@@ -737,6 +737,8 @@ void Game::update(sf::Time frameTime) {
                     playerMakeMove(listRandomPos[1]);
                 } else
                 {
+
+
                     if (players[turn].reachPortalMode == true)
                     {
                         std::cout<<"goes portal"<<std::endl;
@@ -744,6 +746,29 @@ void Game::update(sf::Time frameTime) {
                     }
                     else
                     {
+
+
+                        if (boardDiamonds.ifFieldIsEmpty(listRandomPos[1])==false)
+                        {
+                            playerMakeMove(listRandomPos[1]);
+                            return;
+
+                        }
+                        if (boardDiamonds.ifFieldIsEmpty(listRandomPos[0])==false)
+                        {
+                            playerMakeMove(listRandomPos[0]);
+                            return;
+
+                        }
+
+                        if ((boardDiamonds.ifFieldIsEmpty(listRandomPos[0])==false) && (boardDiamonds.ifFieldIsEmpty(listRandomPos[1])==false))
+
+                        {
+                            playerMakeMove(listRandomPos[1]);
+                            return;
+                        }
+
+
                         int randPos = rand() % 2;
                         std::cout<<"goes collect"<<std::endl;
                         playerMakeMove(listRandomPos[randPos]);
