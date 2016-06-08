@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     particlesystem.cpp \
     calendar.cpp \
     bubble.cpp \
-    banner.cpp
+    banner.cpp \
+    credits.cpp
 
 LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = ../build_release_pagan_board
@@ -73,7 +74,8 @@ HEADERS += \
     calendar.h \
     particle.h \
     bubble.h \
-    banner.h
+    banner.h \
+    credits.h
 
 
 OTHER_FILES += \
