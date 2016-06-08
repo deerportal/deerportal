@@ -377,15 +377,9 @@ void Game::playerMakeMove(int mousePos) {
 
 int Game::mostDiamonds() const
 {
-
     std::array<int,4> results = {{players[0].cash,players[1].cash,players[2].cash,players[3].cash}};
-
     auto minmax = std::minmax_element(std::begin(results), std::end(results));
-
-    std::cout << "max element " << *(minmax.second) << "\n";
-
     int maxResult = *(minmax.second);
-
     int result = 0;
     int pos = -1;
     for (int i=0; i<4;i++)
@@ -396,14 +390,11 @@ int Game::mostDiamonds() const
             pos = i;
         }
     };
-
     if (result==1)
     {
         return pos;
     }
-
     return -1;
-
 }
 
 /*!
@@ -425,7 +416,6 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
             }
         }
     }
-
 
     if (currentState==state_setup_players)
     {
