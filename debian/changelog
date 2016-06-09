@@ -1,3 +1,14 @@
+deerportal (0.7.0-birthday) UNRELEASED; urgency=medium
+
+  * Notifications
+  * More sounds
+  * Smarter, more agressive and greedy AI
+  * Credits
+  * Test mode
+  * Big diamond
+
+ -- Rafal Zawadzki <bluszcz@taller>  Fri, 10 Jun 2016 00:31:58 +0200
+
 deerportal (0.6.0-betaubuntu2) trusty; urgency=medium
 
   * New dice - from Katia
