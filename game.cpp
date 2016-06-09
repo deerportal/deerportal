@@ -116,7 +116,6 @@ void Game::initBoard()
     int month = now->tm_mon + 1;
     int day = now->tm_mday;
     paganHolidayString =  getHoliday(month, day);
-    //    std::cout << "HOLIDAY"<< paganHolidayString << std::endl;
     paganHolidayTxt.setString(paganHolidayString);
 
     sfxClick.setBuffer(sfxClickBuffer);
@@ -138,33 +137,16 @@ void Game::initBoard()
     restartGame();
     launchNextPlayer();
 
-
-    //    for (int i=0;i<4;i++)
-    //    {
-    //        endGameTxtAmount[i].setFont(gameFont);
-    //        endGameTxtAmount[i].setCharacterSize(25);
-
-
-    //    }
-
     endGameTxt.setFont(gameFont);
     endGameTxt.setString("End of the Game");
     endGameTxt.setCharacterSize(30);
 
-
     sf::FloatRect ss = endGameTxt.getLocalBounds();
-
-
-
     endGameTxt.setPosition((1360/2)-(ss.width/2),60);
 
     setTxtEndGameAmount();
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
-    //    endGameTxt.set
-    //    endGameTxt.setScale(2,2);
-
-
 
     txtSurvivorsLabel.setString("Survivors");
     txtSurvivorsLabel.setFont(gameFont);
@@ -177,7 +159,6 @@ void Game::initBoard()
     txtLoosersLabel.setCharacterSize(30);
     sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
     txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
-
 
 }
 
@@ -381,9 +362,6 @@ int Game::mostDiamonds()
     std::array<int,4> results = {players[0].cash,players[1].cash,players[2].cash,players[3].cash};
 
     auto minmax = std::minmax_element(std::begin(results), std::end(results));
-
-    std::cout << "max element " << *(minmax.second) << "\n";
-
     int maxResult = *(minmax.second);
 
     int result = 0;
@@ -730,19 +708,16 @@ void Game::update(sf::Time frameTime) {
 
                 if (deerModeActive)
                 {
-                    std::cout<<"goes deermode"<<std::endl;
                     playerMakeMove(listRandomPos[1]);
                 } else
                 {
                     if (players[turn].reachPortalMode == true)
                     {
-                        std::cout<<"goes portal"<<std::endl;
                         playerMakeMove(listRandomPos[1]);
                     }
                     else
                     {
                         int randPos = rand() % 2;
-                        std::cout<<"goes collect"<<std::endl;
                         playerMakeMove(listRandomPos[randPos]);
                     };
                 }
@@ -839,7 +814,6 @@ void Game::nextPlayer(){
     // End of game - we don't calculate more players
     if (numberFinishedPlayers==4)
     {
-        //        std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
         return ;
     }
@@ -852,21 +826,7 @@ void Game::nextPlayer(){
         nextRound();
         return;
     }
-
     turn++;
-
-
-    //    if (players[turn].done==true)
-    //    {
-    //        //        std::cout << "Player " << turn << " is done" << std::endl;
-    //        nextPlayer();
-    //        return;
-    //    }
-
-
-
-
-
     launchNextPlayer();
 
 }
@@ -885,7 +845,6 @@ void Game::launchNextPlayer(){
     // Just control
     if (players[turn].done==true)
     {
-        //        std::cout << "Player " << turn << " is done" << std::endl;
         nextPlayer();
         return;
     }
