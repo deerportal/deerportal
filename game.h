@@ -206,6 +206,8 @@ public:
 
     Credits credits;
 
+    float cpuTimeThinkingInterval;
+
 private:
     Bubble bubble;
     int deerModeCounter;

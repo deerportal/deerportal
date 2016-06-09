@@ -130,8 +130,8 @@ void Command::processField(int pos)
     if ((startField) && (efc::startPlayers[game.turn]==pos))
     {
         game.banner.setText("meditation");
-
         game.boardDiamonds.reorder(game.turn);
+        game.sfx.soundMeditation.play();
     }
 
     if (game.boardDiamonds.ifFieldIsEmpty(pos)==false)

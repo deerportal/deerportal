@@ -325,6 +325,7 @@ void Game::showGameBoard()
 
 void Game::endGame()
 {
+    musicGame.stop();
     currentState = state_end_game;
     downTimeCounter = 0;
     numberFinishedPlayers = 4;
@@ -364,6 +365,7 @@ void Game::playerMakeMove(int mousePos) {
             startDeerMode();
         }
 
+        sfx.soundPortal.play();
         numberFinishedPlayers += 1;
         if (numberFinishedPlayers > 3)
         {
@@ -479,6 +481,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         if (downTimeCounter>2)
         {
             currentState = state_menu;
+            musicMenu.play();
             restartGame();
             return ;
             //            restartGame();
@@ -513,6 +516,7 @@ Game::Game():
     banner(&gameFont),
     bigDiamondActive(false),
     credits(&gameFont),
+    cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
 
     deerModeActive(false)
@@ -689,7 +693,7 @@ void Game::update(sf::Time frameTime) {
     {
         if ((cpuTimeThinking<0) && (players[turn].human==false))
         {
-            cpuTimeThinking = 1;
+            cpuTimeThinking = cpuTimeThinkingInterval;
             throwDiceMove();
         }
     }
@@ -953,7 +957,7 @@ void Game::launchNextPlayer(){
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
 
-    cpuTimeThinking = 1;
+    cpuTimeThinking = cpuTimeThinkingInterval;
     if (mostDiamonds()==turn)
     {
         players[turn].reachPortalMode = true;
@@ -1185,7 +1189,7 @@ void Game::startDeerMode() {
     deerModeCounter = 16;
     banner.setText("deer mode");
     bigDiamondActive = false;
-
+    sfx.soundDeerMode.play();
 }
 }
 
