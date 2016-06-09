@@ -516,7 +516,7 @@ Game::Game():
     banner(&gameFont),
     bigDiamondActive(false),
     credits(&gameFont),
-    cpuTimeThinkingInterval(0.1f),
+    cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
 
     deerModeActive(false)
