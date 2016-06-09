@@ -31,6 +31,7 @@
 #include "bubble.h"
 //class Command;
 #include "banner.h"
+#include "credits.h"
 namespace efc {
 
 extern int initScreenX;
@@ -147,7 +148,6 @@ private:
 
     void hideMenu();
     void showGameBoard();
-    void hideGameBoard();
 
 
     GroupHud groupHud;
@@ -202,7 +202,9 @@ public:
     sf::Sprite spriteBigDiamond;
     bool bigDiamondActive;
 
-    int mostDiamonds();
+    int mostDiamonds() const;
+
+    Credits credits;
 
 private:
     Bubble bubble;

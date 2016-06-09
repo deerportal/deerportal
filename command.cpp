@@ -45,7 +45,7 @@ bool Command::removeCard(int playerNumber)
     return false;
 }
 
-void Command::removeAllCardElement(int elementNumber)
+void Command::removeAllCardElement(int elementNumber) const
 {
     /*! This should works as following:
      * - iterate over BoardDiamondSeq
@@ -105,7 +105,7 @@ void Command::freezePlayer(int playerNumber)
     game.players[playerNumber].frozenLeft += 1;
 }
 
-void Command::removeAllItems(int playerNumber)
+ void Command::removeAllItems(int playerNumber) const
 {
     for (auto&& i: game.boardDiamonds.diamonds)
     {

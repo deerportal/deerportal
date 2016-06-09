@@ -1,9 +1,9 @@
 #include "banner.h"
 
 Banner::Banner(sf::Font *gameFont):
+    active(false),
     textStr(""),
-    timeDownCounter(0),
-    active(false)
+    timeDownCounter(0)
 {
 
     text.setFont(*gameFont);

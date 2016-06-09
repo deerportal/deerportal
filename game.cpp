@@ -159,6 +159,7 @@ void Game::initBoard()
     txtLoosersLabel.setCharacterSize(30);
     sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
     txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
+    credits.setTxt(0);
 
 }
 
@@ -356,14 +357,11 @@ void Game::playerMakeMove(int mousePos) {
     return;
 }
 
-int Game::mostDiamonds()
+int Game::mostDiamonds() const
 {
-
-    std::array<int,4> results = {players[0].cash,players[1].cash,players[2].cash,players[3].cash};
-
+    std::array<int,4> results = {{players[0].cash,players[1].cash,players[2].cash,players[3].cash}};
     auto minmax = std::minmax_element(std::begin(results), std::end(results));
     int maxResult = *(minmax.second);
-
     int result = 0;
     int pos = -1;
     for (int i=0; i<4;i++)
@@ -374,14 +372,11 @@ int Game::mostDiamonds()
             pos = i;
         }
     };
-
     if (result==1)
     {
         return pos;
     }
-
     return -1;
-
 }
 
 /*!
@@ -403,7 +398,6 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
             }
         }
     }
-
 
     if (currentState==state_setup_players)
     {
@@ -476,10 +470,6 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
 }
 
-void Game::hideGameBoard()
-{
-    musicGame.play();
-}
 Game::Game():
     screenSize(efc::initScreenX,efc::initScreenY),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
@@ -494,15 +484,21 @@ Game::Game():
     boardDiamonds(&textures),
     window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
+    oscilator(-1),
+    oscilatorInc(true),
+
+
     particleSystem( 430, 230),
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
-    deerModeCounter(4),
-    deerModeActive(false),
+
     banner(&gameFont),
     bigDiamondActive(false),
-    oscilator(-1),
-    oscilatorInc(true)
+    credits(&gameFont),
+    deerModeCounter(4),
+
+    deerModeActive(false)
+
 {
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
@@ -646,6 +642,7 @@ Game::Game():
 
 void Game::update(sf::Time frameTime) {
     banner.update(frameTime);
+    credits.update(frameTime);
     runningCounter += frameTime.asSeconds();
 
     cpuTimeThinking -= frameTime.asSeconds();
@@ -711,12 +708,32 @@ void Game::update(sf::Time frameTime) {
                     playerMakeMove(listRandomPos[1]);
                 } else
                 {
+
+
                     if (players[turn].reachPortalMode == true)
                     {
                         playerMakeMove(listRandomPos[1]);
                     }
                     else
                     {
+                        if (boardDiamonds.ifFieldIsEmpty(listRandomPos[1])==false)
+                        {
+                            playerMakeMove(listRandomPos[1]);
+                            return;
+
+                        }
+                        if (boardDiamonds.ifFieldIsEmpty(listRandomPos[0])==false)
+                        {
+                            playerMakeMove(listRandomPos[0]);
+                            return;
+
+                        }
+                        if ((boardDiamonds.ifFieldIsEmpty(listRandomPos[0])==false) && (boardDiamonds.ifFieldIsEmpty(listRandomPos[1])==false))
+
+                        {
+                            playerMakeMove(listRandomPos[1]);
+                            return;
+                        }
                         int randPos = rand() % 2;
                         playerMakeMove(listRandomPos[randPos]);
                     };
@@ -1039,11 +1056,14 @@ void Game::render(float deltaTime)
         renderTexture.draw(groupHud);
 
     }  else if (currentState==state_menu) {
-        shaderBlur.setParameter("blur_radius", 15);
+
+
+//        shaderBlur.setParameter("blur_radius", 15);
         renderTexture.draw(menuBackground);
-        //        renderTexture.draw(menuTxt, &shaderBlur);
+//        //        renderTexture.draw(menuTxt, &shaderBlur);
         //        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
+        renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 4);
@@ -1134,6 +1154,7 @@ void Game::startDeerMode() {
 
 }
 }
+
 
 
 

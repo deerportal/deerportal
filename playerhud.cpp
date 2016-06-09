@@ -119,13 +119,9 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
     int posX2 = 962;
     int posY1 = 22;
     int posY2 = 720;
-    std::array<std::array<int,2>,4> textPos =
-    {
-        {
-            {{posX1,posY1}}, {{posX2,posY1}},
-            {{posX1,posY2}}, {{posX2, posY2}}
-        }
-    };
+    std::array<std::array<int,2>,4> textPos = {{{
+        {posX1,posY1}}, {{posX2,posY1}},{{posX1,posY2}}, {{posX2, posY2}
+    }}};
 
     txtCash.setPosition(textPos[playerNumber][0],textPos[playerNumber][1] );
     buttons.insert({"end_turn",rectangle});

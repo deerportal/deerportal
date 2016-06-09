@@ -19,15 +19,12 @@ public:
     bool removeDiamond(int playerNumber);
     bool removeCard(int playerNumber);
     void freezePlayer(int playerNumber);
-    void removeAllItems(int playerNumber);
+     void removeAllItems(int playerNumber) const;
     efc::Game &game;
 
     void processField(int pos);
     void processCard(int pos);
-
-//    int processGui(sf::Vector2f posGui);
-
-    void removeAllCardElement(int elementNumber);
+    void removeAllCardElement(int elementNumber) const;
 };
 
 #endif // COMMAND_H

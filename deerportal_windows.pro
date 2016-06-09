@@ -32,7 +32,9 @@ SOURCES += main.cpp \
     particlesystem.cpp \
     calendar.cpp \
     bubble.cpp \
-    banner.cpp
+    banner.cpp \
+    credits.cpp
+
 
 
 #LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
@@ -79,7 +81,9 @@ HEADERS += \
     calendar.h \
     particle.h \
     bubble.h \
-    banner.h
+    banner.h \
+    credits.h
+
 
 
 OTHER_FILES += \
