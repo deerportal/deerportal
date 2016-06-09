@@ -137,33 +137,16 @@ void Game::initBoard()
     restartGame();
     launchNextPlayer();
 
-
-    //    for (int i=0;i<4;i++)
-    //    {
-    //        endGameTxtAmount[i].setFont(gameFont);
-    //        endGameTxtAmount[i].setCharacterSize(25);
-
-
-    //    }
-
     endGameTxt.setFont(gameFont);
     endGameTxt.setString("End of the Game");
     endGameTxt.setCharacterSize(30);
 
-
     sf::FloatRect ss = endGameTxt.getLocalBounds();
-
-
-
     endGameTxt.setPosition((1360/2)-(ss.width/2),60);
 
     setTxtEndGameAmount();
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
-    //    endGameTxt.set
-    //    endGameTxt.setScale(2,2);
-
-
 
     txtSurvivorsLabel.setString("Survivors");
     txtSurvivorsLabel.setFont(gameFont);
@@ -177,7 +160,6 @@ void Game::initBoard()
     sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
     txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
     credits.setTxt(0);
-
 
 }
 
@@ -491,7 +473,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
 }
 
-Game::Game():
+Game::Game(bool newTestMode):
     screenSize(efc::initScreenX,efc::initScreenY),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
@@ -507,21 +489,17 @@ Game::Game():
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
-
-
     particleSystem( 430, 230),
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
-
     banner(&gameFont),
     bigDiamondActive(false),
     credits(&gameFont),
     cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
-
     deerModeActive(false)
-
 {
+    testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
     particleSystem.setDissolutionRate( 10 );
@@ -574,6 +552,12 @@ Game::Game():
     showMenu();
 
     // run the main loop
+
+    if (testMode){
+
+        std::exit(0);
+    }
+
     while (window.isOpen())
     {
         sf::Time frameTime = frameClock.restart();
@@ -659,6 +643,9 @@ Game::Game():
         }
         update(frameTime);
         render(frameTime.asSeconds());
+
+
+
     }
 }
 
@@ -853,7 +840,6 @@ void Game::nextPlayer(){
     // End of game - we don't calculate more players
     if (numberFinishedPlayers==4)
     {
-        //        std::cout << "Everybody Finished!!!" << std::endl;
         endGame();
         return ;
     }
@@ -866,21 +852,7 @@ void Game::nextPlayer(){
         nextRound();
         return;
     }
-
     turn++;
-
-
-    //    if (players[turn].done==true)
-    //    {
-    //        //        std::cout << "Player " << turn << " is done" << std::endl;
-    //        nextPlayer();
-    //        return;
-    //    }
-
-
-
-
-
     launchNextPlayer();
 
 }
@@ -899,7 +871,6 @@ void Game::launchNextPlayer(){
     // Just control
     if (players[turn].done==true)
     {
-        //        std::cout << "Player " << turn << " is done" << std::endl;
         nextPlayer();
         return;
     }
