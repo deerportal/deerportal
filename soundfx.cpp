@@ -10,6 +10,12 @@ SoundFX::SoundFX()
         exit(-1);
     if (!bufferMeditation.loadFromFile("assets/audio/dp-meditation.ogg"))
         exit(-1);
+    if (!bufferPortal.loadFromFile("assets/audio/dp-ok.ogg"))
+        exit(-1);
+
+
+
+
     soundCollect.setBuffer(soundCollectBuffer);
     soundCollect.setVolume(20);
 
@@ -21,10 +27,13 @@ SoundFX::SoundFX()
     soundLetsBegin.setBuffer(soundLetsBeginBuffer);
     soundLetsBegin.setVolume(20);
 
+    soundPortal.setBuffer(bufferPortal);
+    soundPortal.setVolume(20);
+
     soundDeerMode.setBuffer(bufferDeerMode);
     soundDeerMode.setVolume(40);
     soundMeditation.setBuffer(bufferMeditation);
-    soundMeditation.setVolume(30);
+    soundMeditation.setVolume(20);
 }
 
 void SoundFX::playCollect()

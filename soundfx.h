@@ -16,6 +16,8 @@ public:
     sf::SoundBuffer soundCardBuffer;
     sf::SoundBuffer bufferDeerMode;
     sf::SoundBuffer bufferMeditation;
+    sf::SoundBuffer bufferPortal;
+    sf::Sound soundPortal;
     sf::Sound soundDeerMode;
     sf::Sound soundMeditation;
     sf::Sound soundCollect;

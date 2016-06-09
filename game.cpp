@@ -365,6 +365,7 @@ void Game::playerMakeMove(int mousePos) {
             startDeerMode();
         }
 
+        sfx.soundPortal.play();
         numberFinishedPlayers += 1;
         if (numberFinishedPlayers > 3)
         {
