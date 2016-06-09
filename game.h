@@ -59,7 +59,7 @@ private:
     GuiRoundDice guiRoundDice;
 
 public:
-    Game();
+    Game(bool newTestMode);
     BoardDiamondSeq boardDiamonds;
     sf::RenderWindow window;
     sf::RenderTexture renderTexture;
@@ -210,6 +210,9 @@ private:
     Bubble bubble;
     int deerModeCounter;
     bool deerModeActive;
+
+public:
+    bool testMode;
 };
 }
 #endif // GAME_H
