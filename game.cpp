@@ -470,7 +470,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
 }
 
-Game::Game():
+Game::Game(bool newTestMode):
     screenSize(efc::initScreenX,efc::initScreenY),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
@@ -494,8 +494,8 @@ Game::Game():
     credits(&gameFont),
     deerModeCounter(4),
     deerModeActive(false)
-
 {
+    testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
     particleSystem.setDissolutionRate( 10 );
@@ -548,6 +548,9 @@ Game::Game():
     showMenu();
 
     // run the main loop
+
+
+
     while (window.isOpen())
     {
         sf::Time frameTime = frameClock.restart();
@@ -633,6 +636,14 @@ Game::Game():
         }
         update(frameTime);
         render(frameTime.asSeconds());
+
+        if (testMode){
+           if (runningCounter>5)
+           {
+            std::exit(0);
+           }
+        }
+
     }
 }
 
