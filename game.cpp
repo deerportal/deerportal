@@ -549,7 +549,10 @@ Game::Game(bool newTestMode):
 
     // run the main loop
 
+    if (testMode){
 
+        std::exit(0);
+    }
 
     while (window.isOpen())
     {
@@ -637,12 +640,7 @@ Game::Game(bool newTestMode):
         update(frameTime);
         render(frameTime.asSeconds());
 
-        if (testMode){
-           if (runningCounter>5)
-           {
-            std::exit(0);
-           }
-        }
+
 
     }
 }
