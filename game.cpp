@@ -486,17 +486,13 @@ Game::Game():
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
-
-
     particleSystem( 430, 230),
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
-
     banner(&gameFont),
     bigDiamondActive(false),
     credits(&gameFont),
     deerModeCounter(4),
-
     deerModeActive(false)
 
 {
