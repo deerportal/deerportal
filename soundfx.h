@@ -14,6 +14,10 @@ public:
 
     sf::SoundBuffer soundCollectBuffer;
     sf::SoundBuffer soundCardBuffer;
+    sf::SoundBuffer bufferDeerMode;
+    sf::SoundBuffer bufferMeditation;
+    sf::Sound soundDeerMode;
+    sf::Sound soundMeditation;
     sf::Sound soundCollect;
     sf::Sound soundCard;
     void playCollect();
