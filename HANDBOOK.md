@@ -59,9 +59,9 @@ On the right of the board game, there are four piles of 32 the cards dedicated t
 ####Types of the cards
 
 * Stop - increases the **pause period** of the  other element character. 
-* Collect diamond - steals diamond from the other element field 
-* Collect two diamonds - steals two diamonds from the other element field 
-* Collect rune - steals rune from the other element field 
+* Collect a diamond - steals diamond from the other element field. 
+* Collect two diamonds - steals two diamonds from the other element field. 
+* Collect rune - eliminates rune from the other element field. 
 
 
 ###Meditation
@@ -70,21 +70,20 @@ To meditate player has to go back to his start point, and since it depends on th
 
 ###Deer Portal
 
-In the middle of all the boards, there is Deer Portal, with the **Hooftlar** (the Almighty Deer Good altar) placed in the center. First player who reach it and pay tribute to Almighty Deer, starts **Deer Mode** period which takes exactly four rounds (four turns for each player). After that everyone who didn't reach the portal - will be ceased. 
+In the middle of all the boards, there is Deer Portal, with the **Hooftlar** (the Almighty Deer Good altar) placed in the center. First player who reaches it and pay tribute to Almighty Deer, starts **Deer Mode** period which takes exactly four rounds (four turns for each player). After that everyone who didn't reach the portal - will be ceased. 
 
 
 ##Game mechanic
 
 
-Each player who is active (didn't reach Hoofltar yet, nor is being paused) has to perform two actions during his turn - throw a dice (by the click on hand symbol in the right bottom area of the screen), and then decide where to go - by clicking on the corresponding area on his board. After moving the character, depends on the destination field:
+Each player who is active (didn't reach Hoofltar yet, nor is being paused) has to perform two actions during his turn - throw a dice (by the click on dice symbol in the right bottom area of the screen), and then decide where to go - by clicking on the corresponding area on his board. After moving the player, depends on the destination field:
 
-* Nothing happen - if the field was empty
-* Collects the diamond - if there was one 
+* Collects the diamond - if there was one
+* Collects the rune and executes the card - if a rune was on the field
 * Meditates - if the field was a starter place for the character
-* Collects the rune and executes the card - if run was on the field
 * Moves to the Deer God kingdom - by entering the portal. 
 
-If the player entered portal as the first one - he does start Deer Mode and gets awarded with the few diamonds.
+If a player entered portal as the first one - he does start Deer Mode and gets awarded with the few diamonds.
 
 
 
