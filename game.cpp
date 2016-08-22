@@ -497,7 +497,8 @@ Game::Game(bool newTestMode):
     credits(&gameFont),
     cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
-    deerModeActive(false)
+    deerModeActive(false),
+    fullscreen(false)
 {
     testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
@@ -548,6 +549,7 @@ Game::Game(bool newTestMode):
     renderTexture.clear(sf::Color::Black);
     renderTexture.draw(textLoading);
     renderTexture.display();
+    setFullscreen();
 
     showMenu();
 
@@ -577,6 +579,17 @@ Game::Game(bool newTestMode):
             case sf::Event::KeyPressed:
                 if(event.key.code == sf::Keyboard::Escape )
                     window.close();
+                if(event.key.code == sf::Keyboard::F )
+                {
+                    std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
+                    if (fullscreen) {
+                        fullscreen = false;
+                        window.create(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deer Portal");
+                    } else {
+                        setFullscreen();
+
+                    }
+                }
                 if( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
                     particleSystem.fuel( 200/* * window.getFrameTime() */);
                 if( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
@@ -647,6 +660,20 @@ Game::Game(bool newTestMode):
 
 
     }
+}
+
+void Game::setFullscreen()
+{
+    fullscreen = true;
+
+    int xres = sf::VideoMode::getDesktopMode().width;
+    int yres = sf::VideoMode::getDesktopMode().height;
+
+    window.create(sf::VideoMode(xres, yres), "Deer Portal",sf::Style::Fullscreen);
+    sf::View v;
+    v.reset(sf::FloatRect(0, 0, 1360, 768));
+    v.setViewport(sf::FloatRect(0,0,1,1));
+    window.setView(v);
 }
 
 void Game::update(sf::Time frameTime) {

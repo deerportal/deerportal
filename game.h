@@ -69,6 +69,7 @@ public:
     int turn;
 
 private:
+    void setFullscreen();
     void initBoard();
     void restartGame();
     void loadAssets();
@@ -212,6 +213,7 @@ private:
     Bubble bubble;
     int deerModeCounter;
     bool deerModeActive;
+    bool fullscreen;
 
 public:
     bool testMode;
