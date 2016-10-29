@@ -12,7 +12,7 @@ before_install:
   - tar -zxvf SFML-2.4.0-osx-clang.tar.gz
   - cd SFML-2.4.0-osx-clang
   - sudo cp -r lib/* /usr/local/lib/
-  - sudo cp -r Frameworks/ Library/Frameworks/
+  - sudo cp -r Frameworks/ /Library/Frameworks/
 #  - d 755 install.sh
 #  - bash ./install.sh
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
