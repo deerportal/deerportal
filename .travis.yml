@@ -1,3 +1,7 @@
+osx:
+  - linux
+  - osx
+
 sudo: required
 dist: trusty
 language: cpp
