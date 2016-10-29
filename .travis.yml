@@ -23,7 +23,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link --force qt5         ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then /usr/local/bin/qmake          ; fi
  # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then /usr/local/bin/qmake -spec macx-xcode pagan_board.pro          ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -lah /usr/local/bin/          ; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -lah /usr/local/bin/          ; fi
   - cd ..
   - pwd
   - ls
