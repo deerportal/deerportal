@@ -27,10 +27,10 @@ script:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -lah /usr/local/bin/          ; fi
   - cd ..
   - pwd
-  - rm -rf *xcodeproj
+  - rm -rf *.xcodeproj
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then /usr/local/bin/qmake -spec macx-xcode deerportal_osx.pro          ; fi
   - ls
 #  - qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
-  - xcodebuild -list -project pagan_board.xcodeproj
-  - xcodebuild -scheme pagan_board build
+  - xcodebuild -list -project deerportal_osx.xcodeproj
+  - xcodebuild -scheme deerportal_osx build
   - ls
