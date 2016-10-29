@@ -14,8 +14,7 @@ before_install:
   - sudo cp -r lib/* /usr/local/lib/
   - sudo cp -r Frameworks/ /Library/Frameworks/
   - sudo cp -r  include /usr/local/include
-  - sudo cp extlibs/sndfile.framework  /Library/Frameworks
-  - sudo cp extlibs/freetype.framework  /Library/Frameworks
+  - sudo cp -r extlibs/*  /Library/Frameworks
 #  - d 755 install.sh
 #  - bash ./install.sh
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
