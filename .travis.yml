@@ -9,7 +9,7 @@ compiler:
 before_script:
 before_install:
   - wget http://www.sfml-dev.org/files/SFML-2.4.0-osx-clang.tar.gz
-  - tar -zxvf SFML-2.4.0-osx-clang.tar.gz
+  - tar -zxf SFML-2.4.0-osx-clang.tar.gz
   - cd SFML-2.4.0-osx-clang
   - sudo cp -r lib/* /usr/local/lib/
   - sudo cp -r Frameworks/ /Library/Frameworks/
