@@ -29,4 +29,5 @@ script:
   - ls
 #  - qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
   - xcodebuild -list -project pagan_board.xcodeproj
-  - rvm get head
+  - xcodebuild -scheme pagan_board build
+  - ls
