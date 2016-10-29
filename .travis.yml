@@ -29,4 +29,4 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then /usr/local/bin/qmake -spec macx-xcode pagan_board.pro          ; fi
   - ls
 #  - qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
-  - xcode-select --print-path
+  - xcodebuild -list -project pagan_board.xcodeproj
