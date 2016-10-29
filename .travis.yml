@@ -8,6 +8,10 @@ compiler:
   - gcc
 before_script:
 before_install:
+  - wget http://www.sfml-dev.org/files/SFML-2.4.0-osx-clang.tar.gz
+  - tar -zxvf SFML-2.4.0-osx-clang.tar.gz
+  - chmod 755 install.sh
+  - ./install.sh
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt5          ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sfml          ; fi
