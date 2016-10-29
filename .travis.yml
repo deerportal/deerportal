@@ -1,5 +1,4 @@
 os:
-  - linux
   - osx
 
 sudo: required
@@ -12,6 +11,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt5          ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sfml          ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; brew link --force qt5         ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.5 libglew1.5-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1  libxrandr2 libxrender1 libsoil1 cppcheck libsfml-dev; fi
 
 script: qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
