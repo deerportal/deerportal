@@ -1,8 +1,10 @@
 #include "calendar.h"
 
+#define ARRAY_LEN(x) (sizeof(x) / sizeof(x[0]))
+
 std::string getHoliday(int month, int day)
 {
-    for (int i=0;i<59;i++)
+    for (size_t i=0;i<ARRAY_LEN(PAGAN_HOLIDAYS);i++)
     {
         try
         {
