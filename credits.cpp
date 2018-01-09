@@ -9,7 +9,7 @@ Credits::Credits(sf::Font *gameFont):
     txtNumber(0)
 {
 
-    creditsTxt[0] = "for Olaf & Igor, on their birthday";
+    creditsTxt[0] = "    devcarpet proudly presents   ";
     creditsTxt[1] = "game design, code, audio: bluszcz";
     creditsTxt[2] = "game design, visual art: ukata";
     creditsTxt[3] = "game design, tests: igor & olaf";
