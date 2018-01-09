@@ -1,3 +1,9 @@
+deerportal (0.7.1-january-fix-ubuntu1) trusty; urgency=medium
+
+  * Fixed January - Eastern Egg problem (thanks Poul Sander)
+
+ -- Rafal Zawadzki <bluszcz@devcarpet.net>  Tue, 09 Jan 2018 21:33:55 +0200
+
 deerportal (0.7.0-birthday-ubuntu1) trusty; urgency=medium
 
   * Notifications
