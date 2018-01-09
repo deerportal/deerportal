@@ -17,7 +17,7 @@ static std::array<std::array<std::string,3>,59> PAGAN_HOLIDAYS = {{
  {{"01", "20", "Midvintersblot"}},
  {{"01", "22", "Festival of the Muses"}},
  {{"01", "25", "Old Disting Feast"}},
- {{"01", "TueLast", "Upelly - old fire festival"}},
+ {{"01", "30", "Upelly - old fire festival"}},
  {{"01", "31", "Honoring the Valkyries"}},
  {{"02", "02", "1st Cross-Quarter Day"}},
  {{"02", "02", "Imbolg / Imbolc (other Celtic names) / Brighid / Oimelc"}},

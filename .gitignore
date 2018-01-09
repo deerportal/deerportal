@@ -9,3 +9,4 @@ pagan_board.pro.user
 *.Release
 *.Debug
 *.debhelper.log
+debian/deerportal
