@@ -10,3 +10,9 @@ pagan_board.pro.user
 *.Debug
 *.debhelper.log
 debian/deerportal
+MakeCache.txt
+CMakeFiles/
+CPackConfig.cmake
+CPackSourceConfig.cmake
+cmake_install.cmake
+CMakeCache.txt
