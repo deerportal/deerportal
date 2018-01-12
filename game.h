@@ -113,6 +113,7 @@ private:
     sf::Shader shaderBlur;
     sf::Shader shaderPixel;
     sf::Shader shaderDark;
+    sf::Shader shaderWave;
     int mapSize;
     int level[256];
     int levelElems[256];
@@ -200,6 +201,7 @@ public:
     Banner banner;
 
     sf::Sprite spriteBigDiamond;
+    sf::Sprite spritewater;
     bool bigDiamondActive;
 
     int mostDiamonds() const;
@@ -215,6 +217,7 @@ private:
 
 public:
     bool testMode;
+    void launchParticle(float x, float y);
 };
 }
 #endif // GAME_H

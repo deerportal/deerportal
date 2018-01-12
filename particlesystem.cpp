@@ -9,9 +9,9 @@ ParticleSystem::ParticleSystem( int width, int height )
     m_sprite = sf::Sprite(m_texture);
     m_position.x    = 0.5f * width;
     m_position.y    = 0.5f * height;
-    m_particleSpeed = 20.0f;
+    m_particleSpeed = 100.0f;
     m_dissolve  = false;
-    m_dissolutionRate = 4;
+    m_dissolutionRate = 2;
     m_shape     = Shape::CIRCLE;
 }
 
@@ -59,7 +59,10 @@ void ParticleSystem::fuel( int particles )
         particle->color.r = m_randomizer.rnd(0, 255);
         particle->color.g = m_randomizer.rnd(0, 255);
         particle->color.b = m_randomizer.rnd(0, 255);
-        particle->color.a = 255;
+        particle->color.r = 112;
+        particle->color.g = 112;
+        particle->color.b = 200;
+        particle->color.a = 200;
         m_particles.push_back( particle );
     }
 }

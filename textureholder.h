@@ -52,6 +52,8 @@ public:
 
     sf::Texture textureBigDiamond;
 
+    sf::Texture textureWater;
+
 };
 
 #endif // TEXTUREHOLDER_H

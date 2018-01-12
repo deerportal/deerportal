@@ -39,7 +39,10 @@ bool Command::removeCard(int playerNumber)
     if (numberDiamonds>0)
     {
         int elemToRemove = rand() %  numberDiamonds;
+        sf::Vector2f posD(game.boardDiamonds.diamonds[elemToRemove].getPosition());
+        game.launchParticle(posD.x, posD.y);
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
+
         return true;
     }
     return false;
@@ -94,7 +97,10 @@ bool Command::removeDiamond(int playerNumber)
     if (numberDiamonds>0)
     {
         int elemToRemove = rand() %  numberDiamonds;
+        sf::Vector2f posD(game.boardDiamonds.diamonds[elemToRemove].getPosition());
+        game.launchParticle(posD.x, posD.y);
         game.boardDiamonds.collectField(diamonds[elemToRemove]);
+
         return true;
     }
     return false;

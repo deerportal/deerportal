@@ -134,6 +134,7 @@ void Game::initBoard()
     spriteBigDiamond.setTexture(textures.textureBigDiamond);
     spriteBigDiamond.setPosition(474,342);
     spriteBigDiamond.setColor(sf::Color (255, 255, 255,196));
+    spritewater.setTexture(textures.textureWater);
     restartGame();
     launchNextPlayer();
 
@@ -236,6 +237,9 @@ void Game::loadAssets()
     if (!shaderPixel.loadFromFile("assets/shaders/pixelate.frag", sf::Shader::Fragment))
         std::exit(1);
     if (!shaderDark.loadFromFile("assets/shaders/dark.frag", sf::Shader::Fragment))
+        std::exit(1);
+
+    if (!shaderWave.loadFromFile("assets/shaders/wave.vert", sf::Shader::Vertex))
         std::exit(1);
 
     if (!textureBackgroundArt.loadFromFile("assets/img/background_land.png"))
@@ -381,6 +385,12 @@ int Game::mostDiamonds() const
     return -1;
 }
 
+void Game::launchParticle(float x, float y)
+{
+    particleSystem.setPosition(x, y);
+    particleSystem.fuel( 500);
+}
+
 /*!
  * \brief Game::handleLeftClick
  * \param pos
@@ -388,6 +398,9 @@ int Game::mostDiamonds() const
  * \param mousePos
  */
 void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) {
+
+    launchParticle(posFull.x, posFull.y);
+
     if (currentState==state_game)
     {
         if (players[turn].human)
@@ -489,7 +502,7 @@ Game::Game(bool newTestMode):
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
-    particleSystem( 430, 230),
+    particleSystem(1360, 768),
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
     banner(&gameFont),
@@ -502,9 +515,9 @@ Game::Game(bool newTestMode):
     testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
-    particleSystem.setDissolutionRate( 10 );
+    particleSystem.setDissolutionRate( 1 );
     particleSystem.setShape( Shape::CIRCLE );
-    particleSystem.fuel( 1000 );
+//    particleSystem.fuel( 10000 );
     playersSpritesCords[0][0] = 202;
     playersSpritesCords[0][1] = 76;
     playersSpritesCords[1][0] = 562;
@@ -783,6 +796,10 @@ void Game::update(sf::Time frameTime) {
         players[i].play();
         players[i].update(frameTime);
     }
+    if (currentState==state_menu)
+    {
+        downTimeCounter += frameTime.asSeconds();
+    }
 
     if (currentState==state_lets_begin)
     {
@@ -803,6 +820,9 @@ void Game::update(sf::Time frameTime) {
 
     bubble.update(frameTime);
 
+
+    shaderWave.setParameter("wave_phase", sin(runningCounter));
+    shaderWave.setParameter("wave_amplitude", sf::Vector2f(sin(runningCounter)*20,sin(runningCounter)*20));
 
 }
 
@@ -977,6 +997,9 @@ void Game::drawBaseGame()
     shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.005f));
 
     renderTexture.draw(spriteBackgroundArt);
+
+
+
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
     shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.05f)/2);
 
@@ -1068,11 +1091,13 @@ void Game::render(float deltaTime)
 
 
 //        shaderBlur.setParameter("blur_radius", 15);
+
+
         renderTexture.draw(menuBackground);
 //        //        renderTexture.draw(menuTxt, &shaderBlur);
         //        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
-        renderTexture.draw(credits);
+        renderTexture.draw(credits, &shaderWave);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
         shaderBlur.setParameter("blur_radius", 4);
@@ -1119,7 +1144,7 @@ void Game::render(float deltaTime)
     if (bigDiamondActive)
         renderTexture.draw(spriteBigDiamond);
     if (banner.active)
-        renderTexture.draw(banner);
+        renderTexture.draw(banner, &shaderWave);
 
 
 
@@ -1132,7 +1157,10 @@ void Game::render(float deltaTime)
     particleSystem.remove();
     particleSystem.update();
     particleSystem.render();
-    window.draw( particleSystem.getSprite() );
+    particleSystem.setGravity(0,-4);
+    particleSystem.setPosition(680,220);
+
+    window.draw( particleSystem.getSprite(), &shaderWave );
 
 
     window.display();

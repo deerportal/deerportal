@@ -15,7 +15,7 @@ void Banner::setText(std::string newText)
     textStr = newText;
     text.setString(textStr);
     active = true;
-    timeDownCounter = 1.5;
+    timeDownCounter = 4.5;
     // 204,76
     // 840, 718
     //    In [1]: 840 - 204

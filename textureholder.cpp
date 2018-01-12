@@ -97,6 +97,10 @@ TextureHolder::TextureHolder()
     if (!textureBigDiamond.loadFromFile("assets/img/diamond-big.png"))
         std::exit(1);
 
+
+    if (!textureWater.loadFromFile("assets/img/backgroundWater.png"))
+        std::exit(1);
+
     int defaultArray[5][8] = {
         //Cash   Food    Energy  Faith
         {10, 2,  0,  0,  0,  0,  0,  0}, // base
