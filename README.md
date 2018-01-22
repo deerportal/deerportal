@@ -28,19 +28,17 @@ SFML, Linux, OSX, Windows.
 ### Compilation
 
 
-#### Ubuntu Trusty - Xenial
+#### Linux / OSX
 
 ```
-$ sudo apt-get install libsfml-devl
 $ git clone https://github.com/deerportal/deerportal.git
 $ cd deerportal
-$ qmake -makefile pagan_board.pro
+$ cmake .
 $ make
-$ make install
-$ ../build_release_pagan_board/pagan_board
+$ ./DeerPortal
 ```
 
-#### Debian 
+##### Debian 
 
 If you would like to see Deer Portal in Debian repositories, there is an opened bug: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=826612 - please help :)
 
@@ -50,18 +48,6 @@ To make deb package locally:
 $ git clone https://github.com/deerportal/deerportal.git
 $ cd deerportal
 $ fakeroot debian/rules binary
-```
-
-#### Mac OSX
-
-You should have first installed SFML with dependencies: http://www.sfml-dev.org/tutorials/2.3/start-osx.php, thank you can do following:
-
-```
-$ git clone https://github.com/deerportal/deerportal.git
-$ cd deerportal
-$ cmake .
-$ make
-$ ./deerportal
 ```
 
 ### Binary download
