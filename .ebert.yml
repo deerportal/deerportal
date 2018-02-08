@@ -1,0 +1,4 @@
+# .ebert.yml
+engines:
+  gnu-complexity:
+    enabled: true
