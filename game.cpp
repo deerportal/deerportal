@@ -497,7 +497,8 @@ Game::Game(bool newTestMode):
     credits(&gameFont),
     cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
-    deerModeActive(false)
+    deerModeActive(false),
+    gameVersion()
 {
     testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
@@ -543,6 +544,13 @@ Game::Game(bool newTestMode):
     renderTexture.clear(sf::Color::Black);
     renderTexture.draw(textLoading);
     window.display();
+
+    gameVersion.setString("version: " + std::string(DEERPORTAL_VERSION));
+    gameVersion.setFont(gameFont);
+    gameVersion.setPosition(10,10);
+    gameVersion.setColor(sf::Color::White);
+    gameVersion.setCharacterSize(15);
+ 
 
     initBoard();
     renderTexture.clear(sf::Color::Black);
@@ -1072,6 +1080,7 @@ void Game::render(float deltaTime)
 //        //        renderTexture.draw(menuTxt, &shaderBlur);
         //        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
+        renderTexture.draw(gameVersion);
         renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);

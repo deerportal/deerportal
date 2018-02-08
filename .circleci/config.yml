@@ -1,0 +1,10 @@
+version: 2
+jobs:
+   build:
+     docker:
+       - image: ubuntu:xenial
+     steps:
+       - checkout
+       - run: apt-get update
+       - run: apt-get install cmake libsfml-dev g++ -y
+       - run: cmake .

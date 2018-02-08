@@ -1,3 +1,9 @@
+parts/
+prime/
+snap/
+stage/
+DeerPortal
+*.snap
 *.o
 enfucraft
 enfucraft.pro.user
@@ -10,3 +16,9 @@ pagan_board.pro.user
 *.Debug
 *.debhelper.log
 debian/deerportal
+MakeCache.txt
+CMakeFiles/
+CPackConfig.cmake
+CPackSourceConfig.cmake
+cmake_install.cmake
+CMakeCache.txt
