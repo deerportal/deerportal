@@ -110,6 +110,7 @@ private:
     sf::Text endGameTxt;
     sf::Text endGameTxtAmount[4];
     sf::Text paganHolidayTxt;
+    sf::Text gameVersion;
     sf::Shader shaderBlur;
     sf::Shader shaderPixel;
     sf::Shader shaderDark;

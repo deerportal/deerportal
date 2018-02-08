@@ -1,5 +1,5 @@
 name: deerportal
-version: "0.7"
+version: "0.7.2.dev"
 summary: DeerPortal game
 description: Some description for the game
 grade: stable
@@ -25,5 +25,6 @@ parts:
     build-packages:
       - libsfml-dev
       - libgl1-mesa-dri
+      - libopenal-dev
 
     after: [desktop-gtk3]

@@ -1,3 +1,9 @@
+parts/
+prime/
+snap/
+stage/
+DeerPortal
+*.snap
 *.o
 enfucraft
 enfucraft.pro.user
