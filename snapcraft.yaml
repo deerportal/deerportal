@@ -1,0 +1,29 @@
+name: deerportal
+version: "0.7"
+summary: DeerPortal game
+description: Some description for the game
+grade: stable
+confinement: strict
+apps:
+  deerportal:
+    command: desktop-launch DeerPortal
+
+    plugs:
+      - x11
+      - opengl
+      - pulseaudio
+      - desktop
+      - desktop-legacy
+      - unity7
+
+parts:
+  deer-portal:
+    plugin: cmake
+    source: https://github.com/deerportal/deerportal.git
+    source-branch: cmake-tests
+    source-depth: 1
+    build-packages:
+      - libsfml-dev
+      - libgl1-mesa-dri
+
+    after: [desktop-gtk3]
