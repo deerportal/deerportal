@@ -24,7 +24,7 @@ project(myproject)
 
 
 
-add_definitions(-DDEERPORTAL_VERSION="${DEERPORTAL_VERSION}")
+add_definitions(-DDEERPORTAL_VERSION="${DEERPORTAL_VERSION}.${CMAKE_BUILD_TYPE}")
 # Set version information in a config.h file
 # configure_file(
 #   "${PROJECT_SOURCE_DIR}/config.h.in"
