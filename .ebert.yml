@@ -1,4 +1,21 @@
-# .ebert.yml
+# This configuration was used Ebert to review the deerportal/deerportal repository
+# on 345f4e7410dd04bf7c10e0a16ce28bb769afe6ae.
+# You can make this the default configuration for future reviews by moving this
+# file to your repository as `.ebert.yml` and pushing it to GitHub, and tweak
+# it as you wish - To know more on how to change this file to better review your
+# repository you can go to https://docs.ebertapp.io/configuration and see the configuration
+# details.
+---
+styleguide: plataformatec/linters
 engines:
+  credo:
+    enabled: true
+  fixme:
+    enabled: true
+  shellcheck:
+    enabled: true
+  remark-lint:
+    enabled: true
   gnu-complexity:
     enabled: true
+exclude_paths: []
