@@ -5,6 +5,6 @@ jobs:
        - image: ubuntu:xenial
      steps:
        - checkout
-       - run: lsb_release -a
+       - run: apt-get update
        - run: apt-get install cmake libsfml-dev -y
        - run: cmake .
