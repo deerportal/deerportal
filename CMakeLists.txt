@@ -35,39 +35,8 @@ include_directories(${YOUR_DIRECTORY})
 
 # Define sources and executable
 set(EXECUTABLE_NAME "DeerPortal")
-add_executable(${EXECUTABLE_NAME}
-    main.cpp
-    animatedsprite.cpp
-    animation.cpp
-    banner.cpp
-    boarddiamond.cpp
-    boarddiamondseq.cpp
-    boardelem.cpp
-    boardelems.cpp
-    bubble.cpp
-    calendar.cpp
-    card.cpp
-    cardsdeck.cpp
-    cardslist.cpp
-    character.cpp
-    command.cpp
-    credits.cpp
-    data.cpp
-    elem.cpp
-    game.cpp
-    grouphud.cpp
-    guirounddice.cpp
-    guiwindow.cpp
-    hover.cpp
-    particlesystem.cpp
-    pile.cpp
-    playerhud.cpp
-    rotateelem.cpp
-    rounddice.cpp
-    selector.cpp
-    soundfx.cpp
-    textureholder.cpp
-    tilemap.cpp)
+file( GLOB SRCS src/*.cpp src/*.h )
+add_executable(${EXECUTABLE_NAME} ${SRCS})
 
 
 # Detect and add SFML
