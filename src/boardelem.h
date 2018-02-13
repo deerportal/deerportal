@@ -5,7 +5,7 @@
 #include "tilemap.h"
 #include "textureholder.h"
 
-namespace efc {
+namespace DP {
 sf::RectangleShape createNeighbour(int pos);
 
 class BoardElem: public sf::Sprite

@@ -9,7 +9,7 @@
 
 
 
-namespace efc {
+namespace DP {
     extern std::string seasonsNames[4];
     enum directions {
         DIR_LEFT,
@@ -30,7 +30,7 @@ namespace efc {
 
     extern int possibleExits[4]; // number of portal's exit where player stops to play
     const static int diamondsNumber = 112; // number of all cards / diamonds on the board
-    extern std::array<std::array<int,3>,efc::diamondsNumber> DIAMONDS_SETUP;
+    extern std::array<std::array<int,3>,DP::diamondsNumber> DIAMONDS_SETUP;
     extern std::array<std::array<int,39>,4> occupiedFields;
     const static int numberSteps = 39;
     const static int startPlayers[4] = {0,15,255,240};

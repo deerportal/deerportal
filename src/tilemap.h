@@ -10,7 +10,7 @@
 
 
 
-namespace efc {
+namespace DP {
 enum {
     TILE_SIZE = 40,
     BOARD_SIZE = 16,

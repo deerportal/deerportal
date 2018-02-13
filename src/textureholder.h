@@ -6,7 +6,7 @@
 #include "data.h"
 #include <array>
 
-namespace efc {
+namespace DP {
 
 std::set<int> getTerrainSet();
 

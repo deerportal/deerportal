@@ -4,7 +4,7 @@
 #include "command.h"
 #include "data.h"
 
-Command::Command(efc::Game &currentGame) :
+Command::Command(DP::Game &currentGame) :
     game(currentGame)
 {
 
@@ -123,11 +123,11 @@ void Command::freezePlayer(int playerNumber)
  */
 void Command::processField(int pos)
 {
-    bool startField = std::find(std::begin(efc::startPlayers),
-                            std::end(efc::startPlayers), pos)
-            != std::end(efc::startPlayers);
+    bool startField = std::find(std::begin(DP::startPlayers),
+                            std::end(DP::startPlayers), pos)
+            != std::end(DP::startPlayers);
 
-    if ((startField) && (efc::startPlayers[game.turn]==pos))
+    if ((startField) && (DP::startPlayers[game.turn]==pos))
     {
         game.banner.setText("meditation");
         game.boardDiamonds.reorder(game.turn);

@@ -4,7 +4,7 @@
 #include <algorithm>
 
 
-namespace efc {
+namespace DP {
 
 int initScreenX = 1360;
 int initScreenY = 768;
@@ -331,9 +331,9 @@ void Game::throwDiceMove() {
 void Game::playerMakeMove(int mousePos) {
     players[turn].setFigurePos(mousePos);
     commandManager.processField(mousePos);
-    const int *possibleExit = std::find(std::begin(efc::endPlayers),
-                                        std::end(efc::endPlayers), mousePos);
-    if (possibleExit != efc::endPlayers+4) {
+    const int *possibleExit = std::find(std::begin(DP::endPlayers),
+                                        std::end(DP::endPlayers), mousePos);
+    if (possibleExit != DP::endPlayers+4) {
         players[turn].done=true;
         players[turn].reachedPortal=true;
         commandManager.removeAllItems(turn);
@@ -474,18 +474,18 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 }
 
 Game::Game(bool newTestMode):
-    screenSize(efc::initScreenX,efc::initScreenY),
+    screenSize(DP::initScreenX,DP::initScreenY),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewTiles(sf::FloatRect(0, 0, 1360, 768)),
-    selector(efc::TILE_SIZE),
+    selector(DP::TILE_SIZE),
     character(&textures, 3),
     gameTitle("deerportal"),
     roundDice(players),
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-    window(sf::VideoMode(efc::initScreenX, efc::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
+    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
@@ -617,16 +617,16 @@ Game::Game(bool newTestMode):
             sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp,viewTiles);
             //            sf::Vector2f localPositionGui = window.mapPixelToCoords(localPositionTmp,viewGui);
             sf::Vector2f localPositionFull = window.mapPixelToCoords(localPositionTmp,viewFull);
-            int mousePosX = (int)localPosition.x / efc::TILE_SIZE;
-            int mousePosY = (int)localPosition.y / efc::TILE_SIZE;
-            int mousePos = efc::transCords(sf::Vector2i(mousePosX, mousePosY));
+            int mousePosX = (int)localPosition.x / DP::TILE_SIZE;
+            int mousePosY = (int)localPosition.y / DP::TILE_SIZE;
+            int mousePos = DP::transCords(sf::Vector2i(mousePosX, mousePosY));
             if(event.type == sf::Event::Closed)
                 window.close();
 
             // Showing mouse hover
             if (currentState==state_game)
             {
-                if ((localPosition.x>efc::TILE_SIZE*efc::BOARD_SIZE) || (localPosition.x<0)  || (localPosition.y>efc::TILE_SIZE*efc::BOARD_SIZE) || (localPosition.y<0))
+                if ((localPosition.x>DP::TILE_SIZE*DP::BOARD_SIZE) || (localPosition.x<0)  || (localPosition.y>DP::TILE_SIZE*DP::BOARD_SIZE) || (localPosition.y<0))
                 {
                     showPlayerBoardElems = false;
                 } else {
@@ -634,9 +634,9 @@ Game::Game(bool newTestMode):
                 }
             }
 
-            if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=efc::BOARD_SIZE*efc::TILE_SIZE) && (localPosition.y<=efc::BOARD_SIZE*efc::TILE_SIZE))
+            if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=DP::BOARD_SIZE*DP::TILE_SIZE) && (localPosition.y<=DP::BOARD_SIZE*DP::TILE_SIZE))
             {
-                selector.setPosition((int) (localPosition.x / efc::TILE_SIZE)*efc::TILE_SIZE, ((int) localPosition.y / efc::TILE_SIZE)*efc::TILE_SIZE);
+                selector.setPosition((int) (localPosition.x / DP::TILE_SIZE)*DP::TILE_SIZE, ((int) localPosition.y / DP::TILE_SIZE)*DP::TILE_SIZE);
             }
 
             /*!

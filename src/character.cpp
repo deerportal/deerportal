@@ -29,7 +29,7 @@ std::array<int,2> Character::getMovements(int howFar)
                 moveRight = indexRight;
                 if (indexRight==-1)
                     break;
-                indexRight = efc::boards[indexRight][1];
+                indexRight = DP::boards[indexRight][1];
                 if (indexRight==-2)
                 {
                     indexRight = moveRight;
@@ -49,7 +49,7 @@ std::array<int,2> Character::getMovements(int howFar)
 
                 if (indexLeft==-1)
                     break;
-                indexLeft = efc::boards[indexLeft][0];
+                indexLeft = DP::boards[indexLeft][0];
                 if (indexLeft==-2)
                 {
                     indexLeft = moveLeft;
@@ -84,7 +84,7 @@ void Character::setBoardPosition(int playerNumber)
 
 void Character::setDir(int direction)
 {
-    if (direction==efc::DIR_LEFT)
+    if (direction==DP::DIR_LEFT)
         currentAnimation = &walkingAnimationLeft;
 }
 
@@ -106,7 +106,7 @@ void Character::play()
     //    animatedSprite.play(*currentAnimation);
     animatedSprite.play(animations[currentAnimationIndex]);
 //    sf::Vector2f a(getPosition());
-//    sf::Vector2i position(efc::getCords(a));
+//    sf::Vector2i position(DP::getCords(a));
 
 //    std::cout << a.x << "    " << a.y << "           "
 //              << position.x << "       " << position.y << " pos > "
@@ -155,12 +155,12 @@ Character::Character(TextureHolder *textures, int playerNumber):
     leftChar.move(202,76);
     rightChar.move(202,76);
 
-    animations[efc::DIR_LEFT] = walkingAnimationLeft;
-    animations[efc::DIR_RIGHT] = walkingAnimationRight;
-    animations[efc::DIR_UP] = walkingAnimationUp;
-    animations[efc::DIR_DOWN] = walkingAnimationDown;
+    animations[DP::DIR_LEFT] = walkingAnimationLeft;
+    animations[DP::DIR_RIGHT] = walkingAnimationRight;
+    animations[DP::DIR_UP] = walkingAnimationUp;
+    animations[DP::DIR_DOWN] = walkingAnimationDown;
 
-    setDirIndex(efc::DIR_LEFT);
+    setDirIndex(DP::DIR_LEFT);
     setDir();
 
     std::array<int, 4> boardPositions{{0,15,255-15,255}};
@@ -176,29 +176,29 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const
 void Character::update(sf::Time deltaTime)
 {
     sf::Vector2f a(getPosition());
-    sf::Vector2i position(efc::getCords(a));
+    sf::Vector2i position(DP::getCords(a));
     nextRedirect -= deltaTime.asSeconds();
     if (nextRedirect<0)
     {
         int number = rand() % 2;
-        if ((currentAnimationIndex==efc::DIR_LEFT) || (currentAnimationIndex==efc::DIR_RIGHT))
+        if ((currentAnimationIndex==DP::DIR_LEFT) || (currentAnimationIndex==DP::DIR_RIGHT))
         {
             if (number==0){
-                setDirIndex(efc::DIR_DOWN);
+                setDirIndex(DP::DIR_DOWN);
                 setDir();
             } else if (number==1)
             {
-                setDirIndex(efc::DIR_UP);
+                setDirIndex(DP::DIR_UP);
                 setDir();
             }
-        } else if ((currentAnimationIndex==efc::DIR_UP) || (currentAnimationIndex==efc::DIR_DOWN))
+        } else if ((currentAnimationIndex==DP::DIR_UP) || (currentAnimationIndex==DP::DIR_DOWN))
         {
             if (number==0){
-                setDirIndex(efc::DIR_LEFT);
+                setDirIndex(DP::DIR_LEFT);
                 setDir();
             } else if (number==1)
             {
-                setDirIndex(efc::DIR_RIGHT);
+                setDirIndex(DP::DIR_RIGHT);
                 setDir();
             }
         }
@@ -207,33 +207,33 @@ void Character::update(sf::Time deltaTime)
 
     }
 
-    if (currentAnimationIndex==efc::DIR_UP)
+    if (currentAnimationIndex==DP::DIR_UP)
     {
         if (position.y<2)
         {
-            setDirIndex(efc::DIR_DOWN);
+            setDirIndex(DP::DIR_DOWN);
             setDir();
         }
-    }  else   if (currentAnimationIndex==efc::DIR_DOWN)
+    }  else   if (currentAnimationIndex==DP::DIR_DOWN)
     {
-        if (position.y>efc::BOARD_SIZE-1)
+        if (position.y>DP::BOARD_SIZE-1)
         {
-            setDirIndex(efc::DIR_UP);
+            setDirIndex(DP::DIR_UP);
             setDir();
         }
-    } else   if (currentAnimationIndex==efc::DIR_LEFT)
+    } else   if (currentAnimationIndex==DP::DIR_LEFT)
     {
 
         if (position.x<2)
         {
-            setDirIndex(efc::DIR_RIGHT);
+            setDirIndex(DP::DIR_RIGHT);
             setDir();
         }
-    }  else   if (currentAnimationIndex==efc::DIR_RIGHT)
+    }  else   if (currentAnimationIndex==DP::DIR_RIGHT)
     {
-        if (position.x>efc::BOARD_SIZE-1)
+        if (position.x>DP::BOARD_SIZE-1)
         {
-            setDirIndex(efc::DIR_LEFT);
+            setDirIndex(DP::DIR_LEFT);
             setDir();
         }
     }
@@ -243,11 +243,11 @@ void Character::update(sf::Time deltaTime)
     {
         if (moveLeft>-1)
         {
-//            sf::Vector2i cordsLeft(efc::transPosition(moveLeft));
-            sf::Vector2i neededCords(efc::transPosition(moveLeft));
+//            sf::Vector2i cordsLeft(DP::transPosition(moveLeft));
+            sf::Vector2i neededCords(DP::transPosition(moveLeft));
 
-            sf::Vector2f newPos(efc::getScreenPos(neededCords));
-            leftChar.setPosition(newPos.x+efc::TILE_SIZE/4,newPos.y);
+            sf::Vector2f newPos(DP::getScreenPos(neededCords));
+            leftChar.setPosition(newPos.x+DP::TILE_SIZE/4,newPos.y);
 
             leftChar.move(202,76);
         }
@@ -255,11 +255,11 @@ void Character::update(sf::Time deltaTime)
 
         if (moveRight>-1)
         {
-//            sf::Vector2i cordsRight(efc::transPosition(moveRight));
-            sf::Vector2i neededCords(efc::transPosition(moveRight));
+//            sf::Vector2i cordsRight(DP::transPosition(moveRight));
+            sf::Vector2i neededCords(DP::transPosition(moveRight));
 
-            sf::Vector2f newPos(efc::getScreenPos(neededCords));
-            rightChar.setPosition(newPos.x+efc::TILE_SIZE/4,newPos.y);
+            sf::Vector2f newPos(DP::getScreenPos(neededCords));
+            rightChar.setPosition(newPos.x+DP::TILE_SIZE/4,newPos.y);
             rightChar.move(202,76);
 
         }

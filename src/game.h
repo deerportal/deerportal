@@ -32,7 +32,7 @@
 //class Command;
 #include "banner.h"
 #include "credits.h"
-namespace efc {
+namespace DP {
 
 extern int initScreenX;
 extern int initScreenY;

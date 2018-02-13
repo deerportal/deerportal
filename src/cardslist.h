@@ -7,7 +7,7 @@
 #include <chrono>       // std::chrono::system_clock
 #include "card.h"
 
-namespace efc {
+namespace DP {
     const static std::array<int,32> cardsDistribution = {{
         0,0,0,0,0,0,0,0,
         1,1,1,1,1,1,1,1,
@@ -17,7 +17,7 @@ namespace efc {
     const static std::array<int,2> cardsDistributionDebug = {{
         2,3
     }};
-    const static int PILE_SIZE = efc::cardsDistribution.size();
+    const static int PILE_SIZE = DP::cardsDistribution.size();
 
 }
 
@@ -33,7 +33,7 @@ public:
      * \brief element Number of the element
      */
 
-    std::array<Card, efc::PILE_SIZE> cardsPile;
+    std::array<Card, DP::PILE_SIZE> cardsPile;
     int currentCard;
     int element; /*!< Number of the element */
     float invisibleLeft;

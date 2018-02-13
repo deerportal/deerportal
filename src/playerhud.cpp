@@ -6,7 +6,7 @@
 
 std::set<int> Player::getTerrainSet(){
     std::set<int> terrain;
-    for (int i: efc::terrainArray)
+    for (int i: DP::terrainArray)
     {
         terrain.insert(i);
     }
@@ -16,7 +16,7 @@ std::set<int> Player::getTerrainSet(){
 std::set<int> Player::getBusy(){
 
     std::set<int> busyTiles;
-    for (std::pair<int, efc::BoardElem> i: elems.items_map)
+    for (std::pair<int, DP::BoardElem> i: elems.items_map)
     {
         busyTiles.insert(i.first);
     }
@@ -26,10 +26,10 @@ std::set<int> Player::getBusy(){
 
 std::set<int> Player::getNeighbours(){
     std::set<int> neighbours;
-    for (std::pair<int, efc::BoardElem> i: elems.items_map)
+    for (std::pair<int, DP::BoardElem> i: elems.items_map)
     {
         std::set<int> terrain = getTerrainSet();
-        std::set<int>  neighboursVector(efc::getNeighbours(i.second.pos));
+        std::set<int>  neighboursVector(DP::getNeighbours(i.second.pos));
         for (int j: neighboursVector)
         {
             if ((elems.items_map.count(j) == 0) && (terrain.count(j)==0))
@@ -170,18 +170,18 @@ void Player::update(sf::Time deltaTime)
         for (auto&& i: characters)
         {
             sf::Vector2f movement(0.f, 0.f);
-            if  (i.currentAnimationIndex==efc::DIR_LEFT)
+            if  (i.currentAnimationIndex==DP::DIR_LEFT)
                 movement = sf::Vector2f (-10.f, 0.f);
-            else if  (i.currentAnimationIndex==efc::DIR_RIGHT)
+            else if  (i.currentAnimationIndex==DP::DIR_RIGHT)
                 movement = sf::Vector2f (10.f, 0.f);
-            else if  (i.currentAnimationIndex==efc::DIR_UP)
+            else if  (i.currentAnimationIndex==DP::DIR_UP)
                 movement = sf::Vector2f (0.f, -10.f);
-            else if  (i.currentAnimationIndex==efc::DIR_DOWN)
+            else if  (i.currentAnimationIndex==DP::DIR_DOWN)
                 movement = sf::Vector2f (0.f, 10.f);
             i.update(deltaTime);
         }
     } else{
-        characters[0].currentAnimationIndex=efc::DIR_DOWN;
+        characters[0].currentAnimationIndex=DP::DIR_DOWN;
     }
 }
 

@@ -18,10 +18,10 @@ void BoardElems::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
     states.blendMode = blendmode;
 
-    for (const efc::BoardElem &i: items)
+    for (const DP::BoardElem &i: items)
     {
        target.draw(i, states);
-        std::set<int>  neighbours(efc::getNeighbours(i.pos));
+        std::set<int>  neighbours(DP::getNeighbours(i.pos));
         if ((active==true) && (displayNeighbours==true))
         {
             for (int j: neighbours)
@@ -29,7 +29,7 @@ void BoardElems::draw(sf::RenderTarget& target, sf::RenderStates states) const
                 if (items_map.count(j)==0)
                 {
                     neighboursAll.insert(j);
-//                    sf::RectangleShape sprite(efc::createNeighbour(j));
+//                    sf::RectangleShape sprite(DP::createNeighbour(j));
 //                    target.draw(sprite, states);
                 }
             }
@@ -41,7 +41,7 @@ void BoardElems::draw(sf::RenderTarget& target, sf::RenderStates states) const
         {
             if (items_map.count(j)==0)
             {
-                sf::RectangleShape sprite(efc::createNeighbour(j));
+                sf::RectangleShape sprite(DP::createNeighbour(j));
                 target.draw(sprite, states);
             }
         }

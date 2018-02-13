@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-namespace efc {
+namespace DP {
 /*!
  * \brief The GroupHud is a drawable type describing a season and a round.
  */

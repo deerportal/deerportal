@@ -21,12 +21,12 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *comma
         textPileTitle[i].setCharacterSize(16);
         textPileTitle[i].setPosition(cardsPos[i][0]+10,cardsPos[i][1]+100);
 
-        for (unsigned int j=0;j<efc::cardsDistribution.size();j++)
+        for (unsigned int j=0;j<DP::cardsDistribution.size();j++)
         {
 
-            int cardTypeInt = efc::cardsDistribution[j];
+            int cardTypeInt = DP::cardsDistribution[j];
 
-            cardsList[i].cardsPile[j].cardType = efc::cardsTypes[cardTypeInt];
+            cardsList[i].cardsPile[j].cardType = DP::cardsTypes[cardTypeInt];
             cardsList[i].cardsPile[j].cardTypeInt = cardTypeInt;
             spriteCardBases[i].setTexture(this->textures->cardsTextures[i][cardTypeInt]);
 
@@ -65,7 +65,7 @@ void CardsDeck::setTitles(int number)
 {
       int cardTypeInt = getCardTypeInt(number);
 
-        textPileTitle[number].setString(efc::cardsTypes[cardTypeInt]);
+        textPileTitle[number].setString(DP::cardsTypes[cardTypeInt]);
 //        int val = getCardTypeInt(number);
 
 
@@ -90,7 +90,7 @@ void CardsDeck::nextCard(int pileNumber)
         cardsList[pileNumber].invisibleLeft = 0.75f;
         unsigned int currentCard = getCurrentCard(pileNumber);
 
-        if (currentCard>=efc::cardsDistribution.size()-1)
+        if (currentCard>=DP::cardsDistribution.size()-1)
         {
             cardsList[pileNumber].active = false;
             commandManager->removeAllCardElement(pileNumber);
@@ -115,7 +115,7 @@ int CardsDeck::getCurrentCard(int pileNumber)
 
 std::string CardsDeck::getTitle(int pileNumber)
 {
-    std::string currentText = efc::cardsTypes[getCardTypeInt(pileNumber)];
+    std::string currentText = DP::cardsTypes[getCardTypeInt(pileNumber)];
     return currentText;
 }
 

@@ -3,12 +3,12 @@
 BoardDiamondSeq::BoardDiamondSeq(TextureHolder *textures)
 {
     this->textures = textures;
-    for (int i=0;  i<efc::diamondsNumber; i++)
+    for (int i=0;  i<DP::diamondsNumber; i++)
     {
         diamonds[i] = BoardDiamond(this->textures,
-                efc::DIAMONDS_SETUP[i][0],
-                efc::DIAMONDS_SETUP[i][1],
-                efc::DIAMONDS_SETUP[i][2]);
+                DP::DIAMONDS_SETUP[i][0],
+                DP::DIAMONDS_SETUP[i][1],
+                DP::DIAMONDS_SETUP[i][2]);
     }
     reorder();
 }
@@ -16,16 +16,16 @@ BoardDiamondSeq::BoardDiamondSeq(TextureHolder *textures)
 void BoardDiamondSeq::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
-    for (int i=0;  i<efc::diamondsNumber; i++)
+    for (int i=0;  i<DP::diamondsNumber; i++)
     {
         target.draw(diamonds[i],states);
     }
 }
 
-std::array<int,efc::diamondsNumber> BoardDiamondSeq::getBoardPositions()
+std::array<int,DP::diamondsNumber> BoardDiamondSeq::getBoardPositions()
 {
-    std::array<int, efc::diamondsNumber> results;
-    for (int i=0;  i<efc::diamondsNumber; i++)
+    std::array<int, DP::diamondsNumber> results;
+    for (int i=0;  i<DP::diamondsNumber; i++)
     {
         results[i] = diamonds[i].getBoardPosition();
     }
@@ -34,7 +34,7 @@ std::array<int,efc::diamondsNumber> BoardDiamondSeq::getBoardPositions()
 
 //bool BoardDiamondSeq::ifFieldIsEmpty(int pos, int element)
 //{
-//    for (int i=element*efc::diamondsNumber/4;i<(efc::diamondsNumber/4)+(element*efc::diamondsNumber/4);i++)
+//    for (int i=element*DP::diamondsNumber/4;i<(DP::diamondsNumber/4)+(element*DP::diamondsNumber/4);i++)
 //    {
 //        if (diamonds[i].boardPosition==pos)
 //            return false;
@@ -47,7 +47,7 @@ bool BoardDiamondSeq::ifFieldIsEmpty(int pos)
 {
     for (int element=0;element<4;element++)
     {
-        for (int i=element*efc::diamondsNumber/4;i<(efc::diamondsNumber/4)+(element*efc::diamondsNumber/4);i++)
+        for (int i=element*DP::diamondsNumber/4;i<(DP::diamondsNumber/4)+(element*DP::diamondsNumber/4);i++)
         {
             if (diamonds[i].boardPosition==pos)
                return false;
@@ -59,8 +59,8 @@ bool BoardDiamondSeq::ifFieldIsEmpty(int pos)
 
 int BoardDiamondSeq::getRandomPos(int playerNumber)
 {
-    std::set<int> setSteps(efc::occupiedFields[playerNumber].cbegin(), efc::occupiedFields[playerNumber].cend());
-    for (int i=playerNumber*efc::diamondsNumber/4;i<(efc::diamondsNumber/4)+(playerNumber*efc::diamondsNumber/4);i++)
+    std::set<int> setSteps(DP::occupiedFields[playerNumber].cbegin(), DP::occupiedFields[playerNumber].cend());
+    for (int i=playerNumber*DP::diamondsNumber/4;i<(DP::diamondsNumber/4)+(playerNumber*DP::diamondsNumber/4);i++)
     {
         if (diamonds[i].boardPosition!=-1)
         {
@@ -81,7 +81,7 @@ void BoardDiamondSeq::reorder()
     for (int element=0;element<4;element++)
     {
         int start = element;
-        for (int i=start*efc::diamondsNumber/4;i<(efc::diamondsNumber/4)+(start*efc::diamondsNumber/4);i++)
+        for (int i=start*DP::diamondsNumber/4;i<(DP::diamondsNumber/4)+(start*DP::diamondsNumber/4);i++)
         {
             int step = getRandomPos(element);
             diamonds[i].setBoardPosition(step);
@@ -102,7 +102,7 @@ void BoardDiamondSeq::reorder(int element)
 
     int newElement = start;
 
-    for (int i=start*efc::diamondsNumber/4;i<(efc::diamondsNumber/4)+(start*efc::diamondsNumber/4);i++)
+    for (int i=start*DP::diamondsNumber/4;i<(DP::diamondsNumber/4)+(start*DP::diamondsNumber/4);i++)
     {
         int step = getRandomPos(newElement);
         diamonds[i].setBoardPosition(step);
@@ -112,7 +112,7 @@ void BoardDiamondSeq::reorder(int element)
 
 void BoardDiamondSeq::collectField(int pos)
 {
-    for (int i=0;  i<efc::diamondsNumber; i++)
+    for (int i=0;  i<DP::diamondsNumber; i++)
     {
         if (diamonds[i].boardPosition==pos)
         {
@@ -126,7 +126,7 @@ void BoardDiamondSeq::collectField(int pos)
 
 int BoardDiamondSeq::getNumberForField(int pos)
 {
-    for (int i=0;  i<efc::diamondsNumber; i++)
+    for (int i=0;  i<DP::diamondsNumber; i++)
     {
         if (diamonds[i].boardPosition==pos)
         {

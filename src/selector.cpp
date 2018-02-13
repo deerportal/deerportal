@@ -13,7 +13,7 @@ Selector::Selector(int squareSize)
 
 void Selector::changeColor(int colorNumber)
 {
-    sf::Color color(efc::playersColors[colorNumber]);
+    sf::Color color(DP::playersColors[colorNumber]);
     color.a = 128;
     rectangle.setFillColor(color);
 

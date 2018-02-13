@@ -1,7 +1,7 @@
 #include <array>
 #include "data.h"
 
-namespace efc {
+namespace DP {
 
 std::string seasonsNames[4] = {"winter", "spring", "summer", "fall"};
 
@@ -68,7 +68,7 @@ sf::Color playersColors[4] = {
 
 };
 
-std::array<std::array<int,3>,efc::diamondsNumber> DIAMONDS_SETUP =
+std::array<std::array<int,3>,DP::diamondsNumber> DIAMONDS_SETUP =
 {
     {
         {{0,0,-1}},{{0,0,-1}},

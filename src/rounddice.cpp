@@ -25,7 +25,7 @@ void RoundDice::setDiceTexture(){
 }
 
 void RoundDice::setColor(int playerNumber){
-    sf::Color color(efc::playersColors[playerNumber]);
+    sf::Color color(DP::playersColors[playerNumber]);
     spriteDice.setColor(color);
 }
 

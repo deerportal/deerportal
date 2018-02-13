@@ -2,7 +2,7 @@
 #define COMMAND_H
 #include "vector"
 
-namespace efc {
+namespace DP {
     class Game;
 }
 
@@ -10,7 +10,7 @@ class Command
 {
 public:
 //    Command();
-    explicit Command(efc::Game &currentGame);
+    explicit Command(DP::Game &currentGame);
 
     /*!
      * \brief Removes a diamond from the player's field.
@@ -20,7 +20,7 @@ public:
     bool removeCard(int playerNumber);
     void freezePlayer(int playerNumber);
      void removeAllItems(int playerNumber) const;
-    efc::Game &game;
+    DP::Game &game;
 
     void processField(int pos);
     void processCard(int pos);

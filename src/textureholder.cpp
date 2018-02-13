@@ -1,11 +1,11 @@
 #include <iostream>
 #include "textureholder.h"
 
-namespace efc {
+namespace DP {
 
 std::set<int> getTerrainSet() {
     std::set<int> terrain;
-    for (int i: efc::terrainArray)
+    for (int i: DP::terrainArray)
     {
         terrain.insert(i);
     }

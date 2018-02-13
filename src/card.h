@@ -3,7 +3,7 @@
 #include <string>
 #include <array>
 
-namespace efc {
+namespace DP {
 const static std::array<std::string, 4> cardsTypes = {
     {"stop", "card", "diamond", "diamond x 2"}
 };

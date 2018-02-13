@@ -1,20 +1,20 @@
 #include "tilemap.h"
-namespace efc {
+namespace DP {
 
 /*!
  * Returns sf::Vector2i cords taking int board position as input.
  */
 sf::Vector2i transPosition(int pos) {
-    int x = (int) pos % efc::BOARD_SIZE;
-    int y = (int) pos / efc::BOARD_SIZE;
+    int x = (int) pos % DP::BOARD_SIZE;
+    int y = (int) pos / DP::BOARD_SIZE;
     sf::Vector2i cords(x,y);
 
     return cords;
 }
 
 sf::Vector2i transTilePosition(int pos) {
-    int x = (int) pos % efc::TILE_BOARD_SIZE;
-    int y = (int) pos / efc::TILE_BOARD_SIZE;
+    int x = (int) pos % DP::TILE_BOARD_SIZE;
+    int y = (int) pos / DP::TILE_BOARD_SIZE;
     sf::Vector2i cords(x,y);
 
     return cords;
@@ -25,8 +25,8 @@ sf::Vector2i transTilePosition(int pos) {
  * as the input.
  */
 sf::Vector2i getCords(sf::Vector2f position){
-    int x = position.x/efc::TILE_BOARD_SIZE;
-    int y = position.y/efc::TILE_BOARD_SIZE;
+    int x = position.x/DP::TILE_BOARD_SIZE;
+    int y = position.y/DP::TILE_BOARD_SIZE;
     return sf::Vector2i(x, y);
 }
 
@@ -35,8 +35,8 @@ sf::Vector2i getCords(sf::Vector2f position){
  * as the input.
  */
 sf::Vector2f getScreenPos(sf::Vector2i cords){
-    float x = cords.x * efc::TILE_SIZE;
-    float y = cords.y * efc::TILE_SIZE;
+    float x = cords.x * DP::TILE_SIZE;
+    float y = cords.y * DP::TILE_SIZE;
     return sf::Vector2f(x, y);
 }
 
@@ -47,27 +47,27 @@ sf::Vector2f getScreenPos(sf::Vector2i cords){
  */
 int transCords(sf::Vector2i cords) {
     //    std::cout << cords.x << " " << cords.y << " " << std::endl;
-    int pos = (cords.y * efc::BOARD_SIZE)+cords.x;
+    int pos = (cords.y * DP::BOARD_SIZE)+cords.x;
     return pos;
 }
 
 sf::IntRect transPosIntoRect(int pos)
 {
-    sf::Vector2i cords = efc::transTilePosition(pos);
-    sf::IntRect posRect((int)cords.x*efc::TILE_SIZE, (int)cords.y*efc::TILE_SIZE, efc::TILE_SIZE, efc::TILE_SIZE);
+    sf::Vector2i cords = DP::transTilePosition(pos);
+    sf::IntRect posRect((int)cords.x*DP::TILE_SIZE, (int)cords.y*DP::TILE_SIZE, DP::TILE_SIZE, DP::TILE_SIZE);
     //    std::cout << "debug transPosIntoRect " << pos << " "<<  cords.x << " " << cords.y << " " << posRect.left << " " << posRect.top << std::endl;
     return posRect;
 }
 
 std::set<int>  getNeighbours(int pos) {
-    sf::Vector2i cords = efc::transPosition(pos);
+    sf::Vector2i cords = DP::transPosition(pos);
 
 
 
     std::vector<int> neighbours;
     std::set<int> neighboursSet;
 
-    std::set<int> terrain = efc::getTerrainSet();
+    std::set<int> terrain = DP::getTerrainSet();
 
 
     int value = -1;
@@ -82,7 +82,7 @@ std::set<int>  getNeighbours(int pos) {
 
 
     }
-    if (cords.x<efc::BOARD_SIZE-1)
+    if (cords.x<DP::BOARD_SIZE-1)
     {
         neighbours.push_back(pos+1);
         //        neighboursSet.insert(pos+1);
@@ -93,17 +93,17 @@ std::set<int>  getNeighbours(int pos) {
 
     if (cords.y>0)
     {
-        neighbours.push_back(pos-efc::BOARD_SIZE);
-        //        neighboursSet.insert(pos-efc::BOARD_SIZE);
-        value = pos-efc::BOARD_SIZE;
+        neighbours.push_back(pos-DP::BOARD_SIZE);
+        //        neighboursSet.insert(pos-DP::BOARD_SIZE);
+        value = pos-DP::BOARD_SIZE;
         if ((value!=-1) && (terrain.count(value)==0))
             neighboursSet.insert(value);
     }
-    if (cords.y<efc::BOARD_SIZE)
+    if (cords.y<DP::BOARD_SIZE)
     {
-        neighbours.push_back(pos+efc::BOARD_SIZE);
-        //        neighboursSet.insert(pos+efc::BOARD_SIZE);
-        value = pos+efc::BOARD_SIZE;
+        neighbours.push_back(pos+DP::BOARD_SIZE);
+        //        neighboursSet.insert(pos+DP::BOARD_SIZE);
+        value = pos+DP::BOARD_SIZE;
         if ((value!=-1) && (terrain.count(value)==0))
             neighboursSet.insert(value);
     }

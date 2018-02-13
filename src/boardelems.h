@@ -7,8 +7,8 @@ class BoardElems: public sf::Drawable, public sf::Transformable
 {
 public:
     BoardElems();
-    std::vector<efc::BoardElem> items;
-    std::map<int, efc::BoardElem> items_map;
+    std::vector<DP::BoardElem> items;
+    std::map<int, DP::BoardElem> items_map;
     bool active;
     bool displayNeighbours;
 private:

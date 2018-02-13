@@ -49,7 +49,7 @@ void RotateElem::update(sf::Time deltaTime)
 
 void RotateElem::setColor()
 {
-//    spriteRotate.setColor(efc::playersColors[playerNumber]);
+//    spriteRotate.setColor(DP::playersColors[playerNumber]);
     spriteRotate.setColor(sf::Color::White);
 }
 

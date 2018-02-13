@@ -14,14 +14,14 @@ int main(int argc,      // Number of strings in array argv
         commandMe = argv[1];
         if ((argc==2) && (commandMe=="--test"))
         {
-            efc::Game game(true);
+            DP::Game game(true);
 
         } else{
-            efc::Game game(false);
+            DP::Game game(false);
         }
     } else
     {
-        efc::Game game(false);
+        DP::Game game(false);
     }
 
     return 0;

@@ -1,7 +1,7 @@
 #include "grouphud.h"
 #include "data.h"
 
-namespace efc {
+namespace DP {
 
 GroupHud::GroupHud(sf::Font *gameFont)
 {
@@ -27,7 +27,7 @@ void GroupHud::setFont(sf::Font *gameFont) {
 }
 
 void GroupHud::setSeason(int seasonNumber){
-   seasonName.setString("Season: " + efc::seasonsNames[seasonNumber]);
+   seasonName.setString("Season: " + DP::seasonsNames[seasonNumber]);
    setPosition(440,12);
 
 

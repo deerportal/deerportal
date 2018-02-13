@@ -27,9 +27,9 @@ class BoardDiamondSeq : public sf::Drawable, public sf::Transformable
 public:
     explicit BoardDiamondSeq(TextureHolder *textures);
     TextureHolder *textures;
-    BoardDiamond diamonds[efc::diamondsNumber];
+    BoardDiamond diamonds[DP::diamondsNumber];
 
-    std::array<int,efc::diamondsNumber> getBoardPositions();
+    std::array<int,DP::diamondsNumber> getBoardPositions();
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     int getRandomPos(int playerNumber);
 

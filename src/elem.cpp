@@ -12,8 +12,8 @@ Elem::Elem()
 int Elem::getBoardPosition()
 {
     sf::Vector2f currentPos(getPosition());
-    sf::Vector2i currentCords(efc::getCords(currentPos));
-    int currentBoardPosition = efc::transCords(currentCords);
+    sf::Vector2i currentCords(DP::getCords(currentPos));
+    int currentBoardPosition = DP::transCords(currentCords);
     return currentBoardPosition;
 }
 
@@ -24,9 +24,9 @@ int Elem::getBoardPosition()
 
 void Elem::setBoardPosition(int boardPosition)
 {
-    sf::Vector2i neededCords(efc::transPosition(boardPosition));
+    sf::Vector2i neededCords(DP::transPosition(boardPosition));
 
-    sf::Vector2f newPos(efc::getScreenPos(neededCords));
+    sf::Vector2f newPos(DP::getScreenPos(neededCords));
 
     setPosition(newPos.x, newPos.y);
     this->boardPosition = boardPosition;
@@ -39,7 +39,7 @@ void Elem::setBoardPosition(int boardPosition)
 
    sf::Vector2i newVecPos(getPosition());
 //   sf::FloatRect newSize(getGlobalBounds());
-   float newX =  newVecPos.x + (efc::TILE_SIZE/3);
+   float newX =  newVecPos.x + (DP::TILE_SIZE/3);
 //   newX = newX - (newSize.width);
    setPosition(newX, newPos.y);
    move(202,76);
