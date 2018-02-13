@@ -99,5 +99,5 @@ DISTFILES += \
 QMAKE_CXXFLAGS += -std=gnu++0x -Wpedantic -mwindows
 QMAKE_LFLAGS = -static -static-libgcc -static-libstdc++ -mwindows
 TARGET = "Deer Portal"
-win32:RC_ICONS += windows.ico
-win32:RC_FILE += DeerPortal.rc
+win32:RC_ICONS += scripts/windows.ico
+win32:RC_FILE += scripts/DeerPortal.rc
