@@ -1,15 +1,32 @@
-#Change this if you need to target a specific CMake version
+	#Change this if you need to target a specific CMake version
 cmake_minimum_required(VERSION 3.1)
 set (CMAKE_CXX_STANDARD 11)
 
 # Here must be also current version - opposite to debian files which has latest release version
 
-set(DEERPORTAL_MAJOR_VERSION 0)
-set(DEERPORTAL_MINOR_VERSION 7)
-set(DEERPORTAL_PATCH_VERSION 2)
-set(DEERPORTAL_VERSION
-  ${DEERPORTAL_MAJOR_VERSION}.${DEERPORTAL_MINOR_VERSION}.${DEERPORTAL_PATCH_VERSION})
+#set(DEERPORTAL_MAJOR_VERSION 0)
+#set(DEERPORTAL_MINOR_VERSION 7)
+#set(DEERPORTAL_PATCH_VERSION 2)
+#set(DEERPORTAL_VERSION
+#  ${DEERPORTAL_MAJOR_VERSION}.${DEERPORTAL_MINOR_VERSION}.${DEERPORTAL_PATCH_VERSION})
 
+
+
+#file (STRINGS "version.txt" DEERPORTAL_VERSION_MAJOR REGEX "^([0-9]+)")
+#file (STRINGS "version.txt" DEERPORTAL_VERSION_MINOR REGEX "^[0-9]+\\.([0-9]+)")
+file (STRINGS "version.txt" DEERPORTAL_VERSION)
+#string(REGEX REPLACE <regular_expression>
+#	       <replace_expression> <output variable>
+#	              <input> [<input>...])
+#
+
+string(REGEX MATCH "^([0-9]+)" DEERPORTAL_VERSION_MAJOR ${DEERPORTAL_VERSION})
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)\\.([0-9]+).*" "\\2" DEERPORTAL_VERSION_MINOR ${DEERPORTAL_VERSION})
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)\\.([0-9]+.*)" "\\3" DEERPORTAL_VERSION_PATCH ${DEERPORTAL_VERSION})
+MESSAGE( STATUS "DEERPORTAL_VERSION:         " ${DEERPORTAL_VERSION} )
+MESSAGE( STATUS "DEERPORTAL_VERSION_MAJOR:         " ${DEERPORTAL_VERSION_MAJOR} )
+MESSAGE( STATUS "DEERPORTAL_VERSION_MINOR:         " ${DEERPORTAL_VERSION_MINOR} )
+MESSAGE( STATUS "DEERPORTAL_VERSION_PATCH:         " ${DEERPORTAL_VERSION_PATCH} )
 
 # Enable debug symbols by default
 # must be done before project() statement
@@ -37,7 +54,9 @@ include_directories(${YOUR_DIRECTORY})
 set(EXECUTABLE_NAME "DeerPortal")
 file( GLOB SRCS src/*.cpp src/*.h )
 add_executable(${EXECUTABLE_NAME} ${SRCS})
-
+#set(RESOURCE_FILES
+#  assets
+#)
 
 # Detect and add SFML
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
@@ -48,15 +67,19 @@ if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
   target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 endif()
-
+set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+  MACOSX_BUNDLE TRUE
+  MACOSX_FRAMEWORK_IDENTIFIER org.cmake.ExecutableTarget
+  RESOURCE "${RESOURCE_FILES}"
+)
 
 # Install target
 install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
-
+install(DIRECTORY assets DESTINATION share/games/deerportal)
 
 # CPack packaging
 include(InstallRequiredSystemLibraries)
 # set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
-set(CPACK_PACKAGE_VERSION_MAJOR "${DEERPORTAL_MAJOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_MINOR "${DEERPORTAL_MINOR_VERSION}.${DEERPORTAL_PATCH_VERSION}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${DEERPORTAL_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${DEERPORTAL_VERSION_MINOR}.${DEERPORTAL_VERSION_PATCH}")
 include(CPack)

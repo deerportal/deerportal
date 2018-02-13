@@ -33,9 +33,7 @@ script:
   qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew upgrade cmake ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sfml ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sh scripts/travis_before_install_osx.sh; fi
 
 script:
   - cmake .
