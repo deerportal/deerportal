@@ -1,11 +1,12 @@
-[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)[![Build Status](https://travis-ci.org/deerportal/deerportal.svg?branch=master)](https://travis-ci.org/deerportal/deerportal) [![Build Status](https://semaphoreci.com/api/v1/bluszcz/deerportal/branches/master/badge.svg)](https://semaphoreci.com/bluszcz/deerportal) [![Ebert](https://ebertapp.io/github/deerportal/deerportal.svg)](https://ebertapp.io/github/deerportal/deerportal)
+[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)[![Build Status](https://travis-ci.org/deerportal/deerportal.svg?branch=master)](https://travis-ci.org/deerportal/deerportal) [![Build Status](https://semaphoreci.com/api/v1/bluszcz/deerportal/branches/master/badge.svg)](https://semaphoreci.com/bluszcz/deerportal) [![Ebert](https://ebertapp.io/github/deerportal/deerportal.svg)](https://ebertapp.io/github/deerportal/deerportal) {#mainpage}
 
 presents
 
 Deerportal
 -----------
 
-![DeerPortal Game play](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_772.png/@@images/image.png)
+![DeerPortal MultiPlayer Mode](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_771.png/@@images/image.png)
+
 
 Deerportal is a open source (free as a speech, free as a beer) hybrid game which utilize  board and card games mechanisms. World of the game is driven by four classical elemets along with Almighty Deer God.
 
@@ -22,7 +23,8 @@ Features
 
 SFML, Linux, OSX, Windows.
 
-![DeerPortal MultiPlayer Mode](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_771.png/@@images/image.png)
+![DeerPortal Game play](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_772.png/@@images/image.png)
+
 
 ## Installation
 ### Compilation
