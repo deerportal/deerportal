@@ -504,7 +504,7 @@ Game::Game(bool newTestMode):
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
     particleSystem.setDissolutionRate( 10 );
-    particleSystem.setShape( Shape::CIRCLE );
+    particleSystem.setShape( DP::CIRCLE );
     particleSystem.fuel( 1000 );
     playersSpritesCords[0][0] = 202;
     playersSpritesCords[0][1] = 76;

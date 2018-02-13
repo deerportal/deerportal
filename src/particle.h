@@ -26,7 +26,7 @@ class Randomizer {
         std::default_random_engine engine_;
 };
 
-namespace Shape { enum { CIRCLE, SQUARE }; }
+namespace DP { enum { CIRCLE, SQUARE }; }
 
 struct Particle
 {

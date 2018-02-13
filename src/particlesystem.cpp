@@ -12,7 +12,7 @@ ParticleSystem::ParticleSystem( int width, int height )
     m_particleSpeed = 20.0f;
     m_dissolve  = false;
     m_dissolutionRate = 4;
-    m_shape     = Shape::CIRCLE;
+    m_shape     = DP::CIRCLE;
 }
 
 ParticleSystem::~ParticleSystem()
@@ -37,12 +37,12 @@ void ParticleSystem::fuel( int particles )
 
         switch( m_shape )
         {
-        case Shape::CIRCLE:
+        case DP::CIRCLE:
             angle = m_randomizer.rnd(0.0f, 6.2832f);
             particle->vel.x = m_randomizer.rnd(0.0f, cos( angle ));
             particle->vel.y = m_randomizer.rnd(0.0f, sin( angle ));
             break;
-        case Shape::SQUARE:
+        case DP::SQUARE:
             particle->vel.x = m_randomizer.rnd(-1.0f, 1.0f);
             particle->vel.y = m_randomizer.rnd(-1.0f, 1.0f);
             break;
