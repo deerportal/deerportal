@@ -1,9 +1,9 @@
-[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)[![Build Status](https://travis-ci.org/deerportal/deerportal.svg?branch=master)](https://travis-ci.org/deerportal/deerportal) [![Build Status](https://semaphoreci.com/api/v1/bluszcz/deerportal/branches/master/badge.svg)](https://semaphoreci.com/bluszcz/deerportal) [![Ebert](https://ebertapp.io/github/deerportal/deerportal.svg)](https://ebertapp.io/github/deerportal/deerportal) {#mainpage}
+[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)[![Build Status](https://travis-ci.org/deerportal/deerportal.svg?branch=master)](https://travis-ci.org/deerportal/deerportal) [![Build Status](https://semaphoreci.com/api/v1/bluszcz/deerportal/branches/master/badge.svg)](https://semaphoreci.com/bluszcz/deerportal) [![Ebert](https://ebertapp.io/github/deerportal/deerportal.svg)](https://ebertapp.io/github/deerportal/deerportal)
 
 presents
 
-Deerportal
------------
+Deerportal				{#mainpage}
+==========
 
 ![DeerPortal MultiPlayer Mode](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_771.png/@@images/image.png)
 
