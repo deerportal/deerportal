@@ -54,6 +54,10 @@ set_target_properties(${EXECUTABLE_NAME} PROPERTIES
 
 # Install target
 install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+set (ASSETS_BASE_PATH share/games/deerportal)
+add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
+add_definitions(-DASSETS_PATH="${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
+
 install(DIRECTORY assets DESTINATION share/games/deerportal)
 
 # CPack packaging

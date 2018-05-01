@@ -216,11 +216,11 @@ void Game::setCurrentNeighbours ()
 void Game::loadAssets()
 {
 
-    if (!gameFont.loadFromFile("assets/fnt/metal-mania.regular.ttf"))
+    if (!gameFont.loadFromFile(ASSETS_PATH"assets/fnt/metal-mania.regular.ttf"))
     {
         std::exit(1);
     }
-    if (!menuFont.loadFromFile("assets/fnt/metal-macabre.regular.ttf"))
+    if (!menuFont.loadFromFile(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf"))
     {
         std::exit(1);
     }
@@ -230,31 +230,31 @@ void Game::loadAssets()
 
     spriteDeerGod.setTexture(textures.textureDeerGod);
 
-    if (!shaderBlur.loadFromFile("assets/shaders/blur.frag", sf::Shader::Fragment))
+    if (!shaderBlur.loadFromFile(ASSETS_PATH"assets/shaders/blur.frag", sf::Shader::Fragment))
         std::exit(1);
 
-    if (!shaderPixel.loadFromFile("assets/shaders/pixelate.frag", sf::Shader::Fragment))
+    if (!shaderPixel.loadFromFile(ASSETS_PATH"assets/shaders/pixelate.frag", sf::Shader::Fragment))
         std::exit(1);
-    if (!shaderDark.loadFromFile("assets/shaders/dark.frag", sf::Shader::Fragment))
-        std::exit(1);
-
-    if (!textureBackgroundArt.loadFromFile("assets/img/background_land.png"))
+    if (!shaderDark.loadFromFile(ASSETS_PATH"assets/shaders/dark.frag", sf::Shader::Fragment))
         std::exit(1);
 
-    if (!musicGame.openFromFile("assets/audio/game.ogg"))
+    if (!textureBackgroundArt.loadFromFile(ASSETS_PATH"assets/img/background_land.png"))
         std::exit(1);
-    //    if (!musicBackground.openFromFile("assets/audio/wind2.ogg"))
+
+    if (!musicGame.openFromFile(ASSETS_PATH"assets/audio/game.ogg"))
+        std::exit(1);
+    //    if (!musicBackground.openFromFile(ASSETS_PATH"assets/audio/wind2.ogg"))
     //        std::exit(1);
-    if (!musicMenu.openFromFile("assets/audio/menu.ogg"))
+    if (!musicMenu.openFromFile(ASSETS_PATH"assets/audio/menu.ogg"))
         std::exit(1);
 
 
-    if (!sfxClickBuffer.loadFromFile("assets/audio/click.ogg"))
+    if (!sfxClickBuffer.loadFromFile(ASSETS_PATH"assets/audio/click.ogg"))
         std::exit(1);
 
-    if (!sfxDoneBuffer.loadFromFile("assets/audio/done.ogg"))
+    if (!sfxDoneBuffer.loadFromFile(ASSETS_PATH"assets/audio/done.ogg"))
         std::exit(1);
-    //    if (!textureBackground.loadFromFile("assets/img/background.png"))
+    //    if (!textureBackground.loadFromFile(ASSETS_PATH"assets/img/background.png"))
     //        std::exit(1);
 
     spriteBackgroundArt.setTexture(textureBackgroundArt);
@@ -545,7 +545,7 @@ Game::Game(bool newTestMode):
     renderTexture.draw(textLoading);
     window.display();
 
-    gameVersion.setString("version: " + std::string(DEERPORTAL_VERSION));
+    gameVersion.setString("version: " + std::string(DEERPORTAL_VERSION)+"-"+std::string(BASE_PATH));
     gameVersion.setFont(gameFont);
     gameVersion.setPosition(10,10);
     gameVersion.setColor(sf::Color::White);

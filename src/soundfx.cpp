@@ -2,15 +2,15 @@
 
 SoundFX::SoundFX()
 {
-    if (!soundCollectBuffer.loadFromFile("assets/audio/collect.ogg"))
+    if (!soundCollectBuffer.loadFromFile(ASSETS_PATH"assets/audio/collect.ogg"))
         exit(-1);
-    if (!soundCardBuffer.loadFromFile("assets/audio/card.ogg"))
+    if (!soundCardBuffer.loadFromFile(ASSETS_PATH"assets/audio/card.ogg"))
         exit(-1);
-    if (!bufferDeerMode.loadFromFile("assets/audio/dp-deermode.ogg"))
+    if (!bufferDeerMode.loadFromFile(ASSETS_PATH"assets/audio/dp-deermode.ogg"))
         exit(-1);
-    if (!bufferMeditation.loadFromFile("assets/audio/dp-meditation.ogg"))
+    if (!bufferMeditation.loadFromFile(ASSETS_PATH"assets/audio/dp-meditation.ogg"))
         exit(-1);
-    if (!bufferPortal.loadFromFile("assets/audio/dp-ok.ogg"))
+    if (!bufferPortal.loadFromFile(ASSETS_PATH"assets/audio/dp-ok.ogg"))
         exit(-1);
 
 
@@ -22,7 +22,7 @@ SoundFX::SoundFX()
     soundCard.setBuffer(soundCardBuffer);
 //    soundCollect.setVolume(20);
 
-    if (!soundLetsBeginBuffer.loadFromFile("assets/audio/letsbegin.ogg"))
+    if (!soundLetsBeginBuffer.loadFromFile(ASSETS_PATH"assets/audio/letsbegin.ogg"))
         exit(-1);
     soundLetsBegin.setBuffer(soundLetsBeginBuffer);
     soundLetsBegin.setVolume(20);

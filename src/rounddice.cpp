@@ -6,10 +6,10 @@ RoundDice::RoundDice(Player (&players)[4])
     diceResult = 1;
     diceResultSix = 6;
     diceSize = 150;
-    if (!sfxDiceBuffer.loadFromFile("assets/audio/dice.ogg"))
+    if (!sfxDiceBuffer.loadFromFile(ASSETS_PATH"assets/audio/dice.ogg"))
         std::exit(1);
 
-    if (!textureDice.loadFromFile("assets/img/diceWhite.png"))
+    if (!textureDice.loadFromFile(ASSETS_PATH"assets/img/diceWhite.png"))
         std::exit(1);
 
     spriteDice.setTexture(textureDice);

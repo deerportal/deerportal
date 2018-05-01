@@ -30,7 +30,7 @@ TextureHolder::TextureHolder()
     {
         for (int j=0;j<4;j++)
         {
-            if(!cardsTextures[i][j].loadFromFile("assets/img/cards/"+cardsImages[i][j]))
+            if(!cardsTextures[i][j].loadFromFile(ASSETS_PATH"assets/img/cards/"+cardsImages[i][j]))
             {
 //                std::cout << "assets/img/cards/" << cardsImages[i][j];
                 std::exit(1);
@@ -42,59 +42,59 @@ TextureHolder::TextureHolder()
 
 
 
-    if (!textureCardBases[0].loadFromFile("assets/img/card-water-2-diam_m.png"))
+    if (!textureCardBases[0].loadFromFile(ASSETS_PATH"assets/img/card-water-2-diam_m.png"))
         std::exit(1);
 
-    if (!textureCardBases[1].loadFromFile("assets/img/card-earth-2-diam_m.png"))
+    if (!textureCardBases[1].loadFromFile(ASSETS_PATH"assets/img/card-earth-2-diam_m.png"))
         std::exit(1);
 
-    if (!textureCardBases[2].loadFromFile("assets/img/card-fire-2-diam_m.png"))
+    if (!textureCardBases[2].loadFromFile(ASSETS_PATH"assets/img/card-fire-2-diam_m.png"))
         std::exit(1);
 
-    if (!textureCardBases[3].loadFromFile("assets/img/card-air-2-diam_m.png"))
+    if (!textureCardBases[3].loadFromFile(ASSETS_PATH"assets/img/card-air-2-diam_m.png"))
         std::exit(1);
 
 
-//    if (!textureGameBackground.loadFromFile("assets/img/game-ackground.png"))
+//    if (!textureGameBackground.loadFromFile(ASSETS_PATH"assets/img/game-ackground.png"))
 //        std::exit(1);
 
-//    if (!textureTiles.loadFromFile("assets/img/zw-tilesets/_MAP.png"))
+//    if (!textureTiles.loadFromFile(ASSETS_PATH"assets/img/zw-tilesets/_MAP.png"))
 //        std::exit(1);
-//    if (!textureFaces.loadFromFile("assets/img/faces.jpg"))
+//    if (!textureFaces.loadFromFile(ASSETS_PATH"assets/img/faces.jpg"))
 //        std::exit(1);
-//    if (!textureGui.loadFromFile("assets/img/gui.png"))
-//        std::exit(1);
-
-//    if (!textureSymbols.loadFromFile("assets/img/symbols.png"))
-//        std::exit(1);
-//    if (!textureSeasons.loadFromFile("assets/img/seasons.png"))
+//    if (!textureGui.loadFromFile(ASSETS_PATH"assets/img/gui.png"))
 //        std::exit(1);
 
-    if (!textureCharacters.loadFromFile("assets/img/characters-new.png"))
+//    if (!textureSymbols.loadFromFile(ASSETS_PATH"assets/img/symbols.png"))
+//        std::exit(1);
+//    if (!textureSeasons.loadFromFile(ASSETS_PATH"assets/img/seasons.png"))
+//        std::exit(1);
+
+    if (!textureCharacters.loadFromFile(ASSETS_PATH"assets/img/characters-new.png"))
         std::exit(1);
 
-    if (!backgroundDark.loadFromFile("assets/img/background_dark.png"))
+    if (!backgroundDark.loadFromFile(ASSETS_PATH"assets/img/background_dark.png"))
         std::exit(1);
-    if (!textureBoardDiamond.loadFromFile("assets/img/board_diamonds.png"))
-        std::exit(1);
-
-    if (!textureMenu.loadFromFile("assets/img/dp_intro_menu.png"))
+    if (!textureBoardDiamond.loadFromFile(ASSETS_PATH"assets/img/board_diamonds.png"))
         std::exit(1);
 
-    if (!textureLetsBegin.loadFromFile("assets/img/letsbegin.png"))
+    if (!textureMenu.loadFromFile(ASSETS_PATH"assets/img/dp_intro_menu.png"))
+        std::exit(1);
+
+    if (!textureLetsBegin.loadFromFile(ASSETS_PATH"assets/img/letsbegin.png"))
         std::exit(1);
 
 
-    if (!textureButtonCpu.loadFromFile("assets/img/button-cpu.png"))
+    if (!textureButtonCpu.loadFromFile(ASSETS_PATH"assets/img/button-cpu.png"))
         std::exit(1);
 
-    if (!textureButtonHuman.loadFromFile("assets/img/button-human.png"))
+    if (!textureButtonHuman.loadFromFile(ASSETS_PATH"assets/img/button-human.png"))
         std::exit(1);
 
-    if (!textureDeerGod.loadFromFile("assets/img/deer-god.png"))
+    if (!textureDeerGod.loadFromFile(ASSETS_PATH"assets/img/deer-god.png"))
         std::exit(1);
 
-    if (!textureBigDiamond.loadFromFile("assets/img/diamond-big.png"))
+    if (!textureBigDiamond.loadFromFile(ASSETS_PATH"assets/img/diamond-big.png"))
         std::exit(1);
 
     int defaultArray[5][8] = {

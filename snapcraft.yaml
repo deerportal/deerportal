@@ -1,30 +1,13 @@
 name: deerportal
-version: "0.7.2.dev"
-summary: DeerPortal game
-description: Some description for the game
+version: "0.7.2-pre-snap"
+summary: Deer POrtal" snap
+description: Board game where you need to transfer yourself into the Deer God
 grade: stable
 confinement: strict
 apps:
   deerportal:
-    command: desktop-launch DeerPortal
-
-    plugs:
-      - x11
-      - opengl
-      - pulseaudio
-      - desktop
-      - desktop-legacy
-      - unity7
-
+    command: DeerPortal
 parts:
-  deer-portal:
+  source-deerportal:
     plugin: cmake
-    source: https://github.com/deerportal/deerportal.git
-    source-branch: cmake-tests
-    source-depth: 1
-    build-packages:
-      - libsfml-dev
-      - libgl1-mesa-dri
-      - libopenal-dev
-
-    after: [desktop-gtk3]
+    source: https://github.com/deerportal/deerportal/archive/v0.7.2-pre-snap.tar.gz
