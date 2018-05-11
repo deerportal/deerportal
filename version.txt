@@ -1,1 +1,1 @@
-0.7.3-snap-prepare
+0.7.4-esc-to-quit

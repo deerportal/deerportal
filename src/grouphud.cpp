@@ -17,11 +17,11 @@ void GroupHud::setFont(sf::Font *gameFont) {
     seasonName.setFont(*gameFont);
     roundName.setFont(*gameFont);
     monthName.setFont(*gameFont);
-    seasonName.setColor(sf::Color(255,255,255));
+    seasonName.setFillColor(sf::Color(255,255,255));
     seasonName.setCharacterSize(30);
     roundName.setCharacterSize(30);
     monthName.setCharacterSize(30);
-    roundName.setColor(sf::Color(255,255,250));
+    roundName.setFillColor(sf::Color(255,255,250));
 //    monthName.move(400, 0);
     setMonthName(1);
 }

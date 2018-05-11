@@ -21,7 +21,7 @@ Credits::Credits(sf::Font *gameFont):
     text.setString("asdasd");
     text.setFont(*gameFont);
 
-    text.setColor(sf::Color(sf::Color::White));
+    text.setFillColor(sf::Color(sf::Color::White));
 }
 
 void Credits::setTxt(int number)
@@ -42,13 +42,13 @@ void Credits::update(sf::Time frameTime)
 
             if (txtState==state_fade_in)
             {
-                text.setColor(sf::Color(255,255,255,ratio*timeCounter));
+                text.setFillColor(sf::Color(255,255,255,ratio*timeCounter));
             } else  if (txtState==state_fade_out)
             {
-                text.setColor(sf::Color(255,255,255,255-(ratio*timeCounter)));
+                text.setFillColor(sf::Color(255,255,255,255-(ratio*timeCounter)));
             } else  if (txtState==state_text)
             {
-                text.setColor(sf::Color(255,255,255,255));
+                text.setFillColor(sf::Color(255,255,255,255));
             }
 
 }

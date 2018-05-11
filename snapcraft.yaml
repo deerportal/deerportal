@@ -1,6 +1,6 @@
 name: deerportal
-version: "0.7.2-pre-snap"
-summary: Deer POrtal" snap
+version: "0.7.4-esc-to-quit"
+summary: Deer Portal" snap
 description: Board game where you need to transfer yourself into the Deer God
 grade: stable
 confinement: strict
@@ -10,4 +10,7 @@ apps:
 parts:
   source-deerportal:
     plugin: cmake
-    source: https://github.com/deerportal/deerportal/archive/v0.7.2-pre-snap.tar.gz
+    #source: /tmp/v0.7.3-pre-snap.tar.gz
+    source: https://github.com/deerportal/deerportal.git
+    source-type: git
+    #source: https://github.com/deerportal/deerportal/archive/v0.7.3-pre-snap.tar.gz

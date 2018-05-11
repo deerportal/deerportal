@@ -264,7 +264,7 @@ void Game::loadAssets()
     int width = menuTxt.getLocalBounds().width;
     int height = menuTxt.getLocalBounds().height;
     menuTxt.setPosition(1050-(width/2),750-(height/2)-150);
-    menuTxt.setColor(sf::Color(255, 255, 255, 85));
+    menuTxt.setFillColor(sf::Color(255, 255, 255, 85));
     cardsDeck.setFonts(&gameFont);
 
     paganHolidayTxt.setFont(gameFont);
@@ -485,7 +485,7 @@ Game::Game(bool newTestMode):
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
+    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer", sf::Style::Fullscreen),
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
@@ -517,7 +517,7 @@ Game::Game(bool newTestMode):
     textLoading.setString("loading...");
     textLoading.setFont(menuFont);
     textLoading.setPosition(200,200);
-    textLoading.setColor(sf::Color::White);
+    textLoading.setFillColor(sf::Color::White);
     textLoading.setCharacterSize(10);
     renderTexture.create(1360,768);
     renderTexture.clear(sf::Color::White);
@@ -539,7 +539,7 @@ Game::Game(bool newTestMode):
     loadAssets();
     textLoading.setFont(menuFont);
     textLoading.setPosition(200,200);
-    textLoading.setColor(sf::Color::White);
+    textLoading.setFillColor(sf::Color::White);
     textLoading.setCharacterSize(10);
     renderTexture.clear(sf::Color::Black);
     renderTexture.draw(textLoading);
@@ -548,7 +548,7 @@ Game::Game(bool newTestMode):
     gameVersion.setString("version: " + std::string(DEERPORTAL_VERSION)+"-"+std::string(BASE_PATH));
     gameVersion.setFont(gameFont);
     gameVersion.setPosition(10,10);
-    gameVersion.setColor(sf::Color::White);
+    gameVersion.setFillColor(sf::Color::White);
     gameVersion.setCharacterSize(15);
  
 
