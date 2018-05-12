@@ -1,5 +1,5 @@
 name: deerportal
-version: "0.7.4-esc-to-quit"
+version: "0.7.5-more-plugs"
 summary: Deer Portal" snap
 description: Board game where you need to transfer yourself into the Deer God
 grade: stable
@@ -7,6 +7,16 @@ confinement: strict
 apps:
   deerportal:
     command: DeerPortal
+    plugs:
+      - desktop
+      - desktop-legacy
+      - gsettings
+      - home
+      - opengl
+      - pulseaudio
+      - unity7
+      - wayland
+      - x11
 parts:
   source-deerportal:
     plugin: cmake
