@@ -24,3 +24,10 @@ parts:
     source: https://github.com/deerportal/deerportal.git
     source-type: git
     #source: https://github.com/deerportal/deerportal/archive/v0.7.3-pre-snap.tar.gz
+    source-depth: 1
+    build-packages:
+      - libsfml-dev
+      - libgl1-mesa-dri
+      - libopenal-dev
+
+
