@@ -6,8 +6,8 @@
 
 namespace DP {
 
-int initScreenX = 1360;
-int initScreenY = 768;
+int initScreenX = 1920;
+int initScreenY = 1080;
 int currentSeason = 1;
 int month = 0;
 
@@ -43,7 +43,7 @@ struct ResultTable
 void Game::setTxtEndGameAmount(){
     std::string elementNames[4] = {"Water","Earth", "Fire", "Air"};
 
-    int width=1360;
+    int width=initScreenX;
     //    int height = 768;
     //    int startHeight = 100;
     int separator = 40;
@@ -86,7 +86,7 @@ void Game::setTxtEndGameAmount(){
         {
             int counter = txtSurvivors.size();
 
-            tmpText.setPosition((1360/2)-(rectTxt.width/2),200+(counter*separator));
+            tmpText.setPosition((initScreenX/2)-(rectTxt.width/2),200+(counter*separator));
             txtSurvivors.push_back(tmpText);
         } else
         {
@@ -104,7 +104,7 @@ void Game::setTxtEndGameAmount(){
     }
     txtWinner.setCharacterSize(40);
     sf::FloatRect rectTxt = txtWinner.getLocalBounds();
-    txtWinner.setPosition((1360/2)-(rectTxt.width/2),120);
+    txtWinner.setPosition((initScreenX/2)-(rectTxt.width/2),120);
 
 }
 
@@ -142,7 +142,7 @@ void Game::initBoard()
     endGameTxt.setCharacterSize(30);
 
     sf::FloatRect ss = endGameTxt.getLocalBounds();
-    endGameTxt.setPosition((1360/2)-(ss.width/2),60);
+    endGameTxt.setPosition((initScreenX/2)-(ss.width/2),60);
 
     setTxtEndGameAmount();
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
@@ -152,13 +152,13 @@ void Game::initBoard()
     txtSurvivorsLabel.setFont(gameFont);
     txtSurvivorsLabel.setCharacterSize(30);
     sf::FloatRect rectSurvivors = txtSurvivorsLabel.getLocalBounds();
-    txtSurvivorsLabel.setPosition((1360/2)-(rectSurvivors.width/2),200);
+    txtSurvivorsLabel.setPosition((initScreenX/2)-(rectSurvivors.width/2),200);
 
     txtLoosersLabel.setString("Digested by The Elements");
     txtLoosersLabel.setFont(gameFont);
     txtLoosersLabel.setCharacterSize(30);
     sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
-    txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
+    txtLoosersLabel.setPosition((initScreenX/2)-(rectLoosers.width/2),500);
     credits.setTxt(0);
 
 }
@@ -269,7 +269,7 @@ void Game::loadAssets()
 
     paganHolidayTxt.setFont(gameFont);
     paganHolidayTxt.setCharacterSize(20);
-    paganHolidayTxt.setPosition(20,20);
+    paganHolidayTxt.setPosition(20,40);
 
 
     for (int i=0;i<4;i++)
@@ -477,7 +477,7 @@ Game::Game(bool newTestMode):
     screenSize(DP::initScreenX,DP::initScreenY),
     viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
     viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
-    viewTiles(sf::FloatRect(0, 0, 1360, 768)),
+    viewTiles(sf::FloatRect(0, 0, initScreenX, initScreenY)),
     selector(DP::TILE_SIZE),
     character(&textures, 3),
     gameTitle("deerportal"),
@@ -519,7 +519,7 @@ Game::Game(bool newTestMode):
     textLoading.setPosition(200,200);
     textLoading.setFillColor(sf::Color::White);
     textLoading.setCharacterSize(10);
-    renderTexture.create(1360,768);
+    renderTexture.create(initScreenX,initScreenY);
     renderTexture.clear(sf::Color::White);
     renderTexture.draw(textLoading);
     renderTexture.display();

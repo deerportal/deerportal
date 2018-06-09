@@ -17,17 +17,29 @@ apps:
       - unity7
       - wayland
       - x11
+#      - alsa
 parts:
+#  alsa:
+#    after: [alsa-lib, alsa-plugins]
+#  alsa-plugins:
+#    after: [alsa-lib]      
   source-deerportal:
+    after: [desktop-gtk3]
     plugin: cmake
-    #source: /tmp/v0.7.3-pre-snap.tar.gz
+    configflags:
+      - -DCMAKE_BUILD_TYPE=Release  
+      - -DCMAKE_INSTALL_PREFIX=/usr
     source: https://github.com/deerportal/deerportal.git
     source-type: git
-    #source: https://github.com/deerportal/deerportal/archive/v0.7.3-pre-snap.tar.gz
     source-depth: 1
     build-packages:
       - libsfml-dev
       - libgl1-mesa-dri
       - libopenal-dev
+      - libsndio-dev
+#    stage-packages:
+#      - libc6
+#      - alsa
+
 
 

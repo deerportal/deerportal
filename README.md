@@ -37,9 +37,9 @@ SFML, Linux, OSX, Windows.
 ```
 $ git clone https://github.com/deerportal/deerportal.git
 $ cd deerportal
-$ cmake .
-$ make
-$ ./DeerPortal
+$ cmake -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX:PATH=~/opt/deerportal .
+$ make && make install
+$ ~/opt/deerportal/bin/DeerPortal
 ```
 
 ##### Debian 
