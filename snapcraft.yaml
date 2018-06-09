@@ -17,12 +17,7 @@ apps:
       - unity7
       - wayland
       - x11
-#      - alsa
 parts:
-#  alsa:
-#    after: [alsa-lib, alsa-plugins]
-#  alsa-plugins:
-#    after: [alsa-lib]      
   source-deerportal:
     after: [desktop-gtk3]
     plugin: cmake
@@ -32,14 +27,11 @@ parts:
     source: https://github.com/deerportal/deerportal.git
     source-type: git
     source-depth: 1
+    source-branch: feature/working-snap
     build-packages:
       - libsfml-dev
       - libgl1-mesa-dri
       - libopenal-dev
       - libsndio-dev
-#    stage-packages:
-#      - libc6
-#      - alsa
-
-
-
+    stage-packages:
+      - libc6
