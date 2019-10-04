@@ -39,6 +39,7 @@ $ git clone https://github.com/deerportal/deerportal.git
 $ cd deerportal
 $ cmake .
 $ make
+$ sudo make install
 $ ./DeerPortal
 ```
 
