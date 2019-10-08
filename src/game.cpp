@@ -973,7 +973,10 @@ void Game::drawBaseGame()
     renderTexture.setView(viewGui);
     renderTexture.setView(viewTiles);
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
-    shaderBlur.setUniform("blur_radius", sin(runningCounter*0.01f) );
+    
+    float v;
+    v = sin(runningCounter*0.01f);
+    shaderBlur.setUniform("blur_radius", v );
 	
     //    renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
@@ -984,17 +987,22 @@ void Game::drawBaseGame()
 	
     //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
     //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
-    shaderPixel.setUniform("pixel_threshold", sin(runningCounter* 0.005f));
+
+    v = sin(runningCounter*0.005f);
+    shaderPixel.setUniform("pixel_threshold", v);
 
     renderTexture.draw(spriteBackgroundArt);
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
-    shaderBlur.setUniform("blur_radius", sin(runningCounter* 0.05f)/2);
+    v = sin(runningCounter*0.05f)/2;
+    shaderBlur.setUniform("blur_radius", v);
 
     renderTexture.draw(cardsDeck);
     if (currentState==state_roll_dice)
     {
         spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
-        shaderBlur.setUniform("blur_radius", sin(runningCounter* 0.5f)/4);
+
+        v = sin(runningCounter*0.5f)/4;
+        shaderBlur.setUniform("blur_radius", v);
         renderTexture.draw(roundDice.spriteDice);
     }
     else
@@ -1136,7 +1144,9 @@ void Game::render(float deltaTime)
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
-    shaderBlur.setUniform("blur_radius", sin(deltaTime)*0.015f);
+    float v1;
+    v1 = sin(deltaTime)*0.015f;
+    shaderBlur.setUniform("blur_radius", v1);
     shaderBlur.setUniform("blur_radius", 0.0003f);
     window.draw(renderSprite, &shaderBlur);
 
