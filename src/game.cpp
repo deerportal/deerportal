@@ -973,26 +973,28 @@ void Game::drawBaseGame()
     renderTexture.setView(viewGui);
     renderTexture.setView(viewTiles);
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
-    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01f) );
-
+    shaderBlur.setUniform("blur_radius", sin(runningCounter*0.01f) );
+	
     //    renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
     //    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
     //    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
-    shaderBlur.setParameter("blur_radius", 0.01);
+	shaderBlur.setUniform("blur_radius", 0.01f);
+    
+	
     //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
     //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
-    shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.005f));
+    shaderPixel.setUniform("pixel_threshold", sin(runningCounter* 0.005f));
 
     renderTexture.draw(spriteBackgroundArt);
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
-    shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.05f)/2);
+    shaderBlur.setUniform("blur_radius", sin(runningCounter* 0.05f)/2);
 
     renderTexture.draw(cardsDeck);
     if (currentState==state_roll_dice)
     {
         spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
-        shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.5f)/4);
+        shaderBlur.setUniform("blur_radius", sin(runningCounter* 0.5f)/4);
         renderTexture.draw(roundDice.spriteDice);
     }
     else
@@ -1018,7 +1020,7 @@ void Game::drawCharacters(){
         }
     }
     renderTexture.setView(viewFull);
-    shaderBlur.setParameter("blur_radius", 0.005f);
+    shaderBlur.setUniform("blur_radius", 0.005f);
     for (int i=0;i<4;i++)
     {
         for (auto&& j: players[i].characters)
@@ -1065,7 +1067,7 @@ void Game::render(float deltaTime)
         }
     } else if (currentState==state_gui_elem) {
         renderTexture.setView(viewFull);
-        shaderBlur.setParameter("blur_radius", 2);
+        shaderBlur.setUniform("blur_radius", 2.0f);
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
         drawBaseGame();
         drawCharacters();
@@ -1084,7 +1086,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
-        shaderBlur.setParameter("blur_radius", 4);
+        shaderBlur.setUniform("blur_radius", 4.0f);
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
         renderTexture.setView(viewTiles);
         drawBaseGame();
@@ -1098,7 +1100,7 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         renderTexture.draw(spriteBackgroundDark);
         drawBaseGame();
-        shaderBlur.setParameter("blur_radius", 0.05f);
+        shaderBlur.setUniform("blur_radius", 0.05f);
         renderTexture.draw(guiRoundDice, &shaderBlur);
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
@@ -1134,8 +1136,8 @@ void Game::render(float deltaTime)
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
-    shaderBlur.setParameter("blur_radius", sin(deltaTime)*0.015f);
-    shaderBlur.setParameter("blur_radius", 0.0003f);
+    shaderBlur.setUniform("blur_radius", sin(deltaTime)*0.015f);
+    shaderBlur.setUniform("blur_radius", 0.0003f);
     window.draw(renderSprite, &shaderBlur);
 
     particleSystem.remove();
