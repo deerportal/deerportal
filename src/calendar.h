@@ -8,6 +8,7 @@
 #define _calendar_pagan_
 #include <iostream>
 #include <array>
+#include <string>
 
 static std::array<std::array<std::string,3>,59> PAGAN_HOLIDAYS = {{ 
  {{"01", "02", "Frigg's Distaff"}},

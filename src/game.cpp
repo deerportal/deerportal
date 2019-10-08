@@ -485,7 +485,7 @@ Game::Game(bool newTestMode):
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer", sf::Style::Fullscreen),
+    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
@@ -1041,7 +1041,7 @@ void Game::render(float deltaTime)
 {
     window.clear();
     renderTexture.clear();
-    if ((currentState==state_game) or (currentState==state_roll_dice))
+    if ((currentState==state_game) || (currentState==state_roll_dice))
     {
         renderTexture.setView(viewFull);
         renderTexture.draw(spriteBackgroundDark);
