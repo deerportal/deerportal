@@ -23,10 +23,11 @@ void RotateElem::update(sf::Time deltaTime)
 {
 
     float speed;
-
-    speed = 0.05f/deltaTime.asSeconds();
-
-    spriteRotate.rotate(1.0f*speed);
+	const float timestep = 1.0f / 60.0f;
+    speed = 2.0f;
+	float accumulator = 0;
+	accumulator += deltaTime.asSeconds();
+	spriteRotate.rotate(speed * accumulator / timestep);
 
     timeCounter += deltaTime.asSeconds();
 

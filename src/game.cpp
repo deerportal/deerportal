@@ -498,7 +498,8 @@ Game::Game(bool newTestMode):
     cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
     deerModeActive(false),
-    gameVersion()
+    gameVersion(),
+	v1(0.0f)
 {
     testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
@@ -534,7 +535,7 @@ Game::Game(bool newTestMode):
     std::srand (time(NULL));
     window.clear(sf::Color(55,55,55));
     renderTexture.draw(textLoading);
-    window.display();
+    // window.display();
 
     loadAssets();
     textLoading.setFont(menuFont);
@@ -1144,16 +1145,16 @@ void Game::render(float deltaTime)
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
-    float v1;
+    
     v1 = sin(deltaTime)*0.015f;
     shaderBlur.setUniform("blur_radius", v1);
     shaderBlur.setUniform("blur_radius", 0.0003f);
     window.draw(renderSprite, &shaderBlur);
 
-    particleSystem.remove();
-    particleSystem.update();
-    particleSystem.render();
-    window.draw( particleSystem.getSprite() );
+    // particleSystem.remove();
+    // particleSystem.update();
+    // particleSystem.render();
+    // window.draw( particleSystem.getSprite() );
 
 
     window.display();
