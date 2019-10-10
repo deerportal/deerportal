@@ -1,5 +1,6 @@
+base: core18
 name: deerportal
-version: "0.7.5-more-plugs"
+version: "0.8"
 summary: Deer Portal" snap
 description: Board game where you need to transfer yourself into the Deer God
 grade: stable
@@ -17,17 +18,55 @@ apps:
       - unity7
       - wayland
       - x11
+#      - alsa
 parts:
+#  alsa:
+#    after: [alsa-lib, alsa-plugins]
+#  alsa-plugins:
+#    after: [alsa-lib]      
   source-deerportal:
     plugin: cmake
-    #source: /tmp/v0.7.3-pre-snap.tar.gz
-    source: https://github.com/deerportal/deerportal.git
-    source-type: git
-    #source: https://github.com/deerportal/deerportal/archive/v0.7.3-pre-snap.tar.gz
-    source-depth: 1
+    configflags:
+      - -DCMAKE_BUILD_TYPE=Release  
+      - -DCMAKE_INSTALL_PREFIX=/usr
+    source: .
+    source-type: local
+    # source-depth: 1
     build-packages:
+      - g++
       - libsfml-dev
-      - libgl1-mesa-dri
-      - libopenal-dev
+#      - libgl1-mesa-dri
+#      - libopenal-dev
+#      - libsndio-dev
+#    stage-packages:
+#      - libc6
+#      - alsa
+    stage-packages:
+      - libasound2
+      - libflac8
+      - libfreetype6
+      - libgl1
+      - libglvnd0
+      - libglx0
+      - libjpeg-turbo8
+      - libogg0
+      - libopenal1
+      - libpng16-16
+      - libsfml-audio2.4
+      - libsfml-graphics2.4
+      - libsfml-system2.4
+      - libsfml-window2.4
+      - libsndio6.1
+      - libvorbis0a
+      - libvorbisenc2
+      - libvorbisfile3
+      - libx11-6
+      - libxau6
+      - libxcb1
+      - libxdmcp6
+      - libxext6
+      - libxrandr2
+      - libxrender1
+
 
 
