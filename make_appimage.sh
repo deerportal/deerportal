@@ -7,7 +7,7 @@ rm -rf CMakeCache.txt CMakeFiles
 mkdir build
 cd build
 rm -rf CMakeCache.txt CMakeFiles
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 make -j 4
 ../linuxdeploy-x86_64.AppImage --appdir AppDir
 make install DESTDIR=AppDir
