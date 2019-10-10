@@ -4,7 +4,7 @@ RotateElem::RotateElem():
     timeCounter(0),
     active(true)
 {
-    if (!textureRotate.loadFromFile(ASSETS_PATH"assets/img/rotate.png"))
+    if (!textureRotate.loadFromFile(get_full_path(ASSETS_PATH"assets/img/rotate.png")))
         std::exit(1);
 
     spriteRotate.setTexture(textureRotate);

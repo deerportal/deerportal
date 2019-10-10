@@ -2,6 +2,7 @@
 #define BUBBLE_H
 
 #include <SFML/Graphics.hpp>
+#include "filetools.h"
 
 enum BubbleState {DICE=0, MOVE=1};
 
