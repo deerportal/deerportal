@@ -4,13 +4,14 @@ version: "0.8"
 summary: Deer Portal" snap
 description: Board game where you need to transfer yourself into the Deer God
 grade: stable
-confinement: strict
+confinement: devmode
 apps:
   deerportalsnap:
-    command: DeerPortal
+    command: desktop-launch DeerPortal
     environment:
       DP_DIR: "$SNAP"
     plugs:
+      - alsa
       - audio-playback
       - desktop
       - desktop-legacy
@@ -23,10 +24,34 @@ apps:
       - x11
 #      - alsa
 parts:
-#  alsa:
-#    after: [alsa-lib, alsa-plugins]
-#  alsa-plugins:
-#    after: [alsa-lib]      
+  desktop-gtk3:
+    build-packages:
+      - libgtk-3-dev
+    make-parameters:
+      - FLAVOR=gtk3
+    plugin: make
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    stage-packages:
+      - libxkbcommon0
+      - ttf-ubuntu-font-family
+      - dmz-cursor-theme
+      - light-themes
+      - adwaita-icon-theme
+      - gnome-themes-standard
+      - shared-mime-info
+      - libgtk-3-0
+      - libgdk-pixbuf2.0-0
+      - libglib2.0-bin
+      - libgtk-3-bin
+      - unity-gtk3-module
+      - libappindicator3-1
+      - locales-all
+      - xdg-user-dirs
+      - ibus-gtk3
+      - libibus-1.0-5
+
+ 
   source-deerportal:
     plugin: cmake
     configflags:
@@ -38,13 +63,16 @@ parts:
     build-packages:
       - g++
       - libsfml-dev
-#      - libgl1-mesa-dri
-#      - libopenal-dev
-#      - libsndio-dev
+      - libgl1-mesa-dri
+      - libopenal-dev
+      - libsndio-dev
+      - libasound2-dev
+      - libasound2-data
 #    stage-packages:
 #      - libc6
 #      - alsa
     stage-packages:
+      - alsa
       - libasound2
       - libflac8
       - libfreetype6
@@ -70,3 +98,7 @@ parts:
       - libxext6
       - libxrandr2
       - libxrender1
+      - libasound2-data
+      - libasound2-plugins
+    after: [desktop-gtk3]
+
