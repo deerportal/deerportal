@@ -5,14 +5,18 @@ summary: Deer Portal" snap
 description: Board game where you need to transfer yourself into the Deer God
 grade: stable
 confinement: strict
+#architectures:
+#  - build-on: amd6#4
+#      run-on: [amd64, i386]
 apps:
-  deerportal:
+  deerportalsnap:
     command: DeerPortal
     plugs:
+      - audio-playback
       - desktop
       - desktop-legacy
-      - gsettings
-      - home
+#      - gsettings
+#      - home
       - opengl
       - pulseaudio
       - unity7
@@ -67,6 +71,3 @@ parts:
       - libxext6
       - libxrandr2
       - libxrender1
-
-
-
