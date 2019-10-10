@@ -1,3 +1,5 @@
+linuxdeploy-x86_64.AppImage
+build/
 parts/
 prime/
 snap/
@@ -24,3 +26,5 @@ cmake_install.cmake
 CMakeCache.txt
 .vs
 out
+install_manifest.txt
+DeerPortal-*.AppImage
