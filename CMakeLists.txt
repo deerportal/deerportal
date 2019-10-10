@@ -53,12 +53,29 @@ set_target_properties(${EXECUTABLE_NAME} PROPERTIES
 )
 
 # Install target
-install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
-set (ASSETS_BASE_PATH share/games/deerportal)
-add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
-add_definitions(-DASSETS_PATH="${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
 
-install(DIRECTORY assets DESTINATION share/games/deerportal)
+IF (WIN32)
+  set (ASSETS_BASE_PATH data)
+  install(TARGETS ${EXECUTABLE_NAME} DESTINATION .)
+ELSE()
+	set (ASSETS_BASE_PATH share/games/deerportal)
+	install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+ENDIF()
+
+add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
+IF (WIN32)
+	add_definitions(-DASSETS_PATH="${ASSETS_BASE_PATH}/")
+#install(DIRECTORY assets DESTINATION share/games/deerportal)
+install(DIRECTORY assets DESTINATION "${ASSETS_BASE_PATH}/")
+ELSE()
+	# add_definitions(-DASSETS_PATH="${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
+	# install(DIRECTORY assets DESTINATION share/games/deerportal)
+	install(DIRECTORY assets DESTINATION "${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
+
+ENDIF()
+# install(DIRECTORY assets DESTINATION share/games/deerportal)
+
+
 
 # CPack packaging
 include(InstallRequiredSystemLibraries)
