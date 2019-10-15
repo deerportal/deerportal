@@ -12,7 +12,7 @@ GuiWindow::GuiWindow(TextureHolder *textures)
 //    spriteClose.setTexture(textures->textureGui);
 //    spriteClose.setTextureRect(sf::IntRect(0,0,16,16));
 //    spriteClose.move(sf::Vector2f(150-16,0));
-    if (!guiElemFont.loadFromFile(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf"))
+    if (!guiElemFont.loadFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf")))
     {
         std::exit(1);
     };
@@ -25,14 +25,16 @@ GuiWindow::GuiWindow(TextureHolder *textures)
     title = "Choose building:";
     guiTitleTxt.setFont(guiElemFont);
     guiTitleTxt.setCharacterSize(58);
-    guiTitleTxt.setColor(sf::Color(255,255,255,200));
+    // guiTitleTxt.setColor(sf::Color(255,255,255,200));
+	guiTitleTxt.setFillColor(sf::Color(255, 255, 255, 200));
+	guiTitleTxt.setOutlineColor(sf::Color(255, 255, 255, 200));
     guiTitleTxt.move(2,0);
     guiTitleTxt.setString(title);
     setPosition(150, 100);
 }
 
 GuiWindow::GuiWindow(){
-    if (!guiElemFont.loadFromFile(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf"))
+    if (!guiElemFont.loadFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf")))
     {
         std::exit(1);
     };

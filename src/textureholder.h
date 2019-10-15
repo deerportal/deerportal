@@ -1,10 +1,11 @@
 #ifndef TEXTUREHOLDER_H
 #define TEXTUREHOLDER_H
 #include <set>
+#include <array>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "data.h"
-#include <array>
+#include "filetools.h"
 
 namespace DP {
 

@@ -1,33 +1,104 @@
+base: core18
 name: deerportal
-version: "0.7.5-more-plugs"
+version: "0.8"
 summary: Deer Portal" snap
 description: Board game where you need to transfer yourself into the Deer God
 grade: stable
 confinement: strict
 apps:
   deerportal:
-    command: DeerPortal
+    command: desktop-launch DeerPortal
+    environment:
+      DP_DIR: "$SNAP"
     plugs:
+#      - alsa
+      - audio-playback
       - desktop
       - desktop-legacy
-      - gsettings
-      - home
+#      - gsettings
+#      - home
       - opengl
       - pulseaudio
-      - unity7
+#      - unity7
       - wayland
       - x11
+#      - alsa
 parts:
+  desktop-gtk3:
+    build-packages:
+      - libgtk-3-dev
+    make-parameters:
+      - FLAVOR=gtk3
+    plugin: make
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    stage-packages:
+      - libxkbcommon0
+      - ttf-ubuntu-font-family
+      - dmz-cursor-theme
+      - light-themes
+      - adwaita-icon-theme
+      - gnome-themes-standard
+      - shared-mime-info
+      - libgtk-3-0
+      - libgdk-pixbuf2.0-0
+      - libglib2.0-bin
+      - libgtk-3-bin
+      - unity-gtk3-module
+      - libappindicator3-1
+      - locales-all
+      - xdg-user-dirs
+      - ibus-gtk3
+      - libibus-1.0-5
+
+ 
   source-deerportal:
     plugin: cmake
-    #source: /tmp/v0.7.3-pre-snap.tar.gz
-    source: https://github.com/deerportal/deerportal.git
-    source-type: git
-    #source: https://github.com/deerportal/deerportal/archive/v0.7.3-pre-snap.tar.gz
-    source-depth: 1
+    configflags:
+      - -DCMAKE_BUILD_TYPE=Release  
+      - -DCMAKE_INSTALL_PREFIX=/usr
+    source: .
+    source-type: local
+    # source-depth: 1
     build-packages:
+      - g++
       - libsfml-dev
       - libgl1-mesa-dri
       - libopenal-dev
-
+      - libsndio-dev
+      - libasound2-dev
+      - libasound2-data
+#    stage-packages:
+#      - libc6
+#      - alsa
+    stage-packages:
+      - alsa
+      - libasound2
+      - libflac8
+      - libfreetype6
+      - libgl1
+      - libglvnd0
+      - libglx0
+      - libjpeg-turbo8
+      - libogg0
+      - libopenal1
+      - libpng16-16
+      - libsfml-audio2.4
+      - libsfml-graphics2.4
+      - libsfml-system2.4
+      - libsfml-window2.4
+      - libsndio6.1
+      - libvorbis0a
+      - libvorbisenc2
+      - libvorbisfile3
+      - libx11-6
+      - libxau6
+      - libxcb1
+      - libxdmcp6
+      - libxext6
+      - libxrandr2
+      - libxrender1
+      - libasound2-data
+      - libasound2-plugins
+    after: [desktop-gtk3]
 

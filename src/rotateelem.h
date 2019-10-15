@@ -2,6 +2,8 @@
 #define ROTATEELEM_H
 #include <SFML/Graphics.hpp>
 #include "data.h"
+#include "filetools.h"
+
 class RotateElem : public sf::Drawable, public sf::Transformable
 {
 public:

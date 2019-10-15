@@ -216,11 +216,11 @@ void Game::setCurrentNeighbours ()
 void Game::loadAssets()
 {
 
-    if (!gameFont.loadFromFile(ASSETS_PATH"assets/fnt/metal-mania.regular.ttf"))
+    if (!gameFont.loadFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-mania.regular.ttf")))
     {
         std::exit(1);
     }
-    if (!menuFont.loadFromFile(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf"))
+    if (!menuFont.loadFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf")))
     {
         std::exit(1);
     }
@@ -230,29 +230,29 @@ void Game::loadAssets()
 
     spriteDeerGod.setTexture(textures.textureDeerGod);
 
-    if (!shaderBlur.loadFromFile(ASSETS_PATH"assets/shaders/blur.frag", sf::Shader::Fragment))
+    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/blur.frag"), sf::Shader::Fragment))
         std::exit(1);
 
-    if (!shaderPixel.loadFromFile(ASSETS_PATH"assets/shaders/pixelate.frag", sf::Shader::Fragment))
+    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/pixelate.frag"), sf::Shader::Fragment))
         std::exit(1);
-    if (!shaderDark.loadFromFile(ASSETS_PATH"assets/shaders/dark.frag", sf::Shader::Fragment))
-        std::exit(1);
-
-    if (!textureBackgroundArt.loadFromFile(ASSETS_PATH"assets/img/background_land.png"))
+    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/dark.frag"), sf::Shader::Fragment))
         std::exit(1);
 
-    if (!musicGame.openFromFile(ASSETS_PATH"assets/audio/game.ogg"))
+    if (!textureBackgroundArt.loadFromFile(get_full_path(ASSETS_PATH"assets/img/background_land.png")))
+        std::exit(1);
+
+    if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"assets/audio/game.ogg")))
         std::exit(1);
     //    if (!musicBackground.openFromFile(ASSETS_PATH"assets/audio/wind2.ogg"))
     //        std::exit(1);
-    if (!musicMenu.openFromFile(ASSETS_PATH"assets/audio/menu.ogg"))
+    if (!musicMenu.openFromFile(get_full_path(ASSETS_PATH"assets/audio/menu.ogg")))
         std::exit(1);
 
 
-    if (!sfxClickBuffer.loadFromFile(ASSETS_PATH"assets/audio/click.ogg"))
+    if (!sfxClickBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/click.ogg")))
         std::exit(1);
 
-    if (!sfxDoneBuffer.loadFromFile(ASSETS_PATH"assets/audio/done.ogg"))
+    if (!sfxDoneBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/done.ogg")))
         std::exit(1);
     //    if (!textureBackground.loadFromFile(ASSETS_PATH"assets/img/background.png"))
     //        std::exit(1);
@@ -485,7 +485,7 @@ Game::Game(bool newTestMode):
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer", sf::Style::Fullscreen),
+    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
@@ -498,7 +498,8 @@ Game::Game(bool newTestMode):
     cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
     deerModeActive(false),
-    gameVersion()
+    gameVersion(),
+	v1(0.0f)
 {
     testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
@@ -534,7 +535,7 @@ Game::Game(bool newTestMode):
     std::srand (time(NULL));
     window.clear(sf::Color(55,55,55));
     renderTexture.draw(textLoading);
-    window.display();
+    // window.display();
 
     loadAssets();
     textLoading.setFont(menuFont);
@@ -973,26 +974,36 @@ void Game::drawBaseGame()
     renderTexture.setView(viewGui);
     renderTexture.setView(viewTiles);
     renderTexture.setView(viewTiles); // Yeah Katia's inspiration
-    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01f) );
-
+    
+    float v;
+    v = sin(runningCounter*0.01f);
+    shaderBlur.setUniform("blur_radius", v );
+	
     //    renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
     //    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
     //    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
-    shaderBlur.setParameter("blur_radius", 0.01);
+	shaderBlur.setUniform("blur_radius", 0.01f);
+    
+	
     //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
     //    shaderBlur.setParameter("blur_radius", sin(runningCounter*0.01) );
-    shaderPixel.setParameter("pixel_threshold", sin(runningCounter* 0.005f));
+
+    v = sin(runningCounter*0.005f);
+    shaderPixel.setUniform("pixel_threshold", v);
 
     renderTexture.draw(spriteBackgroundArt);
     spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
-    shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.05f)/2);
+    v = sin(runningCounter*0.05f)/2;
+    shaderBlur.setUniform("blur_radius", v);
 
     renderTexture.draw(cardsDeck);
     if (currentState==state_roll_dice)
     {
         spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
-        shaderBlur.setParameter("blur_radius", sin(runningCounter* 0.5f)/4);
+
+        v = sin(runningCounter*0.5f)/4;
+        shaderBlur.setUniform("blur_radius", v);
         renderTexture.draw(roundDice.spriteDice);
     }
     else
@@ -1018,7 +1029,7 @@ void Game::drawCharacters(){
         }
     }
     renderTexture.setView(viewFull);
-    shaderBlur.setParameter("blur_radius", 0.005f);
+    shaderBlur.setUniform("blur_radius", 0.005f);
     for (int i=0;i<4;i++)
     {
         for (auto&& j: players[i].characters)
@@ -1041,7 +1052,7 @@ void Game::render(float deltaTime)
 {
     window.clear();
     renderTexture.clear();
-    if ((currentState==state_game) or (currentState==state_roll_dice))
+    if ((currentState==state_game) || (currentState==state_roll_dice))
     {
         renderTexture.setView(viewFull);
         renderTexture.draw(spriteBackgroundDark);
@@ -1065,7 +1076,7 @@ void Game::render(float deltaTime)
         }
     } else if (currentState==state_gui_elem) {
         renderTexture.setView(viewFull);
-        shaderBlur.setParameter("blur_radius", 2);
+        shaderBlur.setUniform("blur_radius", 2.0f);
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
         drawBaseGame();
         drawCharacters();
@@ -1084,7 +1095,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
-        shaderBlur.setParameter("blur_radius", 4);
+        shaderBlur.setUniform("blur_radius", 4.0f);
         renderTexture.draw(spriteBackgroundDark, &shaderBlur);
         renderTexture.setView(viewTiles);
         drawBaseGame();
@@ -1098,7 +1109,7 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         renderTexture.draw(spriteBackgroundDark);
         drawBaseGame();
-        shaderBlur.setParameter("blur_radius", 0.05f);
+        shaderBlur.setUniform("blur_radius", 0.05f);
         renderTexture.draw(guiRoundDice, &shaderBlur);
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
@@ -1134,14 +1145,16 @@ void Game::render(float deltaTime)
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
-    shaderBlur.setParameter("blur_radius", sin(deltaTime)*0.015f);
-    shaderBlur.setParameter("blur_radius", 0.0003f);
+    
+    v1 = sin(deltaTime)*0.015f;
+    shaderBlur.setUniform("blur_radius", v1);
+    shaderBlur.setUniform("blur_radius", 0.0003f);
     window.draw(renderSprite, &shaderBlur);
 
-    particleSystem.remove();
-    particleSystem.update();
-    particleSystem.render();
-    window.draw( particleSystem.getSprite() );
+    // particleSystem.remove();
+    // particleSystem.update();
+    // particleSystem.render();
+    // window.draw( particleSystem.getSprite() );
 
 
     window.display();
