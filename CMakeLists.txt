@@ -68,7 +68,7 @@ IF (WIN32)
 #install(DIRECTORY assets DESTINATION share/games/deerportal)
 install(DIRECTORY assets DESTINATION "${ASSETS_BASE_PATH}/")
 ELSE()
-	# add_definitions(-DASSETS_PATH="${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
+	add_definitions(-DASSETS_PATH="${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
 	# install(DIRECTORY assets DESTINATION share/games/deerportal)
 	install(DIRECTORY assets DESTINATION "${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
 

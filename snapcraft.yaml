@@ -4,14 +4,14 @@ version: "0.8"
 summary: Deer Portal" snap
 description: Board game where you need to transfer yourself into the Deer God
 grade: stable
-confinement: devmode
+confinement: strict
 apps:
-  deerportalsnap:
+  deerportal:
     command: desktop-launch DeerPortal
     environment:
       DP_DIR: "$SNAP"
     plugs:
-      - alsa
+#      - alsa
       - audio-playback
       - desktop
       - desktop-legacy
@@ -19,7 +19,7 @@ apps:
 #      - home
       - opengl
       - pulseaudio
-      - unity7
+#      - unity7
       - wayland
       - x11
 #      - alsa
