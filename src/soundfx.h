@@ -1,9 +1,8 @@
 #ifndef SOUNDFX_H
 #define SOUNDFX_H
 #include <iostream>
-
 #include <SFML/Audio.hpp>
-
+#include "filetools.h"
 /*!
  * \brief The SoundFX various sounds
  */

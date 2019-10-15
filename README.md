@@ -60,6 +60,12 @@ $ fakeroot debian/rules binary
 
 In our [releases](https://github.com/deerportal/deerportal/releases) section we are providing compiled binaries for Ubuntu (Trusty, Xenial) and Windows.
 
+### Snap install
+
+```
+sudo snap install deerportal --classic
+```
+
 #### Ubuntu apt repo
 
 

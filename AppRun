@@ -1,0 +1,4 @@
+#!/bin/sh
+cd "$(dirname "$0")"
+export DP_DIR=.
+exec ./usr/bin/DeerPortal

@@ -4,7 +4,7 @@ RotateElem::RotateElem():
     timeCounter(0),
     active(true)
 {
-    if (!textureRotate.loadFromFile(ASSETS_PATH"assets/img/rotate.png"))
+    if (!textureRotate.loadFromFile(get_full_path(ASSETS_PATH"assets/img/rotate.png")))
         std::exit(1);
 
     spriteRotate.setTexture(textureRotate);
@@ -23,10 +23,11 @@ void RotateElem::update(sf::Time deltaTime)
 {
 
     float speed;
-
-    speed = 0.05f/deltaTime.asSeconds();
-
-    spriteRotate.rotate(1.0f*speed);
+	const float timestep = 1.0f / 60.0f;
+    speed = 2.0f;
+	float accumulator = 0;
+	accumulator += deltaTime.asSeconds();
+	spriteRotate.rotate(speed * accumulator / timestep);
 
     timeCounter += deltaTime.asSeconds();
 

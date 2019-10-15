@@ -53,7 +53,7 @@ void CardsDeck::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= getTransform();
     for (int i=0;i<=3;i++)
     {
-        if ((cardsList[i].invisibleLeft==0.0f) and (cardsList[i].active))
+        if ((cardsList[i].invisibleLeft==0.0f) && (cardsList[i].active))
         {
             target.draw(spriteCardBases[i], states);
             target.draw(textPileTitle[i], states);

@@ -57,6 +57,7 @@ private:
     RoundDice roundDice;
     int roundNumber;
     GuiRoundDice guiRoundDice;
+	float v1;
 
 public:
     Game(bool newTestMode);

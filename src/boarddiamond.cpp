@@ -17,7 +17,7 @@ BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,
     spriteHolder.setTexture(this->textures->textureBoardDiamond);
     sf::IntRect textureRect(idNumber*44, 0, 44,44);
     spriteHolder.setTextureRect(textureRect);
-    spriteHolder.scale(0.5, 0.5);
+    // spriteHolder.scale(0.5, 0.5);
     setBoardPosition(boardPosition);
 }
 

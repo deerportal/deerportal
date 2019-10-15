@@ -26,7 +26,7 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::fuel( int particles )
 {
-    float angle;
+    double angle;
 
     for( int i = 0; i < particles; i++ )
     {
@@ -34,13 +34,17 @@ void ParticleSystem::fuel( int particles )
         particle = new Particle();
         particle->pos.x = m_position.x;
         particle->pos.y = m_position.y;
-
+		double cosangle;
+		double sinangle;
         switch( m_shape )
         {
         case DP::CIRCLE:
-            angle = m_randomizer.rnd(0.0f, 6.2832f);
-            particle->vel.x = m_randomizer.rnd(0.0f, cos( angle ));
-            particle->vel.y = m_randomizer.rnd(0.0f, sin( angle ));
+            angle = m_randomizer.rnd(0.0, 6.2832);
+			cosangle = fabs(cos(angle));
+			sinangle = fabs(sin(angle));
+			particle->vel.x = m_randomizer.rnd(0.0, cosangle);
+			// particle->vel.x = m_randomizer.rnd(0.0, 1.0);
+            particle->vel.y = m_randomizer.rnd(0.0, sinangle);
             break;
         case DP::SQUARE:
             particle->vel.x = m_randomizer.rnd(-1.0f, 1.0f);
