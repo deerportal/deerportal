@@ -12,8 +12,6 @@ make -j 4
 ../linuxdeploy-x86_64.AppImage --appdir AppDir
 make install DESTDIR=AppDir
 cp ../AppRun AppDir/
-#cp ../deerportal.desktop AppDir/net.devcarpet.deerportal.desktop
-#cp ../assets/img/deerportal.png AppDir
 mkdir -p AppDir/usr/share/metainfo/
 cp ../net.devcarpet.deerportal.appdata.xml AppDir/usr/share/metainfo/
 sed -i '/Exec/d' AppDir/deerportal.desktop
