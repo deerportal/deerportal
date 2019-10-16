@@ -2,24 +2,13 @@
 <component type="desktop-application">
 ​  <id>net.devcarpet.deerportal</id>
 ​  <metadata_license>CC-BY-SA-3.0 </metadata_license>
-​  <project_license>zlib License</project_license>
+​  <project_license>Zlib</project_license>
 ​  <name>Deer Portal</name>
-​  <summary>A hybrid game which utilize board and card games mechanisms.</summary>
+​  <summary>A hybrid game which utilize board and card games mechanisms </summary>
 ​
 ​  <description>
 ​    <p>
-​      Power Statistics is a program used to view historical and current battery
-​      information and will show programs running on your computer using power.
-​    </p>
-​    <p>Example list:</p>
-​    <ul>
-​      <li>First item</li>
-​      <li>Second item</li>
-​    </ul>
-​    <p>
-​      You probably only need to install this application if you are having problems
-​      with your laptop battery, or are trying to work out what programs are using
-​      significant amounts of power.
+​      A multiplayer (0-4) full of the diamonds board game driven by a Deer god and classical elements.
 ​    </p>
 ​  </description>
 ​
@@ -36,7 +25,7 @@
 ​  </screenshots>
 ​
 ​  <url type="homepage">https://devcarpet.net/deerportal/</url>
-​  <project_group>GNOME</project_group>
+<!-- ​  <project_group>GNOME</project_group> -->
 ​
 ​  <provides>
 ​    <binary>deerportal</binary>
