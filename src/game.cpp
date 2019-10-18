@@ -532,7 +532,7 @@ Game::Game(bool newTestMode):
     sf::Clock clock;
     guiRoundDice.active = true;
     showPlayerBoardElems = false;
-    window.setVerticalSyncEnabled(true);
+    //window.setVerticalSyncEnabled(true);
 
     std::srand (time(NULL));
     window.clear(sf::Color(55,55,55));
