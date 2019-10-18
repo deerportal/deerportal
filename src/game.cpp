@@ -499,7 +499,8 @@ Game::Game(bool newTestMode):
     deerModeCounter(4),
     deerModeActive(false),
     gameVersion(),
-	v1(0.0f)
+	v1(0.0f),
+    textFPS()
 {
     testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
@@ -528,6 +529,7 @@ Game::Game(bool newTestMode):
     renderSprite.setTexture(renderTexture.getTexture());
     numberFinishedPlayers = 0;
     sf::Clock frameClock;
+    sf::Clock clock;
     guiRoundDice.active = true;
     showPlayerBoardElems = false;
     window.setVerticalSyncEnabled(true);
@@ -537,6 +539,9 @@ Game::Game(bool newTestMode):
     renderTexture.draw(textLoading);
     // window.display();
 
+    textFPS.setFont(gameFont);
+    textFPS.setPosition(0,60);
+    textFPS.setCharacterSize(20);
     loadAssets();
     textLoading.setFont(menuFont);
     textLoading.setPosition(200,200);
@@ -566,7 +571,8 @@ Game::Game(bool newTestMode):
 
         std::exit(0);
     }
-
+    float lastTime = 0;
+    float fpsTime = 0;
     while (window.isOpen())
     {
         sf::Time frameTime = frameClock.restart();
@@ -650,6 +656,23 @@ Game::Game(bool newTestMode):
                                     localPositionFull, mousePos);
             }
         }
+
+
+        fpsTime = fpsTime + frameTime.asSeconds();
+
+            float currentTime = clock.restart().asSeconds();
+            float fps = 1.f / (currentTime);
+            lastTime = currentTime;
+            // float fps = floor(1.f / (frameTime.asSeconds() - lastTime) + 0.5f);
+        if (fpsTime>0.25f)
+        {
+            textFPS.setString("FPS: " + std::to_string(fps));
+            // lastTime = frameTime.asSeconds();
+            fpsTime=0.0f;
+        }
+
+
+
         update(frameTime);
         render(frameTime.asSeconds());
 
@@ -1142,6 +1165,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(banner);
 
 
+    renderTexture.draw(textFPS);
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
@@ -1149,6 +1173,7 @@ void Game::render(float deltaTime)
     v1 = sin(deltaTime)*0.015f;
     shaderBlur.setUniform("blur_radius", v1);
     shaderBlur.setUniform("blur_radius", 0.0003f);
+
     window.draw(renderSprite, &shaderBlur);
 
     // particleSystem.remove();
