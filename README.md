@@ -31,6 +31,15 @@ SFML, Linux, OSX, Windows.
 ## Installation
 ### Compilation
 
+#### Raspberry PI
+
+You need to compile manually SFML from master with following switch:
+
+```
+-DSFML_OPENGL_ES=1
+```
+
+and then you can following Linux instructions below.
 
 #### Linux / OSX
 
@@ -60,7 +69,7 @@ $ fakeroot debian/rules binary
 
 In our [releases](https://github.com/deerportal/deerportal/releases) section we are providing compiled binaries for Ubuntu (Trusty, Xenial) and Windows.
 
-### Snap install
+#### Snap install
 
 ```
 sudo snap install deerportal --classic
@@ -88,7 +97,7 @@ sudo apt-get install deerportal
 
 * https://devcarpet.net/deerportal/downloads/windows/
 
-#### Developer documentation
+### Developer documentation
 
 
 Following doxygen api docs has been created using our Jenkins based Continous Integration:
