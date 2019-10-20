@@ -1114,7 +1114,11 @@ void Game::render(float deltaTime)
 //        //        renderTexture.draw(menuTxt, &shaderBlur);
         //        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
+		
+#ifndef NDEBUG
+		renderTexture.draw(textFPS);
         renderTexture.draw(gameVersion);
+#endif
         renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
@@ -1165,7 +1169,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(banner);
 
 
-    renderTexture.draw(textFPS);
+    
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());

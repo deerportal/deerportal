@@ -58,6 +58,9 @@ set_target_properties(${EXECUTABLE_NAME} PROPERTIES
 IF (WIN32)
   set (ASSETS_BASE_PATH data)
   install(TARGETS ${EXECUTABLE_NAME} DESTINATION .)
+  file(WRITE DeerPortal.exe.gui "")
+  install(FILES DeerPortal.exe.gui DESTINATION .)
+
 ELSE()
 	set (ASSETS_BASE_PATH share/games/deerportal)
 	install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)

@@ -29,3 +29,5 @@ out
 install_manifest.txt
 DeerPortal-*.AppImage
 SFML-2*
+DeerPortal.exe.gui
+CMakeSettings.json
