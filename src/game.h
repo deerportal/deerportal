@@ -183,6 +183,8 @@ private:
     float downTimeCounter;
     Command commandManager;
     sf::Text textLoading;
+    sf::Text textFPS;
+
 public:
     CardsDeck cardsDeck;
     void startDeerMode();

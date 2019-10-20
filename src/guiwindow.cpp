@@ -2,7 +2,7 @@
 
 
 
-void GuiWindow::setTitle(std::string newTitle) {
+void GuiWindow::setTitle(const std::string& newTitle) {
     title = newTitle;
     guiTitleTxt.setString(title);
 }
