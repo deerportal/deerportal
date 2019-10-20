@@ -485,7 +485,7 @@ Game::Game(bool newTestMode):
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
+    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer", sf::Style::Titlebar| sf::Style::Close),
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
@@ -499,8 +499,13 @@ Game::Game(bool newTestMode):
     deerModeCounter(4),
     deerModeActive(false),
     gameVersion(),
-	v1(0.0f)
+	v1(0.0f),
+    textFPS()
 {
+	sf::Image icon;
+	icon.loadFromFile(get_full_path(ASSETS_PATH"assets/img/deerportal.png"));
+	window.setIcon(256, 256, icon.getPixelsPtr());
+	
     testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
@@ -528,15 +533,19 @@ Game::Game(bool newTestMode):
     renderSprite.setTexture(renderTexture.getTexture());
     numberFinishedPlayers = 0;
     sf::Clock frameClock;
+    sf::Clock clock;
     guiRoundDice.active = true;
     showPlayerBoardElems = false;
-    window.setVerticalSyncEnabled(true);
+    //window.setVerticalSyncEnabled(true);
 
     std::srand (time(NULL));
     window.clear(sf::Color(55,55,55));
     renderTexture.draw(textLoading);
     // window.display();
 
+    textFPS.setFont(gameFont);
+    textFPS.setPosition(0,60);
+    textFPS.setCharacterSize(20);
     loadAssets();
     textLoading.setFont(menuFont);
     textLoading.setPosition(200,200);
@@ -566,7 +575,8 @@ Game::Game(bool newTestMode):
 
         std::exit(0);
     }
-
+    float lastTime = 0;
+    float fpsTime = 0;
     while (window.isOpen())
     {
         sf::Time frameTime = frameClock.restart();
@@ -650,6 +660,23 @@ Game::Game(bool newTestMode):
                                     localPositionFull, mousePos);
             }
         }
+
+
+        fpsTime = fpsTime + frameTime.asSeconds();
+
+            float currentTime = clock.restart().asSeconds();
+            float fps = 1.f / (currentTime);
+            lastTime = currentTime;
+            // float fps = floor(1.f / (frameTime.asSeconds() - lastTime) + 0.5f);
+        if (fpsTime>0.25f)
+        {
+            textFPS.setString("FPS: " + std::to_string(fps));
+            // lastTime = frameTime.asSeconds();
+            fpsTime=0.0f;
+        }
+
+
+
         update(frameTime);
         render(frameTime.asSeconds());
 
@@ -1091,7 +1118,11 @@ void Game::render(float deltaTime)
 //        //        renderTexture.draw(menuTxt, &shaderBlur);
         //        renderTexture.draw(menuTxt);
         renderTexture.draw(paganHolidayTxt);
+		
+#ifndef NDEBUG
+		renderTexture.draw(textFPS);
         renderTexture.draw(gameVersion);
+#endif
         renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
@@ -1142,6 +1173,7 @@ void Game::render(float deltaTime)
         renderTexture.draw(banner);
 
 
+    
 
     renderTexture.display();
     renderSprite.setTexture(renderTexture.getTexture());
@@ -1149,6 +1181,7 @@ void Game::render(float deltaTime)
     v1 = sin(deltaTime)*0.015f;
     shaderBlur.setUniform("blur_radius", v1);
     shaderBlur.setUniform("blur_radius", 0.0003f);
+
     window.draw(renderSprite, &shaderBlur);
 
     // particleSystem.remove();

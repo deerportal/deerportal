@@ -10,7 +10,7 @@ Banner::Banner(sf::Font *gameFont):
     text.setCharacterSize(100);
 }
 
-void Banner::setText(std::string newText)
+void Banner::setText(const std::string& newText)
 {
     textStr = newText;
     text.setString(textStr);

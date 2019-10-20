@@ -7,7 +7,7 @@ class Banner: public sf::Drawable, public sf::Transformable
 {
 public:
     explicit Banner(sf::Font *gameFont);
-    void setText(std::string newText);
+    void setText(const std::string& newText);
     bool active;
 
     std::string textStr;
