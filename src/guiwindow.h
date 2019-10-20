@@ -22,7 +22,7 @@ public:
 
     sf::Sprite bgdDark;
 
-    void setTitle(std::string newTitle);
+    void setTitle(const std::string& newTitle);
     sf::Sprite spriteClose;
 
 private:
