@@ -191,6 +191,6 @@ void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) con
     {
         states.transform *= getTransform();
         states.texture = m_texture;
-        target.draw(m_vertices, 4, sf::Quads, states);
+        target.draw(m_vertices, 4, sf::TriangleFan, states);
     }
 }
