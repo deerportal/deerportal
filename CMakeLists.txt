@@ -34,9 +34,36 @@ include_directories(${YOUR_DIRECTORY})
 # Define sources and executable
 set(EXECUTABLE_NAME "DeerPortal")
 file( GLOB SRCS src/*.cpp src/*.h )
-add_executable(${EXECUTABLE_NAME} ${SRCS}
+
+IF(WIN32)
+	#Now we are looking for "sfml-main.lib".
+	#Because we need it if we give ADD_EXECUTABLE the WIN32 switch to creat a GUI application (that one without a cmd promt)
+	FIND_LIBRARY( SFML_MAIN_LIBRARY
+		NAMES sfml-main
+		PATH_SUFFIXES lib64 lib
+		PATHS ${SFML_LIBRARY_SEARCH_DIR}
+	)	
+	LIST(APPEND SFML_LIBRARY ${SFML_MAIN_LIBRARY})
+ENDIF(WIN32)
+
+
+
+
+IF (WIN32)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+
+add_executable(${EXECUTABLE_NAME} WIN32 ${SRCS}
+
 	${CMAKE_CURRENT_SOURCE_DIR}/scripts/DeerPortal.rc
   )
+
+ELSE()
+add_executable(${EXECUTABLE_NAME}  ${SRCS}
+
+	
+  )
+ENDIF()
+
 # Detect and add SFML
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 #Find any version 2.X of SFML
@@ -54,6 +81,8 @@ set_target_properties(${EXECUTABLE_NAME} PROPERTIES
 )
 
 # Install target
+
+
 
 IF (WIN32)
   set (ASSETS_BASE_PATH data)

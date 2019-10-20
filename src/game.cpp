@@ -485,7 +485,7 @@ Game::Game(bool newTestMode):
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
+    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer", sf::Style::Titlebar| sf::Style::Close),
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
@@ -502,6 +502,10 @@ Game::Game(bool newTestMode):
 	v1(0.0f),
     textFPS()
 {
+	sf::Image icon;
+	icon.loadFromFile(get_full_path(ASSETS_PATH"assets/img/deerportal.png"));
+	window.setIcon(256, 256, icon.getPixelsPtr());
+	
     testMode = newTestMode;
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
