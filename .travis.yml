@@ -38,7 +38,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh scripts/travis_before_install_linux.sh; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sh scripts/travis_before_install_osx.sh; fi
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
-  - ps axu |grep Xfvb -i
+  - ps axu |grep Xvfb -i
+  - sleep 4  
 
 
 before_script:
