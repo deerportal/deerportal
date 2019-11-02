@@ -50,7 +50,7 @@ before_script:
 
 script:
   - "export DISPLAY=:99.0"
-  - ps axu |grep Xfvb -i
+  - ps axu |grep Xvfb -i
   - glxinfo    
   - cmake .
   - make 
