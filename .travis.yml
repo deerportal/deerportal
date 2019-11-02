@@ -30,11 +30,18 @@ matrix:
 
 script:
   lsb_release -a
-  qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
+  cmake .
+  make
+  #qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
 
 before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh scripts/travis_before_install_linux.sh; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sh scripts/travis_before_install_osx.sh; fi
 
 script:
+  - Xvfb :1 -screen 0 1900x1080x24 &
+  - export DISPLAY=:1
   - cmake .
-  - make
+  - make 
+  - ./DeerPortal-0.8.1-x86_64.AppImage
+  - DISPLAY=:1 xwd -root -silent | convert xwd:- png:screenshot.png
