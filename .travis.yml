@@ -2,9 +2,9 @@ os:
   - linux
   - osx
 
-compiler:
-  - gcc
-  - clang
+#compiler:
+#  - gcc
+#  - clang
 
 # sudo: required
 # dist: trusty
@@ -12,10 +12,10 @@ language: cpp
 # compiler:
 #   - gcc
 
-addons:
-  apt:
-    packages:
-      - libsfml-dev
+#addons:
+#  apt:
+#    packages:
+#      - libsfml-dev
 
 
 matrix:
@@ -23,16 +23,20 @@ matrix:
     - os: linux
       dist: trusty
       sudo: required
+      compiler:
+        - gcc
     - os: osx
       osx_image: xcode7.2
+      compiler:
+        - clang
 # before_script:
 #   - sudo apt-get install -y libjpeg62-dev libsndfile1-dev libglew1.5 libglew1.5-dev libfreetype6 libjpeg-turbo8 libjpeg8 libopenal-data libopenal1  libxrandr2 libxrender1 libsoil1 cppcheck libsfml-dev
 
-script:
-  lsb_release -a
-  cmake .
-  make
-  #qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
+#script:
+#  lsb_relea<F12>se -a
+#  cmake .
+#  make
+#qmake -makefile pagan_board.pro && make && make && cppcheck . --enable=all 
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh scripts/travis_before_install_linux.sh; fi
@@ -50,10 +54,10 @@ before_script:
 
 
 script:
-  - "export DISPLAY=:99.0"
-  - ps axu |grep Xvfb -i
-  - glxinfo    
-  - cmake .
-  - make 
-  - ./DeerPortal-0.8.1-x86_64.AppImage
-  - DISPLAY=:1 xwd -root -silent | convert xwd:- png:screenshot.png
+  - bash scripts/travis_make.sh
+    #  - "export DISPLAY=:99.0"
+    #  - cmake .
+    #  - ps axu |grep Xvfb -i
+    #  - glxinfo    
+    #  - ./DeerPortal-0.8.1-x86_64.AppImage
+    #  - DISPLAY=:1 xwd -root -silent | convert xwd:- png:screenshot.png
