@@ -39,6 +39,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sh scripts/travis_before_install_osx.sh; fi
 
 script:
+  - glxinfo
   - Xvfb :1 -screen 0 1900x1080x24 &
   - export DISPLAY=:1
   - cmake .
