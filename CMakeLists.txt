@@ -39,7 +39,8 @@ file( GLOB SRCS src/*.cpp src/*.h )
 IF(WIN32)
 	#Now we are looking for "sfml-main.lib".
 	#Because we need it if we give ADD_EXECUTABLE the WIN32 switch to creat a GUI application (that one without a cmd promt)
-	set(SFML_DIR "C:/Users/blusz/Dev/deerportal/SFML-2.5.1/lib/cmake/SFML")
+	#set(SFML_DIR "C:/Users/blusz/Dev/SFML-2.5.1/")
+	set(SFML_DIR "C:/Users/blusz/Dev/SFML-2.5.1/lib/cmake/SFML")
 	FIND_LIBRARY( SFML_MAIN_LIBRARY
 		NAMES sfml-main
 		PATH_SUFFIXES lib64 lib
@@ -70,7 +71,7 @@ ENDIF()
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 #Find any version 2.X of SFML
 #See the FindSFML.cmake file for additional details and instructions
-find_package(SFML 2 REQUIRED network audio graphics window system)
+# find_package(SFML 2 REQUIRED network audio graphics window system)
 if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
   target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} flac)

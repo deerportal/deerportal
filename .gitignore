@@ -31,3 +31,6 @@ DeerPortal-*.AppImage
 SFML-2*
 DeerPortal.exe.gui
 CMakeSettings.json
+Debug/
+Release/
+x64/
