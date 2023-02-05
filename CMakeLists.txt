@@ -1,7 +1,7 @@
 #Change this if you need to target a specific CMake version
 cmake_minimum_required(VERSION 3.1)
-set (CMAKE_CXX_STANDARD 11)
-set(SFML_STATIC_LIBRARIES TRUE)
+set (CMAKE_CXX_STANDARD 14)
+#set(SFML_STATIC_LIBRARIES TRUE)
 
 # To unify version handling
 file (STRINGS "version.txt" DEERPORTAL_VERSION)
@@ -50,7 +50,7 @@ IF(WIN32)
 ENDIF(WIN32)
 
 
-find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
+find_package(SFML 2.5.1 COMPONENTS system window graphics audio REQUIRED)
 
 IF (WIN32)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
@@ -74,7 +74,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 # find_package(SFML 2 REQUIRED network audio graphics window system)
 if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} flac)
+  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 endif()
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES
