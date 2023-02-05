@@ -1,7 +1,7 @@
 #Change this if you need to target a specific CMake version
 cmake_minimum_required(VERSION 3.1)
 set (CMAKE_CXX_STANDARD 11)
-set(SFML_STATIC_LIBRARIES TRUE)
+#set(SFML_STATIC_LIBRARIES TRUE)
 
 # To unify version handling
 file (STRINGS "version.txt" DEERPORTAL_VERSION)
@@ -20,7 +20,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 # (you can also set it on the command line: -D CMAKE_BUILD_TYPE=Release)
 
-project(myproject)
+project(deerportal)
 
 #target_compile_definitions(DeerPortal PRIVATE FOO=1 BAR=1)
 add_definitions(-DDEERPORTAL_VERSION="${DEERPORTAL_VERSION}.${CMAKE_BUILD_TYPE}")
@@ -40,7 +40,8 @@ IF(WIN32)
 	#Now we are looking for "sfml-main.lib".
 	#Because we need it if we give ADD_EXECUTABLE the WIN32 switch to creat a GUI application (that one without a cmd promt)
 	#set(SFML_DIR "C:/Users/blusz/Dev/SFML-2.5.1/")
-	set(SFML_DIR "C:/Users/blusz/Dev/SFML-2.5.1/lib/cmake/SFML")
+	#set(SFML_DIR "C:/Users/blusz/Dev/SFML-2.6-x64/lib/cmake/SFML")
+	set(SFML_DIR "C:/Users/blusz/Dev/SFML-2.6-x64/")
 	FIND_LIBRARY( SFML_MAIN_LIBRARY
 		NAMES sfml-main
 		PATH_SUFFIXES lib64 lib
@@ -50,7 +51,7 @@ IF(WIN32)
 ENDIF(WIN32)
 
 
-find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
+find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 
 IF (WIN32)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")

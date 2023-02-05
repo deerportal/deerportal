@@ -1088,10 +1088,12 @@ void Game::render(float deltaTime)
         drawBaseGame();
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
-        renderTexture.setView(viewTiles);
-        drawCharacters();
+
+        renderTexture.setView(viewFull);
         renderTexture.draw(boardDiamonds);
         renderTexture.draw(bubble);
+        renderTexture.setView(viewTiles);
+        drawCharacters();
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
