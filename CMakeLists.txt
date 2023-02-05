@@ -1,6 +1,6 @@
 #Change this if you need to target a specific CMake version
 cmake_minimum_required(VERSION 3.1)
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 11)
 #set(SFML_STATIC_LIBRARIES TRUE)
 
 # To unify version handling
@@ -50,9 +50,9 @@ IF(WIN32)
 ENDIF(WIN32)
 
 
-find_package(SFML 2.5.1 COMPONENTS system window graphics audio REQUIRED)
 
 IF (WIN32)
+find_package(SFML 2.5.1 COMPONENTS system window graphics audio REQUIRED)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 
 add_executable(${EXECUTABLE_NAME} WIN32 ${SRCS}
@@ -61,6 +61,7 @@ add_executable(${EXECUTABLE_NAME} WIN32 ${SRCS}
   )
 
 ELSE()
+find_package(SFML 2 REQUIRED network audio graphics window system)
 add_executable(${EXECUTABLE_NAME}  ${SRCS}
 
 	
