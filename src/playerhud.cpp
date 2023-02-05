@@ -123,7 +123,7 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
         {posX1,posY1}}, {{posX2,posY1}},{{posX1,posY2}}, {{posX2, posY2}
     }}};
 
-    txtCash.setPosition(textPos[playerNumber][0],textPos[playerNumber][1] );
+    txtCash.setPosition((float)textPos[playerNumber][0], (float)textPos[playerNumber][1] );
     buttons.insert({"end_turn",rectangle});
 
     setSpriteAI();
@@ -236,7 +236,7 @@ void Player::setSpriteAI()
         }
     };
 
-    sf::Vector2f spriteHumanPosNew(spriteHumanPos[number][0],spriteHumanPos[number][1]);
+    sf::Vector2f spriteHumanPosNew((float)spriteHumanPos[number][0], (float)spriteHumanPos[number][1]);
     spriteAI.setPosition(spriteHumanPosNew);
 
 }

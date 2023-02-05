@@ -25,8 +25,8 @@ sf::Vector2i transTilePosition(int pos) {
  * as the input.
  */
 sf::Vector2i getCords(sf::Vector2f position){
-    int x = position.x/DP::TILE_BOARD_SIZE;
-    int y = position.y/DP::TILE_BOARD_SIZE;
+    int x = (int)position.x/DP::TILE_BOARD_SIZE;
+    int y = (int)position.y/DP::TILE_BOARD_SIZE;
     return sf::Vector2i(x, y);
 }
 
@@ -35,8 +35,8 @@ sf::Vector2i getCords(sf::Vector2f position){
  * as the input.
  */
 sf::Vector2f getScreenPos(sf::Vector2i cords){
-    float x = cords.x * DP::TILE_SIZE;
-    float y = cords.y * DP::TILE_SIZE;
+    float x = (float)cords.x * DP::TILE_SIZE;
+    float y = (float)cords.y * DP::TILE_SIZE;
     return sf::Vector2f(x, y);
 }
 

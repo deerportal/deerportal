@@ -1,3 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#pragma once
+#define _WINSOCK_DEPRECATED_NO_WARNINGS 1 
+
 #ifndef GAME_H
 #define GAME_H
 #include <stdlib.h>

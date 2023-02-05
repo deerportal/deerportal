@@ -15,11 +15,11 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *comma
     for (int i=0;i<=3;i++)
     {
 //        spriteCardBases[i].setTexture(this->textures->textureCardBases[i]);
-        spriteCardBases[i].setPosition(cardsPos[i][0],cardsPos[i][1]);
+        spriteCardBases[i].setPosition((float)cardsPos[i][0], (float)cardsPos[i][1]);
 
         textPileTitle[i].setFont(*gameFont);
         textPileTitle[i].setCharacterSize(16);
-        textPileTitle[i].setPosition(cardsPos[i][0]+10,cardsPos[i][1]+100);
+        textPileTitle[i].setPosition((float)cardsPos[i][0]+10, (float)cardsPos[i][1]+100);
 
         for (unsigned int j=0;j<DP::cardsDistribution.size();j++)
         {

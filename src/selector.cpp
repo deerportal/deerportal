@@ -1,7 +1,7 @@
 #include "selector.h"
 
 Selector::Selector(int squareSize)
-    :rectangle(sf::Vector2f(squareSize-1, squareSize-1))
+    :rectangle(sf::Vector2f((float)squareSize-1, (float)squareSize-1))
 {
     this->squareSize = squareSize;
     rectangle.setFillColor(sf::Color(150, 250, 150,168));

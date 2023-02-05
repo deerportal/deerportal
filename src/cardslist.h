@@ -19,7 +19,7 @@ namespace DP {
     const static std::array<int,2> cardsDistributionDebug = {{
         2,3
     }};
-    const static int PILE_SIZE = DP::cardsDistribution.size();
+    const static int PILE_SIZE = (int)DP::cardsDistribution.size();
 
 }
 

@@ -261,8 +261,8 @@ void Game::loadAssets()
     menuTxt.setFont(gameFont);
     menuTxt.setCharacterSize(60);
     menuTxt.setString(gameTitle);
-    int width = menuTxt.getLocalBounds().width;
-    int height = menuTxt.getLocalBounds().height;
+    int width = (int)menuTxt.getLocalBounds().width;
+    int height = (int)menuTxt.getLocalBounds().height;
     menuTxt.setPosition(1050-(width/2),750-(height/2)-150);
     menuTxt.setFillColor(sf::Color(255, 255, 255, 85));
     cardsDeck.setFonts(&gameFont);
@@ -406,13 +406,13 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         for (int i=0;i<4;i++)
         {
             sf::IntRect spriteHumanRect(players[i].spriteAI.getGlobalBounds());
-            if (spriteHumanRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+            if (spriteHumanRect.intersects(sf::IntRect((int)posFull.x, (int)posFull.y, 1, 1)))
             {
                 players[i].swapHuman();
             }
         }
         sf::IntRect startGameRect(580,640,180,80);
-        if (startGameRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+        if (startGameRect.intersects(sf::IntRect((int)posFull.x, (int)posFull.y, 1, 1)))
         {
             bigDiamondActive = true;
             banner.setText("start game");
@@ -425,7 +425,7 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
     {
         if (players[turn].human){
             sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
-            if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+            if (diceRect.intersects(sf::IntRect((int)posFull.x, (int)posFull.y, 1, 1)))
             {
                 throwDiceMove();
             }
@@ -475,8 +475,8 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
 Game::Game(bool newTestMode):
     screenSize(DP::initScreenX,DP::initScreenY),
-    viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
-    viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
+    viewFull(sf::FloatRect(00.f, 00.f, (float)screenSize.x, (float)screenSize.y)),
+    viewGui(sf::FloatRect(00.f, 00.f, (float)screenSize.x, (float)screenSize.y)),
     viewTiles(sf::FloatRect(0, 0, 1360, 768)),
     selector(DP::TILE_SIZE),
     character(&textures, 3),
@@ -538,7 +538,7 @@ Game::Game(bool newTestMode):
     showPlayerBoardElems = false;
     //window.setVerticalSyncEnabled(true);
 
-    std::srand (time(NULL));
+    std::srand ((int)time(NULL));
     window.clear(sf::Color(55,55,55));
     renderTexture.draw(textLoading);
     // window.display();
@@ -555,7 +555,8 @@ Game::Game(bool newTestMode):
     renderTexture.draw(textLoading);
     window.display();
 
-    gameVersion.setString("version: " + std::string(DEERPORTAL_VERSION)+"-"+std::string(BASE_PATH));
+    gameVersion.setString("version: " + std::string(DEERPORTAL_VERSION)+"-"+std::string(BASE_PATH)+" SFML version: " + 
+        std::to_string(SFML_VERSION_MAJOR) + "." + std::to_string(SFML_VERSION_MINOR)+ "." + std::to_string(SFML_VERSION_PATCH) );
     gameVersion.setFont(gameFont);
     gameVersion.setPosition(10,10);
     gameVersion.setFillColor(sf::Color::White);
@@ -647,7 +648,7 @@ Game::Game(bool newTestMode):
 
             if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=DP::BOARD_SIZE*DP::TILE_SIZE) && (localPosition.y<=DP::BOARD_SIZE*DP::TILE_SIZE))
             {
-                selector.setPosition((int) (localPosition.x / DP::TILE_SIZE)*DP::TILE_SIZE, ((int) localPosition.y / DP::TILE_SIZE)*DP::TILE_SIZE);
+                selector.setPosition((float) (localPosition.x / DP::TILE_SIZE)*(float)DP::TILE_SIZE, ((int) localPosition.y / DP::TILE_SIZE)*DP::TILE_SIZE);
             }
 
             /*!

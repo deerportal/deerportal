@@ -55,7 +55,7 @@ public:
     void setDissolutionRate( unsigned char rate ) { m_dissolutionRate = rate; }
     void setShape( unsigned char shape ) { m_shape = shape; }
 
-    int getNumberOfParticles() { return m_particles.size(); }
+    int getNumberOfParticles() { return (int)m_particles.size(); }
     std::string getNumberOfParticlesString();
     sf::Sprite& getSprite() { return m_sprite; }
 
