@@ -648,7 +648,9 @@ Game::Game(bool newTestMode):
 
             if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=DP::BOARD_SIZE*DP::TILE_SIZE) && (localPosition.y<=DP::BOARD_SIZE*DP::TILE_SIZE))
             {
-                selector.setPosition((float) (localPosition.x / DP::TILE_SIZE)*(float)DP::TILE_SIZE, ((int) localPosition.y / DP::TILE_SIZE)*DP::TILE_SIZE);
+                selector.setPosition(
+                    (int) (localPosition.x / DP::TILE_SIZE)*(int)DP::TILE_SIZE, 
+                    ((int) localPosition.y / DP::TILE_SIZE)* (int)DP::TILE_SIZE);
             }
 
             /*!
