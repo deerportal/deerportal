@@ -16,7 +16,7 @@ add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
 include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x)
+    GIT_TAG 2.5.0)
 FetchContent_MakeAvailable(SFML)
 
 # add_executable(CMakeSFMLProject src/main.cpp)
