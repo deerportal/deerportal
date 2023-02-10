@@ -10,10 +10,10 @@ Bubble::Bubble():
 {
     spritesBubbles = {{spriteDice, spriteFootSteps}};
 
-    if (!textureDice.loadFromFile(get_full_path(ASSETS_PATH"assets/img/bubble_dice.png")))
+    if (!textureDice.loadFromFile(get_full_path("assets/img/bubble_dice.png")))
         std::exit(1);
 
-    if (!textureFootSteps.loadFromFile(get_full_path(ASSETS_PATH"assets/img/bubble_footsteps.png")))
+    if (!textureFootSteps.loadFromFile(get_full_path("assets/img/bubble_footsteps.png")))
         std::exit(1);
 
     spritesBubbles[0].setTexture(textureDice);

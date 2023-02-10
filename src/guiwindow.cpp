@@ -12,7 +12,7 @@ GuiWindow::GuiWindow(TextureHolder *textures)
 //    spriteClose.setTexture(textures->textureGui);
 //    spriteClose.setTextureRect(sf::IntRect(0,0,16,16));
 //    spriteClose.move(sf::Vector2f(150-16,0));
-    if (!guiElemFont.loadFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf")))
+    if (!guiElemFont.loadFromFile(get_full_path("assets/fnt/metal-macabre.regular.ttf")))
     {
         std::exit(1);
     };
@@ -34,7 +34,7 @@ GuiWindow::GuiWindow(TextureHolder *textures)
 }
 
 GuiWindow::GuiWindow(){
-    if (!guiElemFont.loadFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf")))
+    if (!guiElemFont.loadFromFile(get_full_path("assets/fnt/metal-macabre.regular.ttf")))
     {
         std::exit(1);
     };

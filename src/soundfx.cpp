@@ -2,15 +2,15 @@
 
 SoundFX::SoundFX()
 {
-    if (!soundCollectBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/collect.ogg")))
+    if (!soundCollectBuffer.loadFromFile(get_full_path("assets/audio/collect.ogg")))
         exit(-1);
-    if (!soundCardBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/card.ogg")))
+    if (!soundCardBuffer.loadFromFile(get_full_path("assets/audio/card.ogg")))
         exit(-1);
-    if (!bufferDeerMode.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/dp-deermode.ogg")))
+    if (!bufferDeerMode.loadFromFile(get_full_path("assets/audio/dp-deermode.ogg")))
         exit(-1);
-    if (!bufferMeditation.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/dp-meditation.ogg")))
+    if (!bufferMeditation.loadFromFile(get_full_path("assets/audio/dp-meditation.ogg")))
         exit(-1);
-    if (!bufferPortal.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/dp-ok.ogg")))
+    if (!bufferPortal.loadFromFile(get_full_path("assets/audio/dp-ok.ogg")))
         exit(-1);
 
 
@@ -22,7 +22,7 @@ SoundFX::SoundFX()
     soundCard.setBuffer(soundCardBuffer);
 //    soundCollect.setVolume(20);
 
-    if (!soundLetsBeginBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/letsbegin.ogg")))
+    if (!soundLetsBeginBuffer.loadFromFile(get_full_path("assets/audio/letsbegin.ogg")))
         exit(-1);
     soundLetsBegin.setBuffer(soundLetsBeginBuffer);
     soundLetsBegin.setVolume(20);

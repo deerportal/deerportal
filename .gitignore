@@ -37,3 +37,5 @@ x64/
 Debug-2.6/
 DeerPortal.dir/
 .vscode
+_CPack_Packages/
+_deps/
