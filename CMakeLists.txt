@@ -27,8 +27,8 @@ add_executable(${EXECUTABLE_NAME}  ${SRCS})
 target_link_libraries(DeerPortal PRIVATE sfml-graphics sfml-audio sfml-system)
 # target_compile_features(DeerPortal PRIVATE cxx_std_17)
 if (WIN32 AND BUILD_SHARED_LIBS)
-    add_custom_command(TARGET CMakeSFMLProject POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:CMakeSFMLProject> $<TARGET_FILE_DIR:CMakeSFMLProject> COMMAND_EXPAND_LISTS)
+    add_custom_command(TARGET DeerPortal POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:DeerPortal> $<TARGET_FILE_DIR:DeerPortal> COMMAND_EXPAND_LISTS)
 endif()
 
 install(TARGETS DeerPortal)		
