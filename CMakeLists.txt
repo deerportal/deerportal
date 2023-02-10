@@ -25,6 +25,8 @@ set(EXECUTABLE_NAME "DeerPortal")
 file( GLOB SRCS src/*.cpp src/*.h )
 add_executable(${EXECUTABLE_NAME}  ${SRCS})
 target_link_libraries(DeerPortal PRIVATE sfml-graphics sfml-audio sfml-system)
+target_compile_features(DeerPortal PRIVATE cxx_std_17)
+
 # target_compile_features(DeerPortal PRIVATE cxx_std_17)
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET DeerPortal POST_BUILD
