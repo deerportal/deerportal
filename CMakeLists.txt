@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(DeerPortal LANGUAGES CXX)
-
+set(SFML_STATIC_LIBRARIES TRUE)
+set(BUILD_SHARED_LIBS ON)
 # To unify version handling
 file (STRINGS "version.txt" DEERPORTAL_VERSION)
 string(REGEX MATCH "^([0-9]+)" DEERPORTAL_VERSION_MAJOR ${DEERPORTAL_VERSION})
@@ -16,7 +17,7 @@ add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
 include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x)
+    GIT_TAG feature/prep_next_release)
 FetchContent_MakeAvailable(SFML)
 
 # add_executable(CMakeSFMLProject src/main.cpp)
