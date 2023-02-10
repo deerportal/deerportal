@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(DeerPortal LANGUAGES CXX)
-set(SFML_STATIC_LIBRARIES TRUE)
-set(BUILD_SHARED_LIBS ON)
+
+set(BUILD_SHARED_LIBS FALSE)
 # To unify version handling
 file (STRINGS "version.txt" DEERPORTAL_VERSION)
 string(REGEX MATCH "^([0-9]+)" DEERPORTAL_VERSION_MAJOR ${DEERPORTAL_VERSION})
