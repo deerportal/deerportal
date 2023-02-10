@@ -20,6 +20,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Add sources
+      run: sudo  add-apt-repository --enable-source  -y  
+
     - name: Install Dependencies
       run: sudo apt build-dep libsfml-dev
 
