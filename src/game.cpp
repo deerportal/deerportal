@@ -69,15 +69,14 @@ void Game::setTxtEndGameAmount(){
 
 
     std::sort(resultsVector.begin(), resultsVector.end());
-    txtWinner.setFont(gameFont);
-    txtWinner.setCharacterSize(40);
+    txtWinner->setFont(gameFont);
+    txtWinner->setCharacterSize(40);
     for (int i=0;i<4;i++)
     {
 
         int playerNumber = resultsVector[i].playerNumber;
         std::string elementName = elementNames[playerNumber];
-        sf::Text tmpText;
-        tmpText.setFont(gameFont);
+        sf::Text tmpText(gameFont);
         tmpText.setCharacterSize(25);
         tmpText.setString(elementName+ " " + std::to_string(players[playerNumber].cash));
         sf::FloatRect rectTxt = tmpText.getLocalBounds();
@@ -86,25 +85,25 @@ void Game::setTxtEndGameAmount(){
         {
             int counter = txtSurvivors.size();
 
-            tmpText.setPosition((1360/2)-(rectTxt.width/2),200+(counter*separator));
-            txtSurvivors.push_back(tmpText);
+            tmpText.setPosition(sf::Vector2f((1360/2)-(rectTxt.size.x/2),200+(counter*separator)));
+            txtSurvivors.push_back(std::make_unique<sf::Text>(tmpText));
         } else
         {
             int counter = txtLoosers.size();
 
-            tmpText.setPosition((width/2)-(rectTxt.width/2),540+(counter*separator));
-            txtLoosers.push_back(tmpText);
+            tmpText.setPosition(sf::Vector2f((width/2)-(rectTxt.size.x/2),540+(counter*separator)));
+            txtLoosers.push_back(std::make_unique<sf::Text>(tmpText));
         }
 
     }
     if (txtSurvivors.size()>0)
     {
-        txtWinner.setString("Winner: " + txtSurvivors[0].getString());
+        txtWinner->setString("Winner: " + txtSurvivors[0]->getString());
         txtSurvivors.erase(txtSurvivors.begin()+0);
     }
-    txtWinner.setCharacterSize(40);
-    sf::FloatRect rectTxt = txtWinner.getLocalBounds();
-    txtWinner.setPosition((1360/2)-(rectTxt.width/2),120);
+    txtWinner->setCharacterSize(40);
+    sf::FloatRect rectTxt = txtWinner->getLocalBounds();
+    txtWinner->setPosition(sf::Vector2f((1360/2)-(rectTxt.size.x/2),120));
 
 }
 
@@ -116,49 +115,49 @@ void Game::initBoard()
     int month = now->tm_mon + 1;
     int day = now->tm_mday;
     paganHolidayString =  getHoliday(month, day);
-    paganHolidayTxt.setString(paganHolidayString);
+    paganHolidayTxt->setString(paganHolidayString);
 
     sfxClick.setBuffer(sfxClickBuffer);
     sfxDone.setBuffer(sfxDoneBuffer);
-    spriteBackgroundDark.setTexture(textures.backgroundDark);
-    spriteBackgroundDark.setPosition(0,0);
-    spriteLestBegin.setTexture(textures.textureLetsBegin);
-    viewTiles.setViewport(sf::FloatRect(0.15f,0.1f, 1.0f, 1.0f));
-    viewGui.setViewport(sf::FloatRect(0.806f,0.066f, 1, 1));
+    spriteBackgroundDark->setTexture(textures.backgroundDark);
+    spriteBackgroundDark->setPosition(sf::Vector2f(0,0));
+    spriteLestBegin->setTexture(textures.textureLetsBegin);
+    viewTiles.setViewport(sf::FloatRect({0.15f,0.1f}, {1.0f, 1.0f}));
+    viewGui.setViewport(sf::FloatRect({0.806f,0.066f}, {1, 1}));
 
     groupHud.setFont(&gameFont);
     groupHud.setSeason(currentSeason);
     groupHud.setRoundName(roundNumber);
 
     cardsDeck.setFonts(&gameFont);
-    spriteBigDiamond.setTexture(textures.textureBigDiamond);
-    spriteBigDiamond.setPosition(474,342);
-    spriteBigDiamond.setColor(sf::Color (255, 255, 255,196));
+    spriteBigDiamond->setTexture(textures.textureBigDiamond);
+    spriteBigDiamond->setPosition(sf::Vector2f(474,342));
+    spriteBigDiamond->setColor(sf::Color (255, 255, 255,196));
     restartGame();
     launchNextPlayer();
 
-    endGameTxt.setFont(gameFont);
-    endGameTxt.setString("End of the Game");
-    endGameTxt.setCharacterSize(30);
+    endGameTxt->setFont(gameFont);
+    endGameTxt->setString("End of the Game");
+    endGameTxt->setCharacterSize(30);
 
-    sf::FloatRect ss = endGameTxt.getLocalBounds();
-    endGameTxt.setPosition((1360/2)-(ss.width/2),60);
+    sf::FloatRect ss = endGameTxt->getLocalBounds();
+    endGameTxt->setPosition(sf::Vector2f((1360/2)-(ss.size.x/2),60));
 
     setTxtEndGameAmount();
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
 
-    txtSurvivorsLabel.setString("Survivors");
-    txtSurvivorsLabel.setFont(gameFont);
-    txtSurvivorsLabel.setCharacterSize(30);
-    sf::FloatRect rectSurvivors = txtSurvivorsLabel.getLocalBounds();
-    txtSurvivorsLabel.setPosition((1360/2)-(rectSurvivors.width/2),200);
+    txtSurvivorsLabel->setString("Survivors");
+    txtSurvivorsLabel->setFont(gameFont);
+    txtSurvivorsLabel->setCharacterSize(30);
+    sf::FloatRect rectSurvivors = txtSurvivorsLabel->getLocalBounds();
+    txtSurvivorsLabel->setPosition(sf::Vector2f((1360/2)-(rectSurvivors.size.x/2),200));
 
-    txtLoosersLabel.setString("Digested by The Elements");
-    txtLoosersLabel.setFont(gameFont);
-    txtLoosersLabel.setCharacterSize(30);
-    sf::FloatRect rectLoosers = txtLoosersLabel.getLocalBounds();
-    txtLoosersLabel.setPosition((1360/2)-(rectLoosers.width/2),500);
+    txtLoosersLabel->setString("Digested by The Elements");
+    txtLoosersLabel->setFont(gameFont);
+    txtLoosersLabel->setCharacterSize(30);
+    sf::FloatRect rectLoosers = txtLoosersLabel->getLocalBounds();
+    txtLoosersLabel->setPosition(sf::Vector2f((1360/2)-(rectLoosers.size.x/2),500));
     credits.setTxt(0);
 
 }
@@ -173,10 +172,10 @@ void Game::restartGame()
     Player playerHud2(&textures, &gameFont,1);
     Player playerHud3(&textures, &gameFont,2);
     Player playerHud4(&textures, &gameFont,3);
-    players[0] = playerHud1;
-    players[1] = playerHud2;
-    players[3] = playerHud3;
-    players[2] = playerHud4;
+    players[0] = std::move(playerHud1);
+    players[1] = std::move(playerHud2);
+    players[3] = std::move(playerHud3);
+    players[2] = std::move(playerHud4);
     players[0].setActive(true);
     setCurrentNeighbours();
     diceResultPlayer =  6;
@@ -216,26 +215,26 @@ void Game::setCurrentNeighbours ()
 void Game::loadAssets()
 {
 
-    if (!gameFont.loadFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-mania.regular.ttf")))
+    if (!gameFont.openFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-mania.regular.ttf")))
     {
         std::exit(1);
     }
-    if (!menuFont.loadFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf")))
+    if (!menuFont.openFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf")))
     {
         std::exit(1);
     }
 
-    menuBackground.setTexture(textures.textureMenu);
+    // Initialize sprites with textures for SFML 3.0
+    menuBackground = std::make_unique<sf::Sprite>(textures.textureMenu);
 
+    spriteDeerGod = std::make_unique<sf::Sprite>(textures.textureDeerGod);
 
-    spriteDeerGod.setTexture(textures.textureDeerGod);
-
-    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/blur.frag"), sf::Shader::Fragment))
+    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/blur.frag"), sf::Shader::Type::Fragment))
         std::exit(1);
 
-    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/pixelate.frag"), sf::Shader::Fragment))
+    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/pixelate.frag"), sf::Shader::Type::Fragment))
         std::exit(1);
-    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/dark.frag"), sf::Shader::Fragment))
+    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/dark.frag"), sf::Shader::Type::Fragment))
         std::exit(1);
 
     if (!textureBackgroundArt.loadFromFile(get_full_path(ASSETS_PATH"assets/img/background_land.png")))
@@ -257,27 +256,35 @@ void Game::loadAssets()
     //    if (!textureBackground.loadFromFile(ASSETS_PATH"assets/img/background.png"))
     //        std::exit(1);
 
-    spriteBackgroundArt.setTexture(textureBackgroundArt);
-    menuTxt.setFont(gameFont);
-    menuTxt.setCharacterSize(60);
-    menuTxt.setString(gameTitle);
-    int width = menuTxt.getLocalBounds().width;
-    int height = menuTxt.getLocalBounds().height;
-    menuTxt.setPosition(1050-(width/2),750-(height/2)-150);
-    menuTxt.setFillColor(sf::Color(255, 255, 255, 85));
+    // Initialize sprites that depend on loaded textures
+    spriteBackgroundArt = std::make_unique<sf::Sprite>(textureBackgroundArt);
+    spriteBackgroundDark = std::make_unique<sf::Sprite>(textures.backgroundDark);
+    spriteLestBegin = std::make_unique<sf::Sprite>(textures.textureLetsBegin);
+    spriteBigDiamond = std::make_unique<sf::Sprite>(textures.textureBigDiamond);
+    
+    menuTxt->setFont(gameFont);
+    menuTxt->setCharacterSize(60);
+    menuTxt->setString(gameTitle);
+    int width = menuTxt->getLocalBounds().size.x;
+    int height = menuTxt->getLocalBounds().size.y;
+    menuTxt->setPosition(sf::Vector2f(1050-(width/2),750-(height/2)-150));
+    menuTxt->setFillColor(sf::Color(255, 255, 255, 85));
     cardsDeck.setFonts(&gameFont);
 
-    paganHolidayTxt.setFont(gameFont);
-    paganHolidayTxt.setCharacterSize(20);
-    paganHolidayTxt.setPosition(20,20);
+    paganHolidayTxt->setFont(gameFont);
+    paganHolidayTxt->setCharacterSize(20);
+    paganHolidayTxt->setPosition(sf::Vector2f(20,20));
 
 
     for (int i=0;i<4;i++)
     {
-        playersSprites[i].setTexture(textureBackgroundArt);
-        playersSprites[i].setTextureRect(sf::IntRect(playersSpritesCords[i][0],
-                                         playersSpritesCords[i][1], 280, 280));
-        playersSprites[i].setPosition(playersSpritesCords[i][0], playersSpritesCords[i][1]);
+        // Initialize player sprites with texture
+        playersSprites[i] = std::make_unique<sf::Sprite>(textureBackgroundArt);
+        seasons[i] = std::make_unique<sf::Sprite>(textureBackgroundArt); // Use appropriate texture
+        
+        playersSprites[i]->setTextureRect(sf::IntRect({playersSpritesCords[i][0],
+                                         playersSpritesCords[i][1]}, {280, 280}));
+        playersSprites[i]->setPosition(sf::Vector2f(playersSpritesCords[i][0], playersSpritesCords[i][1]));
     }
 
 
@@ -286,7 +293,7 @@ void Game::loadAssets()
 void Game::showMenu()
 {
     musicMenu.play();
-    musicMenu.setLoop(true);
+    musicMenu.setLooping(true);
     currentState = state_menu;
 }
 void Game::hideMenu()
@@ -298,7 +305,7 @@ void Game::showGameBoard()
 {
     //    musicGame.setVolume(20);
     musicGame.play();
-    musicGame.setLoop(true);
+    musicGame.setLooping(true);
     sfx.playLetsBegin();
 
     currentState = state_setup_players;
@@ -405,14 +412,14 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
     {
         for (int i=0;i<4;i++)
         {
-            sf::IntRect spriteHumanRect(players[i].spriteAI.getGlobalBounds());
-            if (spriteHumanRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+            sf::FloatRect spriteHumanRect(players[i].spriteAI->getGlobalBounds());
+            if (spriteHumanRect.contains(posFull))
             {
                 players[i].swapHuman();
             }
         }
-        sf::IntRect startGameRect(580,640,180,80);
-        if (startGameRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+        sf::IntRect startGameRect({580,640}, {180,80});
+        if (startGameRect.contains(sf::Vector2i((int)posFull.x, (int)posFull.y)))
         {
             bigDiamondActive = true;
             banner.setText("start game");
@@ -424,8 +431,8 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
     else if (currentState==state_roll_dice)
     {
         if (players[turn].human){
-            sf::IntRect diceRect(roundDice.spriteDice.getGlobalBounds());
-            if (diceRect.intersects(sf::IntRect(posFull.x, posFull.y, 1, 1)))
+            sf::FloatRect diceRect(roundDice.spriteDice->getGlobalBounds());
+            if (diceRect.contains(posFull))
             {
                 throwDiceMove();
             }
@@ -475,9 +482,9 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
 
 Game::Game(bool newTestMode):
     screenSize(DP::initScreenX,DP::initScreenY),
-    viewFull(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
-    viewGui(sf::FloatRect(00, 00, screenSize.x, screenSize.y)),
-    viewTiles(sf::FloatRect(0, 0, 1360, 768)),
+    viewFull(sf::FloatRect({0, 0}, {(float)screenSize.x, (float)screenSize.y})),
+    viewGui(sf::FloatRect({0, 0}, {(float)screenSize.x, (float)screenSize.y})),
+    viewTiles(sf::FloatRect({0, 0}, {1360, 768})),
     selector(DP::TILE_SIZE),
     character(&textures, 3),
     gameTitle("deerportal"),
@@ -485,7 +492,7 @@ Game::Game(bool newTestMode):
     roundNumber(1),
     guiRoundDice(&textures),
     boardDiamonds(&textures),
-    window(sf::VideoMode(DP::initScreenX, DP::initScreenY), "Deerportal - game about how human can be upgraded to the Deer"),
+    window(sf::VideoMode(sf::Vector2u(DP::initScreenX, DP::initScreenY)), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
@@ -495,13 +502,34 @@ Game::Game(bool newTestMode):
     banner(&gameFont),
     bigDiamondActive(false),
     credits(&gameFont),
+    sfxClick(sfxClickBuffer),
+    sfxDone(sfxDoneBuffer),
+    nextRotateElem(&textures),
+    prevRotateElem(&textures),
     cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
     deerModeActive(false),
-    gameVersion(),
-	v1(0.0f)
+    v1(0.0f)
 {
     testMode = newTestMode;
+    // Initialize unique_ptr text members (these have font constructors)
+    txtWinner = std::make_unique<sf::Text>(gameFont);
+    txtSurvivorsLabel = std::make_unique<sf::Text>(gameFont);
+    txtLoosersLabel = std::make_unique<sf::Text>(gameFont);
+    paganHolidayTxt = std::make_unique<sf::Text>(gameFont);
+    gameVersion = std::make_unique<sf::Text>(gameFont);
+    menuTxt = std::make_unique<sf::Text>(gameFont);
+    endGameTxt = std::make_unique<sf::Text>(gameFont);
+    textLoading = std::make_unique<sf::Text>(menuFont);
+    
+    // Sprite initialization will be done in loadAssets() where textures are available
+    // renderSprite will be initialized after renderTexture is ready
+    
+    // Initialize text arrays
+    for (int i = 0; i < 4; i++) {
+        endGameTxtAmount[i] = std::make_unique<sf::Text>(gameFont);
+    }
+    
     // TODO: perhaps get rid of the particles at all...
     particleSystem.setDissolve( true );
     particleSystem.setDissolutionRate( 10 );
@@ -515,17 +543,18 @@ Game::Game(bool newTestMode):
     playersSpritesCords[3][1] = 436;
     playersSpritesCords[2][0] = 562;
     playersSpritesCords[2][1] = 436;
-    textLoading.setString("loading...");
-    textLoading.setFont(menuFont);
-    textLoading.setPosition(200,200);
-    textLoading.setFillColor(sf::Color::White);
-    textLoading.setCharacterSize(10);
-    renderTexture.create(1360,768);
+    textLoading->setString("loading...");
+    textLoading->setFont(menuFont);
+    textLoading->setPosition(sf::Vector2f(200,200));
+    textLoading->setFillColor(sf::Color::White);
+    textLoading->setCharacterSize(10);
+    renderTexture.resize(sf::Vector2u(1360,768));
     renderTexture.clear(sf::Color::White);
-    renderTexture.draw(textLoading);
+    renderTexture.draw(*textLoading);
     renderTexture.display();
 
-    renderSprite.setTexture(renderTexture.getTexture());
+    // Initialize renderSprite with renderTexture after renderTexture is ready
+    renderSprite = std::make_unique<sf::Sprite>(renderTexture.getTexture());
     numberFinishedPlayers = 0;
     sf::Clock frameClock;
     guiRoundDice.active = true;
@@ -534,28 +563,28 @@ Game::Game(bool newTestMode):
 
     std::srand (time(NULL));
     window.clear(sf::Color(55,55,55));
-    renderTexture.draw(textLoading);
+    renderTexture.draw(*textLoading);
     // window.display();
 
     loadAssets();
-    textLoading.setFont(menuFont);
-    textLoading.setPosition(200,200);
-    textLoading.setFillColor(sf::Color::White);
-    textLoading.setCharacterSize(10);
+    textLoading->setFont(menuFont);
+    textLoading->setPosition(sf::Vector2f(200,200));
+    textLoading->setFillColor(sf::Color::White);
+    textLoading->setCharacterSize(10);
     renderTexture.clear(sf::Color::Black);
-    renderTexture.draw(textLoading);
+    renderTexture.draw(*textLoading);
     window.display();
 
-    gameVersion.setString("version: " + std::string(DEERPORTAL_VERSION)+"-"+std::string(BASE_PATH));
-    gameVersion.setFont(gameFont);
-    gameVersion.setPosition(10,10);
-    gameVersion.setFillColor(sf::Color::White);
-    gameVersion.setCharacterSize(15);
+    gameVersion->setString("version: " + std::string(DEERPORTAL_VERSION)+"-"+std::string(BASE_PATH));
+    gameVersion->setFont(gameFont);
+    gameVersion->setPosition(sf::Vector2f(10,10));
+    gameVersion->setFillColor(sf::Color::White);
+    gameVersion->setCharacterSize(15);
  
 
     initBoard();
     renderTexture.clear(sf::Color::Black);
-    renderTexture.draw(textLoading);
+    renderTexture.draw(*textLoading);
     renderTexture.display();
 
     showMenu();
@@ -571,47 +600,46 @@ Game::Game(bool newTestMode):
     {
         sf::Time frameTime = frameClock.restart();
 
-        // handle events
-        sf::Event event;
+        // handle events - SFML 3.0 variant-based event system
         float xpos = 320.0f;
         float ypos = 240.0f;
         float xgrv = 0.0f;
         float ygrv = 0.0f;
 
-        while (window.pollEvent(event))
+        while (const std::optional<sf::Event> eventOpt = window.pollEvent())
         {
-            switch (event.type) {
-            case sf::Event::Closed:
-                window.close(); break;
-            case sf::Event::KeyPressed:
-                if(event.key.code == sf::Keyboard::Escape )
+            const sf::Event& event = *eventOpt;
+            
+            if (event.is<sf::Event::Closed>())
+            {
+                window.close();
+            }
+            else if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>())
+            {
+                if(keyPressed->code == sf::Keyboard::Key::Escape)
                     window.close();
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Space ) )
                     particleSystem.fuel( 200/* * window.getFrameTime() */);
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::A ) )
                     particleSystem.setPosition( --xpos, ypos );
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::D ) )
                     particleSystem.setPosition( ++xpos, ypos );
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::W ) )
                     particleSystem.setPosition( xpos, --ypos );
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::S ) )
                     particleSystem.setPosition( xpos, ++ypos );
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Left ) )
                     particleSystem.setGravity( --xgrv * 0.1f, ygrv * 0.1f);
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Right ) )
                     particleSystem.setGravity( ++xgrv * 0.1f, ygrv * 0.1f );
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Up ) )
                     particleSystem.setGravity( xgrv * 0.1f, --ygrv * 0.1f );
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Down ) )
                     particleSystem.setGravity( xgrv * 0.1f, ++ygrv * 0.1f );
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::G ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::G ) )
                     particleSystem.setGravity( 0.0f, 0.0f );
-                if( sf::Keyboard::isKeyPressed( sf::Keyboard::P ) )
+                if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::P ) )
                     particleSystem.setPosition( 320.0f, 240.0f );
-                break;
-            default:
-                break;
-
             }
 
             sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
@@ -621,7 +649,8 @@ Game::Game(bool newTestMode):
             int mousePosX = (int)localPosition.x / DP::TILE_SIZE;
             int mousePosY = (int)localPosition.y / DP::TILE_SIZE;
             int mousePos = DP::transCords(sf::Vector2i(mousePosX, mousePosY));
-            if(event.type == sf::Event::Closed)
+            
+            if (event.is<sf::Event::Closed>())
                 window.close();
 
             // Showing mouse hover
@@ -637,15 +666,15 @@ Game::Game(bool newTestMode):
 
             if ((localPosition.x>=0) && (localPosition.y>=0) && (localPosition.x<=DP::BOARD_SIZE*DP::TILE_SIZE) && (localPosition.y<=DP::BOARD_SIZE*DP::TILE_SIZE))
             {
-                selector.setPosition((int) (localPosition.x / DP::TILE_SIZE)*DP::TILE_SIZE, ((int) localPosition.y / DP::TILE_SIZE)*DP::TILE_SIZE);
+                selector.setPosition(sf::Vector2f((int) (localPosition.x / DP::TILE_SIZE)*DP::TILE_SIZE, ((int) localPosition.y / DP::TILE_SIZE)*DP::TILE_SIZE));
             }
 
             /*!
              * Handling mouse click
              */
-            if (event.type == sf::Event::MouseButtonReleased)
+            if (const auto* mouseButtonReleased = event.getIf<sf::Event::MouseButtonReleased>())
             {
-                if (event.mouseButton.button == sf::Mouse::Left)
+                if (mouseButtonReleased->button == sf::Mouse::Button::Left)
                     handleLeftClick(localPosition,
                                     localPositionFull, mousePos);
             }
@@ -681,7 +710,7 @@ void Game::update(sf::Time frameTime) {
 
 
     float modifier = sin(oscilator/2.5)*30.0f;
-    spriteBigDiamond.setPosition(474,342+modifier);
+    spriteBigDiamond->setPosition(sf::Vector2f(474,342+modifier));
 
 
 
@@ -765,22 +794,22 @@ void Game::update(sf::Time frameTime) {
 
         if (currentMovements[0]>-1)
         {
-            prevRotateElem.spriteRotate.setPosition(players[turn].characters[0].leftChar.getPosition());
-            prevRotateElem.spriteRotate.move(10,20);
+            prevRotateElem.spriteRotate->setPosition(players[turn].characters[0].leftChar->getPosition());
+            prevRotateElem.spriteRotate->move(sf::Vector2f(10,20));
 
             // Modificator to fit on the bigger view
-            prevRotateElem.spriteRotate.move(-202,-76);
+            prevRotateElem.spriteRotate->move(sf::Vector2f(-202,-76));
 
             prevRotateElem.update(frameTime);
             prevRotateElem.setColor();
         }
         if (currentMovements[1]>-1)
         {
-            nextRotateElem.spriteRotate.setPosition(players[turn].characters[0].rightChar.getPosition());
-            nextRotateElem.spriteRotate.move(10,20);
+            nextRotateElem.spriteRotate->setPosition(players[turn].characters[0].rightChar->getPosition());
+            nextRotateElem.spriteRotate->move(sf::Vector2f(10,20));
 
             // Modificator to fit on the bigger view
-            nextRotateElem.spriteRotate.move(-202,-76);
+            nextRotateElem.spriteRotate->move(sf::Vector2f(-202,-76));
             nextRotateElem.update(frameTime);
             nextRotateElem.setColor();
         }
@@ -796,7 +825,7 @@ void Game::update(sf::Time frameTime) {
     if (currentState==state_lets_begin)
     {
         downTimeCounter += frameTime.asSeconds();
-        spriteLestBegin.setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
+        spriteLestBegin->setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
         if (downTimeCounter>5)
         {
             currentState = state_roll_dice;
@@ -981,7 +1010,7 @@ void Game::drawBaseGame()
 	
     //    renderTexture.draw(gameBackground);
     renderTexture.setView(viewFull);
-    //    renderTexture.draw(spriteBackgroundArt,  &shaderDark);
+    //    renderTexture.draw(*spriteBackgroundArt,  &shaderDark);
     //    spriteBackgroundArt.setColor(sf::Color(255, 255, 255, 208));
 	shaderBlur.setUniform("blur_radius", 0.01f);
     
@@ -992,22 +1021,22 @@ void Game::drawBaseGame()
     v = sin(runningCounter*0.005f);
     shaderPixel.setUniform("pixel_threshold", v);
 
-    renderTexture.draw(spriteBackgroundArt);
-    spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
+    renderTexture.draw(*spriteBackgroundArt);
+    spriteBackgroundArt->setColor(sf::Color(255, 255, 255));
     v = sin(runningCounter*0.05f)/2;
     shaderBlur.setUniform("blur_radius", v);
 
     renderTexture.draw(cardsDeck);
     if (currentState==state_roll_dice)
     {
-        spriteBackgroundArt.setColor(sf::Color(255, 255, 255));
+        spriteBackgroundArt->setColor(sf::Color(255, 255, 255));
 
         v = sin(runningCounter*0.5f)/4;
         shaderBlur.setUniform("blur_radius", v);
-        renderTexture.draw(roundDice.spriteDice);
+        renderTexture.draw(*roundDice.spriteDice);
     }
     else
-        renderTexture.draw(roundDice.spriteDice);
+        renderTexture.draw(*roundDice.spriteDice);
     renderTexture.setView(viewTiles);
     drawSquares();
 
@@ -1055,7 +1084,7 @@ void Game::render(float deltaTime)
     if ((currentState==state_game) || (currentState==state_roll_dice))
     {
         renderTexture.setView(viewFull);
-        renderTexture.draw(spriteBackgroundDark);
+        renderTexture.draw(*spriteBackgroundDark);
         renderTexture.setView(viewTiles);
         drawBaseGame();
         renderTexture.setView(viewFull);
@@ -1069,15 +1098,15 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
     } else if (currentState==state_setup_players) {
         renderTexture.setView(viewFull);
-        renderTexture.draw(spriteDeerGod);
+        renderTexture.draw(*spriteDeerGod);
         for (int i=0;i<4;i++)
         {
-            renderTexture.draw(players[i].spriteAI);
+            renderTexture.draw(*players[i].spriteAI);
         }
     } else if (currentState==state_gui_elem) {
         renderTexture.setView(viewFull);
         shaderBlur.setUniform("blur_radius", 2.0f);
-        renderTexture.draw(spriteBackgroundDark, &shaderBlur);
+        renderTexture.draw(*spriteBackgroundDark, &shaderBlur);
         drawBaseGame();
         drawCharacters();
         renderTexture.setView(viewFull);
@@ -1087,27 +1116,27 @@ void Game::render(float deltaTime)
 
 
 //        shaderBlur.setParameter("blur_radius", 15);
-        renderTexture.draw(menuBackground);
+        renderTexture.draw(*menuBackground);
 //        //        renderTexture.draw(menuTxt, &shaderBlur);
         //        renderTexture.draw(menuTxt);
-        renderTexture.draw(paganHolidayTxt);
-        renderTexture.draw(gameVersion);
+        renderTexture.draw(*paganHolidayTxt);
+        renderTexture.draw(*gameVersion);
         renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
         shaderBlur.setUniform("blur_radius", 4.0f);
-        renderTexture.draw(spriteBackgroundDark, &shaderBlur);
+        renderTexture.draw(*spriteBackgroundDark, &shaderBlur);
         renderTexture.setView(viewTiles);
         drawBaseGame();
         drawCharacters();
         renderTexture.draw(boardDiamonds, &shaderBlur);
         renderTexture.setView(viewFull);
         drawPlayersGui();
-        renderTexture.draw(spriteLestBegin,&shaderBlur);
+        renderTexture.draw(*spriteLestBegin,&shaderBlur);
 
     } else if (currentState==state_gui_end_round){
         renderTexture.setView(viewFull);
-        renderTexture.draw(spriteBackgroundDark);
+        renderTexture.draw(*spriteBackgroundDark);
         drawBaseGame();
         shaderBlur.setUniform("blur_radius", 0.05f);
         renderTexture.draw(guiRoundDice, &shaderBlur);
@@ -1116,40 +1145,40 @@ void Game::render(float deltaTime)
     }
     else if (currentState==state_end_game){
         renderTexture.setView(viewFull);
-        renderTexture.draw(spriteBackgroundDark);
-        renderTexture.draw(spriteLestBegin,&shaderBlur);
-        renderTexture.draw(endGameTxt);
+        renderTexture.draw(*spriteBackgroundDark);
+        renderTexture.draw(*spriteLestBegin,&shaderBlur);
+        renderTexture.draw(*endGameTxt);
 
         //        for (int i=0;i<4;i++){
         //            if (players[i].reachedPortal)
         //                renderTexture.draw(endGameTxtAmount[i]);
         //        }
 
-        renderTexture.draw(txtWinner);
-        renderTexture.draw(txtSurvivorsLabel);
+        renderTexture.draw(*txtWinner);
+        renderTexture.draw(*txtSurvivorsLabel);
         for (unsigned int i=0; i<txtSurvivors.size();i++) {
-            renderTexture.draw(txtSurvivors[i]);
+            renderTexture.draw(*txtSurvivors[i]);
         }
-        renderTexture.draw(txtLoosersLabel);
+        renderTexture.draw(*txtLoosersLabel);
         for (unsigned int i=0; i<txtLoosers.size();i++) {
-            renderTexture.draw(txtLoosers[i]);
+            renderTexture.draw(*txtLoosers[i]);
         }
 
     }
     if (bigDiamondActive)
-        renderTexture.draw(spriteBigDiamond);
+        renderTexture.draw(*spriteBigDiamond);
     if (banner.active)
         renderTexture.draw(banner);
 
 
 
     renderTexture.display();
-    renderSprite.setTexture(renderTexture.getTexture());
+    renderSprite->setTexture(renderTexture.getTexture());
     
     v1 = sin(deltaTime)*0.015f;
     shaderBlur.setUniform("blur_radius", v1);
     shaderBlur.setUniform("blur_radius", 0.0003f);
-    window.draw(renderSprite, &shaderBlur);
+    window.draw(*renderSprite, &shaderBlur);
 
     // particleSystem.remove();
     // particleSystem.update();

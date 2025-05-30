@@ -6,12 +6,13 @@
 class Credits: public sf::Drawable, public sf::Transformable
 {
 public:
-    explicit Credits(sf::Font *gameFont);
-    void update(sf::Time frameTime);
+    Credits(sf::Font *gameFont);
+    void update(sf::Time deltaTime);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    std::unique_ptr<sf::Text> text;
+    float timeDownCounter;
 
     std::string textStr;
-    sf::Text text;
     std::array<std::string,4> creditsTxt;
     float txtInterval;
     float timeCounter;

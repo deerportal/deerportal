@@ -76,7 +76,7 @@ std::array<int,2> Character::getMovements(int howFar)
 void Character::setBoardPosition(int playerNumber)
 {
     Elem::setBoardPosition(playerNumber);
-    move(0,-20);
+    move(sf::Vector2f(0,-20));
 
 }
 
@@ -132,28 +132,31 @@ Character::Character(TextureHolder *textures, int playerNumber):
     int charWidth = 32;
     int charHeight = 58;
 
+    // Initialize the unique_ptr sprites with textures
+    leftChar = std::make_unique<sf::Sprite>(textures->textureCharacters);
+    rightChar = std::make_unique<sf::Sprite>(textures->textureCharacters);
 
     walkingAnimationDown.setSpriteSheet(textures->textureCharacters);
-    walkingAnimationDown.addFrame(sf::IntRect(offset, 0, charWidth, charHeight));
-    walkingAnimationDown.addFrame(sf::IntRect(offset, 58, charWidth, charHeight));
+    walkingAnimationDown.addFrame(sf::IntRect({offset, 0}, {charWidth, charHeight}));
+    walkingAnimationDown.addFrame(sf::IntRect({offset, 58}, {charWidth, charHeight}));
 
     walkingAnimationRight.setSpriteSheet(textures->textureCharacters);
-    walkingAnimationRight.addFrame(sf::IntRect(offset, 116, charWidth, charHeight));
-    walkingAnimationRight.addFrame(sf::IntRect(offset, 174, charWidth, charHeight));
+    walkingAnimationRight.addFrame(sf::IntRect({offset, 116}, {charWidth, charHeight}));
+    walkingAnimationRight.addFrame(sf::IntRect({offset, 174}, {charWidth, charHeight}));
 
     walkingAnimationLeft.setSpriteSheet(textures->textureCharacters);
-    walkingAnimationLeft.addFrame(sf::IntRect(offset, 232, charWidth, charHeight));
-    walkingAnimationLeft.addFrame(sf::IntRect(offset, 290, charWidth, charHeight));
+    walkingAnimationLeft.addFrame(sf::IntRect({offset, 232}, {charWidth, charHeight}));
+    walkingAnimationLeft.addFrame(sf::IntRect({offset, 290}, {charWidth, charHeight}));
 
     walkingAnimationUp.setSpriteSheet(textures->textureCharacters);
-    walkingAnimationUp.addFrame(sf::IntRect(offset, 348, charWidth, charHeight));
-    walkingAnimationUp.addFrame(sf::IntRect(offset, 406, charWidth, charHeight));
+    walkingAnimationUp.addFrame(sf::IntRect({offset, 348}, {charWidth, charHeight}));
+    walkingAnimationUp.addFrame(sf::IntRect({offset, 406}, {charWidth, charHeight}));
 
     currentAnimation = &walkingAnimationRight;
 
 
-    leftChar.move(202,76);
-    rightChar.move(202,76);
+    leftChar->move(sf::Vector2f(202,76));
+    rightChar->move(sf::Vector2f(202,76));
 
     animations[DP::DIR_LEFT] = walkingAnimationLeft;
     animations[DP::DIR_RIGHT] = walkingAnimationRight;
@@ -247,9 +250,9 @@ void Character::update(sf::Time deltaTime)
             sf::Vector2i neededCords(DP::transPosition(moveLeft));
 
             sf::Vector2f newPos(DP::getScreenPos(neededCords));
-            leftChar.setPosition(newPos.x+DP::TILE_SIZE/4,newPos.y);
+            leftChar->setPosition(sf::Vector2f(newPos.x+DP::TILE_SIZE/4,newPos.y));
 
-            leftChar.move(202,76);
+            leftChar->move(sf::Vector2f(202,76));
         }
 
 
@@ -259,8 +262,8 @@ void Character::update(sf::Time deltaTime)
             sf::Vector2i neededCords(DP::transPosition(moveRight));
 
             sf::Vector2f newPos(DP::getScreenPos(neededCords));
-            rightChar.setPosition(newPos.x+DP::TILE_SIZE/4,newPos.y);
-            rightChar.move(202,76);
+            rightChar->setPosition(sf::Vector2f(newPos.x+DP::TILE_SIZE/4,newPos.y));
+            rightChar->move(sf::Vector2f(202,76));
 
         }
 
@@ -273,7 +276,7 @@ void Character::update(sf::Time deltaTime)
 sf::FloatRect Character::getLocalBounds() const
 {
 
-    return sf::FloatRect(0.f, 0.f, 0, 0);
+    return sf::FloatRect({0.f, 0.f}, {0.f, 0.f});
 }
 
 sf::FloatRect Character::getGlobalBounds() const

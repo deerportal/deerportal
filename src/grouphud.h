@@ -11,13 +11,11 @@ namespace DP {
 class GroupHud: public sf::Drawable, public sf::Transformable
 {
 public:
-    explicit GroupHud( sf::Font *gameFont);
     GroupHud();
     void setFont(sf::Font *gameFont);
-    sf::Text seasonName;
-    sf::Text roundName;
-    sf::Text monthName;
-
+    std::unique_ptr<sf::Text> seasonName;
+    std::unique_ptr<sf::Text> roundName;
+    std::unique_ptr<sf::Text> monthName;
 
     void setSeason(int seasonNumber);
     void setRoundName(int roundNumber);

@@ -97,10 +97,10 @@ sf::FloatRect AnimatedSprite::getLocalBounds() const
 {
     sf::IntRect rect = m_animation->getFrame(m_currentFrame);
 
-    float width = static_cast<float>(std::fabs(rect.width));
-    float height = static_cast<float>(std::fabs(rect.height));
+    float width = static_cast<float>(std::fabs(rect.size.x));
+    float height = static_cast<float>(std::fabs(rect.size.y));
 
-    return sf::FloatRect(0.f, 0.f, width, height);
+    return sf::FloatRect(sf::Vector2f(0.f, 0.f), sf::Vector2f(width, height));
 }
 
 sf::FloatRect AnimatedSprite::getGlobalBounds() const
@@ -131,14 +131,14 @@ void AnimatedSprite::setFrame(std::size_t newFrame, bool resetTime)
         sf::IntRect rect = m_animation->getFrame(newFrame);
 
         m_vertices[0].position = sf::Vector2f(0.f, 0.f);
-        m_vertices[1].position = sf::Vector2f(0.f, static_cast<float>(rect.height));
-        m_vertices[2].position = sf::Vector2f(static_cast<float>(rect.width), static_cast<float>(rect.height));
-        m_vertices[3].position = sf::Vector2f(static_cast<float>(rect.width), 0.f);
+        m_vertices[1].position = sf::Vector2f(0.f, static_cast<float>(rect.size.y));
+        m_vertices[2].position = sf::Vector2f(static_cast<float>(rect.size.x), static_cast<float>(rect.size.y));
+        m_vertices[3].position = sf::Vector2f(static_cast<float>(rect.size.x), 0.f);
 
-        float left = static_cast<float>(rect.left) + 0.0001f;
-        float right = left + static_cast<float>(rect.width);
-        float top = static_cast<float>(rect.top);
-        float bottom = top + static_cast<float>(rect.height);
+        float left = static_cast<float>(rect.position.x) + 0.0001f;
+        float right = left + static_cast<float>(rect.size.x);
+        float top = static_cast<float>(rect.position.y);
+        float bottom = top + static_cast<float>(rect.size.y);
 
         m_vertices[0].texCoords = sf::Vector2f(left, top);
         m_vertices[1].texCoords = sf::Vector2f(left, bottom);
@@ -191,6 +191,6 @@ void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) con
     {
         states.transform *= getTransform();
         states.texture = m_texture;
-        target.draw(m_vertices, 4, sf::Quads, states);
+        target.draw(m_vertices, 4, sf::PrimitiveType::TriangleFan, states);
     }
 }

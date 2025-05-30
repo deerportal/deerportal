@@ -13,6 +13,8 @@ class BoardElem: public sf::Sprite
 public:
     BoardElem();
     BoardElem(int pos, int type);
+    
+    static sf::Texture& getDefaultTexture();
 
     int pos;
     int type;

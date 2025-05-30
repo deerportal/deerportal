@@ -1,6 +1,6 @@
 #Change this if you need to target a specific CMake version
-cmake_minimum_required(VERSION 3.1)
-set (CMAKE_CXX_STANDARD 11)
+cmake_minimum_required(VERSION 3.5)
+set (CMAKE_CXX_STANDARD 17)
 
 # To unify version handling
 file (STRINGS "version.txt" DEERPORTAL_VERSION)
@@ -36,14 +36,10 @@ set(EXECUTABLE_NAME "DeerPortal")
 file( GLOB SRCS src/*.cpp src/*.h )
 add_executable(${EXECUTABLE_NAME} ${SRCS})
 
-# Detect and add SFML
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
-#Find any version 2.X of SFML
-#See the FindSFML.cmake file for additional details and instructions
-find_package(SFML 2 REQUIRED network audio graphics window system)
+# Find SFML 3.0 using modern CMake approach
+find_package(SFML 3 COMPONENTS System Window Graphics Audio Network REQUIRED)
 if(SFML_FOUND)
-  include_directories(${SFML_INCLUDE_DIR})
-  target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+  target_link_libraries(${EXECUTABLE_NAME} PRIVATE SFML::System SFML::Window SFML::Graphics SFML::Audio SFML::Network)
 endif()
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES
@@ -52,30 +48,47 @@ set_target_properties(${EXECUTABLE_NAME} PROPERTIES
   RESOURCE "${RESOURCE_FILES}"
 )
 
-# Install target
+# macOS App Bundle: Copy assets into the bundle
+if(APPLE)
+  # Copy assets into the app bundle Resources directory
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets
+    $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Resources/assets
+    COMMENT "Copying assets to macOS app bundle"
+  )
+  
+  # For macOS, let runtime detection handle the path (empty ASSETS_PATH)
+  add_definitions(-DASSETS_PATH="")
+  add_definitions(-DBASE_PATH="app_bundle")
+else()
+  # Original logic for other platforms
+  add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
+  IF (WIN32)
+    set (ASSETS_BASE_PATH data)
+    add_definitions(-DASSETS_PATH="${ASSETS_BASE_PATH}/")
+  ELSE()
+    set (ASSETS_BASE_PATH share/games/deerportal)
+    add_definitions(-DASSETS_PATH="${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
+  ENDIF()
+endif()
 
+# Install target
 IF (WIN32)
   set (ASSETS_BASE_PATH data)
   install(TARGETS ${EXECUTABLE_NAME} DESTINATION .)
+  install(DIRECTORY assets DESTINATION "${ASSETS_BASE_PATH}/")
 ELSE()
-	set (ASSETS_BASE_PATH share/games/deerportal)
-	install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+  if(APPLE)
+    # For macOS, install the app bundle
+    install(TARGETS ${EXECUTABLE_NAME} DESTINATION Applications)
+  else()
+    # For Linux/Unix
+    set (ASSETS_BASE_PATH share/games/deerportal)
+    install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+    install(DIRECTORY assets DESTINATION "${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
+  endif()
 ENDIF()
-
-add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
-IF (WIN32)
-	add_definitions(-DASSETS_PATH="${ASSETS_BASE_PATH}/")
-#install(DIRECTORY assets DESTINATION share/games/deerportal)
-install(DIRECTORY assets DESTINATION "${ASSETS_BASE_PATH}/")
-ELSE()
-	add_definitions(-DASSETS_PATH="${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
-	# install(DIRECTORY assets DESTINATION share/games/deerportal)
-	install(DIRECTORY assets DESTINATION "${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
-
-ENDIF()
-# install(DIRECTORY assets DESTINATION share/games/deerportal)
-
-
 
 # CPack packaging
 include(InstallRequiredSystemLibraries)

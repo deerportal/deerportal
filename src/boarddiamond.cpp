@@ -14,9 +14,9 @@ BoardDiamond::BoardDiamond(TextureHolder *textures, int idNumber,
     this->playerNumber = playerNumber;
     this->boardPosition = boardPosition;
     this->idNumber = idNumber;
-    spriteHolder.setTexture(this->textures->textureBoardDiamond);
-    sf::IntRect textureRect(idNumber*44, 0, 44,44);
-    spriteHolder.setTextureRect(textureRect);
+    spriteHolder = std::make_unique<sf::Sprite>(this->textures->textureBoardDiamond);
+    sf::IntRect textureRect(sf::Vector2i(idNumber*44, 0), sf::Vector2i(44, 44));
+    spriteHolder->setTextureRect(textureRect);
     // spriteHolder.scale(0.5, 0.5);
     setBoardPosition(boardPosition);
 }
@@ -26,7 +26,7 @@ void BoardDiamond::draw(sf::RenderTarget& target, sf::RenderStates states) const
     if (boardPosition>-1)
     {
         states.transform *= getTransform();
-        target.draw(spriteHolder, states);
+        target.draw(*spriteHolder, states);
     }
 }
 

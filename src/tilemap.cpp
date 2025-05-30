@@ -53,9 +53,9 @@ int transCords(sf::Vector2i cords) {
 
 sf::IntRect transPosIntoRect(int pos)
 {
-    sf::Vector2i cords = DP::transTilePosition(pos);
-    sf::IntRect posRect((int)cords.x*DP::TILE_SIZE, (int)cords.y*DP::TILE_SIZE, DP::TILE_SIZE, DP::TILE_SIZE);
-    //    std::cout << "debug transPosIntoRect " << pos << " "<<  cords.x << " " << cords.y << " " << posRect.left << " " << posRect.top << std::endl;
+    sf::Vector2i cords(DP::transPosition(pos));
+    sf::IntRect posRect({(int)cords.x*DP::TILE_SIZE, (int)cords.y*DP::TILE_SIZE}, {DP::TILE_SIZE, DP::TILE_SIZE});
+    //    std::cout << "debug transPosIntoRect " << pos << " "<<  cords.x << " " << cords.y << " " << posRect.position.x << " " << posRect.position.y << std::endl;
     return posRect;
 }
 

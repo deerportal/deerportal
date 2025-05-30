@@ -22,26 +22,16 @@ int Elem::getBoardPosition()
  * \param boardPosition
  */
 
-void Elem::setBoardPosition(int boardPosition)
+void Elem::setBoardPosition(int newBoardPosition)
 {
-    sf::Vector2i neededCords(DP::transPosition(boardPosition));
+    boardPosition = newBoardPosition;
+    sf::Vector2i cords = DP::transPosition(boardPosition);
+    sf::Vector2f newPos = DP::getScreenPos(cords);
+    setPosition(sf::Vector2f(newPos.x, newPos.y));
 
-    sf::Vector2f newPos(DP::getScreenPos(neededCords));
-
-    setPosition(newPos.x, newPos.y);
-    this->boardPosition = boardPosition;
-
-//    std::array<int,2> movements(getMovements(diceResult));
-//    std::cout << "board pos >> " << boardPosition << " cords >>" << neededCords.x << " "   << neededCords.y
-//              << "newpos >> " << newPos.x << " " << newPos.y << " "
-//              << "movements >> " << movements[0] << " " << movements[1]
-//              << std::endl;
-
-   sf::Vector2i newVecPos(getPosition());
 //   sf::FloatRect newSize(getGlobalBounds());
-   float newX =  newVecPos.x + (DP::TILE_SIZE/3);
-//   newX = newX - (newSize.width);
-   setPosition(newX, newPos.y);
-   move(202,76);
-
+//   float newX = newPos.x;
+//   newX = newX - (newSize.size.x);
+   setPosition(sf::Vector2f(newPos.x, newPos.y));
+   move(sf::Vector2f(202,76));
 }

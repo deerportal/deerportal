@@ -1,47 +1,66 @@
 #include "grouphud.h"
 #include "data.h"
+#include <iostream> // For std::cerr
 
 namespace DP {
 
-GroupHud::GroupHud(sf::Font *gameFont)
-{
-    seasonName.setFont(*gameFont);
-
-}
-
 GroupHud::GroupHud(){
-
+    // Default constructor: unique_ptrs (seasonName, roundName, monthName) are initially nullptr.
+    // The setFont method is responsible for their actual initialization with a valid font.
 }
 
 void GroupHud::setFont(sf::Font *gameFont) {
-    seasonName.setFont(*gameFont);
-    roundName.setFont(*gameFont);
-    monthName.setFont(*gameFont);
-    seasonName.setFillColor(sf::Color(255,255,255));
-    seasonName.setCharacterSize(30);
-    roundName.setCharacterSize(30);
-    monthName.setCharacterSize(30);
-    roundName.setFillColor(sf::Color(255,255,250));
-//    monthName.move(400, 0);
-    setMonthName(1);
+    if (!gameFont) {
+        std::cerr << "Error: GroupHud::setFont called with null gameFont. Text objects will not be created." << std::endl;
+        // Explicitly set to nullptr to ensure they are not used if font is bad, 
+        // though default unique_ptr construction is already nullptr.
+        seasonName = nullptr;
+        roundName = nullptr;
+        monthName = nullptr;
+        return;
+    }
+
+    // Initialize unique_ptrs if they haven_t been already, or set font if they exist.
+    if (!seasonName) seasonName = std::make_unique<sf::Text>(*gameFont);
+    else seasonName->setFont(*gameFont); 
+
+    if (!roundName) roundName = std::make_unique<sf::Text>(*gameFont);
+    else roundName->setFont(*gameFont);
+
+    if (!monthName) monthName = std::make_unique<sf::Text>(*gameFont);
+    else monthName->setFont(*gameFont);
+
+    // Check if text objects were successfully created before using them
+    if (seasonName) {
+        seasonName->setFillColor(sf::Color(255,255,255));
+        seasonName->setCharacterSize(30);
+    }
+    if (roundName) {
+        roundName->setCharacterSize(30);
+        roundName->setFillColor(sf::Color(255,255,250));
+    }
+    if (monthName) {
+        monthName->setCharacterSize(30);
+        setMonthName(1); // Ensure this is called after monthName is valid and font is set
+    }
 }
 
 void GroupHud::setSeason(int seasonNumber){
-   seasonName.setString("Season: " + DP::seasonsNames[seasonNumber]);
-   setPosition(440,12);
+   seasonName->setString("Season: " + DP::seasonsNames[seasonNumber]);
+   setPosition(sf::Vector2f(440,12));
 
 
 }
 
 void GroupHud::setDeerModeActive(){
-   seasonName.setString("Deer Mode");
-   setPosition(455,12);
+   seasonName->setString("Deer Mode");
+   setPosition(sf::Vector2f(455,12));
 
 
 }
 void GroupHud::setRoundName(int roundNumber){
-   roundName.setString("Round: " + std::to_string(roundNumber));
-   roundName.setPosition(30, 700);
+   roundName->setString("Round: " + std::to_string(roundNumber));
+   roundName->setPosition(sf::Vector2f(30, 700));
 
 }
 
@@ -49,24 +68,23 @@ void GroupHud::setRoundName(int roundNumber){
 
 void GroupHud::setDeerModeCounter(int deerModeCounter)
 {
-    roundName.setString(std::to_string(deerModeCounter));
-    roundName.setPosition(50, 700);
+    roundName->setString(std::to_string(deerModeCounter));
+    roundName->setPosition(sf::Vector2f(50, 700));
 }
 
 //void
 
 void GroupHud::setMonthName(int monthNumber){
-   monthName.setString("Month: " + std::to_string(monthNumber));
+   monthName->setString("Month: " + std::to_string(monthNumber));
 
 }
 void GroupHud::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
     states.transform *= getTransform();
 
-
-        target.draw(seasonName, states);
-        target.draw(roundName, states);
-//        target.draw(monthName, states);
+    if (seasonName) target.draw(*seasonName, states);
+    if (roundName) target.draw(*roundName, states);
+    if (monthName) target.draw(*monthName, states);
 
 
 }

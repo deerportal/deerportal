@@ -64,7 +64,7 @@ public:
     BoardDiamondSeq boardDiamonds;
     sf::RenderWindow window;
     sf::RenderTexture renderTexture;
-    sf::Sprite renderSprite;
+    std::unique_ptr<sf::Sprite> renderSprite;
     Player players[4];
     SoundFX sfx;
     int turn;
@@ -79,7 +79,7 @@ private:
     float runningCounter;
     float oscilator;
     bool oscilatorInc;
-    sf::Sprite playersSprites[4]  ;
+    std::array<std::unique_ptr<sf::Sprite>, 4> playersSprites;
     int playersSpritesCords[4][2];
 
     enum states {
@@ -98,20 +98,20 @@ private:
     };
     states currentState;
 
-    sf::Sprite spriteDeerGod;
-    sf::Sprite spriteBackgroundDark;
-    sf::Sprite spriteLestBegin;
+    std::unique_ptr<sf::Sprite> spriteDeerGod;
+    std::unique_ptr<sf::Sprite> spriteBackgroundDark;
+    std::unique_ptr<sf::Sprite> spriteLestBegin;
     sf::Texture textureBackgroundArt;
-    sf::Sprite spriteBackgroundArt;
+    std::unique_ptr<sf::Sprite> spriteBackgroundArt;
     sf::Texture textureTiles;
     sf::Texture textureFaces;
     sf::Font gameFont;
     sf::Font menuFont;
-    sf::Text menuTxt;
-    sf::Text endGameTxt;
-    sf::Text endGameTxtAmount[4];
-    sf::Text paganHolidayTxt;
-    sf::Text gameVersion;
+    std::unique_ptr<sf::Text> menuTxt;
+    std::unique_ptr<sf::Text> endGameTxt;
+    std::array<std::unique_ptr<sf::Text>, 4> endGameTxtAmount;
+    std::unique_ptr<sf::Text> paganHolidayTxt;
+    std::unique_ptr<sf::Text> gameVersion;
     sf::Shader shaderBlur;
     sf::Shader shaderPixel;
     sf::Shader shaderDark;
@@ -134,8 +134,8 @@ private:
     void nextRound();
 
 
-    sf::Sprite menuBackground;
-    sf::Sprite seasons[4];
+    std::unique_ptr<sf::Sprite> menuBackground;
+    std::array<std::unique_ptr<sf::Sprite>, 4> seasons;
 
     sf::Music musicGame;
     sf::Music musicMenu;
@@ -182,17 +182,17 @@ private:
 
     float downTimeCounter;
     Command commandManager;
-    sf::Text textLoading;
+    std::unique_ptr<sf::Text> textLoading;
 public:
     CardsDeck cardsDeck;
     void startDeerMode();
 
-    sf::Text txtWinner;
+    std::unique_ptr<sf::Text> txtWinner;
 
-    sf::Text txtSurvivorsLabel;
-    sf::Text txtLoosersLabel;
-    std::vector<sf::Text> txtSurvivors;
-    std::vector<sf::Text> txtLoosers;
+    std::unique_ptr<sf::Text> txtSurvivorsLabel;
+    std::unique_ptr<sf::Text> txtLoosersLabel;
+    std::vector<std::unique_ptr<sf::Text>> txtSurvivors;
+    std::vector<std::unique_ptr<sf::Text>> txtLoosers;
 
 
     void throwDiceMove();
@@ -201,7 +201,7 @@ public:
     float cpuTimeThinking;
     Banner banner;
 
-    sf::Sprite spriteBigDiamond;
+    std::unique_ptr<sf::Sprite> spriteBigDiamond;
     bool bigDiamondActive;
 
     int mostDiamonds() const;

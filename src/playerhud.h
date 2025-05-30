@@ -55,31 +55,44 @@ public:
 
     bool human;
 
-    sf::Sprite spriteAI;
-    void setSpriteAI();
+    sf::Texture textureAI;
+    std::unique_ptr<sf::Sprite> spriteAI;
+    sf::Texture textureCountries[4];
+    std::map<sf::Keyboard::Key, sf::RectangleShape> elemKeys;
+
+    /*
+     * This is 4 different players areas on the screen
+     */
+    //    sf::Sprite spriteFace;
+
+    std::unique_ptr<sf::Text> txtCash;
+    std::unique_ptr<sf::Text> txtEnergy;
+    std::unique_ptr<sf::Text> txtFood;
+    std::unique_ptr<sf::Text> txtFaith;
+    std::unique_ptr<sf::Text> txtNextRound;
+    sf::Color colorMain;
+    sf::Color colorSecond;
+    sf::Font *gameFont;
+
+    bool aiActive;
+    std::unique_ptr<sf::Sprite> symbol;
+    sf::Texture symbolTexture;
+
+    int tileSize;
+    TextureHolder *textures;
+    sf::RectangleShape rectangle;
+    sf::RectangleShape rectangle2;
 
     void setHuman(bool newHuman);
 
     int number;
 
     void swapHuman();
+    void setSpriteAI();
     bool reachPortalMode;
 
 private:
 //    sf::Sprite spriteFace;
-    sf::Text txtCash;
-    sf::Text txtEnergy;
-    sf::Text txtFood;
-    sf::Text txtFaith;
-    sf::Text txtNextRound;
-//    int faceSize;
-    int tileSize;
-    TextureHolder *textures;
-    sf::RectangleShape rectangle;
-    sf::RectangleShape rectangle2;
-
-    sf::Sprite symbol;
-
     std::set<int> getTerrainSet();
 
 

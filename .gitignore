@@ -28,3 +28,6 @@ CMakeCache.txt
 out
 install_manifest.txt
 DeerPortal-*.AppImage
+.DS_Store
+DeerPortal.app/
+orig-sfml/

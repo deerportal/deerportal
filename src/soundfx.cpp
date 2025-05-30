@@ -1,6 +1,12 @@
 #include "soundfx.h"
 
 SoundFX::SoundFX()
+    : soundPortal(bufferPortal),
+      soundDeerMode(bufferDeerMode), 
+      soundMeditation(bufferMeditation),
+      soundCollect(soundCollectBuffer),
+      soundCard(soundCardBuffer),
+      soundLetsBegin(soundLetsBeginBuffer)
 {
     if (!soundCollectBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/collect.ogg")))
         exit(-1);
@@ -13,26 +19,15 @@ SoundFX::SoundFX()
     if (!bufferPortal.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/dp-ok.ogg")))
         exit(-1);
 
-
-
-
-    soundCollect.setBuffer(soundCollectBuffer);
-    soundCollect.setVolume(20);
-
-    soundCard.setBuffer(soundCardBuffer);
-//    soundCollect.setVolume(20);
-
     if (!soundLetsBeginBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/letsbegin.ogg")))
         exit(-1);
-    soundLetsBegin.setBuffer(soundLetsBeginBuffer);
+
+    // Set volume for sounds (buffers already set in initializer list)
+    soundCollect.setVolume(20);
+    soundCard.setVolume(20); // Fixed missing volume
     soundLetsBegin.setVolume(20);
-
-    soundPortal.setBuffer(bufferPortal);
     soundPortal.setVolume(20);
-
-    soundDeerMode.setBuffer(bufferDeerMode);
     soundDeerMode.setVolume(40);
-    soundMeditation.setBuffer(bufferMeditation);
     soundMeditation.setVolume(20);
 }
 

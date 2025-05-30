@@ -2,6 +2,7 @@
 
 
 RoundDice::RoundDice(Player (&players)[4])
+    : sfxDice(sfxDiceBuffer)
 {
     playersHud = players;
     diceResult = 1;
@@ -13,26 +14,27 @@ RoundDice::RoundDice(Player (&players)[4])
     if (!textureDice.loadFromFile(get_full_path(ASSETS_PATH"assets/img/diceWhite.png")))
         std::exit(1);
 
-    spriteDice.setTexture(textureDice);
-    sfxDice.setBuffer(sfxDiceBuffer);
+    spriteDice = std::make_unique<sf::Sprite>(textureDice);
     sfxDice.setVolume(12);
-    spriteDice.setPosition(1140,550);
+    spriteDice->setPosition(sf::Vector2f(1140,550));
     setDiceTexture();
 }
 
 void RoundDice::setDiceTexture(){
-    sf::IntRect diceRect(diceSize*diceResultSix, 0, diceSize, diceSize);
-    spriteDice.setTextureRect(diceRect);
+    sf::IntRect diceRect({diceSize*diceResultSix, 0}, {diceSize, diceSize});
+    spriteDice->setTextureRect(diceRect);
 }
 
 void RoundDice::setColor(int playerNumber){
     sf::Color color(DP::playersColors[playerNumber]);
-    spriteDice.setColor(color);
+    spriteDice->setColor(color);
 }
 
-void RoundDice::setDiceTexture(int diceResult){
-    this->diceResultSix = diceResult;
-    setDiceTexture();
+void RoundDice::setDiceTexture(int diceResult)
+{
+    int diceSize = 64;
+    sf::IntRect diceRect({diceSize*diceResultSix, 0}, {diceSize, diceSize});
+    spriteDice->setTextureRect(diceRect);
 }
 
 std::string RoundDice::drawRound(){
@@ -65,5 +67,10 @@ int RoundDice::throwDiceSix(){
     setDiceTexture();
 //    return 26;
     return result+1;
+}
+
+void RoundDice::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    if (spriteDice) target.draw(*spriteDice, states);
 }
 

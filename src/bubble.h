@@ -2,6 +2,8 @@
 #define BUBBLE_H
 
 #include <SFML/Graphics.hpp>
+#include <memory>
+#include <array>
 #include "filetools.h"
 
 enum BubbleState {DICE=0, MOVE=1};
@@ -14,10 +16,10 @@ public:
 public:
     sf::Texture textureDice;
     sf::Texture textureFootSteps;
-    sf::Sprite spriteDice;
-    sf::Sprite spriteFootSteps;
+    std::unique_ptr<sf::Sprite> spriteDice;
+    std::unique_ptr<sf::Sprite> spriteFootSteps;
 
-    std::array<sf::Sprite,2> spritesBubbles;
+    std::array<std::unique_ptr<sf::Sprite>,2> spritesBubbles;
     BubbleState state;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void update(sf::Time deltaTime);

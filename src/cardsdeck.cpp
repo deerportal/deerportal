@@ -2,8 +2,6 @@
 
 CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *command)
 {
-
-
     commandManager=command;
     std::array<std::array<int,2>,4> cardsPos = {
         {
@@ -14,29 +12,23 @@ CardsDeck::CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *comma
     this->textures = textures;
     for (int i=0;i<=3;i++)
     {
-//        spriteCardBases[i].setTexture(this->textures->textureCardBases[i]);
-        spriteCardBases[i].setPosition(cardsPos[i][0],cardsPos[i][1]);
+        // Initialize the unique_ptr sprites and text with a default texture/font
+        spriteCardBases[i] = std::make_unique<sf::Sprite>(this->textures->cardsTextures[i][0]);
+        spriteCardBases[i]->setPosition(sf::Vector2f(cardsPos[i][0], cardsPos[i][1]));
 
-        textPileTitle[i].setFont(*gameFont);
-        textPileTitle[i].setCharacterSize(16);
-        textPileTitle[i].setPosition(cardsPos[i][0]+10,cardsPos[i][1]+100);
+        textPileTitle[i] = std::make_unique<sf::Text>(*gameFont);
+        textPileTitle[i]->setCharacterSize(16);
+        textPileTitle[i]->setPosition(sf::Vector2f(cardsPos[i][0]+10, cardsPos[i][1]+100));
 
         for (unsigned int j=0;j<DP::cardsDistribution.size();j++)
         {
-
             int cardTypeInt = DP::cardsDistribution[j];
-
             cardsList[i].cardsPile[j].cardType = DP::cardsTypes[cardTypeInt];
             cardsList[i].cardsPile[j].cardTypeInt = cardTypeInt;
-            spriteCardBases[i].setTexture(this->textures->cardsTextures[i][cardTypeInt]);
-
+            spriteCardBases[i]->setTexture(this->textures->cardsTextures[i][cardTypeInt]);
         }
-
-
-
     }
     reloadCards();
-
 }
 
 void CardsDeck::reloadCards(){
@@ -55,8 +47,8 @@ void CardsDeck::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
         if ((cardsList[i].invisibleLeft==0.0f) && (cardsList[i].active))
         {
-            target.draw(spriteCardBases[i], states);
-            target.draw(textPileTitle[i], states);
+            target.draw(*spriteCardBases[i], states);
+            target.draw(*textPileTitle[i], states);
         }
     }
 }
@@ -65,11 +57,11 @@ void CardsDeck::setTitles(int number)
 {
       int cardTypeInt = getCardTypeInt(number);
 
-        textPileTitle[number].setString(DP::cardsTypes[cardTypeInt]);
+        textPileTitle[number]->setString(DP::cardsTypes[cardTypeInt]);
 //        int val = getCardTypeInt(number);
 
 
-        spriteCardBases[number].setTexture(textures->cardsTextures[number][cardTypeInt]);
+        spriteCardBases[number]->setTexture(textures->cardsTextures[number][cardTypeInt]);
 
 }
 
@@ -79,7 +71,7 @@ void CardsDeck::setFonts(sf::Font *gameFont)
 {
     for (int i=0;i<=3;i++)
     {
-        textPileTitle[i].setFont(*gameFont);
+        textPileTitle[i]->setFont(*gameFont);
     }
 }
 

@@ -1,6 +1,7 @@
 #ifndef CARDSDECK_H
 #define CARDSDECK_H
 #include <array>
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "textureholder.h"
@@ -15,8 +16,8 @@ class CardsDeck: public sf::Drawable, public sf::Transformable
 public:
     CardsDeck(TextureHolder *textures, sf::Font *gameFont, Command *command);
     std::array<CardsList, 4> cardsList;
-    std::array<sf::Sprite, 4> spriteCardBases;
-    std::array<sf::Text, 4> textPileTitle;
+    std::array<std::unique_ptr<sf::Sprite>, 4> spriteCardBases;
+    std::array<std::unique_ptr<sf::Text>, 4> textPileTitle;
     TextureHolder *textures;
 
     Command *commandManager;
