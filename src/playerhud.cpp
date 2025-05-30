@@ -159,9 +159,6 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
     if (txtFaith) target.draw(*txtFaith, states);
     if (txtNextRound) target.draw(*txtNextRound, states);
     if (symbol) target.draw(*symbol, states);
-    if (spriteAI && !human){
-        target.draw(*spriteAI, states);
-    }
 }
 
 void Player::play()

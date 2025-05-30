@@ -1,4 +1,7 @@
 #include "rounddice.h"
+#include "filetools.h"
+#include "data.h"
+#include "textureholder.h"
 
 
 RoundDice::RoundDice(Player (&players)[4])
@@ -32,7 +35,6 @@ void RoundDice::setColor(int playerNumber){
 
 void RoundDice::setDiceTexture(int diceResult)
 {
-    int diceSize = 64;
     sf::IntRect diceRect({diceSize*diceResultSix, 0}, {diceSize, diceSize});
     spriteDice->setTextureRect(diceRect);
 }

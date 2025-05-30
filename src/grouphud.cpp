@@ -1,5 +1,7 @@
 #include "grouphud.h"
 #include "data.h"
+#include "filetools.h"
+#include <memory>
 #include <iostream> // For std::cerr
 
 namespace DP {
@@ -46,38 +48,40 @@ void GroupHud::setFont(sf::Font *gameFont) {
 }
 
 void GroupHud::setSeason(int seasonNumber){
-   seasonName->setString("Season: " + DP::seasonsNames[seasonNumber]);
-   setPosition(sf::Vector2f(440,12));
-
-
+    if (seasonName) {
+        seasonName->setString("Season: " + DP::seasonsNames[seasonNumber]);
+        setPosition(sf::Vector2f(440,12));
+    }
 }
 
 void GroupHud::setDeerModeActive(){
-   seasonName->setString("Deer Mode");
-   setPosition(sf::Vector2f(455,12));
-
-
+    if (seasonName) {
+        seasonName->setString("Deer Mode");
+        setPosition(sf::Vector2f(455,12));
+    }
 }
+
 void GroupHud::setRoundName(int roundNumber){
-   roundName->setString("Round: " + std::to_string(roundNumber));
-   roundName->setPosition(sf::Vector2f(30, 700));
-
+    if (roundName) {
+        roundName->setString("Round: " + std::to_string(roundNumber));
+        roundName->setPosition(sf::Vector2f(30, 700));
+    }
 }
-
-
 
 void GroupHud::setDeerModeCounter(int deerModeCounter)
 {
-    roundName->setString(std::to_string(deerModeCounter));
-    roundName->setPosition(sf::Vector2f(50, 700));
+    if (roundName) {
+        roundName->setString(std::to_string(deerModeCounter));
+        roundName->setPosition(sf::Vector2f(50, 700));
+    }
 }
-
-//void
 
 void GroupHud::setMonthName(int monthNumber){
-   monthName->setString("Month: " + std::to_string(monthNumber));
-
+    if (monthName) {
+        monthName->setString("Month: " + std::to_string(monthNumber));
+    }
 }
+
 void GroupHud::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
     states.transform *= getTransform();
