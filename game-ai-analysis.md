@@ -240,3 +240,51 @@ while (const std::optional event = window.pollEvent()) {
 - **Cross-platform design**: CMake-based build system
 
 This analysis provides the context needed for completing the SFML 3.0 migration while preserving all game functionality and visual fidelity. 
+
+---
+
+## HUD SYSTEM ANALYSIS (Original vs Migrated)
+
+### ✅ **GroupHud Original Behavior**
+**Original SFML 2 Logic:**
+- **Season text**: Positioned via `setPosition(440,12)` on entire GroupHud object
+- **Round text**: Fixed at `(30, 700)` - bottom left corner
+- **Month text**: **NOT DRAWN** (commented out: `//target.draw(monthName, states);`)
+- **Transform system**: Uses GroupHud's `sf::Transformable` to position season text
+
+**Migration Issue:**
+- Current migrated version incorrectly positions individual text elements
+- Month is being drawn when it shouldn't be
+- Round appears in wrong location (right side instead of bottom left)
+
+### ✅ **Player HUD Original Positioning**  
+**Diamond Count (Cash) Display:**
+```cpp
+int posX1 = 82;    // Left side X
+int posX2 = 962;   // Right side X  
+int posY1 = 22;    // Top Y
+int posY2 = 720;   // Bottom Y
+std::array<std::array<int,2>,4> textPos = {{{
+    {posX1,posY1}}, {{posX2,posY1}},{{posX1,posY2}}, {{posX2, posY2}
+}}};
+```
+- **Player 0 (Water)**: Top left `(82, 22)`
+- **Player 1 (Earth)**: Top right `(962, 22)` 
+- **Player 2 (Fire)**: Bottom right `(962, 720)`
+- **Player 3 (Air)**: Bottom left `(82, 720)`
+
+**End Turn Buttons:**
+- Position: `(40, (playerNumber*100)+10)`
+- **Player 0**: `(40, 10)`
+- **Player 1**: `(40, 110)`
+- **Player 2**: `(40, 210)` 
+- **Player 3**: `(40, 310)`
+
+### 🔧 **Required Fixes for Migration**
+1. **GroupHud**: Revert to using `setPosition()` on entire object, not individual texts
+2. **Month**: Remove from draw() method (should not be displayed)
+3. **Round**: Move to bottom left `(30, 700)` position
+4. **Player cash**: Verify corner positioning matches original coordinates
+5. **Transform system**: Use GroupHud's Transformable correctly
+
+--- 

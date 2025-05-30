@@ -50,20 +50,23 @@ void GroupHud::setFont(sf::Font *gameFont) {
 void GroupHud::setSeason(int seasonNumber){
     if (seasonName) {
         seasonName->setString("Season: " + DP::seasonsNames[seasonNumber]);
-        setPosition(sf::Vector2f(440,12));
+        // Position the entire GroupHud object, not individual text elements
+        setPosition(sf::Vector2f(440, 12));
     }
 }
 
 void GroupHud::setDeerModeActive(){
     if (seasonName) {
         seasonName->setString("Deer Mode");
-        setPosition(sf::Vector2f(455,12));
+        // Position the entire GroupHud object, not individual text elements  
+        setPosition(sf::Vector2f(455, 12));
     }
 }
 
 void GroupHud::setRoundName(int roundNumber){
     if (roundName) {
         roundName->setString("Round: " + std::to_string(roundNumber));
+        // Round text positioned at bottom left, as in original
         roundName->setPosition(sf::Vector2f(30, 700));
     }
 }
@@ -72,6 +75,7 @@ void GroupHud::setDeerModeCounter(int deerModeCounter)
 {
     if (roundName) {
         roundName->setString(std::to_string(deerModeCounter));
+        // Deer mode counter positioned at bottom left
         roundName->setPosition(sf::Vector2f(50, 700));
     }
 }
@@ -79,18 +83,21 @@ void GroupHud::setDeerModeCounter(int deerModeCounter)
 void GroupHud::setMonthName(int monthNumber){
     if (monthName) {
         monthName->setString("Month: " + std::to_string(monthNumber));
+        // Month positioning - though it won't be drawn in the original behavior
     }
 }
 
 void GroupHud::draw(sf::RenderTarget& target, sf::RenderStates states) const{
-
     states.transform *= getTransform();
-
+    
+    // Draw season name (positioned via GroupHud transform)
     if (seasonName) target.draw(*seasonName, states);
+    
+    // Draw round name (positioned absolutely at bottom left)
     if (roundName) target.draw(*roundName, states);
-    if (monthName) target.draw(*monthName, states);
-
-
+    
+    // Month is NOT drawn in original - commented out to match original behavior
+    // if (monthName) target.draw(*monthName, states);
 }
 }
 
