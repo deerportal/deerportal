@@ -102,6 +102,7 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
 
     txtCash = std::make_unique<sf::Text>(*gameFont);
     txtCash->setCharacterSize(20);
+    txtCash->setFillColor(sf::Color(200, 200, 200, 180));
 
     txtFood = std::make_unique<sf::Text>(*gameFont);
     txtEnergy = std::make_unique<sf::Text>(*gameFont);
@@ -154,10 +155,10 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
     if (txtCash) target.draw(*txtCash, states);
-    if (txtEnergy) target.draw(*txtEnergy, states);
-    if (txtFood) target.draw(*txtFood, states);
-    if (txtFaith) target.draw(*txtFaith, states);
-    if (txtNextRound) target.draw(*txtNextRound, states);
+    // if (txtEnergy) target.draw(*txtEnergy, states);  // REMOVED - Not drawn in 0.8.2
+    // if (txtFood) target.draw(*txtFood, states);      // REMOVED - Not drawn in 0.8.2
+    // if (txtFaith) target.draw(*txtFaith, states);    // REMOVED - Not drawn in 0.8.2
+    // if (txtNextRound) target.draw(*txtNextRound, states); // REMOVED - Not drawn in 0.8.2
     // if (symbol) target.draw(*symbol, states); // COMMENTED OUT - was using wrong texture
 }
 

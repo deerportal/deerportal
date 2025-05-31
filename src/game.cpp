@@ -965,6 +965,20 @@ void Game::launchNextPlayer(){
 
     players[turn].characters[0].diceResult = diceResultPlayer;
     groupHud.setRoundName(roundNumber);
+    if (!deerModeActive) {
+        if (mostDiamonds() == turn) {
+            players[turn].reachPortalMode = true;
+            bigDiamondActive = true;   // Show diamond for player with most diamonds
+        } else {
+            players[turn].reachPortalMode = false;
+            // bigDiamondActive remains unchanged here, allowing it to persist through ties if previously active
+        }
+    } else {
+        // In Deer Mode: bigDiamond is already false (set by startDeerMode)
+        // Ensure players cannot enter portal mode through the 'most diamonds' mechanic here.
+        players[turn].reachPortalMode = false;
+    }
+
     if (deerModeActive==false)
     {
         groupHud.setSeason(currentSeason);
@@ -990,15 +1004,6 @@ void Game::launchNextPlayer(){
             players[turn].characters[0].getPosition().y-45);
 
     cpuTimeThinking = cpuTimeThinkingInterval;
-    if (mostDiamonds()==turn)
-    {
-        players[turn].reachPortalMode = true;
-        bigDiamondActive = true;   // Show diamond for player with most diamonds
-    } else {
-        players[turn].reachPortalMode = false;
-        // bigDiamondActive = false;  // DO NOT hide here to match 0.8.2 behavior where it stays visible in ties
-    }
-
 }
 
 void Game::drawPlayersGui(){
