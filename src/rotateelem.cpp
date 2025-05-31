@@ -7,7 +7,7 @@ RotateElem::RotateElem(TextureHolder *textures):
     timeCounter(0),
     active(true)
 {
-    if (!textureRotate.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "assets/img/rotate.png")))
+    if (!textureRotate.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "img/rotate.png")))
         std::exit(1);
 
     spriteRotate = std::make_unique<sf::Sprite>(textureRotate);

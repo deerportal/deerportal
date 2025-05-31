@@ -40,6 +40,7 @@ add_executable(${EXECUTABLE_NAME} ${SRCS})
 find_package(SFML 3 COMPONENTS System Window Graphics Audio Network REQUIRED)
 if(SFML_FOUND)
   target_link_libraries(${EXECUTABLE_NAME} PRIVATE SFML::System SFML::Window SFML::Graphics SFML::Audio SFML::Network)
+  target_include_directories(${EXECUTABLE_NAME} PRIVATE ${SFML_INCLUDE_DIRS})
 endif()
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES
@@ -58,18 +59,18 @@ if(APPLE)
     COMMENT "Copying assets to macOS app bundle"
   )
   
-  # For macOS, let runtime detection handle the path (empty ASSETS_PATH)
-  add_definitions(-DASSETS_PATH="")
+  # For macOS, let runtime detection handle the path
+  add_definitions(-DASSETS_PATH="assets/")
   add_definitions(-DBASE_PATH="app_bundle")
 else()
   # Original logic for other platforms
   add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
   IF (WIN32)
     set (ASSETS_BASE_PATH data)
-    add_definitions(-DASSETS_PATH="${ASSETS_BASE_PATH}/")
+    add_definitions(-DASSETS_PATH="assets/")
   ELSE()
     set (ASSETS_BASE_PATH share/games/deerportal)
-    add_definitions(-DASSETS_PATH="${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
+    add_definitions(-DASSETS_PATH="assets/")
   ENDIF()
 endif()
 

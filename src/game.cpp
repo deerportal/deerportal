@@ -215,11 +215,11 @@ void Game::setCurrentNeighbours ()
 void Game::loadAssets()
 {
 
-    if (!gameFont.openFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-mania.regular.ttf")))
+    if (!gameFont.openFromFile(get_full_path(ASSETS_PATH"fnt/metal-mania.regular.ttf")))
     {
         std::exit(1);
     }
-    if (!menuFont.openFromFile(get_full_path(ASSETS_PATH"assets/fnt/metal-macabre.regular.ttf")))
+    if (!menuFont.openFromFile(get_full_path(ASSETS_PATH"fnt/metal-macabre.regular.ttf")))
     {
         std::exit(1);
     }
@@ -229,29 +229,29 @@ void Game::loadAssets()
 
     spriteDeerGod = std::make_unique<sf::Sprite>(textures.textureDeerGod);
 
-    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/blur.frag"), sf::Shader::Type::Fragment))
+    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"shaders/blur.frag"), sf::Shader::Type::Fragment))
         std::exit(1);
 
-    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/pixelate.frag"), sf::Shader::Type::Fragment))
+    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"shaders/pixelate.frag"), sf::Shader::Type::Fragment))
         std::exit(1);
-    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"assets/shaders/dark.frag"), sf::Shader::Type::Fragment))
-        std::exit(1);
-
-    if (!textureBackgroundArt.loadFromFile(get_full_path(ASSETS_PATH"assets/img/background_land.png")))
+    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"shaders/dark.frag"), sf::Shader::Type::Fragment))
         std::exit(1);
 
-    if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"assets/audio/game.ogg")))
+    if (!textureBackgroundArt.loadFromFile(get_full_path(ASSETS_PATH"img/background_land.png")))
+        std::exit(1);
+
+    if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"audio/game.ogg")))
         std::exit(1);
     //    if (!musicBackground.openFromFile(ASSETS_PATH"assets/audio/wind2.ogg"))
     //        std::exit(1);
-    if (!musicMenu.openFromFile(get_full_path(ASSETS_PATH"assets/audio/menu.ogg")))
+    if (!musicMenu.openFromFile(get_full_path(ASSETS_PATH"audio/menu.ogg")))
         std::exit(1);
 
 
-    if (!sfxClickBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/click.ogg")))
+    if (!sfxClickBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/click.ogg")))
         std::exit(1);
 
-    if (!sfxDoneBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/done.ogg")))
+    if (!sfxDoneBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/done.ogg")))
         std::exit(1);
     //    if (!textureBackground.loadFromFile(ASSETS_PATH"assets/img/background.png"))
     //        std::exit(1);

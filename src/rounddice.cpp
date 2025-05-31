@@ -11,10 +11,10 @@ RoundDice::RoundDice(Player (&players)[4])
     diceResult = 1;
     diceResultSix = 6;
     diceSize = 150;
-    if (!sfxDiceBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/dice.ogg")))
+    if (!sfxDiceBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/dice.ogg")))
         std::exit(1);
 
-    if (!textureDice.loadFromFile(get_full_path(ASSETS_PATH"assets/img/diceWhite.png")))
+    if (!textureDice.loadFromFile(get_full_path(ASSETS_PATH"img/diceWhite.png")))
         std::exit(1);
 
     spriteDice = std::make_unique<sf::Sprite>(textureDice);

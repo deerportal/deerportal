@@ -12,7 +12,7 @@ void GuiWindow::setTitle(std::string newTitle) {
 
 GuiWindow::GuiWindow(TextureHolder *textures)
 {
-    if (!guiElemFont.openFromFile(get_full_path(std::string(ASSETS_PATH) + "assets/fnt/metal-macabre.regular.ttf"))) {
+    if (!guiElemFont.openFromFile(get_full_path(std::string(ASSETS_PATH) + "fnt/metal-macabre.regular.ttf"))) {
         std::cerr << "Failed to load font metal-macabre.regular.ttf" << std::endl;
         std::exit(1);
     }
@@ -23,7 +23,7 @@ GuiWindow::GuiWindow(TextureHolder *textures)
     // spriteClose would also need its texture set here if it's from TextureHolder
     // if (textures->textureClose) spriteClose = std::make_unique<sf::Sprite>(*textures->textureClose); 
     // For now, assuming spriteClose is handled by derived classes or needs its own texture loading.
-    if (!textureClose.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "assets/img/gui/close.png"))) {
+    if (!textureClose.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "img/gui/close.png"))) {
         std::cerr << "Failed to load texture assets/img/gui/close.png" << std::endl;
         spriteClose = nullptr;
     } else {
@@ -41,14 +41,14 @@ GuiWindow::GuiWindow(TextureHolder *textures)
 
 GuiWindow::GuiWindow()
 {
-    if (!guiElemFont.openFromFile(get_full_path(std::string(ASSETS_PATH) + "assets/fnt/metal-macabre.regular.ttf"))) {
+    if (!guiElemFont.openFromFile(get_full_path(std::string(ASSETS_PATH) + "fnt/metal-macabre.regular.ttf"))) {
         std::cerr << "Failed to load font metal-macabre.regular.ttf" << std::endl;
         std::exit(1);
     }
     guiTitleTxt = std::make_unique<sf::Text>(guiElemFont); // Pass font here
 
     // Load texture for bgdDark (member textureBgdDark)
-    if (!textureBgdDark.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "assets/img/bgd-dark.png"))) {
+    if (!textureBgdDark.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "img/bgd-dark.png"))) {
         std::cerr << "Failed to load texture assets/img/bgd-dark.png" << std::endl;
         // bgdDark will remain nullptr (default unique_ptr state)
     } else {
@@ -56,7 +56,7 @@ GuiWindow::GuiWindow()
     }
 
     // Load texture for spriteClose (member textureClose)
-    if (!textureClose.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "assets/img/gui/close.png"))) {
+    if (!textureClose.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "img/gui/close.png"))) {
         std::cerr << "Failed to load texture assets/img/gui/close.png" << std::endl;
         // spriteClose will remain nullptr (default unique_ptr state)
     } else {

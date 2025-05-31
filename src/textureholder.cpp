@@ -30,7 +30,7 @@ TextureHolder::TextureHolder()
     {
         for (int j=0;j<4;j++)
         {
-            if(!cardsTextures[i][j].loadFromFile(get_full_path(ASSETS_PATH"assets/img/cards/"+cardsImages[i][j])))
+            if(!cardsTextures[i][j].loadFromFile(get_full_path(ASSETS_PATH"img/cards/"+cardsImages[i][j])))
             {
 //                std::cout << "assets/img/cards/" << cardsImages[i][j];
                 std::exit(1);
@@ -42,16 +42,16 @@ TextureHolder::TextureHolder()
 
 
 
-    if (!textureCardBases[0].loadFromFile(get_full_path(ASSETS_PATH"assets/img/card-water-2-diam_m.png")))
+    if (!textureCardBases[0].loadFromFile(get_full_path(ASSETS_PATH"img/card-water-2-diam_m.png")))
         std::exit(1);
 
-    if (!textureCardBases[1].loadFromFile(get_full_path(ASSETS_PATH"assets/img/card-earth-2-diam_m.png")))
+    if (!textureCardBases[1].loadFromFile(get_full_path(ASSETS_PATH"img/card-earth-2-diam_m.png")))
         std::exit(1);
 
-    if (!textureCardBases[2].loadFromFile(get_full_path(ASSETS_PATH"assets/img/card-fire-2-diam_m.png")))
+    if (!textureCardBases[2].loadFromFile(get_full_path(ASSETS_PATH"img/card-fire-2-diam_m.png")))
         std::exit(1);
 
-    if (!textureCardBases[3].loadFromFile(get_full_path(ASSETS_PATH"assets/img/card-air-2-diam_m.png")))
+    if (!textureCardBases[3].loadFromFile(get_full_path(ASSETS_PATH"img/card-air-2-diam_m.png")))
         std::exit(1);
 
 
@@ -70,31 +70,31 @@ TextureHolder::TextureHolder()
 //    if (!textureSeasons.loadFromFile(ASSETS_PATH"assets/img/seasons.png"))
 //        std::exit(1);
 
-    if (!textureCharacters.loadFromFile(get_full_path(ASSETS_PATH"assets/img/characters-new.png")))
+    if (!textureCharacters.loadFromFile(get_full_path(ASSETS_PATH"img/characters-new.png")))
         std::exit(1);
 
-    if (!backgroundDark.loadFromFile(get_full_path(ASSETS_PATH"assets/img/background_dark.png")))
+    if (!backgroundDark.loadFromFile(get_full_path(ASSETS_PATH"img/background_dark.png")))
         std::exit(1);
-    if (!textureBoardDiamond.loadFromFile(get_full_path(ASSETS_PATH"assets/img/board_diamonds.png")))
-        std::exit(1);
-
-    if (!textureMenu.loadFromFile(get_full_path(ASSETS_PATH"assets/img/dp_intro_menu.png")))
+    if (!textureBoardDiamond.loadFromFile(get_full_path(ASSETS_PATH"img/board_diamonds.png")))
         std::exit(1);
 
-    if (!textureLetsBegin.loadFromFile(get_full_path(ASSETS_PATH"assets/img/letsbegin.png")))
+    if (!textureMenu.loadFromFile(get_full_path(ASSETS_PATH"img/dp_intro_menu.png")))
+        std::exit(1);
+
+    if (!textureLetsBegin.loadFromFile(get_full_path(ASSETS_PATH"img/letsbegin.png")))
         std::exit(1);
 
 
-    if (!textureButtonCpu.loadFromFile(get_full_path(ASSETS_PATH"assets/img/button-cpu.png")))
+    if (!textureButtonCpu.loadFromFile(get_full_path(ASSETS_PATH"img/button-cpu.png")))
         std::exit(1);
 
-    if (!textureButtonHuman.loadFromFile(get_full_path(ASSETS_PATH"assets/img/button-human.png")))
+    if (!textureButtonHuman.loadFromFile(get_full_path(ASSETS_PATH"img/button-human.png")))
         std::exit(1);
 
-    if (!textureDeerGod.loadFromFile(get_full_path(ASSETS_PATH"assets/img/deer-god.png")))
+    if (!textureDeerGod.loadFromFile(get_full_path(ASSETS_PATH"img/deer-god.png")))
         std::exit(1);
 
-    if (!textureBigDiamond.loadFromFile(get_full_path(ASSETS_PATH"assets/img/diamond-big.png")))
+    if (!textureBigDiamond.loadFromFile(get_full_path(ASSETS_PATH"img/diamond-big.png")))
         std::exit(1);
 
     int defaultArray[5][8] = {

@@ -8,18 +8,18 @@ SoundFX::SoundFX()
       soundCard(soundCardBuffer),
       soundLetsBegin(soundLetsBeginBuffer)
 {
-    if (!soundCollectBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/collect.ogg")))
+    if (!soundCollectBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/collect.ogg")))
         exit(-1);
-    if (!soundCardBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/card.ogg")))
+    if (!soundCardBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/card.ogg")))
         exit(-1);
-    if (!bufferDeerMode.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/dp-deermode.ogg")))
+    if (!bufferDeerMode.loadFromFile(get_full_path(ASSETS_PATH"audio/dp-deermode.ogg")))
         exit(-1);
-    if (!bufferMeditation.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/dp-meditation.ogg")))
+    if (!bufferMeditation.loadFromFile(get_full_path(ASSETS_PATH"audio/dp-meditation.ogg")))
         exit(-1);
-    if (!bufferPortal.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/dp-ok.ogg")))
+    if (!bufferPortal.loadFromFile(get_full_path(ASSETS_PATH"audio/dp-ok.ogg")))
         exit(-1);
 
-    if (!soundLetsBeginBuffer.loadFromFile(get_full_path(ASSETS_PATH"assets/audio/letsbegin.ogg")))
+    if (!soundLetsBeginBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/letsbegin.ogg")))
         exit(-1);
 
     // Set volume for sounds (buffers already set in initializer list)
