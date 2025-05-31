@@ -1050,7 +1050,7 @@ void Game::drawBaseGame()
     shaderPixel.setUniform("pixel_threshold", v);
 
     renderTexture.draw(*spriteBackgroundArt);
-    spriteBackgroundArt->setColor(sf::Color(255, 255, 255));
+    spriteBackgroundArt->setColor(sf::Color(255, 255, 255, 255));  // Full opacity
     v = sin(runningCounter*0.05f)/2;
     shaderBlur.setUniform("blur_radius", v);
 
