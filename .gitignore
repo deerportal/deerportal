@@ -31,3 +31,5 @@ DeerPortal-*.AppImage
 .DS_Store
 DeerPortal.app/
 orig-sfml/
+deerportal-0.8.2/
+deerportal-sfml2/
