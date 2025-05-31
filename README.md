@@ -1,4 +1,4 @@
-Devcarpet                         {#mainpage}
+Devcarpet
 =========
 presents
 
@@ -26,10 +26,15 @@ SFML 3, Linux, macOS, Windows.
 
 #### macOS
 
-```
+```bash
 $ git clone https://github.com/deerportal/deerportal.git
 $ cd deerportal
-$ cmake .
+
+# For a Release build (recommended for performance):
+$ cmake -DCMAKE_BUILD_TYPE=Release .
+# Or, for a Debug build (for development and debugging):
+# $ cmake -DCMAKE_BUILD_TYPE=Debug .
+
 $ make
 $ sudo make install
 $ open DeerPortal.app

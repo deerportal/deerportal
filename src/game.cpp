@@ -510,7 +510,7 @@ Game::Game(bool newTestMode):
     turn(0),
     oscilator(-1),
     oscilatorInc(true),
-    particleSystem( 430, 230),
+    particleSystem(1, 1),
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
     banner(&gameFont),
@@ -524,7 +524,7 @@ Game::Game(bool newTestMode):
     deerModeCounter(4),
     deerModeActive(false),
     v1(0.0f),
-    fpsDisplayUpdateTimer(0.0f)  // Initialize FPS timer
+    fpsDisplayUpdateTimer(0.0f)
 {
     testMode = newTestMode;
     // Initialize unique_ptr text members (these have font constructors)
@@ -547,10 +547,14 @@ Game::Game(bool newTestMode):
     }
     
     // TODO: perhaps get rid of the particles at all...
+    /* Commenting out Particle System Initialization to prevent CPU waste
     particleSystem.setDissolve( true );
     particleSystem.setDissolutionRate( 10 );
     particleSystem.setShape( DP::CIRCLE );
-    particleSystem.fuel( 1000 );
+    particleSystem.fuel( 1000 ); // CRITICAL: This was creating 1000 particles!
+    */
+
+    // Restoring playersSpritesCords assignments to the constructor body
     playersSpritesCords[0][0] = 202;
     playersSpritesCords[0][1] = 76;
     playersSpritesCords[1][0] = 562;
@@ -559,6 +563,7 @@ Game::Game(bool newTestMode):
     playersSpritesCords[3][1] = 436;
     playersSpritesCords[2][0] = 562;
     playersSpritesCords[2][1] = 436;
+
     textLoading->setString("loading...");
     textLoading->setFont(menuFont);
     textLoading->setPosition(sf::Vector2f(200,200));
@@ -577,7 +582,8 @@ Game::Game(bool newTestMode):
     sf::Clock frameClock;
     guiRoundDice.active = true;
     showPlayerBoardElems = false;
-    window.setVerticalSyncEnabled(true);
+    // window.setVerticalSyncEnabled(true); // Temporarily disable for testing raw FPS
+    window.setVerticalSyncEnabled(false); // V-Sync OFF
 
     std::srand (time(NULL));
     window.clear(sf::Color(55,55,55));
@@ -636,8 +642,9 @@ Game::Game(bool newTestMode):
             {
                 if(keyPressed->code == sf::Keyboard::Key::Escape)
                     window.close();
+                /* Commenting out Particle System fuel on key press
                 if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Space ) )
-                    particleSystem.fuel( 200/* * window.getFrameTime() */);
+                    particleSystem.fuel( 200 ); // * window.getFrameTime() * / );
                 if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::A ) )
                     particleSystem.setPosition( --xpos, ypos );
                 if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::D ) )
@@ -658,6 +665,7 @@ Game::Game(bool newTestMode):
                     particleSystem.setGravity( 0.0f, 0.0f );
                 if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::P ) )
                     particleSystem.setPosition( 320.0f, 240.0f );
+                */
             }
 
             sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);

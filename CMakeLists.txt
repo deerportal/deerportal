@@ -12,12 +12,25 @@ MESSAGE( STATUS "DEERPORTAL_VERSION_MAJOR:         " ${DEERPORTAL_VERSION_MAJOR}
 MESSAGE( STATUS "DEERPORTAL_VERSION_MINOR:         " ${DEERPORTAL_VERSION_MINOR} )
 MESSAGE( STATUS "DEERPORTAL_VERSION_PATCH:         " ${DEERPORTAL_VERSION_PATCH} )
 
-# Enable debug symbols by default
-# must be done before project() statement
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
+# Configure C++ flags for different build types
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0" CACHE STRING "Flags used by the C++ compiler during debug builds.")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -flto" CACHE STRING "Flags used by the C++ compiler during release builds.")
+# For Apple Clang, -flto might need to be -flto=thin depending on linker, adjust if necessary
+if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -flto")
+  # For older Clang, you might need -fuse-ld=lld if default linker doesn't support LTO well
 endif()
-# (you can also set it on the command line: -D CMAKE_BUILD_TYPE=Release)
+
+# Set default build type to Release if not specified by the user
+# To choose a build type, use: cmake -DCMAKE_BUILD_TYPE=Debug .. or cmake -DCMAKE_BUILD_TYPE=Release ..
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build (Debug or Release). Default is Release." FORCE)
+endif()
+
+MESSAGE(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+MESSAGE(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
+MESSAGE(STATUS "C++ Flags (Release): ${CMAKE_CXX_FLAGS_RELEASE}")
+MESSAGE(STATUS "C++ Flags (Debug): ${CMAKE_CXX_FLAGS_DEBUG}")
 
 project(myproject)
 
@@ -64,7 +77,15 @@ if(APPLE)
   add_definitions(-DBASE_PATH="app_bundle")
 else()
   # Original logic for other platforms
-  add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
+  # Ensure BASE_PATH is set correctly for non-Apple builds if using CMAKE_INSTALL_PREFIX
+  if(DEFINED CMAKE_INSTALL_PREFIX)
+    add_definitions(-DBASE_PATH="${CMAKE_INSTALL_PREFIX}")
+  else()
+    # Fallback or default if CMAKE_INSTALL_PREFIX is not always set
+    # This might need adjustment based on how non-packaged versions are run
+    add_definitions(-DBASE_PATH=".") 
+  endif()
+
   IF (WIN32)
     set (ASSETS_BASE_PATH data)
     add_definitions(-DASSETS_PATH="assets/")
@@ -95,5 +116,6 @@ ENDIF()
 include(InstallRequiredSystemLibraries)
 # set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
 set(CPACK_PACKAGE_VERSION_MAJOR "${DEERPORTAL_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${DEERPORTAL_VERSION_MINOR}.${DEERPORTAL_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION_MINOR "${DEERPORTAL_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${DEERPORTAL_VERSION_PATCH}")
 include(CPack)
