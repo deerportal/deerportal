@@ -131,7 +131,7 @@ void Game::initBoard()
 
     cardsDeck.setFonts(&gameFont);
     spriteBigDiamond->setTexture(textures.textureBigDiamond);
-    spriteBigDiamond->setPosition(sf::Vector2f(474,342));
+    spriteBigDiamond->setPosition(sf::Vector2f(474,342));  // Original 0.8.2 position coordinates
     spriteBigDiamond->setColor(sf::Color (255, 255, 255,196));
     restartGame();
     launchNextPlayer();
@@ -201,6 +201,7 @@ void Game::restartGame()
     cardsDeck.reloadCards();
     deerModeActive = false;
     deerModeCounter = 16;
+    bigDiamondActive = true;  // Ensure big diamond is visible on game restart
 
 }
 
@@ -992,9 +993,10 @@ void Game::launchNextPlayer(){
     if (mostDiamonds()==turn)
     {
         players[turn].reachPortalMode = true;
+        bigDiamondActive = true;   // Show diamond for player with most diamonds
     } else {
         players[turn].reachPortalMode = false;
-
+        // bigDiamondActive = false;  // DO NOT hide here to match 0.8.2 behavior where it stays visible in ties
     }
 
 }
@@ -1118,6 +1120,11 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.setView(viewFull);
+
+        // Draw Big Diamond ONLY when game board is active
+        if (bigDiamondActive)
+            renderTexture.draw(*spriteBigDiamond);
+
     } else if (currentState==state_setup_players) {
         renderTexture.setView(viewFull);
         renderTexture.draw(*spriteDeerGod);
@@ -1187,8 +1194,6 @@ void Game::render(float deltaTime)
         }
 
     }
-    if (bigDiamondActive)
-        renderTexture.draw(*spriteBigDiamond);
     if (banner.active)
         renderTexture.draw(banner);
 

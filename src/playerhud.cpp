@@ -125,7 +125,7 @@ Player::Player(TextureHolder *textures,  sf::Font *gameFont, int playerNumber):
 
     // Initialize sprite unique_ptrs with available textures
     spriteAI = std::make_unique<sf::Sprite>(textures->textureButtonCpu);
-    symbol = std::make_unique<sf::Sprite>(textures->textureBigDiamond); // Placeholder until proper symbol texture
+    // symbol = std::make_unique<sf::Sprite>(textures->textureBigDiamond); // COMMENTED OUT - This was causing diamond to appear in wrong place
     setSpriteAI();
 }
 
@@ -158,7 +158,7 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
     if (txtFood) target.draw(*txtFood, states);
     if (txtFaith) target.draw(*txtFaith, states);
     if (txtNextRound) target.draw(*txtNextRound, states);
-    if (symbol) target.draw(*symbol, states);
+    // if (symbol) target.draw(*symbol, states); // COMMENTED OUT - was using wrong texture
 }
 
 void Player::play()
