@@ -183,6 +183,11 @@ private:
     float downTimeCounter;
     Command commandManager;
     std::unique_ptr<sf::Text> textLoading;
+    
+    // NEW 0.8.2 FEATURES
+    std::unique_ptr<sf::Text> textFPS;  // FPS display text
+    float fpsDisplayUpdateTimer;        // Timer for FPS display updates
+
 public:
     CardsDeck cardsDeck;
     void startDeerMode();

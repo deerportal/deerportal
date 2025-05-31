@@ -275,6 +275,18 @@ void Game::loadAssets()
     paganHolidayTxt->setCharacterSize(20);
     paganHolidayTxt->setPosition(sf::Vector2f(20,20));
 
+    // Setup FPS display text (NEW 0.8.2 FEATURE)
+    textFPS->setFont(gameFont);
+    textFPS->setCharacterSize(20);
+    textFPS->setPosition(sf::Vector2f(0, 60));
+    textFPS->setFillColor(sf::Color::Yellow);
+    textFPS->setString("FPS: --");
+
+    // Load and set window icon (NEW 0.8.2 FEATURE)
+    sf::Image icon;
+    if (icon.loadFromFile(get_full_path(ASSETS_PATH"img/deerportal.png"))) {
+        window.setIcon(icon.getSize(), icon.getPixelsPtr());
+    }
 
     for (int i=0;i<4;i++)
     {
@@ -509,7 +521,8 @@ Game::Game(bool newTestMode):
     cpuTimeThinkingInterval(1.0f),
     deerModeCounter(4),
     deerModeActive(false),
-    v1(0.0f)
+    v1(0.0f),
+    fpsDisplayUpdateTimer(0.0f)  // Initialize FPS timer
 {
     testMode = newTestMode;
     // Initialize unique_ptr text members (these have font constructors)
@@ -521,6 +534,7 @@ Game::Game(bool newTestMode):
     menuTxt = std::make_unique<sf::Text>(gameFont);
     endGameTxt = std::make_unique<sf::Text>(gameFont);
     textLoading = std::make_unique<sf::Text>(menuFont);
+    textFPS = std::make_unique<sf::Text>(gameFont);  // Initialize FPS text
     
     // Sprite initialization will be done in loadAssets() where textures are available
     // renderSprite will be initialized after renderTexture is ready
@@ -691,6 +705,14 @@ void Game::update(sf::Time frameTime) {
     banner.update(frameTime);
     credits.update(frameTime);
     runningCounter += frameTime.asSeconds();
+
+    // FPS calculation and display update (NEW 0.8.2 FEATURE)
+    fpsDisplayUpdateTimer += frameTime.asSeconds();
+    if (fpsDisplayUpdateTimer >= 0.25f) {  // Update FPS display every 0.25 seconds
+        float fps = 1.0f / frameTime.asSeconds();
+        textFPS->setString("FPS: " + std::to_string(static_cast<int>(fps)));
+        fpsDisplayUpdateTimer = 0.0f;
+    }
 
     cpuTimeThinking -= frameTime.asSeconds();
 
@@ -1170,7 +1192,8 @@ void Game::render(float deltaTime)
     if (banner.active)
         renderTexture.draw(banner);
 
-
+    // Draw FPS counter (NEW 0.8.2 FEATURE)
+    renderTexture.draw(*textFPS);
 
     renderTexture.display();
     renderSprite->setTexture(renderTexture.getTexture());
