@@ -1,9 +1,12 @@
 #include "game.h"
+#include "game-assets.h"
+#include "game-input.h"
+#include "game-renderer.h"
+#include "game-core.h"
 #include "particle.h"
 #include "calendar.h"
 #include <algorithm>
 #include <stdexcept>
-
 
 namespace DP {
 
@@ -499,6 +502,8 @@ Game::Game(bool newTestMode):
     viewFull(sf::FloatRect({0, 0}, {(float)screenSize.x, (float)screenSize.y})),
     viewGui(sf::FloatRect({0, 0}, {(float)screenSize.x, (float)screenSize.y})),
     viewTiles(sf::FloatRect({0, 0}, {1360, 768})),
+    currentSeason(1),
+    month(0),
     selector(DP::TILE_SIZE),
     character(&textures, 3),
     gameTitle("deerportal"),
@@ -589,6 +594,12 @@ Game::Game(bool newTestMode):
     window.clear(sf::Color(55,55,55));
     renderTexture.draw(*textLoading);
     // window.display();
+
+    // Initialize modules
+    assets = std::make_unique<GameAssets>(this);
+    input = std::make_unique<GameInput>(this);
+    renderer = std::make_unique<GameRenderer>(this);
+    core = std::make_unique<GameCore>(this);
 
     loadAssets();
     textLoading->setFont(menuFont);
@@ -1272,6 +1283,23 @@ void Game::startDeerMode() {
     bigDiamondActive = false;
     sfx.soundDeerMode.play();
 }
+}
+
+// Factory functions for main.cpp to avoid header include issues
+DP::Game* createGame(bool testMode)
+{
+    return new DP::Game(testMode);
+}
+
+void runGame(DP::Game* game)
+{
+    // Game constructor already handles the main loop
+    // This function exists for future expansion if needed
+}
+
+void destroyGame(DP::Game* game)
+{
+    delete game;
 }
 
 

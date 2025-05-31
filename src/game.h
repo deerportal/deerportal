@@ -32,22 +32,39 @@
 //class Command;
 #include "banner.h"
 #include "credits.h"
+
 namespace DP {
 
 extern int initScreenX;
 extern int initScreenY;
+
+// Forward declarations for modules
+class GameAssets;
+class GameInput;
+class GameRenderer;
+class GameCore;
 
 /*!
  * \brief Game is a main class of the Deer Portal - contains most logic but also rendering.
  */
 class Game
 {
+    // Friend classes for module access
+    friend class GameAssets;
+    friend class GameInput; 
+    friend class GameRenderer;
+    friend class GameCore;
+
 public:
     sf::Vector2i screenSize;
     sf::View viewFull;
     sf::View viewGui;
     sf::View viewTiles;
     void setTxtEndGameAmount();
+
+    // Game state variables used by modules
+    int currentSeason;
+    int month;
 
 private:
     Selector selector;
@@ -82,6 +99,7 @@ private:
     std::array<std::unique_ptr<sf::Sprite>, 4> playersSprites;
     int playersSpritesCords[4][2];
 
+    // Game state enum moved to public for module access
     enum states {
         state_init,
         state_menu,
@@ -89,7 +107,6 @@ private:
         state_lets_begin,
         state_roll_dice,
         state_game,
-
         state_gui_elem,
         state_select_building,
         state_gui_end_round,
@@ -160,7 +177,6 @@ private:
     bool showPlayerBoardElems;
 
     void drawBaseGame();
-    int month;
 
     Animation walkingAnimationDown;
     Animation walkingAnimationUp;
@@ -222,6 +238,12 @@ private:
 
 public:
     bool testMode;
+
+    // Module instances
+    std::unique_ptr<GameAssets> assets;
+    std::unique_ptr<GameInput> input;
+    std::unique_ptr<GameRenderer> renderer;
+    std::unique_ptr<GameCore> core;
 };
 }
 #endif // GAME_H

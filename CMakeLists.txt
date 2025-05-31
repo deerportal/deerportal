@@ -55,8 +55,80 @@ include_directories(${YOUR_DIRECTORY})
 
 # Define sources and executable
 set(EXECUTABLE_NAME "DeerPortal")
-file( GLOB SRCS src/*.cpp src/*.h )
-add_executable(${EXECUTABLE_NAME} ${SRCS})
+
+# Main game files
+set(GAME_SOURCES
+    src/main.cpp
+    src/game.cpp
+    src/game.h
+    # New modular files
+    src/game-assets.cpp
+    src/game-assets.h
+    src/game-input.cpp
+    src/game-input.h
+    src/game-renderer.cpp
+    src/game-renderer.h
+    src/game-core.cpp
+    src/game-core.h
+)
+
+# Other source files
+file(GLOB OTHER_SOURCES 
+    src/tilemap.cpp
+    src/tilemap.h
+    src/selector.cpp
+    src/selector.h
+    src/playerhud.cpp
+    src/playerhud.h
+    src/textureholder.cpp
+    src/textureholder.h
+    src/hover.cpp
+    src/hover.h
+    src/guiwindow.cpp
+    src/guiwindow.h
+    src/rounddice.cpp
+    src/rounddice.h
+    src/guirounddice.cpp
+    src/guirounddice.h
+    src/grouphud.cpp
+    src/grouphud.h
+    src/animatedsprite.cpp
+    src/animatedsprite.h
+    src/character.cpp
+    src/character.h
+    src/rotateelem.cpp
+    src/rotateelem.h
+    src/boarddiamondseq.cpp
+    src/boarddiamondseq.h
+    src/soundfx.cpp
+    src/soundfx.h
+    src/cardsdeck.cpp
+    src/cardsdeck.h
+    src/calendar.cpp
+    src/calendar.h
+    src/particle.cpp
+    src/particle.h
+    src/bubble.cpp
+    src/bubble.h
+    src/command.cpp
+    src/command.h
+    src/banner.cpp
+    src/banner.h
+    src/credits.cpp
+    src/credits.h
+    # Missing files that were causing linking errors
+    src/particlesystem.cpp
+    src/elem.cpp
+    src/boardelems.cpp
+    src/boarddiamond.cpp
+    src/animation.cpp
+    src/cardslist.cpp
+    src/data.cpp
+    src/boardelem.cpp
+    src/card.cpp
+)
+
+add_executable(${EXECUTABLE_NAME} ${GAME_SOURCES} ${OTHER_SOURCES})
 
 # Find SFML 3.0 using modern CMake approach
 find_package(SFML 3 COMPONENTS System Window Graphics Audio Network REQUIRED)
