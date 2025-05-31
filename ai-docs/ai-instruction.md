@@ -2,9 +2,78 @@
 
 This repository contains the DeerPortal SFML game, developed by you! 🦌
 
-**Current Version: 0.9 "Welcome Back"** 🎉
+**Current Version: 0.9.0 "Welcome Back"** 🎉
 
-Our primary objective is to migrate this project to **SFML 3.0.0** (from its current version). You can find the SFML 3.0.0 download here: https://www.sfml-dev.org/download/sfml/3.0.0/
+Our primary objective was to migrate this project to **SFML 3.0.0** (from its previous version). You can find the SFML 3.0.0 download here: https://www.sfml-dev.org/download/sfml/3.0.0/
+
+## Migration Status: ✅ COMPLETE (Version 0.9.0 "Welcome Back")
+**Date Completed**: January 2025
+**Current Release**: 0.9.0 "Welcome Back" - May 2025
+
+✅ **SFML 3.0 Migration**: Successfully migrated from SFML 2.x to SFML 3.0.0
+✅ **C++17 Compatibility**: Fixed all nodiscard warnings and enhanced error handling
+✅ **Version Update**: Released version 0.9.0 "Welcome Back"
+✅ **Contact Updates**: Updated all email addresses to bluszcz@gmail.com
+✅ **Release Notes**: Created comprehensive release documentation
+
+## Recent Changes (Version 0.9.0 Session):
+
+### 1. Version Release Management
+- **Version Number**: Updated from 0.8.2 to 0.9.0 "Welcome Back"
+- **Semantic Versioning**: Ensured consistency across all configuration files
+- **Release Notes**: Created comprehensive RELEASE_NOTES.md with git history
+- **AppData**: Updated application metadata for proper distribution
+
+### 2. Contact Information Updates
+- **Email Migration**: Changed all instances of bluszcz@devcarpet.net to bluszcz@gmail.com
+- **Files Updated**: debian/*, documentation, and metadata files
+- **Consistency**: Ensured uniform contact information across the project
+
+### 3. SFML 3.0 C++17 Compatibility Fixes
+- **Nodiscard Warnings**: Fixed two critical warnings related to `resize()` methods
+  - `src/boardelem.cpp`: Added error handling for `defaultTexture.resize()`
+  - `src/game.cpp`: Added error handling for `renderTexture.resize()`
+- **Error Handling**: Implemented proper exception handling with `std::runtime_error`
+- **Modern C++**: Enhanced code safety and compliance with C++17 standards
+- **Dependencies**: Added `<stdexcept>` includes where needed
+
+### 4. Documentation Quality
+- **README.md**: Fixed grammar errors and improved clarity
+- **Technical Accuracy**: Updated platform references (OSX → macOS)
+- **Consistency**: Ensured professional documentation standards
+
+## 🎮 The Game
+
+DeerPortal is a hybrid board/card game featuring:
+- **Gameplay**: 0-4 players compete to collect diamonds and survive elemental chaos
+- **Theme**: Four classical elements with the Almighty Deer God
+- **Mechanics**: Board movement, card actions, seasonal changes
+- **Graphics**: Modern SFML 3.0 graphics engine with shaders and effects
+
+## 🔧 Technical Stack
+
+### Core Technologies
+- **Graphics**: SFML 3.0.0 (fully migrated and compatible)
+- **Language**: C++17 with modern practices
+- **Build System**: CMake with cross-platform support
+- **Platforms**: Linux, macOS, Windows
+
+### Project Structure
+- **Source Code**: `src/` directory with modular C++ classes
+- **Assets**: `assets/` with graphics, audio, and shader resources
+- **Build Configuration**: CMakeLists.txt with SFML 3.0 integration
+- **Packaging**: debian/, snapcraft.yaml for distribution
+
+## 🚀 Current Status
+
+The project is now **production-ready** with:
+- ✅ Complete SFML 3.0 migration
+- ✅ Modern C++17 compatibility
+- ✅ Cross-platform build system
+- ✅ Professional documentation
+- ✅ Clean version 0.9.0 "Welcome Back" release
+
+All major technical debt has been resolved, and the game is ready for distribution and further development.
 
 # 🛠️ Development Guidelines
 

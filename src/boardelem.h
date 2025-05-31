@@ -2,6 +2,7 @@
 #define BOARDELEM_H
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <stdexcept>
 #include "tilemap.h"
 #include "textureholder.h"
 

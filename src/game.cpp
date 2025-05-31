@@ -2,6 +2,7 @@
 #include "particle.h"
 #include "calendar.h"
 #include <algorithm>
+#include <stdexcept>
 
 
 namespace DP {
@@ -563,7 +564,9 @@ Game::Game(bool newTestMode):
     textLoading->setPosition(sf::Vector2f(200,200));
     textLoading->setFillColor(sf::Color::White);
     textLoading->setCharacterSize(10);
-    renderTexture.resize(sf::Vector2u(1360,768));
+    if (!renderTexture.resize(sf::Vector2u(1360,768))) {
+        throw std::runtime_error("Failed to resize render texture in Game constructor");
+    }
     renderTexture.clear(sf::Color::White);
     renderTexture.draw(*textLoading);
     renderTexture.display();

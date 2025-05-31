@@ -6,7 +6,9 @@ sf::Texture& BoardElem::getDefaultTexture() {
     static sf::Texture defaultTexture;
     static bool initialized = false;
     if (!initialized) {
-        defaultTexture.resize(sf::Vector2u(1, 1));
+        if (!defaultTexture.resize(sf::Vector2u(1, 1))) {
+            throw std::runtime_error("Failed to resize default texture for BoardElem");
+        }
         initialized = true;
     }
     return defaultTexture;

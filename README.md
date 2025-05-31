@@ -5,11 +5,11 @@ presents
 Deerportal
 ----------
 
-Deerportal is a open source (free as a speech, free as a beer) hybrid game which utilize  board and card games mechanisms. World of the game is driven by four classical elemets along with Almighty Deer God.
+Deerportal is an open source (free as speech, free as beer) hybrid game that utilizes board and card game mechanisms. The world of the game is driven by four classical elements along with the Almighty Deer God.
 
 Homepage: https://devcarpet.net/deerportal/
 
-Collect the diamonds, execute actions on cards and survive the chaos of nature! Compete against 3 other players.
+Collect diamonds, execute actions on cards, and survive the chaos of nature! Compete against 3 other players.
 
 Features
 --------
@@ -18,13 +18,13 @@ Features
 * changing seasons
 * open source (zlib / cc-by 4.0)
 
-SFML 3, Linux, OSX, Windows.
+SFML 3, Linux, macOS, Windows.
 
 ## Installation
 
 ### Compilation
 
-#### OSX
+#### macOS
 
 ```
 $ git clone https://github.com/deerportal/deerportal.git
@@ -37,17 +37,14 @@ $ open DeerPortal.app
 
 ##### Debian 
 
-If you would like to see Deer Portal in Debian repositories, there is an opened bug: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=826612 - please help :)
+If you would like to see Deer Portal in Debian repositories, there is an open bug: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=826612 - please help :)
 
-To make deb package locally:
+To make a deb package locally:
 
 ```
 $ git clone https://github.com/deerportal/deerportal.git
 $ cd deerportal
 $ fakeroot debian/rules binary
 ```
-
-
-
 
 **Developed with [Devcarpet](https://devcarpet.net) platform.**
