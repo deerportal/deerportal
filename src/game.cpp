@@ -1166,8 +1166,11 @@ void Game::render(float deltaTime)
         //        renderTexture.draw(menuTxt);
         renderTexture.draw(*paganHolidayTxt);
         
-        renderTexture.draw(*textFPS);
-        renderTexture.draw(*gameVersion);
+// FPS Counter and Version info will be moved to a general drawing location
+// #if defined(DEERPORTAL_SHOW_FPS_COUNTER) || !defined(NDEBUG)
+//         renderTexture.draw(*textFPS);
+//         renderTexture.draw(*gameVersion);
+// #endif
         renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
@@ -1215,7 +1218,18 @@ void Game::render(float deltaTime)
     if (banner.active)
         renderTexture.draw(banner);
 
-    // FPS counter removed from here - was being drawn in all states incorrectly
+    renderTexture.setView(viewFull); // Ensure GUI view for correct positioning
+
+    // Show FPS counter if DEERPORTAL_SHOW_FPS_COUNTER is defined (via CMake option)
+    // OR if it's a Debug build (NDEBUG is not defined)
+#if defined(DEERPORTAL_SHOW_FPS_COUNTER) || !defined(NDEBUG)
+    renderTexture.draw(*textFPS);
+#endif
+
+    // Show version info ONLY in Debug builds (NDEBUG is not defined)
+#ifndef NDEBUG
+    renderTexture.draw(*gameVersion);
+#endif
 
     renderTexture.display();
     renderSprite->setTexture(renderTexture.getTexture());

@@ -35,6 +35,10 @@ $ cmake -DCMAKE_BUILD_TYPE=Release .
 # Or, for a Debug build (for development and debugging):
 # $ cmake -DCMAKE_BUILD_TYPE=Debug .
 
+# To always show the FPS counter (e.g., in a Release build for testing):
+# $ cmake -DCMAKE_BUILD_TYPE=Release -DSHOW_FPS_COUNTER=ON .
+# The FPS counter is automatically shown in Debug builds.
+
 $ make
 $ sudo make install
 $ open DeerPortal.app

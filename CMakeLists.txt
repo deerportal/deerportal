@@ -32,6 +32,15 @@ MESSAGE(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 MESSAGE(STATUS "C++ Flags (Release): ${CMAKE_CXX_FLAGS_RELEASE}")
 MESSAGE(STATUS "C++ Flags (Debug): ${CMAKE_CXX_FLAGS_DEBUG}")
 
+# Option to control FPS counter visibility in all builds
+option(SHOW_FPS_COUNTER "Enable FPS counter in all builds" OFF)
+if(SHOW_FPS_COUNTER)
+  add_definitions(-DDEERPORTAL_SHOW_FPS_COUNTER)
+  MESSAGE(STATUS "FPS Counter will be visible in this build (DEERPORTAL_SHOW_FPS_COUNTER defined)")
+else()
+  MESSAGE(STATUS "FPS Counter will be hidden unless in Debug build (NDEBUG not defined)")
+endif()
+
 project(myproject)
 
 #target_compile_definitions(DeerPortal PRIVATE FOO=1 BAR=1)
