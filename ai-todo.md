@@ -208,3 +208,63 @@ if (!renderTexture.resize(sf::Vector2u(1360,768))) {
 **Repository**: [https://github.com/deerportal/deerportal/](https://github.com/deerportal/deerportal/)  
 **Current Status**: SFML 3.0 migration complete ✅  
 **Next Phase**: Code quality and C++17 modernization 🚀 
+
+# 🦌 DeerPortal AI Todo & Investigation Notes
+
+## ✅ COMPLETED TASKS
+
+### 0.8.2 Upgrade Features ✅
+- [x] **FPS Display**: Added working FPS counter (yellow, top-left, 0.25s updates)
+- [x] **Window Icon**: Added deerportal.png icon loading
+- [x] **Version Update**: Updated version.txt from 0.8.1 to 0.8.2
+- [x] **Big Diamond Logic**: Fixed positioning (474,342) and game logic
+- [x] **Big Diamond Animation**: Vertical sine wave movement working
+- [x] **Big Diamond State Management**: Only shows during gameplay states
+
+### UI Cleanup ✅
+- [x] **Player HUD Cleanup**: Removed extra white text elements (txtEnergy, txtFood, txtFaith, txtNextRound)
+- [x] **Cash Text Color**: Changed from bright white to subtle gray
+- [x] **FPS Counter Positioning**: Moved to debug-only mode in menu (matches 0.8.2)
+
+## 🚧 ACTIVE INVESTIGATION
+
+### ❌ MYSTERY WHITE STRIPE ISSUE
+**Problem**: White stripe/bar visible in top-left during gameplay that doesn't exist in 0.8.2
+**Status**: POTENTIAL FIX APPLIED
+
+**Investigated & Ruled Out**:
+- ❌ FPS Counter (was showing during gameplay, now fixed to debug-menu only)
+- ❌ gameVersion text (only shows on menu)
+- ❌ Player HUD text elements (txtEnergy, txtFood, txtFaith, txtNextRound - all commented out)
+- ❌ txtCash color (changed to gray, still visible)
+
+**🎯 POTENTIAL CULPRIT FOUND**:
+- ✅ **monthName text in GroupHud**: Defaults to white color, positioned at (0,0), gets "Month: X" text
+- ✅ **Extra setMonthName call**: Current version calls `groupHud.setMonthName(month%4)` in `launchNextPlayer()` 
+- ✅ **Missing in 0.8.2**: 0.8.2 does NOT call setMonthName during gameplay
+- ✅ **No color set**: monthName had no color set, defaulting to white at position (0,0)
+
+**Fix Applied**:
+- Set monthName color to transparent: `sf::Color(255, 255, 255, 0)`
+- Removed extra `setMonthName(month%4)` call during gameplay (not in 0.8.2)
+- Set monthName position to off-screen: `sf::Vector2f(-1000, -1000)`
+- monthName is commented out from drawing but might still render due to default position (0,0)
+
+**Status**: Testing needed to confirm if white stripe is gone after all fixes
+
+## 🔄 PENDING TASKS
+
+### Big Diamond Enhancement
+- [ ] **Deer Mode Logic**: Verify diamond properly disappears during deer mode
+- [ ] **Collection Logic**: Implement diamond collection when player reaches center position 136
+- [ ] **Portal Interaction**: Handle dual functionality of position 136 (diamond + portal exit)
+
+### Code Quality
+- [ ] **Add missing logic**: `launchNextPlayer()` needs bigDiamondActive management for deer mode
+- [ ] **Documentation**: Update ai-instructions.md with white stripe investigation findings
+
+## 📝 NOTES
+- Build system working perfectly (zero errors)
+- SFML 3 migration stable and functional
+- All 0.8.2 features implemented except the mysterious white stripe
+- Game plays identically to 0.8.2 except for the visual white stripe issue 

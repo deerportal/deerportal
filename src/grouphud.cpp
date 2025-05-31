@@ -43,6 +43,7 @@ void GroupHud::setFont(sf::Font *gameFont) {
     }
     if (monthName) {
         monthName->setCharacterSize(30);
+        monthName->setFillColor(sf::Color(255, 255, 255, 0)); // Transparent - not drawn anyway
         setMonthName(1); // Ensure this is called after monthName is valid and font is set
     }
 }
@@ -83,6 +84,7 @@ void GroupHud::setDeerModeCounter(int deerModeCounter)
 void GroupHud::setMonthName(int monthNumber){
     if (monthName) {
         monthName->setString("Month: " + std::to_string(monthNumber));
+        monthName->setPosition(sf::Vector2f(-1000, -1000)); // Position off-screen to be safe
         // Month positioning - though it won't be drawn in the original behavior
     }
 }

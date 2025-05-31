@@ -982,7 +982,6 @@ void Game::launchNextPlayer(){
     if (deerModeActive==false)
     {
         groupHud.setSeason(currentSeason);
-        groupHud.setMonthName(month%4);
     } else
     {
         groupHud.setDeerModeActive();
@@ -1154,7 +1153,11 @@ void Game::render(float deltaTime)
 //        //        renderTexture.draw(menuTxt, &shaderBlur);
         //        renderTexture.draw(menuTxt);
         renderTexture.draw(*paganHolidayTxt);
+        
+#ifndef NDEBUG
+        renderTexture.draw(*textFPS);
         renderTexture.draw(*gameVersion);
+#endif
         renderTexture.draw(credits);
     }  else if (currentState==state_lets_begin) {
         renderTexture.setView(viewFull);
@@ -1202,8 +1205,7 @@ void Game::render(float deltaTime)
     if (banner.active)
         renderTexture.draw(banner);
 
-    // Draw FPS counter (NEW 0.8.2 FEATURE)
-    renderTexture.draw(*textFPS);
+    // FPS counter removed from here - was being drawn in all states incorrectly
 
     renderTexture.display();
     renderSprite->setTexture(renderTexture.getTexture());
