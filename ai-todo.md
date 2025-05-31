@@ -246,6 +246,18 @@ if (!renderTexture.resize(sf::Vector2u(1360,768))) {
 
 **Conclusion**: This is a **minor visual difference** caused by changes in SFML's sprite rendering engine between v2 and v3. The game is **fully functional** and **all 0.8.2 features are implemented successfully**.
 
+### 🎲 DICE RENDERING FIXES
+**Problem**: Dice showing wrong face when waiting for player to click vs. showing result
+**Root Cause**: Missing logic from 0.8.2 migration
+
+**Fixes Applied**:
+1. ✅ **Fixed setDiceTexture(int diceResult)**: Added missing `this->diceResultSix = diceResult;` line from 0.8.2 version
+2. ✅ **Added missing setFaces() implementation**: Allows setting dice to specific face numbers
+3. ✅ **Added waiting state**: Set dice to face 0 when `state_roll_dice` (waiting for player to click)
+
+**Before**: Dice always showed face 6 (last result) even when waiting for new input  
+**After**: Dice shows face 0 (waiting state) then correct result after throw
+
 ## 🔄 PENDING TASKS
 
 ### Big Diamond Enhancement

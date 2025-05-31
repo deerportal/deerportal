@@ -35,8 +35,8 @@ void RoundDice::setColor(int playerNumber){
 
 void RoundDice::setDiceTexture(int diceResult)
 {
-    sf::IntRect diceRect({diceSize*diceResultSix, 0}, {diceSize, diceSize});
-    spriteDice->setTextureRect(diceRect);
+    this->diceResultSix = diceResult;
+    setDiceTexture();
 }
 
 std::string RoundDice::drawRound(){
@@ -74,5 +74,11 @@ int RoundDice::throwDiceSix(){
 void RoundDice::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     if (spriteDice) target.draw(*spriteDice, states);
+}
+
+void RoundDice::setFaces(int number)
+{
+    this->diceResultSix = number;
+    setDiceTexture();
 }
 

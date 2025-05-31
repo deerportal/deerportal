@@ -999,6 +999,7 @@ void Game::launchNextPlayer(){
     currentState = state_roll_dice;
     bubble.state = BubbleState::DICE;
     roundDice.setColor(turn);
+    roundDice.setFaces(0);  // Set dice to show "waiting to click" face (face 0)
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
 
