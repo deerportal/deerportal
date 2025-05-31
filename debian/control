@@ -1,7 +1,7 @@
 Source: deerportal
 Section: games
 Priority: optional
-Maintainer: Rafal Zawadzki <bluszcz@devcarpet.net>
+Maintainer: Rafal Zawadzki <bluszcz@gmail.com>
 Build-Depends: debhelper (>= 8.0.0), libsfml-dev, cmake
 Standards-Version: 3.9.4
 Homepage: https://devcarpet.net/deerportal/

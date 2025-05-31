@@ -2,6 +2,8 @@
 
 This repository contains the DeerPortal SFML game, developed by you! 🦌
 
+**Current Version: 0.9 "Welcome Back"** 🎉
+
 Our primary objective is to migrate this project to **SFML 3.0.0** (from its current version). You can find the SFML 3.0.0 download here: https://www.sfml-dev.org/download/sfml/3.0.0/
 
 # 🛠️ Development Guidelines
@@ -31,8 +33,9 @@ A file named `cursor-memory-bank.md` will be used as a memory bank. 💾 Please 
 ## Project Overview
 DeerPortal is a strategic board game with 4 players representing elemental forces (Water/Earth/Fire/Air). The project has been successfully migrated from SFML 2.x to SFML 3.0.
 
-## Migration Status: ✅ COMPLETE
+## Migration Status: ✅ COMPLETE (Version 0.9 "Welcome Back")
 **Date Completed**: January 2025
+**Current Release**: 0.9 "Welcome Back" - May 2025
 
 ### Major Achievements
 1. ✅ **SFML 3.0 API Migration**: All breaking changes successfully addressed

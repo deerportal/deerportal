@@ -32,9 +32,19 @@
 ​  </provides>
 ​
 ​  <releases>
-​    <release version="0.8.1" date="2013-04-12">
+​    <release version="0.9.0" date="2025-05-31">
 ​      <description>
-​        <p>Introduces AppImage metainfo file.</p>
+​        <p>Welcome Back - Major SFML 3.0 migration release with enhanced performance and modern C++ implementation.</p>
+​      </description>
+​    </release>
+​    <release version="0.8.2" date="2025-01-31">
+​      <description>
+​        <p>FPS display feature, window icon support, and performance optimizations.</p>
+​      </description>
+​    </release>
+​    <release version="0.8.1" date="2024-12-01">
+​      <description>
+​        <p>SFML 3.0 migration groundwork and code modernization.</p>
 ​      </description>
 ​    </release>
 ​  </releases>
