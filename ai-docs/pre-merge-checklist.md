@@ -75,14 +75,21 @@ $ # Start a game, make a few moves, verify AI opponents work
 # 1. Static analysis (if tools available)
 $ cppcheck --enable=all --std=c++17 src/ 2>&1 | grep -E "(error|warning)"
 
-# 2. Memory debugging with AddressSanitizer (macOS valgrind alternative)
+# 2. Memory debugging on macOS (AddressSanitizer leak detection unsupported on newer macOS)
+# Option A: Basic AddressSanitizer (detects buffer overflows, use-after-free, etc.)
 $ make clean
-$ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -g" .
+$ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-fsanitize=address -fsanitize=undefined -g" .
 $ make -j4
-$ ASAN_OPTIONS=detect_leaks=1:abort_on_error=1 ./DeerPortal.app/Contents/MacOS/DeerPortal
-# Run for a few minutes, exit cleanly to see leak report
+$ ASAN_OPTIONS=abort_on_error=0 ./DeerPortal.app/Contents/MacOS/DeerPortal
+# Run for a few minutes - ASan will report memory errors immediately
 
-# 3. Alternative: Use Xcode Instruments for memory profiling
+# Option B: macOS native leak detection (recommended for leak testing)
+$ make clean && cmake -DCMAKE_BUILD_TYPE=Release . && make -j4
+$ export MallocStackLogging=1
+$ ./DeerPortal.app/Contents/MacOS/DeerPortal &
+$ sleep 30 && leaks $(pgrep -f DeerPortal) | head -20
+
+# 3. Alternative: Use Xcode Instruments for comprehensive analysis
 $ # Open Instruments.app -> Choose "Leaks" template -> Select DeerPortal.app
 
 # 4. Build test with different configurations

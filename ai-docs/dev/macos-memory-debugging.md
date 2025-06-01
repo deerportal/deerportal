@@ -30,14 +30,25 @@ cmake -DCMAKE_BUILD_TYPE=Debug \
       -DCMAKE_CXX_FLAGS="-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -g" .
 make -j4
 
-# Run with leak detection
-ASAN_OPTIONS=detect_leaks=1:abort_on_error=1:log_path=./asan_log \
+# Run with basic memory error detection (leak detection often unsupported on newer macOS)
+ASAN_OPTIONS=abort_on_error=0:halt_on_error=0 \
 ./DeerPortal.app/Contents/MacOS/DeerPortal
 
-# For CI/automated testing
-ASAN_OPTIONS=detect_leaks=1:abort_on_error=1:exitcode=1 \
+# Alternative: Use macOS MallocStackLogging for leak detection
+export MallocStackLogging=1
+export MallocStackLoggingNoCompact=1
+./DeerPortal.app/Contents/MacOS/DeerPortal
+# Then use: leaks PID or heap PID
+
+# For CI/automated testing (without leak detection)
+ASAN_OPTIONS=abort_on_error=1:halt_on_error=1 \
 ./DeerPortal.app/Contents/MacOS/DeerPortal
 ```
+
+### **⚠️ Known Limitations on macOS:**
+- **Leak detection**: Often unsupported on ARM Macs and newer macOS versions
+- **Workaround**: Use `MallocStackLogging` + `leaks` command instead
+- **Still detects**: Buffer overflows, use-after-free, double-free, initialization issues
 
 ### **Interpreting Results:**
 - **No output**: ✅ No memory issues detected
