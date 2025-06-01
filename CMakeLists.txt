@@ -1,5 +1,5 @@
 #Change this if you need to target a specific CMake version
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 set (CMAKE_CXX_STANDARD 17)
 
 # To unify version handling

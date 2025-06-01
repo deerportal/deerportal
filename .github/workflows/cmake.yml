@@ -20,6 +20,34 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install SFML 3.0 Dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          build-essential \
+          cmake \
+          git \
+          libfreetype6-dev \
+          libopenal-dev \
+          libvorbis-dev \
+          libflac-dev \
+          libudev-dev \
+          libgl1-mesa-dev \
+          libxrandr-dev \
+          libxcursor-dev \
+          libxi-dev \
+          libx11-dev
+
+    - name: Build and Install SFML 3.0 from Source
+      run: |
+        git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
+        cmake --build build -j$(nproc)
+        sudo cmake --install build
+        cd ..
+        rm -rf sfml-source
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
