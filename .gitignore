@@ -1,3 +1,4 @@
+# Generated build files and caches
 linuxdeploy-x86_64.AppImage
 build/
 parts/
@@ -34,3 +35,7 @@ orig-sfml/
 deerportal-0.9.0/
 deerportal-0.8.2/
 deerportal-sfml2/
+
+# Development cache and generated files
+.cache/
+compile_commands.json
