@@ -28,7 +28,7 @@ public:
     std::unique_ptr<sf::Sprite> spriteClose;
     sf::Texture textureClose;
 
-    void setTitle(std::string newTitle);
+    void setTitle(const std::string& newTitle);
 
 private:
 

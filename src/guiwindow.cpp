@@ -3,7 +3,7 @@
 #include "filetools.h" // For get_full_path
 #include <iostream> // For std::cerr
 
-void GuiWindow::setTitle(std::string newTitle) {
+void GuiWindow::setTitle(const std::string& newTitle) {
     title = newTitle;
     if (guiTitleTxt) { // Only set if guiTitleTxt is valid
         guiTitleTxt->setString(title);
