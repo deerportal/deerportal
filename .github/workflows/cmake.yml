@@ -71,7 +71,9 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_INSTALL_PREFIX=/usr/local \
           -DSFML_BUILD_EXAMPLES=OFF \
-          -DSFML_BUILD_DOC=OFF
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=ON \
+          -DSFML_USE_SYSTEM_DEPS=ON
         echo "Building SFML (this may take a few minutes)..."
         cmake --build build -j$(nproc) --config Release
         echo "Installing SFML..."

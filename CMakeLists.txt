@@ -131,8 +131,24 @@ file(GLOB OTHER_SOURCES
 add_executable(${EXECUTABLE_NAME} ${GAME_SOURCES} ${OTHER_SOURCES})
 
 # Find SFML 3.0 using modern CMake approach
-find_package(SFML 3 COMPONENTS System Window Graphics Audio Network REQUIRED)
+# Try to find SFML 3.0, be flexible with shared/static configuration
+find_package(SFML 3 COMPONENTS System Window Graphics Audio Network QUIET)
+
+# If not found, try alternative approaches
+if(NOT SFML_FOUND)
+  # Try with explicit static preference for CI builds
+  message(STATUS "SFML 3.0 not found with default config, trying alternative approaches...")
+  set(SFML_STATIC_LIBRARIES ON)
+  find_package(SFML 3 COMPONENTS System Window Graphics Audio Network QUIET)
+endif()
+
+# Final required check
+if(NOT SFML_FOUND)
+  find_package(SFML 3 COMPONENTS System Window Graphics Audio Network REQUIRED)
+endif()
+
 if(SFML_FOUND)
+  message(STATUS "SFML 3.0 found successfully")
   target_link_libraries(${EXECUTABLE_NAME} PRIVATE SFML::System SFML::Window SFML::Graphics SFML::Audio SFML::Network)
   target_include_directories(${EXECUTABLE_NAME} PRIVATE ${SFML_INCLUDE_DIRS})
 endif()
