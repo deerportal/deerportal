@@ -97,6 +97,21 @@ Inside the `orig-sfml` folder, you'll find the SFML source code and HTML documen
 
 A file named `cursor-memory-bank.md` will be used as a memory bank. 💾 Please store gathered knowledge about the migration progress in this file to maintain a better context for our work.
 
+## 🎨 Asset History & Important Changes
+
+### Background Assets Evolution
+- **background_land.png White Strip Analysis**:
+  - **Initial Creation**: Commit `3c946ba7130f0f1d973a31de876c3e7225312c36` (Jan 31, 2016) by Rafal Zawadzki - No white strip, dark green background
+  - **White Strip Introduced**: Commit `6118565ef4689d260b1fbedfe26eaaa08520fad3` (Oct 31, 2016) by user `ukata` with message "updated background"
+  - **Reference**: [GitHub Commit](https://github.com/bluszcz/deerportal/commit/6118565ef4689d260b1fbedfe26eaaa08520fad3)
+  - **White Color Hex Values** (top-left area):
+    - `#FBFDF8` - Very light greenish-white: `rgb(251,253,248)`
+    - `#FBFCF8` - Light greenish-white: `rgb(251,252,248)`
+    - `#FBFCFA` - Light white with slight green tint: `rgb(251,252,250)`
+    - `#FDFEF9` - Near-white with tiny green tint: `rgb(253,254,249)`
+    - `#FFFFFF` - Pure white: `rgb(255,255,255)`
+  - **Note**: The white strip was added approximately 9 months after the initial background file creation and is present in all versions since October 2016.
+
 # AI Instructions for DeerPortal SFML 3.0 Migration
 
 ## Project Overview
