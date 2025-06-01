@@ -112,6 +112,40 @@ A file named `cursor-memory-bank.md` will be used as a memory bank. 💾 Please 
     - `#FFFFFF` - Pure white: `rgb(255,255,255)`
   - **Note**: The white strip was added approximately 9 months after the initial background file creation and is present in all versions since October 2016.
 
+## 🔄 **Maintenance Guidelines & Best Practices**
+
+### **Always Update When Making Changes:**
+1. **RELEASE_NOTES.md**: 
+   - Document all features, fixes, and changes in each version
+   - Follow semantic versioning (major.minor.patch)
+   - Include dates and contributor attribution
+   - Reference GitHub commits/PRs when applicable
+   
+2. **.gitignore**: 
+   - Add generated files (.cache/, build/, compile_commands.json)
+   - Include platform-specific files (.DS_Store, *.swp, etc.)
+   - Exclude temporary development files
+   - Update when new build tools or IDEs are used
+
+3. **Version Consistency**:
+   - Update version.txt for releases
+   - Sync version numbers across CMakeLists.txt, package files
+   - Update copyright years and contact information
+   - Verify AppData metadata matches current version
+
+4. **Documentation Updates**:
+   - Keep README.md current with latest SFML version and dependencies
+   - Update build instructions for new platforms or requirements
+   - Maintain AI documentation files with latest context
+   - Document API changes and migration guides
+
+### **Pre-Commit Checklist:**
+- [ ] Updated RELEASE_NOTES.md with changes
+- [ ] Verified .gitignore excludes new generated files
+- [ ] Checked version consistency across project files
+- [ ] Updated documentation if APIs changed
+- [ ] Tested build process on target platforms
+
 # AI Instructions for DeerPortal SFML 3.0 Migration
 
 ## Project Overview
