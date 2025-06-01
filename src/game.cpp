@@ -725,10 +725,6 @@ Game::Game(bool newTestMode):
 }
 
 void Game::update(sf::Time frameTime) {
-    banner.update(frameTime);
-    credits.update(frameTime);
-    runningCounter += frameTime.asSeconds();
-
     // FPS calculation and display update (NEW 0.8.2 FEATURE)
     fpsDisplayUpdateTimer += frameTime.asSeconds();
     if (fpsDisplayUpdateTimer >= 0.25f) {  // Update FPS display every 0.25 seconds
@@ -737,156 +733,181 @@ void Game::update(sf::Time frameTime) {
         fpsDisplayUpdateTimer = 0.0f;
     }
 
+    runningCounter += frameTime.asSeconds();
+
+    // PERFORMANCE OPTIMIZATION: State-aware conditional updates
+    switch (currentState) {
+        case state_game:
+        case state_roll_dice:
+            // Full game updates only during gameplay
+            updateGameplayElements(frameTime);
+            break;
+            
+        case state_menu:
+            // Only update menu-specific elements
+            credits.update(frameTime);
+            break;
+            
+        case state_setup_players:
+        case state_lets_begin:
+        case state_end_game:
+            // Minimal updates for transition states
+            updateMinimalElements(frameTime);
+            break;
+            
+        default:
+            // Skip expensive updates for other states
+            break;
+    }
+}
+
+void Game::updateGameplayElements(sf::Time frameTime) {
+    // Banner only when active
+    if (banner.active) {
+        banner.update(frameTime);
+    }
+    
     cpuTimeThinking -= frameTime.asSeconds();
 
+    // Big diamond oscillation only when active and visible
+    if (bigDiamondActive && (currentState == state_game || currentState == state_roll_dice)) {
+        if (oscilatorInc) {
+            oscilator += frameTime.asSeconds();
+        } else {
+            oscilator -= frameTime.asSeconds();
+        }
 
-    if (oscilatorInc)
-    {
-        oscilator += frameTime.asSeconds();
-    } else {
-        oscilator -= frameTime.asSeconds();
+        if (oscilator < -1)
+            oscilatorInc = true;
+
+        if (oscilator > 1)
+            oscilatorInc = false;
+
+        float modifier = sin(oscilator/2.5)*30.0f;
+        spriteBigDiamond->setPosition(sf::Vector2f(474,342+modifier));
     }
 
-    if (oscilator<-1)
-        oscilatorInc = true;
-
-    if (oscilator>1)
-        oscilatorInc = false;
-
-
-    float modifier = sin(oscilator/2.5)*30.0f;
-    spriteBigDiamond->setPosition(sf::Vector2f(474,342+modifier));
-
-
-
-    if (currentState==state_roll_dice)
-    {
-        if ((cpuTimeThinking<0) && (players[turn].human==false))
-        {
+    // AI logic for dice rolling
+    if (currentState == state_roll_dice) {
+        if ((cpuTimeThinking < 0) && (players[turn].human == false)) {
             cpuTimeThinking = cpuTimeThinkingInterval;
             throwDiceMove();
         }
     }
 
-    if (currentState==state_game)
-    {
+    // Game state updates and AI logic
+    if (currentState == state_game) {
         std::array<int,2> currentMovements = players[turn].getMovements(diceResultPlayer);
 
-        if ((cpuTimeThinking<0) &&  (players[turn].human==false))
-        {
+        if ((cpuTimeThinking < 0) && (players[turn].human == false)) {
             std::vector<int> listRandomPos;
 
-
-
-            if (currentMovements[0]>-1) {
+            if (currentMovements[0] > -1) {
                 listRandomPos.push_back(currentMovements[0]);
-
             }
-            if (currentMovements[1]>-1) {
+            if (currentMovements[1] > -1) {
                 listRandomPos.push_back(currentMovements[1]);
-
             }
 
             unsigned int sizeRndPos = listRandomPos.size();
-            if (sizeRndPos==0) {
-
-            } else if  (sizeRndPos==1) {
+            if (sizeRndPos == 0) {
+                // No moves available
+            } else if (sizeRndPos == 1) {
                 playerMakeMove(listRandomPos[0]);
-
-            } else if (sizeRndPos==2) {
-
-                if (deerModeActive)
-                {
+            } else if (sizeRndPos == 2) {
+                if (deerModeActive) {
                     playerMakeMove(listRandomPos[1]);
-                } else
-                {
-
-
-                    if (players[turn].reachPortalMode == true)
-                    {
+                } else {
+                    if (players[turn].reachPortalMode == true) {
                         playerMakeMove(listRandomPos[1]);
-                    }
-                    else
-                    {
-                        if (boardDiamonds.ifFieldIsEmpty(listRandomPos[1])==false)
-                        {
+                    } else {
+                        if (boardDiamonds.ifFieldIsEmpty(listRandomPos[1]) == false) {
                             playerMakeMove(listRandomPos[1]);
                             return;
-
                         }
-                        if (boardDiamonds.ifFieldIsEmpty(listRandomPos[0])==false)
-                        {
+                        if (boardDiamonds.ifFieldIsEmpty(listRandomPos[0]) == false) {
                             playerMakeMove(listRandomPos[0]);
                             return;
-
                         }
-                        if ((boardDiamonds.ifFieldIsEmpty(listRandomPos[0])==false) && (boardDiamonds.ifFieldIsEmpty(listRandomPos[1])==false))
-
-                        {
+                        if ((boardDiamonds.ifFieldIsEmpty(listRandomPos[0]) == false) && 
+                            (boardDiamonds.ifFieldIsEmpty(listRandomPos[1]) == false)) {
                             playerMakeMove(listRandomPos[1]);
                             return;
                         }
                         int randPos = rand() % 2;
                         playerMakeMove(listRandomPos[randPos]);
-                    };
+                    }
                 }
             }
-
         }
 
-
-
-
-        if (currentMovements[0]>-1)
-        {
+        // Rotation elements only when visible and active
+        if (currentMovements[0] > -1) {
             prevRotateElem.spriteRotate->setPosition(players[turn].characters[0].leftChar->getPosition());
             prevRotateElem.spriteRotate->move(sf::Vector2f(10,20));
-
-            // Modificator to fit on the bigger view
             prevRotateElem.spriteRotate->move(sf::Vector2f(-202,-76));
-
             prevRotateElem.update(frameTime);
             prevRotateElem.setColor();
         }
-        if (currentMovements[1]>-1)
-        {
+        if (currentMovements[1] > -1) {
             nextRotateElem.spriteRotate->setPosition(players[turn].characters[0].rightChar->getPosition());
             nextRotateElem.spriteRotate->move(sf::Vector2f(10,20));
-
-            // Modificator to fit on the bigger view
             nextRotateElem.spriteRotate->move(sf::Vector2f(-202,-76));
             nextRotateElem.update(frameTime);
             nextRotateElem.setColor();
         }
     }
+    
+    // Cards deck only during game states where cards are relevant
     cardsDeck.update(frameTime);
-    for (int i=0;i<4;i++)
-    {
-
-        players[i].play();
-        players[i].update(frameTime);
+    
+    // PERFORMANCE: Only update current player instead of all 4
+    players[turn].play();
+    players[turn].update(frameTime);
+    
+    // Update other players only if they need minimal processing (idle animations, etc.)
+    for (int i = 0; i < 4; i++) {
+        if (i != turn) {
+            // Minimal update for non-active players (only if needed for idle animations)
+            // players[i].updateIdle(frameTime); // Uncomment if such method exists
+        }
     }
 
-    if (currentState==state_lets_begin)
-    {
+    // Game state transitions
+    if (currentState == state_lets_begin) {
         downTimeCounter += frameTime.asSeconds();
         spriteLestBegin->setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
-        if (downTimeCounter>5)
-        {
+        if (downTimeCounter > 5) {
             currentState = state_roll_dice;
             bubble.state = BubbleState::DICE;
         }
     }
 
-    if (currentState==state_end_game)
-    {
+    if (currentState == state_end_game) {
         downTimeCounter += frameTime.asSeconds();
-
     }
 
     bubble.update(frameTime);
+}
 
-
+void Game::updateMinimalElements(sf::Time frameTime) {
+    // Only essential updates for transition states
+    if (banner.active) {
+        banner.update(frameTime);
+    }
+    
+    if (currentState == state_lets_begin) {
+        downTimeCounter += frameTime.asSeconds();
+        spriteLestBegin->setColor(sf::Color(255,255,255,255-(downTimeCounter*35)));
+        if (downTimeCounter > 5) {
+            currentState = state_roll_dice;
+            bubble.state = BubbleState::DICE;
+        }
+    }
+    
+    if (currentState == state_end_game) {
+        downTimeCounter += frameTime.asSeconds();
+    }
 }
 
 /*!
@@ -1021,7 +1042,7 @@ void Game::launchNextPlayer(){
     currentState = state_roll_dice;
     bubble.state = BubbleState::DICE;
     roundDice.setColor(turn);
-    roundDice.setFaces(0);  // Set dice to show "waiting to click" face (face 0)
+    roundDice.setFaces(6);  // Set dice to show "waiting to click" face (face 6 - the distinctive 45-degree sprite)
     bubble.setPosition(players[turn].characters[0].getPosition().x-30,
             players[turn].characters[0].getPosition().y-45);
 

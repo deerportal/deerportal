@@ -42,13 +42,23 @@ public:
     void setTxtEndGameAmount();
     void updateFPSDisplay(float deltaTime);
 
+    // Performance optimization methods
+    void renderDirectToWindow(float deltaTime);
+    void drawBaseGameDirect();
+    void drawCharactersDirect();
+    void drawPlayersGuiDirect();
+    void drawUIElementsDirect();
+    void conditionalShaderRender(sf::Drawable& drawable, sf::Shader* shader = nullptr);
+
 private:
     Game* game;  // Reference to main game instance
 
-    // Rendering state
+    // Performance optimization variables
     float runningCounter;
     float fpsDisplayUpdateTimer;
-    float v1;  // Shader parameter
+    float v1;
+    bool enableShaders;      // Performance: Control shader usage
+    bool useDirectRendering; // Performance: Skip render-to-texture when possible
 
     // Helper rendering methods
     void clearBuffers();

@@ -78,6 +78,7 @@ void RoundDice::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void RoundDice::setFaces(int number)
 {
+    // Face mapping: 0-5 = dice result faces 1-6, 6 = distinctive 45-degree waiting sprite (from 0.8.2)
     this->diceResultSix = number;
     setDiceTexture();
 }

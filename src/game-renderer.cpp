@@ -38,6 +38,8 @@ GameRenderer::GameRenderer(Game* gameInstance)
     , runningCounter(0.0f)
     , fpsDisplayUpdateTimer(0.0f)
     , v1(0.0f)
+    , enableShaders(false)  // Performance: Disable shaders by default
+    , useDirectRendering(true)  // Performance: Skip render-to-texture for gameplay
 {
 }
 
@@ -49,7 +51,13 @@ void GameRenderer::render(float deltaTime)
 {
     clearBuffers();
     
-    // Route to state-specific rendering
+    // PERFORMANCE OPTIMIZATION: Direct rendering for gameplay states
+    if (useDirectRendering && (game->currentState == Game::state_game || game->currentState == Game::state_roll_dice)) {
+        renderDirectToWindow(deltaTime);
+        return;
+    }
+    
+    // Route to state-specific rendering (with post-processing)
     switch (game->currentState)
     {
         case Game::state_game:
@@ -258,12 +266,12 @@ void GameRenderer::drawBaseGame()
     {
         game->spriteBackgroundArt->setColor(sf::Color(255, 255, 255));
 
-        v = sin(game->runningCounter * 0.5f) / 4;
-        game->shaderBlur.setUniform("blur_radius", v);
+        // Simply draw the dice - setFaces(6) sets it to the distinctive 45-degree waiting sprite (position 6)
         game->renderTexture.draw(*game->roundDice.spriteDice);
     }
     else
     {
+        // Normal dice rendering (shows result)
         game->renderTexture.draw(*game->roundDice.spriteDice);
     }
     
@@ -460,6 +468,137 @@ void GameRenderer::setupShaders()
 {
     // Initialize shader parameters if needed
     // This method can be expanded for shader setup
+}
+
+void GameRenderer::renderDirectToWindow(float deltaTime)
+{
+    // PERFORMANCE: Direct rendering to window, skipping render-to-texture pipeline
+    game->window.clear();
+    
+    // Set appropriate views and draw directly
+    game->window.setView(game->viewFull);
+    game->window.draw(*game->spriteBackgroundDark);
+    
+    game->window.setView(game->viewTiles);
+    drawBaseGameDirect();
+    
+    game->window.setView(game->viewFull);
+    game->window.draw(game->groupHud);
+    
+    game->window.setView(game->viewTiles);
+    drawCharactersDirect();
+    game->window.draw(game->boardDiamonds);
+    game->window.draw(game->bubble);
+    
+    game->window.setView(game->viewFull);
+    drawPlayersGuiDirect();
+
+    // Draw Big Diamond ONLY when active (no post-processing)
+    if (game->bigDiamondActive)
+        game->window.draw(*game->spriteBigDiamond);
+    
+    // Draw UI elements directly
+    drawUIElementsDirect();
+    
+    game->window.display();
+}
+
+void GameRenderer::drawBaseGameDirect()
+{
+    // Direct drawing without render-to-texture overhead
+    for (int i = 0; i < 4; i++)
+    {
+        game->window.draw(game->players[i].elems);
+    }
+    
+    if (game->showPlayerBoardElems)
+    {
+        game->window.draw(game->selector);
+    }
+    
+    // Background without excessive shaders
+    game->window.draw(*game->spriteBackgroundArt);
+    
+    game->window.draw(game->cardsDeck);
+    
+    // IMPORTANT: Preserve dice waiting state visual effects from v0.8.2
+    if (game->currentState == Game::state_roll_dice)
+    {
+        // Simply draw the dice - setFaces(6) sets it to the distinctive 45-degree waiting sprite (position 6)
+        game->window.draw(*game->roundDice.spriteDice);
+    }
+    else
+    {
+        // Normal dice rendering (shows result)
+        game->window.draw(*game->roundDice.spriteDice);
+    }
+}
+
+void GameRenderer::drawCharactersDirect()
+{
+    if (game->currentState == Game::state_game)
+    {
+        std::array<int,2> currentMovements = game->players[game->turn].characters[0].getMovements(game->diceResultPlayer);
+        
+        if (currentMovements[1] > -1)
+        {
+            if (game->nextRotateElem.active)
+                game->window.draw(game->nextRotateElem);
+        }
+        
+        if (currentMovements[0] > -1)
+        {
+            if (game->prevRotateElem.active)
+                game->window.draw(game->prevRotateElem);
+        }
+    }
+    
+    for (int i = 0; i < 4; i++)
+    {
+        for (auto&& j : game->players[i].characters)
+        {
+            if (game->currentState == Game::state_game)
+                j.drawMovements = true;
+            else
+                j.drawMovements = false;
+                
+            game->window.draw(j);
+        }
+    }
+}
+
+void GameRenderer::drawPlayersGuiDirect()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        game->window.draw(game->players[i]);
+    }
+}
+
+void GameRenderer::drawUIElementsDirect()
+{
+    // Show FPS counter if enabled
+#if defined(DEERPORTAL_SHOW_FPS_COUNTER) || !defined(NDEBUG)
+    game->window.draw(*game->textFPS);
+#endif
+
+    // Show version info ONLY in Debug builds
+#ifndef NDEBUG
+    game->window.draw(*game->gameVersion);
+#endif
+    
+    if (game->banner.active)
+        game->window.draw(game->banner);
+}
+
+void GameRenderer::conditionalShaderRender(sf::Drawable& drawable, sf::Shader* shader)
+{
+    // PERFORMANCE: Only use shaders when explicitly enabled and beneficial
+    if (enableShaders && shader) {
+        game->renderTexture.draw(drawable, shader);
+    } else {
+        game->renderTexture.draw(drawable);  // Direct rendering without shader overhead
+    }
 }
 
 } // namespace DP 

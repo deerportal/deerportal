@@ -244,6 +244,10 @@ public:
     std::unique_ptr<GameInput> input;
     std::unique_ptr<GameRenderer> renderer;
     std::unique_ptr<GameCore> core;
+
+    // Performance optimization methods
+    void updateGameplayElements(sf::Time frameTime);
+    void updateMinimalElements(sf::Time frameTime);
 };
 }
 #endif // GAME_H

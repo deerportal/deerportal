@@ -304,7 +304,7 @@ void GameCore::launchNextPlayer()
     game->currentState = Game::state_roll_dice;
     game->bubble.state = BubbleState::DICE;
     game->roundDice.setColor(game->turn);
-    game->roundDice.setFaces(0);  // Set dice to show "waiting to click" face (face 0)
+    game->roundDice.setFaces(6);  // Set dice to show "waiting to click" face (face 6 - the distinctive 45-degree sprite)
     game->bubble.setPosition(game->players[game->turn].characters[0].getPosition().x-30,
             game->players[game->turn].characters[0].getPosition().y-45);
 
