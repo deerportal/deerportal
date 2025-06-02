@@ -39,3 +39,32 @@ deerportal-sfml2/
 # Development cache and generated files
 .cache/
 compile_commands.json
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+*.bak
+*.backup
+
+# Generated handbook PDF (optional - uncomment if you don't want to track the PDF)
+# handbook.pdf
+
+# Temporary data directory
+.data/

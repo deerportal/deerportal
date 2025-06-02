@@ -1,20 +1,263 @@
-\documentclass[12pt]{article}
-\title{Deer Portal \\ \large Handbook}
-
-\date{\today}
-\author{Rafał Zawadzki}
-\usepackage{titling}
-\usepackage[showframe]{geometry}
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\geometry{margin=2.5cm}
+\title{Deer Portal \\ \large Game Handbook \& Card Reference}
+\date{\today}
+\author{Rafał Zawadzki \\ \small bluszcz@deerportal.net}
+
+% Custom colors for elements
+\definecolor{waterblue}{RGB}{70,130,180}
+\definecolor{earthgreen}{RGB}{34,139,34}
+\definecolor{firered}{RGB}{220,20,60}
+\definecolor{airyellow}{RGB}{255,215,0}
+
+% Header and footer setup
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Deer Portal Handbook}
+\lhead{\leftmark}
+\cfoot{\thepage}
+
 \renewcommand\maketitlehooka{\null\mbox{}\vfill}
 \renewcommand\maketitlehookd{\vfill\null}
+
 \begin{document}
 \maketitle
 \newpage
+
 \tableofcontents
 \newpage
-\section*{Sample Chapter}
-Hello world \LaTeX
 
-\url{https://linuxconfig.org}
+\section{Introduction}
+
+Deer Portal is a multiplayer board game driven by the four classical elements, designed for 0-4 players. The game takes place in an ancient world where the Almighty Deer God protects all compassionate creatures.
+
+\subsection{Game Objective}
+Transform yourself into a \textbf{Deer Lesser God} by reaching the \textbf{Hoof Portal} and collecting the most diamonds.
+
+\subsection{Game Philosophy}
+The game was inspired during a Buddhist journey through Japan, specifically after visiting Tōdai-ji temple in Nara. The mission is to spread the word about the Deer through this strategic gameplay.
+
+\section{Game Setup}
+
+\subsection{Classical Elements}
+The gameboard is divided into four areas, each controlled by one classical element:
+
+\begin{itemize}
+    \item \textcolor{waterblue}{\textbf{Water}} (Blue) - Represents flow, adaptation, and change
+    \item \textcolor{earthgreen}{\textbf{Earth}} (Green) - Represents stability, growth, and foundation  
+    \item \textcolor{firered}{\textbf{Fire}} (Red) - Represents energy, transformation, and passion
+    \item \textcolor{airyellow}{\textbf{Air}} (Yellow) - Represents freedom, intellect, and movement
+\end{itemize}
+
+\subsection{Players}
+Each of the four players is mentored by one classical element and can:
+\begin{itemize}
+    \item Move around their designated board area
+    \item Collect runes and diamonds
+    \item Meditate to receive help from their patron element
+    \item Reach the Deer Portal for transformation
+\end{itemize}
+
+Players can be controlled by humans or computers, allowing for various gameplay configurations.
+
+\section{Card System}
+
+The heart of Deer Portal's strategy lies in its sophisticated card system. Each element maintains a deck of 32 cards that provide powerful interactions between players.
+
+\subsection{Card Distribution}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Card Type} & \textbf{Quantity per Element} & \textbf{Total in Game} \\
+\hline
+Stop Cards & 8 & 32 \\
+Remove Cards & 8 & 32 \\
+Diamond Cards & 8 & 32 \\
+Diamond x2 Cards & 8 & 32 \\
+\hline
+\textbf{Total per Element} & \textbf{32} & \textbf{128} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Card Activation Rules}
+\begin{enumerate}
+    \item \textbf{Own Element Runes}: When landing on your own element's rune, the card is discarded and the next card is revealed
+    \item \textbf{Other Element Runes}: When landing on another element's rune, the card effect executes against that element's area
+    \item \textbf{Targeting Restriction}: You cannot use cards against your own element area
+    \item \textbf{Deck Progression}: After each card use, the deck advances to the next card
+    \item \textbf{Deck Exhaustion}: When a deck runs out, that element pile becomes inactive
+\end{enumerate}
+
+\section{Card Types \& Effects}
+
+\subsection{Stop Cards}
+\textbf{Primary Effect}: Freeze target player for one complete turn
+
+\textbf{Mechanical Implementation}: \texttt{frozenLeft += 1}
+
+\textbf{Strategic Use}:
+\begin{itemize}
+    \item Disrupt leading players during critical moments
+    \item Prevent opponents from reaching the portal
+    \item Buy time to collect valuable resources
+    \item Most effective during mid-to-late game phases
+\end{itemize}
+
+\textbf{Visual Design}: Each element's stop card features a distinctive yellow prohibition symbol overlaid on the element's thematic background.
+
+\subsection{Remove Cards}
+\textbf{Primary Effect}: Eliminate a random diamond or card from target element area
+
+\textbf{Mechanical Implementation}: Random selection and removal from target area's resources
+
+\textbf{Strategic Use}:
+\begin{itemize}
+    \item Reduce opponent resource accumulation
+    \item Eliminate high-value targets before opponents can collect them
+    \item Tactical disruption of opponent strategies
+    \item Most effective when target areas have valuable visible resources
+\end{itemize}
+
+\textbf{Visual Design}: Features a crossed-out diamond symbol on each element's themed background, representing resource elimination.
+
+\subsection{Diamond Cards}
+\textbf{Primary Effect}: Steal one diamond from target area + award 1 cash to current player
+
+\textbf{Mechanical Implementation}: \texttt{removeDiamond()} + \texttt{cash += 1}
+
+\textbf{Strategic Use}:
+\begin{itemize}
+    \item Direct resource acquisition from opponents
+    \item Build economic advantage throughout the game
+    \item Steady progression toward victory condition
+    \item Effective throughout all game phases
+\end{itemize}
+
+\textbf{Visual Design}: Displays a single, prominently featured diamond on each element's background.
+
+\subsection{Diamond x2 Cards}
+\textbf{Primary Effect}: Steal two diamonds from target area + award 2 cash to current player
+
+\textbf{Mechanical Implementation}: \texttt{removeDiamond()} called twice + \texttt{cash += 2}
+
+\textbf{Strategic Use}:
+\begin{itemize}
+    \item Maximum resource gain per single card activation
+    \item Game-changing potential in close matches
+    \item Priority target for strategic timing
+    \item Most valuable card type in the deck
+\end{itemize}
+
+\textbf{Visual Design}: Features two diamonds prominently displayed, often with enhanced visual effects representing their increased value.
+
+\section{Element-Specific Visual Themes}
+
+\subsection{\textcolor{waterblue}{Water Element Cards}}
+Visual characteristics include flowing water textures, blue gradients, and aquatic motifs that convey fluidity and adaptability.
+
+\subsection{\textcolor{earthgreen}{Earth Element Cards}}
+Feature natural textures, green earth tones, and organic patterns representing stability and growth.
+
+\subsection{\textcolor{firered}{Fire Element Cards}}
+Incorporate flame effects, warm red colors, and dynamic energy patterns symbolizing transformation and passion.
+
+\subsection{\textcolor{airyellow}{Air Element Cards}}
+Display light, airy backgrounds with yellow/white color schemes and flowing patterns representing freedom and movement.
+
+\section{Advanced Strategy}
+
+\subsection{Card Priority System}
+\begin{enumerate}
+    \item \textbf{Diamond x2 Cards} - Highest strategic value
+    \item \textbf{Diamond Cards} - Reliable resource acquisition  
+    \item \textbf{Stop Cards} - Tactical disruption tool
+    \item \textbf{Remove Cards} - Situational utility option
+\end{enumerate}
+
+\subsection{Timing Strategies}
+\begin{itemize}
+    \item \textbf{Early Game}: Focus on diamond cards for resource building
+    \item \textbf{Mid Game}: Deploy stop cards against leading players
+    \item \textbf{Late Game}: Use remove cards to eliminate threats before portal entry
+\end{itemize}
+
+\subsection{Element Targeting}
+Consider these factors when choosing targets:
+\begin{itemize}
+    \item Visible resource density in target areas
+    \item Strategic position of controlling players
+    \item Current game state and remaining turns
+    \item Deck status of different elements
+\end{itemize}
+
+\section{Game Mechanics Integration}
+
+\subsection{Meditation System}
+Returning to your starting position with an exact dice roll triggers meditation, which:
+\begin{itemize}
+    \item Regenerates all diamonds and cards in your area
+    \item Requires precise dice roll calculation
+    \item Provides strategic reset opportunity
+    \item Implemented via \texttt{game.boardDiamonds.reorder(game.turn)}
+\end{itemize}
+
+\subsection{Deck Exhaustion Effects}
+When element decks become empty:
+\begin{itemize}
+    \item Deck marked as inactive: \texttt{cardsList[pileNumber].active = false}
+    \item All remaining resources removed: \texttt{removeAllCardElement(pileNumber)}
+    \item Element becomes strategically less valuable
+    \item Affects long-term game balance
+\end{itemize}
+
+\section{Victory Conditions}
+
+\subsection{Primary Victory}
+The player with the most diamonds when all players reach the portal (or deer mode ends) wins the game.
+
+\subsection{Tiebreaker}
+In case of diamond count ties, victory goes to the player who reached the portal first.
+
+\subsection{Transformation}
+The winner transforms into a Deer God, while survivors become devoted monks spreading the philosophy.
+
+\section{Technical Implementation}
+
+\subsection{Asset Organization}
+Card images are systematically organized in \texttt{assets/img/cards/} using the naming convention:
+\begin{itemize}
+    \item \texttt{card-\{element\}-\{type\}.small.png} (game display)
+    \item \texttt{card-\{element\}-\{type\}.png} (high resolution)
+\end{itemize}
+
+Where \texttt{\{element\}} = water, earth, fire, air and \texttt{\{type\}} = stop, remove-card, diam, 2-diam.
+
+\subsection{Core Implementation Files}
+\begin{itemize}
+    \item \texttt{src/card.h} - Card data structures and type definitions
+    \item \texttt{src/cardsdeck.h/.cpp} - Deck management and rendering
+    \item \texttt{src/cardslist.h/.cpp} - Card distribution and shuffling
+    \item \texttt{src/command.cpp} - Card effect execution logic
+    \item \texttt{src/textureholder.cpp} - Asset loading and management
+\end{itemize}
+
+\section{Conclusion}
+
+The Deer Portal card system provides deep strategic gameplay while maintaining thematic coherence with the game's spiritual and elemental foundations. Mastery of card timing, element targeting, and resource management separates novice players from those worthy of transformation into Deer Gods.
+
+May your journey through the elements lead to enlightenment and victory in the sacred realm of the Almighty Deer.
+
 \end{document}

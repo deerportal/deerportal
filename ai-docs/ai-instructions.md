@@ -60,19 +60,49 @@ The game features a sophisticated card system with 128 total cards:
 - Cards provide strategic interaction between players
 - Meditation system regenerates player areas
 
-## Documentation Files Created
+## Documentation System
+
+### Documentation Files Created
 - `CARDS.md` - Comprehensive card reference with images and mechanics
-- Links to actual game assets for visual reference
-- Technical implementation details for developers
+- `handbook.tex` - Professional LaTeX handbook with card documentation
+- `ai-docs/handbook-generation.md` - PDF generation instructions
+
+### LaTeX Handbook Features (Created 2024)
+**Structure Organization:**
+- Cards grouped by type (Stop, Remove, Diamond, Diamond x2) instead of by element color
+- Professional formatting with custom colors for each element
+- Strategic analysis and technical implementation details
+- Comprehensive table of contents and cross-references
+
+**LaTeX Features Used:**
+- Custom color definitions for elements (`\definecolor`)
+- Professional table formatting (`booktabs`, `tabularx`)
+- Enhanced headers/footers (`fancyhdr`)
+- Hyperlinks and bookmarks (`hyperref`)
+- Structured sections with proper LaTeX hierarchy
+
+**PDF Generation Process:**
+- Command line: `pdflatex handbook.tex` (run twice for TOC)
+- Build scripts provided for Linux/macOS/Windows
+- CMake integration available
+- CI/CD workflows documented for automated building
+
+### Documentation Maintenance
+- LaTeX build artifacts added to `.gitignore`
+- Optional PDF tracking (commented out in gitignore)
+- Systematic approach to documentation updates
+- Version control integration for handbook releases
 
 ## Key Technical Patterns
 - SFML for graphics and audio
 - State management pattern for game flow
 - Component-based entity system for players
 - Texture management system for efficient asset loading
+- Professional documentation with LaTeX typesetting
 
 ## Development History
 - Game evolved from Buddhist temple inspiration
 - Multi-platform support (CMake build system)
 - Active development with version tracking
-- Handbook exists but needed card documentation supplement 
+- Handbook exists but needed card documentation supplement
+- Enhanced with professional LaTeX handbook (2024) 
