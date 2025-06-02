@@ -16,6 +16,35 @@ Deer Portal is a multiplayer board game built with C++ and SFML, featuring four 
 - Create appropriate `.gitignore` for language and files
 - Document all major features and mechanics
 
+### Git Workflow Guidelines (Updated 2024-06-02)
+
+**AI Permissions for Git Operations:**
+- ✅ **CAN EDIT**: `.gitignore` files directly
+- ✅ **CAN CHECK**: Read-only git commands (`git status`, `git log`, `git diff`, `git branch`)
+- ❓ **MUST ASK FIRST**: Any modification commands:
+  - `git add`, `git commit`, `git push`, `git pull`
+  - `git merge`, `git rebase`, `git branch -D`
+  - `git reset`, `git checkout`, `git switch`
+  - Any command that changes repository state
+
+**Workflow Process:**
+1. AI edits files as requested
+2. AI asks permission before committing changes
+3. User reviews and approves git operations
+4. User maintains full control over repository state
+
+**Branch Management:**
+- Development happens on feature branches (e.g., `cards`)
+- Master branch contains stable releases
+- AI should always check current branch before making suggestions
+- Branch switching requires explicit user permission
+
+**Collaboration Best Practices:**
+- AI documents changes clearly for commit messages
+- User retains authority over release timing
+- Version control decisions remain with project maintainer
+- Emergency rollbacks handled by user only
+
 ## Game Architecture Analysis
 
 ### Card System (Analyzed 2024)
