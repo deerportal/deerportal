@@ -14,7 +14,7 @@
 \geometry{margin=2.5cm}
 \title{Deer Portal \\ \large Game Handbook \& Card Reference}
 \date{\today}
-\author{Rafał Zawadzki \\ \small bluszcz@deerportal.net}
+\author{Rafał Zawadzki \\ \small bluszcz@gmail.com}
 
 % Custom colors for elements
 \definecolor{waterblue}{RGB}{70,130,180}
@@ -72,6 +72,24 @@ Each of the four players is mentored by one classical element and can:
 
 Players can be controlled by humans or computers, allowing for various gameplay configurations.
 
+\subsection{Turn Structure}
+Each active player (who hasn't reached the portal yet, nor is frozen) performs two actions during their turn:
+
+\begin{enumerate}
+    \item \textbf{Roll the Dice} - Click on the dice symbol in the bottom right area
+    \item \textbf{Choose Movement} - Click on the corresponding area on your board to move your character
+\end{enumerate}
+
+\subsection{Field Effects}
+After moving your character, depending on the destination field you may:
+
+\begin{itemize}
+    \item \textbf{Collect Diamonds} - If there was one on the field (+1 cash)
+    \item \textbf{Activate Cards} - If a rune was on the field (execute card effect)
+    \item \textbf{Meditate} - If the field was your starting place (regenerate your area)
+    \item \textbf{Enter Portal} - Move to the Deer God kingdom (end game trigger)
+\end{itemize}
+
 \section{Card System}
 
 The heart of Deer Portal's strategy lies in its sophisticated card system. Each element maintains a deck of 32 cards that provide powerful interactions between players.
@@ -106,8 +124,6 @@ Diamond x2 Cards & 8 & 32 \\
 \subsection{Stop Cards}
 \textbf{Primary Effect}: Freeze target player for one complete turn
 
-\textbf{Mechanical Implementation}: \texttt{frozenLeft += 1}
-
 \textbf{Strategic Use}:
 \begin{itemize}
     \item Disrupt leading players during critical moments
@@ -118,10 +134,35 @@ Diamond x2 Cards & 8 & 32 \\
 
 \textbf{Visual Design}: Each element's stop card features a distinctive yellow prohibition symbol overlaid on the element's thematic background.
 
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-water-stop.small.png}
+    \caption*{\textcolor{waterblue}{Water Stop}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-earth-stop.small.png}
+    \caption*{\textcolor{earthgreen}{Earth Stop}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-fire-stop.small.png}
+    \caption*{\textcolor{firered}{Fire Stop}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-air-stop.small.png}
+    \caption*{\textcolor{airyellow}{Air Stop}}
+\end{minipage}
+\end{figure}
+
 \subsection{Remove Cards}
 \textbf{Primary Effect}: Eliminate a random diamond or card from target element area
-
-\textbf{Mechanical Implementation}: Random selection and removal from target area's resources
 
 \textbf{Strategic Use}:
 \begin{itemize}
@@ -133,10 +174,35 @@ Diamond x2 Cards & 8 & 32 \\
 
 \textbf{Visual Design}: Features a crossed-out diamond symbol on each element's themed background, representing resource elimination.
 
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-water-remove-card.small.png}
+    \caption*{\textcolor{waterblue}{Water Remove}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-earth-remove-card.small.png}
+    \caption*{\textcolor{earthgreen}{Earth Remove}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-fire-remove-card.small.png}
+    \caption*{\textcolor{firered}{Fire Remove}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-air-remove-card.small.png}
+    \caption*{\textcolor{airyellow}{Air Remove}}
+\end{minipage}
+\end{figure}
+
 \subsection{Diamond Cards}
 \textbf{Primary Effect}: Steal one diamond from target area + award 1 cash to current player
-
-\textbf{Mechanical Implementation}: \texttt{removeDiamond()} + \texttt{cash += 1}
 
 \textbf{Strategic Use}:
 \begin{itemize}
@@ -148,10 +214,35 @@ Diamond x2 Cards & 8 & 32 \\
 
 \textbf{Visual Design}: Displays a single, prominently featured diamond on each element's background.
 
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-water-diam.small.png}
+    \caption*{\textcolor{waterblue}{Water Diamond}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-earth-diam.small.png}
+    \caption*{\textcolor{earthgreen}{Earth Diamond}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-fire-diam.small.png}
+    \caption*{\textcolor{firered}{Fire Diamond}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-air-diam.small.png}
+    \caption*{\textcolor{airyellow}{Air Diamond}}
+\end{minipage}
+\end{figure}
+
 \subsection{Diamond x2 Cards}
 \textbf{Primary Effect}: Steal two diamonds from target area + award 2 cash to current player
-
-\textbf{Mechanical Implementation}: \texttt{removeDiamond()} called twice + \texttt{cash += 2}
 
 \textbf{Strategic Use}:
 \begin{itemize}
@@ -162,6 +253,33 @@ Diamond x2 Cards & 8 & 32 \\
 \end{itemize}
 
 \textbf{Visual Design}: Features two diamonds prominently displayed, often with enhanced visual effects representing their increased value.
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-water-2-diam.small.png}
+    \caption*{\textcolor{waterblue}{Water Diamond x2}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-earth-2-diam.small.png}
+    \caption*{\textcolor{earthgreen}{Earth Diamond x2}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-fire-2-diam.small.png}
+    \caption*{\textcolor{firered}{Fire Diamond x2}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{assets/img/cards/card-air-2-diam.small.png}
+    \caption*{\textcolor{airyellow}{Air Diamond x2}}
+\end{minipage}
+\end{figure}
 
 \section{Element-Specific Visual Themes}
 
@@ -211,16 +329,25 @@ Returning to your starting position with an exact dice roll triggers meditation,
     \item Regenerates all diamonds and cards in your area
     \item Requires precise dice roll calculation
     \item Provides strategic reset opportunity
-    \item Implemented via \texttt{game.boardDiamonds.reorder(game.turn)}
+    \item Essential for long-term resource management
 \end{itemize}
 
 \subsection{Deck Exhaustion Effects}
 When element decks become empty:
 \begin{itemize}
-    \item Deck marked as inactive: \texttt{cardsList[pileNumber].active = false}
-    \item All remaining resources removed: \texttt{removeAllCardElement(pileNumber)}
+    \item Deck becomes inactive (no more cards can be drawn)
+    \item All remaining resources of that element are removed from the board
     \item Element becomes strategically less valuable
     \item Affects long-term game balance
+\end{itemize}
+
+\subsection{Deer Mode}
+When the first player reaches the portal:
+\begin{itemize}
+    \item \textbf{Deer Mode} begins (4 rounds - one turn per player)
+    \item First player gets bonus diamonds for reaching first
+    \item All remaining players must reach portal before Deer Mode ends
+    \item Players who don't reach portal in time are eliminated
 \end{itemize}
 
 \section{Victory Conditions}
@@ -232,26 +359,42 @@ The player with the most diamonds when all players reach the portal (or deer mod
 In case of diamond count ties, victory goes to the player who reached the portal first.
 
 \subsection{Transformation}
-The winner transforms into a Deer God, while survivors become devoted monks spreading the philosophy.
+- \textbf{Winner}: Transforms into a Deer God
+- \textbf{Survivors}: Become devoted monks spreading the philosophy  
+- \textbf{Eliminated}: Become the foundation of the new philosophy
 
-\section{Technical Implementation}
+\section{Advanced Tips}
 
-\subsection{Asset Organization}
-Card images are systematically organized in \texttt{assets/img/cards/} using the naming convention:
+\subsection{Resource Management}
 \begin{itemize}
-    \item \texttt{card-\{element\}-\{type\}.small.png} (game display)
-    \item \texttt{card-\{element\}-\{type\}.png} (high resolution)
+    \item Balance immediate gains vs. long-term strategy
+    \item Monitor opponent diamond counts
+    \item Use meditation strategically to refresh your area
+    \item Time your portal entry carefully
 \end{itemize}
 
-Where \texttt{\{element\}} = water, earth, fire, air and \texttt{\{type\}} = stop, remove-card, diam, 2-diam.
-
-\subsection{Core Implementation Files}
+\subsection{Card Timing}
 \begin{itemize}
-    \item \texttt{src/card.h} - Card data structures and type definitions
-    \item \texttt{src/cardsdeck.h/.cpp} - Deck management and rendering
-    \item \texttt{src/cardslist.h/.cpp} - Card distribution and shuffling
-    \item \texttt{src/command.cpp} - Card effect execution logic
-    \item \texttt{src/textureholder.cpp} - Asset loading and management
+    \item Save powerful cards for crucial moments
+    \item Watch for opponent weaknesses
+    \item Don't waste cards on empty areas
+    \item Consider deck status when planning moves
+\end{itemize}
+
+\subsection{Movement Strategy}
+\begin{itemize}
+    \item Plan your dice rolls and movement paths
+    \item Position for multiple collection opportunities
+    \item Avoid predictable patterns
+    \item Use exact movement for meditation when needed
+\end{itemize}
+
+\subsection{Endgame Planning}
+\begin{itemize}
+    \item Monitor Deer Mode countdown
+    \item Ensure portal access before elimination
+    \item Make final resource grabs before time runs out
+    \item Position for tiebreaker advantages
 \end{itemize}
 
 \section{Conclusion}

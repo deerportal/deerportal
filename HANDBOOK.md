@@ -49,6 +49,22 @@ Each of the four players is mentored by one classical element and can:
 Players can be controlled by humans or computers, allowing for various
 gameplay configurations.
 
+## How to Play
+
+### Turn Structure
+Each active player (who hasn't reached the portal yet, nor is frozen) performs two actions during their turn:
+
+1. **Roll the Dice** - Click on the dice symbol in the bottom right area
+2. **Choose Movement** - Click on the corresponding area on your board to move your character
+
+### Field Effects
+After moving your character, depending on the destination field you may:
+
+- **Collect Diamonds** - If there was one on the field (+1 cash)
+- **Activate Cards** - If a rune was on the field (execute card effect)
+- **Meditate** - If the field was your starting place (regenerate your area)
+- **Enter Portal** - Move to the Deer God kingdom (end game trigger)
+
 # Card System
 
 The heart of Deer Portal's strategy lies in its sophisticated card
@@ -90,8 +106,6 @@ interactions between players.
 
 **Primary Effect**: Freeze target player for one complete turn
 
-**Mechanical Implementation**: `frozenLeft += 1`
-
 **Strategic Use**:
 
 - Disrupt leading players during critical moments
@@ -109,9 +123,6 @@ yellow prohibition symbol overlaid on the element's thematic background.
 
 **Primary Effect**: Eliminate a random diamond or card from target
 element area
-
-**Mechanical Implementation**: Random selection and removal from target
-area's resources
 
 **Strategic Use**:
 
@@ -131,8 +142,6 @@ element's themed background, representing resource elimination.
 **Primary Effect**: Steal one diamond from target area + award 1 cash to
 current player
 
-**Mechanical Implementation**: `removeDiamond()` + `cash += 1`
-
 **Strategic Use**:
 
 - Direct resource acquisition from opponents
@@ -150,9 +159,6 @@ each element's background.
 
 **Primary Effect**: Steal two diamonds from target area + award 2 cash
 to current player
-
-**Mechanical Implementation**: `removeDiamond()` called twice +
-`cash += 2`
 
 **Strategic Use**:
 
@@ -222,7 +228,7 @@ Consider these factors when choosing targets:
 
 - Deck status of different elements
 
-# Game Mechanics Integration
+# Special Game Mechanics
 
 ## Meditation System
 
@@ -235,19 +241,31 @@ meditation, which:
 
 - Provides strategic reset opportunity
 
-- Implemented via `game.boardDiamonds.reorder(game.turn)`
+- Essential for long-term resource management
 
 ## Deck Exhaustion Effects
 
 When element decks become empty:
 
-- Deck marked as inactive: `cardsList[pileNumber].active = false`
+- Deck becomes inactive (no more cards can be drawn)
 
-- All remaining resources removed: `removeAllCardElement(pileNumber)`
+- All remaining resources of that element are removed from the board
 
 - Element becomes strategically less valuable
 
 - Affects long-term game balance
+
+## Deer Mode
+
+When the first player reaches the portal:
+
+- **Deer Mode** begins (4 rounds - one turn per player)
+
+- First player gets bonus diamonds for reaching first
+
+- All remaining players must reach portal before Deer Mode ends
+
+- Players who don't reach portal in time are eliminated
 
 # Victory Conditions
 
@@ -263,42 +281,58 @@ the portal first.
 
 ## Transformation
 
-The winner transforms into a Deer God, while survivors become devoted
-monks spreading the philosophy.
+- **Winner**: Transforms into a Deer God
 
-# Technical Implementation
+- **Survivors**: Become devoted monks spreading the philosophy
 
-## Asset Organization
+- **Eliminated**: Become the foundation of the new philosophy
 
-Card images are systematically organized in `assets/img/cards/` using
-the naming convention:
+# Advanced Tips
 
-- `card-{element}-{type}.small.png` (game display)
+## Resource Management
 
-- `card-{element}-{type}.png` (high resolution)
+- Balance immediate gains vs. long-term strategy
 
-Where `{element}` = water, earth, fire, air and `{type}` = stop,
-remove-card, diam, 2-diam.
+- Monitor opponent diamond counts
 
-## Core Implementation Files
+- Use meditation strategically to refresh your area
 
-- `src/card.h` - Card data structures and type definitions
+- Time your portal entry carefully
 
-- `src/cardsdeck.h/.cpp` - Deck management and rendering
+## Card Timing
 
-- `src/cardslist.h/.cpp` - Card distribution and shuffling
+- Save powerful cards for crucial moments
 
-- `src/command.cpp` - Card effect execution logic
+- Watch for opponent weaknesses
 
-- `src/textureholder.cpp` - Asset loading and management
+- Don't waste cards on empty areas
+
+- Consider deck status when planning moves
+
+## Movement Strategy
+
+- Plan your dice rolls and movement paths
+
+- Position for multiple collection opportunities
+
+- Avoid predictable patterns
+
+- Use exact movement for meditation when needed
+
+## Endgame Planning
+
+- Monitor Deer Mode countdown
+
+- Ensure portal access before elimination
+
+- Make final resource grabs before time runs out
+
+- Position for tiebreaker advantages
+
+---
 
 # Conclusion
 
-The Deer Portal card system provides deep strategic gameplay while
-maintaining thematic coherence with the game's spiritual and elemental
-foundations. Mastery of card timing, element targeting, and resource
-management separates novice players from those worthy of transformation
-into Deer Gods.
+Master the balance between resource collection, strategic card play, and perfect timing to transform into a Deer God. The path to enlightenment requires wisdom, strategy, and a touch of luck with the dice.
 
-May your journey through the elements lead to enlightenment and victory
-in the sacred realm of the Almighty Deer.
+May your journey through the elements lead to victory in the sacred realm of the Almighty Deer!
