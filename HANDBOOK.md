@@ -250,10 +250,10 @@ In case of diamond count ties, victory goes to the player who reached the portal
 - Make final resource grabs before time runs out
 - Position for tiebreaker advantages
 
----
-
 ## Conclusion
 
 Master the balance between resource collection, strategic card play, and perfect timing to transform into a Deer God. The path to enlightenment requires wisdom, strategy, and a touch of luck with the dice.
 
 May your journey through the elements lead to victory in the sacred realm of the Almighty Deer!
+
+<!-- Updated: 2024-06-02 - Fixed formatting and removed broken image references -->
