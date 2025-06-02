@@ -36,7 +36,6 @@ SOURCES += src/main.cpp \
     src/credits.cpp
 
 
-
 #LIBS += -lsfml-window  -lsfml-system -lsfml-graphics -lsfml-audio
 DESTDIR = builds/build_release_deerportal_win32
 

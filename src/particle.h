@@ -3,6 +3,7 @@
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -10,6 +11,8 @@
 #include <vector>
 #include <random>
 #include <cmath>
+#include <memory>
+
 class Randomizer {
     public:
 		Randomizer() : device_(), engine_(device_()) {};
@@ -57,7 +60,7 @@ public:
 
     int getNumberOfParticles() { return m_particles.size(); }
     std::string getNumberOfParticlesString();
-    sf::Sprite& getSprite() { return m_sprite; }
+    sf::Sprite& getSprite() { return *m_sprite; }
 
 private:
     sf::Vector2f    m_position; // Particle origin (pixel co-ordinates)
@@ -67,7 +70,7 @@ private:
     sf::Image   m_image;    // See render() and remove()
     sf::Texture m_texture;
     Randomizer  m_randomizer;
-    sf::Sprite  m_sprite;   // Connected to m_image
+    std::unique_ptr<sf::Sprite> m_sprite;   // Connected to m_image
     float       m_particleSpeed;// Pixels per second (at most)
     bool        m_dissolve; // Dissolution enabled?
     unsigned char   m_dissolutionRate;

@@ -1,109 +1,83 @@
-Devcarpet                         {#mainpage}
+Devcarpet
 =========
 presents
 
 Deerportal
 ----------
 
-[![devcarpet](https://devcarpet.net/images/dc_black.png)](https://devcarpet.net)[![Build Status](https://travis-ci.org/deerportal/deerportal.svg?branch=master)](https://travis-ci.org/deerportal/deerportal) [![Build Status](https://semaphoreci.com/api/v1/bluszcz/deerportal/branches/master/badge.svg)](https://semaphoreci.com/bluszcz/deerportal) [![Ebert](https://ebertapp.io/github/deerportal/deerportal.svg)](https://ebertapp.io/github/deerportal/deerportal) 
+Deerportal is an open source (free as speech, free as beer) hybrid game that utilizes board and card game mechanisms. The world of the game is driven by four classical elements along with the Almighty Deer God.
 
-![DeerPortal MultiPlayer Mode](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_771.png/@@images/image.png)
-
-
-Deerportal is a open source (free as a speech, free as a beer) hybrid game which utilize  board and card games mechanisms. World of the game is driven by four classical elemets along with Almighty Deer God.
+**Current Version: 0.9.0 "Welcome Back" (May 2025)**
 
 Homepage: https://devcarpet.net/deerportal/
 
-Collect the diamonds, execute actions on cards and survive the chaos of nature! Compete against 3 other players.
+Collect diamonds, execute actions on cards, and survive the chaos of nature! Compete against 3 other players.
 
 Features
 --------
 
 * 0-4 players mode
-* changing seasons
-* open source (zlib / cc-by 4.0)
+* Changing seasons and dynamic weather
+* Advanced AI opponents with different strategies  
+* Open source (zlib / cc-by 4.0)
+* Modern SFML 3.0 graphics engine
+* Cross-platform support
 
-SFML, Linux, OSX, Windows.
-
-![DeerPortal Game play](https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_772.png/@@images/image.png)
-
+**Platforms**: SFML 3.0, Linux, macOS, Windows.
 
 ## Installation
+
 ### Compilation
 
-#### Raspberry PI
+#### macOS
 
-You need to compile manually SFML from master with following switch:
+```bash
+$ git clone https://github.com/bluszcz/deerportal-2025-Q3.git
+$ cd deerportal-2025-Q3
 
-```
--DSFML_OPENGL_ES=1
-```
+# For a Release build (recommended for performance):
+$ cmake -DCMAKE_BUILD_TYPE=Release .
+# Or, for a Debug build (for development and debugging):
+# $ cmake -DCMAKE_BUILD_TYPE=Debug .
 
-and then you can following Linux instructions below.
+# To always show the FPS counter (e.g., in a Release build for testing):
+# $ cmake -DCMAKE_BUILD_TYPE=Release -DSHOW_FPS_COUNTER=ON .
+# The FPS counter is automatically shown in Debug builds.
 
-#### Linux / OSX
-
-```
-$ git clone https://github.com/deerportal/deerportal.git
-$ cd deerportal
-$ cmake .
 $ make
 $ sudo make install
-$ ./DeerPortal
+$ open DeerPortal.app
+```
+
+#### Requirements
+- **SFML 3.0** (automatically found by CMake if installed via Homebrew)
+- **C++17 compatible compiler** (Clang++ 14+, GCC 9+, MSVC 2019+)
+- **CMake 3.16** or newer
+
+#### Homebrew Installation (macOS)
+```bash
+$ brew install sfml cmake
 ```
 
 ##### Debian 
 
-If you would like to see Deer Portal in Debian repositories, there is an opened bug: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=826612 - please help :)
+If you would like to see Deer Portal in Debian repositories, there is an open bug: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=826612 - please help :)
 
-To make deb package locally:
+To make a deb package locally:
 
 ```
-$ git clone https://github.com/deerportal/deerportal.git
-$ cd deerportal
+$ git clone https://github.com/bluszcz/deerportal-2025-Q3.git
+$ cd deerportal-2025-Q3
 $ fakeroot debian/rules binary
 ```
 
-### Binary download
+## What's New in 0.9.0 "Welcome Back"
 
-
-In our [releases](https://github.com/deerportal/deerportal/releases) section we are providing compiled binaries for Ubuntu (Trusty, Xenial) and Windows.
-
-#### Snap install
-
-```
-sudo snap install deerportal --classic
-```
-
-#### Ubuntu apt repo
-
-
-If you want to have an easy installation via system apt, add one of the folowing (depends on your distro) to your /etc/apt/sources.list, if you have Trusty 14.04
-```
-deb http://deb.devcarpet.net/ubuntu trusty main
-```
-or for Xenial 16.04
-```
-deb http://deb.devcarpet.net/ubuntu xenial main
-```
-
-and later:
-```
-sudo apt-get update
-sudo apt-get install deerportal
-```
-
-#### Development windows builds
-
-* https://devcarpet.net/deerportal/downloads/windows/
-
-### Developer documentation
-
-
-Following doxygen api docs has been created using our Jenkins based Continous Integration:
-
-* https://devcarpet.net/deerportal/downloads/docs/html/
+- **SFML 3.0 Migration**: Complete upgrade to modern SFML 3.0 API
+- **C++17 Support**: Modern C++ features and improved memory management
+- **Enhanced Stability**: Smart pointer implementation for memory safety
+- **Cross-Platform Excellence**: Improved macOS app bundle and Linux package support
+- **Performance Optimizations**: Better resource management and loading
 
 **Developed with [Devcarpet](https://devcarpet.net) platform.**
-
-![SFML GAME](https://bluszcz.net/projects/games/deerportal/sfml-logo-small.png/@@images/image.png)
+**Contact**: Rafal Zawadzki <bluszcz@gmail.com>

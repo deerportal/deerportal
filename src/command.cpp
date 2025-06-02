@@ -134,6 +134,12 @@ void Command::processField(int pos)
         game.sfx.soundMeditation.play();
     }
 
+    // Hide big diamond when player enters center position (like in 0.8.2)
+    if (pos == 136 && game.bigDiamondActive) {
+        game.bigDiamondActive = false;
+        game.players[game.turn].cash += 3;  // Bonus for collecting center diamond
+    }
+
     if (game.boardDiamonds.ifFieldIsEmpty(pos)==false)
     {
         game.sfx.playCollect();

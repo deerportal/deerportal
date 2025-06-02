@@ -1,0 +1,15 @@
+CompileFlags:
+  Add: 
+    - -std=c++17
+    - -I/opt/homebrew/include
+    - -I/opt/homebrew/include/SFML
+  Remove: 
+    - -W*
+
+Diagnostics:
+  Suppress: 
+    - unused-parameter
+    - unused-variable
+  
+Index:
+  Background: Build 

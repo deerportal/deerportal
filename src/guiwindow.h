@@ -1,5 +1,6 @@
 #ifndef GUIWINDOW_H
 #define GUIWINDOW_H
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "hover.h"
 #include "textureholder.h"
@@ -7,7 +8,8 @@
 class GuiWindow: public Hover
 {
 public:
-    explicit GuiWindow(TextureHolder *textures);
+    GuiWindow(sf::Font *gameFont);
+    GuiWindow(TextureHolder *textures);
     GuiWindow();
 //    void setTextureHolder(TextureHolder *textures);
 
@@ -17,13 +19,16 @@ public:
     sf::Font guiElemFont;
     std::string title;
     std::string description;
-    sf::Text guiTitleTxt;
+    std::unique_ptr<sf::Text> guiTitleTxt;
 //    sf::Texture* textureGui;
 
-    sf::Sprite bgdDark;
+    std::unique_ptr<sf::Sprite> bgdDark;
+    sf::Texture textureBgdDark;
+
+    std::unique_ptr<sf::Sprite> spriteClose;
+    sf::Texture textureClose;
 
     void setTitle(const std::string& newTitle);
-    sf::Sprite spriteClose;
 
 private:
 

@@ -1,57 +1,51 @@
 #include "rotateelem.h"
+#include "textureholder.h"
+#include "data.h"      // For ASSETS_PATH
+#include <string>      // For std::string
 
-RotateElem::RotateElem():
+RotateElem::RotateElem(TextureHolder *textures):
     timeCounter(0),
     active(true)
 {
-    if (!textureRotate.loadFromFile(get_full_path(ASSETS_PATH"assets/img/rotate.png")))
+    if (!textureRotate.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "img/rotate.png")))
         std::exit(1);
 
-    spriteRotate.setTexture(textureRotate);
-    spriteRotate.scale(0.7f,0.7f);
-    spriteRotate.setOrigin(32, 32);
-
-
-
+    spriteRotate = std::make_unique<sf::Sprite>(textureRotate);
+    spriteRotate->scale(sf::Vector2f(0.7f, 0.7f));
+    spriteRotate->setOrigin(sf::Vector2f(32.f, 32.f));
 }
 
 void RotateElem::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     states.transform *= getTransform();
-target.draw(spriteRotate, states);
+    if (spriteRotate) target.draw(*spriteRotate, states);
 }
+
 void RotateElem::update(sf::Time deltaTime)
 {
-
     float speed;
-	const float timestep = 1.0f / 60.0f;
+    const float timestep = 1.0f / 60.0f;
     speed = 2.0f;
-	float accumulator = 0;
-	accumulator += deltaTime.asSeconds();
-	spriteRotate.rotate(speed * accumulator / timestep);
+    float accumulator = 0;
+    accumulator += deltaTime.asSeconds();
+    if (spriteRotate) spriteRotate->rotate(sf::degrees(speed * accumulator / timestep));
 
     timeCounter += deltaTime.asSeconds();
 
     if (timeCounter>0.40f)
-        if (timeCounter>0.40f)
     {
         if (active)
         {
             active = false;
-
         } else {
             active = true;
         };
         timeCounter = 0;
     }
-
-
-
 }
 
 void RotateElem::setColor()
 {
-//    spriteRotate.setColor(DP::playersColors[playerNumber]);
-    spriteRotate.setColor(sf::Color::White);
+    if (spriteRotate) spriteRotate->setColor(sf::Color::White);
 }
 
 void RotateElem::reset()

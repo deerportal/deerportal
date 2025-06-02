@@ -25,8 +25,8 @@ public:
     int currentAnimationIndex;
 
 
-    sf::Sprite leftChar;
-    sf::Sprite rightChar;
+    std::unique_ptr<sf::Sprite> leftChar;
+    std::unique_ptr<sf::Sprite> rightChar;
 
     AnimatedSprite animatedSprite;
 

@@ -1,6 +1,7 @@
 #ifndef BOARDDIAMOND_H
 #define BOARDDIAMOND_H
 #include <set>
+#include <memory>
 #include "textureholder.h"
 #include "elem.h"
 #include <SFML/Graphics.hpp>
@@ -26,7 +27,7 @@ public:
      * \brief 0-3 elements area on the board
      */
     int playerNumber;
-    sf::Sprite spriteHolder;
+    std::unique_ptr<sf::Sprite> spriteHolder;
 
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

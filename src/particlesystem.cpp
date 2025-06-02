@@ -1,15 +1,22 @@
 #include "particle.h"
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Time.hpp>
 #include <sstream>
+#include <iostream>
 
-ParticleSystem::ParticleSystem( int width, int height )
+ParticleSystem::ParticleSystem( int width, int height ) :
+    m_transparent( sf::Color::Transparent )
 {
-    m_transparent = sf::Color( 0, 0, 0, 0 );
-    m_image.create( width, height, m_transparent );
-    m_texture.loadFromImage(m_image);
-    m_sprite = sf::Sprite(m_texture);
+    m_image.resize( sf::Vector2u(static_cast<unsigned int>(width), static_cast<unsigned int>(height)), m_transparent );
+    if (!m_texture.loadFromImage(m_image))
+    {
+        std::cerr << "ParticleSystem: Failed to load texture from image in constructor!" << std::endl;
+        // Potentially throw an exception or set an error state
+    }
+    m_sprite = std::make_unique<sf::Sprite>(m_texture);
     m_position.x    = 0.5f * width;
     m_position.y    = 0.5f * height;
-    m_particleSpeed = 20.0f;
+    m_particleSpeed = 100.0f;
     m_dissolve  = false;
     m_dissolutionRate = 4;
     m_shape     = DP::CIRCLE;
@@ -18,76 +25,58 @@ ParticleSystem::ParticleSystem( int width, int height )
 ParticleSystem::~ParticleSystem()
 {
     for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
-        for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
-    {
         delete *it;
-    }
+
+    m_particles.clear();
 }
 
 void ParticleSystem::fuel( int particles )
 {
-    double angle;
-
-    for( int i = 0; i < particles; i++ )
+    for( int i = 0; i < particles; ++i )
     {
-        Particle* particle;
-        particle = new Particle();
-        particle->pos.x = m_position.x;
-        particle->pos.y = m_position.y;
-		double cosangle;
-		double sinangle;
-        switch( m_shape )
-        {
-        case DP::CIRCLE:
-            angle = m_randomizer.rnd(0.0, 6.2832);
-			cosangle = fabs(cos(angle));
-			sinangle = fabs(sin(angle));
-			particle->vel.x = m_randomizer.rnd(0.0, cosangle);
-			// particle->vel.x = m_randomizer.rnd(0.0, 1.0);
-            particle->vel.y = m_randomizer.rnd(0.0, sinangle);
-            break;
-        case DP::SQUARE:
-            particle->vel.x = m_randomizer.rnd(-1.0f, 1.0f);
-            particle->vel.y = m_randomizer.rnd(-1.0f, 1.0f);
-            break;
-        default:
-            particle->vel.x = 0.5f; // Easily detected
-            particle->vel.y = 0.5f; // Easily detected
-        }
+        Particle *p = new Particle;
+        p->pos.x = m_randomizer.rnd( 0.0f, static_cast<float>(m_image.getSize().x -1) );
+        p->pos.y = m_randomizer.rnd( 0.0f, static_cast<float>(m_image.getSize().y -1) );
+        p->vel.x = m_randomizer.rnd( -m_particleSpeed, m_particleSpeed );
+        p->vel.y = m_randomizer.rnd( -m_particleSpeed, m_particleSpeed );
+        p->color = sf::Color( m_randomizer.rnd(0,255), m_randomizer.rnd(0,255), m_randomizer.rnd(0,255), 255 );
 
-        if( particle->vel.x == 0.0f && particle->vel.y == 0.0f )
-        {
-            delete particle;
-            continue;
-        }
-        particle->color.r = m_randomizer.rnd(0, 255);
-        particle->color.g = m_randomizer.rnd(0, 255);
-        particle->color.b = m_randomizer.rnd(0, 255);
-        particle->color.a = 255;
-        m_particles.push_back( particle );
+        m_particles.push_back(p);
     }
 }
 
 void ParticleSystem::update()
 {
-    float time = m_clock.restart().asSeconds();
+    sf::Time elapsed = m_clock.restart();
+    float time = elapsed.asSeconds();
 
-    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
+    for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); )
     {
-        (*it)->vel.x += m_gravity.x * time;
-        (*it)->vel.y += m_gravity.y * time;
+        Particle *p = *it;
 
-        (*it)->pos.x += (*it)->vel.x * time * m_particleSpeed;
-        (*it)->pos.y += (*it)->vel.y * time * m_particleSpeed;
+        p->vel.x += m_gravity.x * time;
+        p->vel.y += m_gravity.y * time;
 
-        if( m_dissolve ) (*it)->color.a -= m_dissolutionRate;
+        p->pos.x += p->vel.x * time;
+        p->pos.y += p->vel.y * time;
 
-        if( (*it)->pos.x > m_image.getSize().x || (*it)->pos.x < 0 || (*it)->pos.y > m_image.getSize().y || (*it)->pos.y < 0 || (*it)->color.a < 10 )
+        if( m_dissolve && p->color.a > m_dissolutionRate )
+            p->color.a -= m_dissolutionRate;
+        else if( m_dissolve && p->color.a <= m_dissolutionRate )
+            p->color.a = 0;
+
+        unsigned int imgWidth = m_image.getSize().x;
+        unsigned int imgHeight = m_image.getSize().y;
+
+        if( p->color.a == 0 ||
+            p->pos.x >= static_cast<float>(imgWidth) || p->pos.x < 0 ||
+            p->pos.y >= static_cast<float>(imgHeight) || p->pos.y < 0 )
         {
-            delete (*it);
-            it = m_particles.erase( it );
-            if( it == m_particles.end() ) return;
+            delete p;
+            it = m_particles.erase(it);
         }
+        else
+            ++it;
     }
 }
 
@@ -95,7 +84,13 @@ void ParticleSystem::render()
 {
     for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
     {
-        m_image.setPixel( (int)(*it)->pos.x, (int)(*it)->pos.y, (*it)->color );
+        Particle* p = *it;
+        sf::Vector2u coords(static_cast<unsigned int>(p->pos.x),
+                              static_cast<unsigned int>(p->pos.y));
+        if (coords.x < m_image.getSize().x && coords.y < m_image.getSize().y)
+        {
+            m_image.setPixel( coords, p->color );
+        }
     }
     m_texture.update(m_image);
 }
@@ -104,7 +99,13 @@ void ParticleSystem::remove()
 {
     for( ParticleIterator it = m_particles.begin(); it != m_particles.end(); ++it )
     {
-        m_image.setPixel( (int)(*it)->pos.x, (int)(*it)->pos.y, m_transparent );
+        Particle* p = *it;
+        sf::Vector2u coords(static_cast<unsigned int>(p->pos.x),
+                              static_cast<unsigned int>(p->pos.y));
+        if (coords.x < m_image.getSize().x && coords.y < m_image.getSize().y)
+        {
+            m_image.setPixel( coords, m_transparent );
+        }
     }
 }
 

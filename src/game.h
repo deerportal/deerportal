@@ -32,22 +32,39 @@
 //class Command;
 #include "banner.h"
 #include "credits.h"
+
 namespace DP {
 
 extern int initScreenX;
 extern int initScreenY;
+
+// Forward declarations for modules
+class GameAssets;
+class GameInput;
+class GameRenderer;
+class GameCore;
 
 /*!
  * \brief Game is a main class of the Deer Portal - contains most logic but also rendering.
  */
 class Game
 {
+    // Friend classes for module access
+    friend class GameAssets;
+    friend class GameInput; 
+    friend class GameRenderer;
+    friend class GameCore;
+
 public:
     sf::Vector2i screenSize;
     sf::View viewFull;
     sf::View viewGui;
     sf::View viewTiles;
     void setTxtEndGameAmount();
+
+    // Game state variables used by modules
+    int currentSeason;
+    int month;
 
 private:
     Selector selector;
@@ -64,7 +81,7 @@ public:
     BoardDiamondSeq boardDiamonds;
     sf::RenderWindow window;
     sf::RenderTexture renderTexture;
-    sf::Sprite renderSprite;
+    std::unique_ptr<sf::Sprite> renderSprite;
     Player players[4];
     SoundFX sfx;
     int turn;
@@ -79,9 +96,10 @@ private:
     float runningCounter;
     float oscilator;
     bool oscilatorInc;
-    sf::Sprite playersSprites[4]  ;
+    std::array<std::unique_ptr<sf::Sprite>, 4> playersSprites;
     int playersSpritesCords[4][2];
 
+    // Game state enum moved to public for module access
     enum states {
         state_init,
         state_menu,
@@ -89,7 +107,6 @@ private:
         state_lets_begin,
         state_roll_dice,
         state_game,
-
         state_gui_elem,
         state_select_building,
         state_gui_end_round,
@@ -98,20 +115,20 @@ private:
     };
     states currentState;
 
-    sf::Sprite spriteDeerGod;
-    sf::Sprite spriteBackgroundDark;
-    sf::Sprite spriteLestBegin;
+    std::unique_ptr<sf::Sprite> spriteDeerGod;
+    std::unique_ptr<sf::Sprite> spriteBackgroundDark;
+    std::unique_ptr<sf::Sprite> spriteLestBegin;
     sf::Texture textureBackgroundArt;
-    sf::Sprite spriteBackgroundArt;
+    std::unique_ptr<sf::Sprite> spriteBackgroundArt;
     sf::Texture textureTiles;
     sf::Texture textureFaces;
     sf::Font gameFont;
     sf::Font menuFont;
-    sf::Text menuTxt;
-    sf::Text endGameTxt;
-    sf::Text endGameTxtAmount[4];
-    sf::Text paganHolidayTxt;
-    sf::Text gameVersion;
+    std::unique_ptr<sf::Text> menuTxt;
+    std::unique_ptr<sf::Text> endGameTxt;
+    std::array<std::unique_ptr<sf::Text>, 4> endGameTxtAmount;
+    std::unique_ptr<sf::Text> paganHolidayTxt;
+    std::unique_ptr<sf::Text> gameVersion;
     sf::Shader shaderBlur;
     sf::Shader shaderPixel;
     sf::Shader shaderDark;
@@ -134,8 +151,8 @@ private:
     void nextRound();
 
 
-    sf::Sprite menuBackground;
-    sf::Sprite seasons[4];
+    std::unique_ptr<sf::Sprite> menuBackground;
+    std::array<std::unique_ptr<sf::Sprite>, 4> seasons;
 
     sf::Music musicGame;
     sf::Music musicMenu;
@@ -160,7 +177,6 @@ private:
     bool showPlayerBoardElems;
 
     void drawBaseGame();
-    int month;
 
     Animation walkingAnimationDown;
     Animation walkingAnimationUp;
@@ -182,19 +198,22 @@ private:
 
     float downTimeCounter;
     Command commandManager;
-    sf::Text textLoading;
-    sf::Text textFPS;
+    std::unique_ptr<sf::Text> textLoading;
+    
+    // NEW 0.8.2 FEATURES
+    std::unique_ptr<sf::Text> textFPS;  // FPS display text
+    float fpsDisplayUpdateTimer;        // Timer for FPS display updates
 
 public:
     CardsDeck cardsDeck;
     void startDeerMode();
 
-    sf::Text txtWinner;
+    std::unique_ptr<sf::Text> txtWinner;
 
-    sf::Text txtSurvivorsLabel;
-    sf::Text txtLoosersLabel;
-    std::vector<sf::Text> txtSurvivors;
-    std::vector<sf::Text> txtLoosers;
+    std::unique_ptr<sf::Text> txtSurvivorsLabel;
+    std::unique_ptr<sf::Text> txtLoosersLabel;
+    std::vector<std::unique_ptr<sf::Text>> txtSurvivors;
+    std::vector<std::unique_ptr<sf::Text>> txtLoosers;
 
 
     void throwDiceMove();
@@ -203,7 +222,7 @@ public:
     float cpuTimeThinking;
     Banner banner;
 
-    sf::Sprite spriteBigDiamond;
+    std::unique_ptr<sf::Sprite> spriteBigDiamond;
     bool bigDiamondActive;
 
     int mostDiamonds() const;
@@ -219,6 +238,16 @@ private:
 
 public:
     bool testMode;
+
+    // Module instances
+    std::unique_ptr<GameAssets> assets;
+    std::unique_ptr<GameInput> input;
+    std::unique_ptr<GameRenderer> renderer;
+    std::unique_ptr<GameCore> core;
+
+    // Performance optimization methods
+    void updateGameplayElements(sf::Time frameTime);
+    void updateMinimalElements(sf::Time frameTime);
 };
 }
 #endif // GAME_H

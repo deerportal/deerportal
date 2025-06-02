@@ -4,16 +4,18 @@
 #include "data.h"
 #include "filetools.h"
 
+class TextureHolder; // Forward declaration
+
 class RotateElem : public sf::Drawable, public sf::Transformable
 {
 public:
-    RotateElem();
+    RotateElem(TextureHolder *textures);
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void update(sf::Time deltaTime);
 
     sf::Texture textureRotate;
-    sf::Sprite spriteRotate;
+    std::unique_ptr<sf::Sprite> spriteRotate;
     void setColor();
 
     float timeCounter;

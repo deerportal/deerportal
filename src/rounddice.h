@@ -19,11 +19,16 @@ public:
     int diceResultSix;
     int throwDiceSix();
     sf::Texture textureDice;
-    sf::Sprite spriteDice;
+    std::unique_ptr<sf::Sprite> spriteDice;
     void setDiceTexture();
     void setDiceTexture(int diceResult);
 
     void setColor(int playerNumber);
+
+    RoundDice();
+    void setTextures(TextureHolder *textures);
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void setFaces(int number);
 
 private:
     int throwDice();

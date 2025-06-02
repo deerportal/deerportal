@@ -1,42 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>net.devcarpet.deerportal.desktop</id>
-  <metadata_license>CC-BY-SA-3.0 </metadata_license>
-  <project_license>Zlib</project_license>
-  <name>Deer Portal</name>
-  <summary>A hybrid game which utilize board and card games mechanisms </summary>
-
-  <description>
-    <p>
-      A multiplayer (0-4) full of the diamonds board game driven by a Deer god and classical elements.
-    </p>
-  </description>
-
-<!-- Does not work with Ubuntu 16.04 -->
-<!-- <launchable type="desktop-id">net.devcarpet.deerportal.desktop</launchable> -->
-
-
-  <screenshots>
-    <screenshot type="default">
-      <caption>Game start and gameplay</caption>
-      <image>https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_771.png/@@images/image.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_772.png/@@images/image.png</image>
-    </screenshot>
-  </screenshots>
-
-  <url type="homepage">https://devcarpet.net/deerportal/</url>
-
-  <provides>
-    <binary>deerportal</binary>
-  </provides>
-
-  <releases>
-    <release version="0.8.1" date="2013-04-12">
-      <description>
-        <p>Introduces AppImage metainfo file.</p>
-      </description>
-    </release>
-  </releases>
-</component>
+​  <id>net.devcarpet.deerportal</id>
+​  <metadata_license>CC-BY-SA-3.0 </metadata_license>
+​  <project_license>Zlib</project_license>
+​  <name>Deer Portal</name>
+​  <summary>A hybrid game which utilize board and card games mechanisms </summary>
+​
+​  <description>
+​    <p>
+​      A multiplayer (0-4) full of the diamonds board game driven by a Deer god and classical elements.
+​    </p>
+​  </description>
+​
+​  <launchable type="desktop-id">net.devcarpet.deerportal.desktop</launchable>
+​
+​  <screenshots>
+​    <screenshot type="default">
+​      <caption>Game start and gameplay</caption>
+​      <image>https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_771.png/@@images/image.png</image>
+​    </screenshot>
+​    <screenshot>
+​      <image>https://bluszcz.net/projects/games/deerportal/deerportal-game-about-how-human-can-be-upgraded-to-the-deer_772.png/@@images/image.png</image>
+​    </screenshot>
+​  </screenshots>
+​
+​  <url type="homepage">https://devcarpet.net/deerportal/</url>
+<!-- ​  <project_group>GNOME</project_group> -->
+​
+​  <provides>
+​    <binary>deerportal</binary>
+​  </provides>
+​
+​  <releases>
+​    <release version="0.9.0" date="2025-05-31">
+​      <description>
+​        <p>Welcome Back - Major SFML 3.0 migration release with enhanced performance and modern C++ implementation.</p>
+​      </description>
+​    </release>
+​    <release version="0.8.2" date="2025-01-31">
+​      <description>
+​        <p>FPS display feature, window icon support, and performance optimizations.</p>
+​      </description>
+​    </release>
+​    <release version="0.8.1" date="2024-12-01">
+​      <description>
+​        <p>SFML 3.0 migration groundwork and code modernization.</p>
+​      </description>
+​    </release>
+​  </releases>
+​</component>
