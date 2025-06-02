@@ -119,6 +119,14 @@ interactions between players.
 **Visual Design**: Each element's stop card features a distinctive
 yellow prohibition symbol overlaid on the element's thematic background.
 
+<div align="center">
+
+| Water Stop | Earth Stop | Fire Stop | Air Stop |
+|:----------:|:----------:|:---------:|:--------:|
+| ![Water Stop](assets/img/cards/card-water-stop.small.png) | ![Earth Stop](assets/img/cards/card-earth-stop.small.png) | ![Fire Stop](assets/img/cards/card-fire-stop.small.png) | ![Air Stop](assets/img/cards/card-air-stop.small.png) |
+
+</div>
+
 ## Remove Cards
 
 **Primary Effect**: Eliminate a random diamond or card from target
@@ -136,6 +144,14 @@ element area
 
 **Visual Design**: Features a crossed-out diamond symbol on each
 element's themed background, representing resource elimination.
+
+<div align="center">
+
+| Water Remove | Earth Remove | Fire Remove | Air Remove |
+|:------------:|:------------:|:-----------:|:----------:|
+| ![Water Remove](assets/img/cards/card-water-remove-card.small.png) | ![Earth Remove](assets/img/cards/card-earth-remove-card.small.png) | ![Fire Remove](assets/img/cards/card-fire-remove-card.small.png) | ![Air Remove](assets/img/cards/card-air-remove-card.small.png) |
+
+</div>
 
 ## Diamond Cards
 
@@ -155,6 +171,14 @@ current player
 **Visual Design**: Displays a single, prominently featured diamond on
 each element's background.
 
+<div align="center">
+
+| Water Diamond | Earth Diamond | Fire Diamond | Air Diamond |
+|:-------------:|:-------------:|:------------:|:-----------:|
+| ![Water Diamond](assets/img/cards/card-water-diam.small.png) | ![Earth Diamond](assets/img/cards/card-earth-diam.small.png) | ![Fire Diamond](assets/img/cards/card-fire-diam.small.png) | ![Air Diamond](assets/img/cards/card-air-diam.small.png) |
+
+</div>
+
 ## Diamond x2 Cards
 
 **Primary Effect**: Steal two diamonds from target area + award 2 cash
@@ -172,6 +196,14 @@ to current player
 
 **Visual Design**: Features two diamonds prominently displayed, often
 with enhanced visual effects representing their increased value.
+
+<div align="center">
+
+| Water Diamond x2 | Earth Diamond x2 | Fire Diamond x2 | Air Diamond x2 |
+|:----------------:|:----------------:|:---------------:|:--------------:|
+| ![Water Diamond x2](assets/img/cards/card-water-2-diam.small.png) | ![Earth Diamond x2](assets/img/cards/card-earth-2-diam.small.png) | ![Fire Diamond x2](assets/img/cards/card-fire-2-diam.small.png) | ![Air Diamond x2](assets/img/cards/card-air-2-diam.small.png) |
+
+</div>
 
 # Element-Specific Visual Themes
 
