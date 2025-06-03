@@ -9,7 +9,7 @@ class Elem: public sf::Drawable, public sf::Transformable
 public:
     Elem();
     void setBoardPosition(int boardPosition);
-    int getBoardPosition();
+    int getBoardPosition() const;
     int boardPosition;
 };
 

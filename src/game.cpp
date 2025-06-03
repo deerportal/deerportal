@@ -1162,8 +1162,9 @@ void Game::render(float deltaTime)
         renderTexture.setView(viewFull);
         renderTexture.draw(groupHud);
         renderTexture.setView(viewTiles);
-        drawCharacters();
+        // FIXED: Draw diamonds first, then characters on top
         renderTexture.draw(boardDiamonds);
+        drawCharacters();
         renderTexture.draw(bubble);
         renderTexture.setView(viewFull);
         drawPlayersGui();
@@ -1210,8 +1211,9 @@ void Game::render(float deltaTime)
         renderTexture.draw(*spriteBackgroundDark, &shaderBlur);
         renderTexture.setView(viewTiles);
         drawBaseGame();
-        drawCharacters();
+        // FIXED: Draw diamonds first, then characters on top
         renderTexture.draw(boardDiamonds, &shaderBlur);
+        drawCharacters();
         renderTexture.setView(viewFull);
         drawPlayersGui();
         renderTexture.draw(*spriteLestBegin,&shaderBlur);
