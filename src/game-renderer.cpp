@@ -119,8 +119,8 @@ void GameRenderer::renderStateGame()
     game->renderTexture.draw(game->groupHud);
     
     game->renderTexture.setView(game->viewTiles);
-    drawCharacters();
     game->renderTexture.draw(game->boardDiamonds);
+    drawCharacters();
     game->renderTexture.draw(game->bubble);
     
     game->renderTexture.setView(game->viewFull);
@@ -171,8 +171,8 @@ void GameRenderer::renderStateLetsBegin()
     
     game->renderTexture.setView(game->viewTiles);
     drawBaseGame();
-    drawCharacters();
     game->renderTexture.draw(game->boardDiamonds, &game->shaderBlur);
+    drawCharacters();
     
     game->renderTexture.setView(game->viewFull);
     drawPlayersGui();

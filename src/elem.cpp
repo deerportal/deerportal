@@ -9,7 +9,7 @@ Elem::Elem()
  * \brief Character::getBoardPosition
  * \return
  */
-int Elem::getBoardPosition()
+int Elem::getBoardPosition() const
 {
     sf::Vector2f currentPos(getPosition());
     sf::Vector2i currentCords(DP::getCords(currentPos));

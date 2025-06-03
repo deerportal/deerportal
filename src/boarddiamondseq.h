@@ -20,6 +20,9 @@
  *
  * Together it would give 32 + 24 = 56 diamonds cards/diamonds together,
  * 15 per area.
+ *
+ * PERFORMANCE OPTIMIZATION (Issue #68):
+ * Now uses VertexArray for efficient batched rendering instead of 112 individual draw calls.
  */
 
 class BoardDiamondSeq : public sf::Drawable, public sf::Transformable
@@ -42,6 +45,15 @@ public:
     int getNumberForField(int pos);
 
     void reorder(int element);
+
+private:
+    // PERFORMANCE OPTIMIZATION: VertexArray for batched rendering (Issue #68)
+    mutable sf::VertexArray m_vertices;
+    mutable bool m_needsUpdate;
+    
+    // Helper methods for VertexArray optimization
+    void updateVertexArray() const;
+    void updateSingleDiamond(int index) const;
 };
 
 #endif // BOARDDIAMONDSEQ_H
