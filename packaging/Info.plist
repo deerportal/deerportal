@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>DeerPortal</string>
+    <key>CFBundleIdentifier</key>
+    <string>org.deerportal.DeerPortal</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>DeerPortal</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@DEERPORTAL_VERSION@</string>
+    <key>CFBundleVersion</key>
+    <string>@DEERPORTAL_VERSION@</string>
+    <key>CFBundleDisplayName</key>
+    <string>DeerPortal</string>
+    <key>CFBundleGetInfoString</key>
+    <string>DeerPortal @DEERPORTAL_VERSION@, Game About How Human Can Be Upgraded to the Deer</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2024 DeerPortal Team. All rights reserved.</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.15</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.games</string>
+</dict>
+</plist> 

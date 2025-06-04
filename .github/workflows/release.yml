@@ -1,0 +1,280 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v0.9.0, v1.0.0, etc.
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      version:
+        description: 'Version to build (e.g., 0.9.0)'
+        required: true
+        default: '0.9.0'
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  # macOS Build with DMG creation
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get version from tag or input
+      id: get_version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Building version: ${VERSION}"
+
+    - name: Update version.txt
+      run: |
+        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        cat version.txt
+
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install cmake
+
+    - name: Install SFML 3.0
+      run: |
+        # Build SFML 3.0 from source for macOS
+        git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+          -DSFML_BUILD_EXAMPLES=OFF \
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_INSTALL_PREFIX=/usr/local
+        cmake --build build -j$(sysctl -n hw.ncpu) --config Release
+        sudo cmake --install build
+        cd ..
+        rm -rf sfml-source
+
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+          -DSFML_STATIC_LIBRARIES=ON
+
+    - name: Build
+      run: |
+        cmake --build build --config ${{ env.BUILD_TYPE }} -j$(sysctl -n hw.ncpu)
+
+    - name: Create DMG package
+      run: |
+        cd build
+        cpack -G DragNDrop
+
+    - name: Upload DMG artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: DeerPortal-${{ steps.get_version.outputs.VERSION }}-macOS-dmg
+        path: build/DeerPortal-*-macOS.dmg
+        retention-days: 30
+
+    - name: Upload to Release
+      if: github.event_name == 'push'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/DeerPortal-*-macOS.dmg
+        tag_name: ${{ github.ref }}
+        name: DeerPortal v${{ steps.get_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+        body: |
+          ## DeerPortal v${{ steps.get_version.outputs.VERSION }}
+          
+          ### macOS Installation
+          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-macOS.dmg`
+          2. Open the DMG file
+          3. Drag DeerPortal.app to Applications folder
+          4. Launch from Applications
+          
+          ### System Requirements
+          - macOS 10.15 (Catalina) or later
+          - 4GB RAM recommended
+          - Graphics card with OpenGL 3.3 support
+          
+          ### Controls
+          - Mouse: Navigate menus and select moves
+          - Escape: Exit game
+          - Space: Various game actions
+          
+          Enjoy your journey to becoming a deer! 🦌
+
+  # Windows Build
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get version from tag or input
+      id: get_version
+      shell: bash
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Building version: ${VERSION}"
+
+    - name: Update version.txt
+      shell: bash
+      run: |
+        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        cat version.txt
+
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Install SFML 3.0
+      shell: bash
+      run: |
+        # Download and build SFML 3.0 for Windows
+        git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DSFML_BUILD_EXAMPLES=OFF \
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_INSTALL_PREFIX="C:/SFML"
+        cmake --build build --config Release
+        cmake --install build
+        cd ..
+        rm -rf sfml-source
+
+    - name: Configure CMake
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_PREFIX_PATH="C:/SFML"
+
+    - name: Build
+      run: |
+        cmake --build build --config ${{ env.BUILD_TYPE }}
+
+    - name: Create Windows package
+      run: |
+        cd build
+        cpack -G NSIS
+
+    - name: Upload Windows artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: DeerPortal-${{ steps.get_version.outputs.VERSION }}-Windows-installer
+        path: build/DeerPortal-*-Windows.exe
+        retention-days: 30
+
+    - name: Upload to Release
+      if: github.event_name == 'push'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/DeerPortal-*-Windows.exe
+        tag_name: ${{ github.ref }}
+
+  # Linux Build
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get version from tag or input
+      id: get_version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Building version: ${VERSION}"
+
+    - name: Update version.txt
+      run: |
+        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        cat version.txt
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          build-essential \
+          cmake \
+          git \
+          libfreetype6-dev \
+          libopenal-dev \
+          libvorbis-dev \
+          libflac-dev \
+          libudev-dev \
+          libgl1-mesa-dev \
+          libxrandr-dev \
+          libxcursor-dev \
+          libxi-dev \
+          libx11-dev \
+          pkg-config
+
+    - name: Install SFML 3.0
+      run: |
+        git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DSFML_BUILD_EXAMPLES=OFF \
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_INSTALL_PREFIX=/usr/local
+        cmake --build build -j$(nproc) --config Release
+        sudo cmake --install build
+        cd ..
+        rm -rf sfml-source
+
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DSFML_STATIC_LIBRARIES=ON
+
+    - name: Build
+      run: |
+        cmake --build build --config ${{ env.BUILD_TYPE }} -j$(nproc)
+
+    - name: Create Linux packages
+      run: |
+        cd build
+        cpack -G TGZ
+        cpack -G DEB
+
+    - name: Upload Linux artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux-packages
+        path: |
+          build/DeerPortal-*-Linux.tar.gz
+          build/DeerPortal-*-Linux.deb
+        retention-days: 30
+
+    - name: Upload to Release
+      if: github.event_name == 'push'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          build/DeerPortal-*-Linux.tar.gz
+          build/DeerPortal-*-Linux.deb
+        tag_name: ${{ github.ref }} 
