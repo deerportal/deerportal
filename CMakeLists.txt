@@ -211,8 +211,73 @@ ENDIF()
 
 # CPack packaging
 include(InstallRequiredSystemLibraries)
-# set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
+
+# Basic package information
+set(CPACK_PACKAGE_NAME "DeerPortal")
+set(CPACK_PACKAGE_VENDOR "DeerPortal Team")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Game About How Human Can Be Upgraded to the Deer")
+set(CPACK_PACKAGE_DESCRIPTION "DeerPortal - An immersive game experience where players embark on a journey of transformation, exploring what it means to upgrade from human to deer.")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/deerportal/deerportal")
+set(CPACK_PACKAGE_CONTACT "https://github.com/deerportal/deerportal")
+
+# Version information from version.txt
 set(CPACK_PACKAGE_VERSION_MAJOR "${DEERPORTAL_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${DEERPORTAL_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${DEERPORTAL_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION "${DEERPORTAL_VERSION}")
+
+# Platform-specific packaging
+if(APPLE)
+    # macOS DMG configuration
+    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_DMG_VOLUME_NAME "DeerPortal")
+    set(CPACK_DMG_FORMAT "UDBZ")  # Compressed format for smaller file size
+    set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${CMAKE_SOURCE_DIR}/packaging/dmg_setup.scpt")
+    
+    # DMG appearance
+    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/packaging/dmg_background.png")
+    
+    # App bundle configuration
+    set(CPACK_BUNDLE_NAME "DeerPortal")
+    set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/packaging/DeerPortal.icns")
+    set(CPACK_BUNDLE_PLIST "${CMAKE_SOURCE_DIR}/packaging/Info.plist")
+    
+    # File name format: DeerPortal-0.9.0-macOS.dmg
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-macOS")
+    
+elseif(WIN32)
+    # Windows installer configuration
+    set(CPACK_GENERATOR "NSIS")
+    set(CPACK_NSIS_DISPLAY_NAME "DeerPortal")
+    set(CPACK_NSIS_PACKAGE_NAME "DeerPortal")
+    set(CPACK_NSIS_CONTACT "https://github.com/deerportal/deerportal")
+    set(CPACK_NSIS_URL_INFO_ABOUT "https://github.com/deerportal/deerportal")
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Windows")
+    
+else()
+    # Linux packaging
+    set(CPACK_GENERATOR "TGZ;DEB")
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "DeerPortal Team")
+    set(CPACK_DEBIAN_PACKAGE_SECTION "games")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 3.0)")
+    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Linux")
+endif()
+
+# Source package configuration
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
+set(CPACK_SOURCE_IGNORE_FILES
+    "/build/"
+    "/\\.git/"
+    "/\\.github/"
+    "/\\.data/"
+    "\\.gitignore"
+    "\\.DS_Store"
+    "/ai-docs/"
+    ".*\\.dmg$"
+    ".*\\.exe$"
+    ".*\\.deb$"
+    ".*\\.tar\\.gz$"
+)
+
 include(CPack)
