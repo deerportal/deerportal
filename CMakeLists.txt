@@ -114,6 +114,8 @@ file(GLOB OTHER_SOURCES
     src/command.h
     src/banner.cpp
     src/banner.h
+    src/cardnotification.cpp
+    src/cardnotification.h
     src/credits.cpp
     src/credits.h
     # Missing files that were causing linking errors

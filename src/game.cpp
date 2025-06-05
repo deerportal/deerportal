@@ -340,6 +340,11 @@ void Game::endGame()
 }
 
 void Game::throwDiceMove() {
+    // Dismiss any active card notification when dice is thrown
+    if (cardNotification.isActive()) {
+        cardNotification.dismiss();
+    }
+    
     // Throw a dice action
     diceResultPlayer = roundDice.throwDiceSix();
     players[turn].characters[0].diceResult=diceResultPlayer;
@@ -519,6 +524,7 @@ Game::Game(bool newTestMode):
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
     banner(&gameFont),
+    cardNotification(&gameFont),
     bigDiamondActive(false),
     credits(&gameFont),
     sfxClick(sfxClickBuffer),
@@ -767,6 +773,11 @@ void Game::updateGameplayElements(sf::Time frameTime) {
         banner.update(frameTime);
     }
     
+    // Card notification updates
+    if (cardNotification.isActive()) {
+        cardNotification.update(frameTime);
+    }
+    
     cpuTimeThinking -= frameTime.asSeconds();
 
     // Big diamond oscillation only when active and visible
@@ -894,6 +905,11 @@ void Game::updateMinimalElements(sf::Time frameTime) {
     // Only essential updates for transition states
     if (banner.active) {
         banner.update(frameTime);
+    }
+    
+    // Card notification updates
+    if (cardNotification.isActive()) {
+        cardNotification.update(frameTime);
     }
     
     if (currentState == state_lets_begin) {
@@ -1251,6 +1267,10 @@ void Game::render(float deltaTime)
     }
     if (banner.active)
         renderTexture.draw(banner);
+
+    // Draw card notification overlay
+    if (cardNotification.isActive())
+        renderTexture.draw(cardNotification);
 
     renderTexture.setView(viewFull); // Ensure GUI view for correct positioning
 
