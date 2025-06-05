@@ -18,6 +18,8 @@ public:
     ~IntroShader();
 
     bool initialize(sf::Vector2u screenSize);
+    bool initialize(sf::Vector2u screenSize, const sf::Texture* backgroundTexture);
+    void setIntroTexture(const sf::Texture* introTexture);
     void update(float deltaTime);
     void render(sf::RenderWindow& window);
     

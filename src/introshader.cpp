@@ -15,78 +15,153 @@ IntroShader::~IntroShader()
 
 bool IntroShader::initialize(sf::Vector2u screenSize)
 {
+    return initialize(screenSize, nullptr);
+}
+
+bool IntroShader::initialize(sf::Vector2u screenSize, const sf::Texture* backgroundTexture)
+{
     this->screenSize = screenSize;
     
-    // Try GLSL version 120 first (OpenGL 2.1)
-    const std::string fragmentShader120 = R"(
+    // New grid-based reveal shader that unveils the intro screen rectangle by rectangle
+    const std::string fragmentShaderGrid = R"(
 #version 120
 
-// Shader based on "Creation" by Danilo Guanabara (ShaderToy: XsXXDn)
-// Credits to 'Danilo Guanabara'
-// Original: https://www.shadertoy.com/view/XsXXDn
+// Grid-based reveal shader for DeerPortal intro
+// Unveils the intro screen through random rectangular reveals
 
 uniform float iTime;
 uniform vec2 iResolution;
+uniform sampler2D introTexture;
+uniform bool useIntroTexture;
+
+// Grid configuration
+const float GRID_COLS = 95.0;  // Much denser grid for tiny rectangles (1/10 size)
+const float GRID_ROWS = 63.0;  // Much denser grid for tiny rectangles (1/10 size)
+const float FRAMES_PER_RECT = 5.0;
+const float START_OFFSET = 0.5;  // Even faster offset for the huge number of rectangles
+
+// Simple pseudo-random function for deterministic randomness
+float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+float getGridAnimationTime(vec2 gridPos) {
+    // Calculate when this grid cell should start animating
+    // Use random order instead of sequential
+    float cellIndex = gridPos.y * GRID_COLS + gridPos.x;
+    float totalCells = GRID_COLS * GRID_ROWS;
+    
+    // Create random order by using grid position as seed
+    float randomOrder = random(gridPos) * totalCells;
+    
+    // Stagger start times based on random order
+    float startTime = randomOrder * (START_OFFSET / 60.0);  // Convert frames to seconds (assuming 60fps)
+    
+    // Calculate animation progress for this cell (0.0 to 1.0)
+    float animTime = iTime - startTime;
+    float progress = clamp(animTime / (FRAMES_PER_RECT / 60.0), 0.0, 1.0);
+    
+    return progress;
+}
+
+vec3 getRevealColor(vec2 uv, float progress) {
+    if (!useIntroTexture) {
+        // Fallback: simple color transition
+        vec3 deerportalColor = vec3(0.4, 0.3, 0.2);  // Earthy brown
+        return mix(vec3(0.0), deerportalColor, progress);
+    }
+    
+    // Calculate zoom effect: start at 4x zoom, scale down to 1x as progress goes from 0 to 1
+    float zoomFactor = mix(4.0, 1.0, progress);
+    
+    // Calculate the center point of the current grid cell
+    vec2 gridPos = floor(uv * vec2(GRID_COLS, GRID_ROWS));
+    vec2 cellCenter = (gridPos + 0.5) / vec2(GRID_COLS, GRID_ROWS);
+    
+    // Apply zoom effect relative to the cell center
+    vec2 zoomedUV = cellCenter + (uv - cellCenter) / zoomFactor;
+    
+    // Create strong pixelated effect: much more pronounced pixelation
+    // Start with very large pixels (8x8), end with normal resolution
+    float pixelSize = mix(8.0, 1.0, progress * progress);  // Quadratic easing for smoother transition
+    
+    // Apply pixelation by snapping to pixel grid
+    vec2 pixelGrid = floor(zoomedUV * iResolution / pixelSize);
+    vec2 pixelatedUV = pixelGrid * pixelSize / iResolution;
+    
+    // Fix mirroring by flipping Y coordinate
+    vec2 fixedUV = vec2(pixelatedUV.x, 1.0 - pixelatedUV.y);
+    
+    // Sample the intro screen texture with pixelated zoom effect
+    vec3 introColor = texture2D(introTexture, fixedUV).rgb;
+    
+    // Transition from black to the actual intro screen color
+    return mix(vec3(0.0), introColor, progress);
+}
 
 void main()
 {
-    vec3 c;
-    float l, z = iTime;
-    for(int i = 0; i < 3; i++) {
-        vec2 uv, p = gl_FragCoord.xy / iResolution.xy;
-        uv = p;
-        p -= 0.5;
-        p.x *= iResolution.x / iResolution.y;
-        z += 0.07;
-        l = length(p);
-        uv += p / l * (sin(z) + 1.0) * abs(sin(l * 9.0 - z - z));
-        c[i] = 0.01 / length(mod(uv, 1.0) - 0.5);
-    }
-    gl_FragColor = vec4(c / l, 1.0);
+    vec2 uv = gl_FragCoord.xy / iResolution.xy;
+    
+    // Determine which grid cell this pixel belongs to
+    vec2 gridPos = floor(uv * vec2(GRID_COLS, GRID_ROWS));
+    
+    // Get animation progress for this grid cell
+    float progress = getGridAnimationTime(gridPos);
+    
+    // Add some easing to make the transition smoother
+    float easedProgress = smoothstep(0.0, 1.0, progress);
+    
+    // Get the final color
+    vec3 finalColor = getRevealColor(uv, easedProgress);
+    
+    gl_FragColor = vec4(finalColor, 1.0);
 }
 )";
 
-    // Fallback: Legacy GLSL without version declaration
-    const std::string fragmentShaderLegacy = R"(
-// Shader based on "Creation" by Danilo Guanabara (ShaderToy: XsXXDn)
-// Credits to 'Danilo Guanabara'
-// Original: https://www.shadertoy.com/view/XsXXDn
-
-uniform float iTime;
-uniform vec2 iResolution;
-
-void main()
-{
-    vec3 c;
-    float l, z = iTime;
-    for(int i = 0; i < 3; i++) {
-        vec2 uv, p = gl_FragCoord.xy / iResolution.xy;
-        uv = p;
-        p -= 0.5;
-        p.x *= iResolution.x / iResolution.y;
-        z += 0.07;
-        l = length(p);
-        uv += p / l * (sin(z) + 1.0) * abs(sin(l * 9.0 - z - z));
-        c[i] = 0.01 / length(mod(uv, 1.0) - 0.5);
-    }
-    gl_FragColor = vec4(c / l, 1.0);
-}
-)";
-
-    // Try GLSL 120 first
-    if (shader.loadFromMemory(fragmentShader120, sf::Shader::Type::Fragment))
+    // Try the new grid shader first
+    if (backgroundTexture && shader.loadFromMemory(fragmentShaderGrid, sf::Shader::Type::Fragment))
     {
-        std::cout << "Intro shader loaded successfully with GLSL 120" << std::endl;
+        std::cout << "Grid reveal intro shader loaded successfully with intro texture" << std::endl;
+        shader.setUniform("introTexture", *backgroundTexture);  // Temporarily use background, will be replaced
+        shader.setUniform("useIntroTexture", true);
     }
-    // Fallback to legacy GLSL
-    else if (shader.loadFromMemory(fragmentShaderLegacy, sf::Shader::Type::Fragment))
+    else if (shader.loadFromMemory(fragmentShaderGrid, sf::Shader::Type::Fragment))
     {
-        std::cout << "Intro shader loaded successfully with legacy GLSL" << std::endl;
+        std::cout << "Grid reveal intro shader loaded successfully with fallback colors" << std::endl;
+        shader.setUniform("useIntroTexture", false);
     }
     else
     {
-        std::cerr << "Failed to load intro shader with any GLSL version" << std::endl;
-        return false;
+        // Final fallback to simple shader
+        const std::string simpleShader = R"(
+uniform float iTime;
+uniform vec2 iResolution;
+
+void main()
+{
+    vec2 uv = gl_FragCoord.xy / iResolution.xy;
+    
+    // Simple grid reveal fallback with tiny rectangles
+    vec2 gridPos = floor(uv * vec2(95.0, 63.0));
+    float cellIndex = gridPos.y * 95.0 + gridPos.x;
+    float startTime = cellIndex * 0.002;  // Very fast for massive grid
+    float progress = clamp((iTime - startTime) / 0.08, 0.0, 1.0);
+    
+    vec3 color = vec3(0.4, 0.3, 0.2) * progress;
+    gl_FragColor = vec4(color, 1.0);
+}
+)";
+
+        if (shader.loadFromMemory(simpleShader, sf::Shader::Type::Fragment))
+        {
+            std::cout << "Simple grid intro shader loaded successfully" << std::endl;
+        }
+        else
+        {
+            std::cerr << "Failed to load any intro shader version" << std::endl;
+            return false;
+        }
     }
 
     // Create render texture
@@ -103,14 +178,28 @@ void main()
     return true;
 }
 
+void IntroShader::setIntroTexture(const sf::Texture* introTexture)
+{
+    if (introTexture && initialized) {
+        shader.setUniform("introTexture", *introTexture);
+        shader.setUniform("useIntroTexture", true);
+        std::cout << "Intro texture set successfully" << std::endl;
+    }
+}
+
 void IntroShader::update(float deltaTime)
 {
     if (!initialized || finished) return;
     
     currentTime += deltaTime;
     
-    // Finish after duration
-    if (currentTime >= duration)
+    // Calculate total animation time based on grid size and timing
+    // 95x63 grid = 5,985 rectangles! With 0.5 frame offset
+    // Total time: (5984 * 0.5 + 5) frames / 60fps = about 50 seconds (way too long!)
+    // Let's use a much shorter duration and fast overlap for tiny rectangles
+    float totalAnimationTime = 8.0f;  // Reasonable duration for massive tiny grid
+    
+    if (currentTime >= totalAnimationTime)
     {
         finished = true;
     }

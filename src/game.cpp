@@ -245,6 +245,9 @@ void Game::loadAssets()
     if (!textureBackgroundArt.loadFromFile(get_full_path(ASSETS_PATH"img/background_land.png")))
         std::exit(1);
 
+    if (!textureIntroMenu.loadFromFile(get_full_path(ASSETS_PATH"img/dp_intro_menu.png")))
+        std::exit(1);
+
     if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"audio/game.ogg")))
         std::exit(1);
     //    if (!musicBackground.openFromFile(ASSETS_PATH"assets/audio/wind2.ogg"))
@@ -325,8 +328,8 @@ void Game::showIntroShader()
     musicMenu.play();
     musicMenu.setLooping(true);
     
-    // Initialize intro shader
-    if (!introShader.initialize(sf::Vector2u(screenSize.x, screenSize.y)))
+    // Initialize intro shader with the pre-loaded intro menu image
+    if (!introShader.initialize(sf::Vector2u(screenSize.x, screenSize.y), &textureIntroMenu))
     {
         std::cerr << "Failed to initialize intro shader, going to menu" << std::endl;
         showMenu();

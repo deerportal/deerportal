@@ -123,6 +123,7 @@ private:
     std::unique_ptr<sf::Sprite> spriteLestBegin;
     sf::Texture textureBackgroundArt;
     std::unique_ptr<sf::Sprite> spriteBackgroundArt;
+    sf::Texture textureIntroMenu;  // NEW: Texture for intro menu image
     sf::Texture textureTiles;
     sf::Texture textureFaces;
     sf::Font gameFont;
