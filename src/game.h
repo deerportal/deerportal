@@ -33,6 +33,7 @@
 #include "banner.h"
 #include "credits.h"
 #include "cardnotification.h"
+#include "introshader.h"  // NEW: Intro shader animation
 
 namespace DP {
 
@@ -104,6 +105,7 @@ private:
     enum states {
         state_init,
         state_menu,
+        state_intro_shader,  // NEW: Intro shader animation state
         state_setup_players,
         state_lets_begin,
         state_roll_dice,
@@ -121,6 +123,7 @@ private:
     std::unique_ptr<sf::Sprite> spriteLestBegin;
     sf::Texture textureBackgroundArt;
     std::unique_ptr<sf::Sprite> spriteBackgroundArt;
+    sf::Texture textureIntroMenu;  // NEW: Texture for intro menu image
     sf::Texture textureTiles;
     sf::Texture textureFaces;
     sf::Font gameFont;
@@ -168,7 +171,7 @@ private:
 
     void hideMenu();
     void showGameBoard();
-
+    void showIntroShader();
 
     GroupHud groupHud;
 
@@ -246,6 +249,9 @@ public:
     std::unique_ptr<GameInput> input;
     std::unique_ptr<GameRenderer> renderer;
     std::unique_ptr<GameCore> core;
+
+    // NEW: Intro shader instance
+    IntroShader introShader;
 
     // Performance optimization methods
     void updateGameplayElements(sf::Time frameTime);

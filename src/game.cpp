@@ -245,6 +245,9 @@ void Game::loadAssets()
     if (!textureBackgroundArt.loadFromFile(get_full_path(ASSETS_PATH"img/background_land.png")))
         std::exit(1);
 
+    if (!textureIntroMenu.loadFromFile(get_full_path(ASSETS_PATH"img/dp_intro_menu.png")))
+        std::exit(1);
+
     if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"audio/game.ogg")))
         std::exit(1);
     //    if (!musicBackground.openFromFile(ASSETS_PATH"assets/audio/wind2.ogg"))
@@ -313,20 +316,38 @@ void Game::showMenu()
     musicMenu.setLooping(true);
     currentState = state_menu;
 }
+
 void Game::hideMenu()
 {
     musicMenu.stop();
 }
 
+void Game::showIntroShader()
+{
+    // Start intro shader animation with menu music
+    musicMenu.play();
+    musicMenu.setLooping(true);
+    
+    // Initialize intro shader with the pre-loaded intro menu image
+    if (!introShader.initialize(sf::Vector2u(screenSize.x, screenSize.y), &textureIntroMenu))
+    {
+        std::cerr << "Failed to initialize intro shader, going to menu" << std::endl;
+        showMenu();
+        return;
+    }
+    
+    currentState = state_intro_shader;
+}
+
 void Game::showGameBoard()
 {
-    //    musicGame.setVolume(20);
+    // Stop menu music and start game music
+    musicMenu.stop();
     musicGame.play();
     musicGame.setLooping(true);
-    sfx.playLetsBegin();
-
+    
     currentState = state_setup_players;
-    //    currentState = state_lets_begin;
+    sfx.playLetsBegin();
 }
 
 void Game::endGame()
@@ -469,6 +490,13 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
         return;
     }
 
+    if (currentState==state_intro_shader)
+    {
+        // Allow skipping the intro shader by clicking
+        showMenu();
+        return;
+    }
+
     if (currentState==state_gui_end_round)
     {
         std::string resultCommand = guiRoundDice.getElem(pos);
@@ -524,7 +552,7 @@ Game::Game(bool newTestMode):
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
     banner(&gameFont),
-    cardNotification(&gameFont),
+    cardNotification(&gameFont, &textures),
     bigDiamondActive(false),
     credits(&gameFont),
     sfxClick(sfxClickBuffer),
@@ -628,7 +656,7 @@ Game::Game(bool newTestMode):
     renderTexture.draw(*textLoading);
     renderTexture.display();
 
-    showMenu();
+    showIntroShader();
 
     // run the main loop
 
@@ -747,6 +775,15 @@ void Game::update(sf::Time frameTime) {
         case state_roll_dice:
             // Full game updates only during gameplay
             updateGameplayElements(frameTime);
+            break;
+            
+        case state_intro_shader:
+            // Update intro shader animation
+            introShader.update(frameTime.asSeconds());
+            if (introShader.isFinished()) {
+                // Transition to menu after intro finishes
+                showMenu();
+            }
             break;
             
         case state_menu:
@@ -1190,6 +1227,13 @@ void Game::render(float deltaTime)
         if (bigDiamondActive)
             renderTexture.draw(*spriteBigDiamond);
 
+    } else if (currentState==state_intro_shader) {
+        // Render intro shader animation directly to window (bypass render texture for performance)
+        window.clear(sf::Color::Black);
+        introShader.render(window);
+        window.display();
+        return;  // Skip the rest of the rendering pipeline for intro shader
+        
     } else if (currentState==state_setup_players) {
         renderTexture.setView(viewFull);
         renderTexture.draw(*spriteDeerGod);
