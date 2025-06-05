@@ -400,8 +400,133 @@ Always update `ai-instructions.md` with:
 - **Dependency management**: Clear instructions for each platform
 - **Asset handling**: Ensure assets are available at runtime
 
+## SFML 3.0 Syntax Requirements
+
+**CRITICAL**: Always use SFML 3.0 syntax, not SFML 2. Key differences:
+
+### Constructors and Initialization
+```cpp
+// SFML 3.0 - sprites require texture in constructor
+sf::Sprite sprite(texture);
+sf::Text text(font);
+
+// SFML 3.0 - Vector types
+sf::Vector2u textureSize = texture.getSize();
+sf::Vector2f position(x, y);
+sf::Vector2i intPosition(x, y);
+
+// SFML 3.0 - Texture rectangles
+sf::IntRect rect(sf::Vector2i(x, y), sf::Vector2i(width, height));
+sprite.setTextureRect(rect);
+```
+
+### Size and Bounds
+```cpp
+// SFML 3.0 - Use .size for width/height
+sf::FloatRect bounds = text.getLocalBounds();
+float width = bounds.size.x;
+float height = bounds.size.y;
+
+// SFML 3.0 - Position properties
+float x = bounds.position.x;
+float y = bounds.position.y;
+```
+
+## Card Notification Content-First Sizing
+
+### Algorithm Overview
+The card notification system uses a content-first approach to ensure proper overlay sizing:
+
+1. **Measure Content Rectangle**: Calculate exact dimensions of card + text + portraits
+2. **Apply 15% Margin**: Make overlay 15% larger than content rectangle
+3. **Apply Scaling**: If overlay exceeds board constraints, scale everything proportionally
+4. **Center Content**: Position overlay on board center, then center content within overlay
+
+### Implementation Steps
+```cpp
+// Step 1: Measure card dimensions
+sf::Vector2u textureSize = cardSprite->getTexture().getSize();
+float cardWidth = static_cast<float>(textureSize.x);
+float cardHeight = static_cast<float>(textureSize.y);
+
+// Step 2: Measure text content
+float textContentWidth = 0.0f;
+float textContentHeight = lineSegments.size() * lineHeight;
+// ... measure line widths ...
+
+// Step 3: Calculate text area with padding
+float textPadding = 10.0f;  // 10px each side
+float textAreaWidth = textContentWidth + (textPadding * 2);
+float textAreaHeight = std::max(textContentHeight, cardHeight);
+
+// Step 4: Calculate content rectangle
+float cardSpacing = 30.0f; // Space between card and text area
+float contentRectWidth = cardWidth + cardSpacing + textAreaWidth;
+float contentRectHeight = std::max(cardHeight, textAreaHeight);
+
+// Step 5: Create overlay 15% bigger
+float overlayWidth = contentRectWidth * 1.15f;
+float overlayHeight = contentRectHeight * 1.15f;
+
+// Step 6: Scale if needed
+if (overlayWidth > maxAllowedSize || overlayHeight > maxAllowedSize) {
+    float scale = std::min(maxAllowedSize / overlayWidth, maxAllowedSize / overlayHeight);
+    // Apply scale to all elements including cardSpacing and textPadding...
+}
+
+// Step 7: Position elements
+// 1. Center content rectangle within overlay
+// 2. Position card on left side of content rectangle  
+// 3. Position text area after card + spacing
+// 4. Center text content within text area (respecting padding)
+```
+
+### Scaling Strategy
+- **CARD NEVER SCALES**: Card sprite always remains original size to match deck cards on right
+- **Text-Only Scaling**: Only text elements, portraits, and labels scale when space is limited
+- **Minimum Sizes**: Text never scales below 12px, labels below 10px
+- **Card Consistency**: `cardSprite->setScale(sf::Vector2f(1.0f, 1.0f))` always enforced
+- **Text Scaling**: `text->setCharacterSize(static_cast<unsigned int>(originalSize * textScale))`
+
+## Layout System Principles
+
+### Content Measurement
+- Always measure actual content dimensions before creating overlays
+- Include all elements: cards, text, portraits, spacing
+- Account for line breaks and multi-line text
+
+### Positioning Hierarchy
+1. **Board Center**: Calculate game board center point
+2. **Overlay Position**: Center overlay on board center
+3. **Content Centering**: Center content rectangle within overlay
+4. **Element Positioning**: Position individual elements within content area
+
+### Responsive Design
+- Overlays adapt to content size
+- Elements scale proportionally when space is limited
+- Minimum sizes maintained for readability
+- Consistent spacing regardless of scale
+
+## File Organization
+
+### Core Files
+- `src/cardnotification.h/cpp` - Main notification implementation
+- `src/command.cpp` - Integration with game logic
+- `src/textureholder.h/cpp` - Texture management
+
+### Documentation
+- `ai-docs/card-notification-implementation.md` - Technical implementation details
+- `ai-docs/ai-instructions.md` - This memory bank
+
 ---
 
 **Last Updated**: January 2025 - Windows Compilation Documentation Implementation  
 **Next Priority**: Test Windows documentation on clean systems, address any gaps  
 **Maintenance**: Update SFML compatibility as new versions release
+
+### SFML 3.0 Compliance
+- **Texture Size**: Uses `sf::Vector2u textureSize = texture.getSize()`
+- **Bounds Access**: Uses `bounds.size.x` and `bounds.size.y` instead of `.width/.height`
+- **Vector Construction**: Uses `sf::Vector2f(x, y)` syntax
+- **Texture Rectangles**: Uses `sf::IntRect(sf::Vector2i(x, y), sf::Vector2i(w, h))`
+- **LINEBREAK Handling**: Always skip "LINEBREAK" markers in positioning and rendering loops

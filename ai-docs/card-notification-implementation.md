@@ -1,204 +1,227 @@
 # Card Notification System Implementation
 
+This document outlines the implementation details of the card notification system in Deer Portal.
+
 ## Overview
-Implemented a modular card notification overlay system that displays information when cards are picked up in the Deer Portal game. This addresses the user feedback that it was difficult to understand what happened when a card was taken.
 
-## Features Implemented
+The card notification system displays overlay notifications when players pick up cards, showing:
+1. **Card Image**: Visual representation of the picked card on the left
+2. **Player Portraits**: Character sprites positioned inline with text 
+3. **Notification Text**: Context-aware messages describing the card effect
 
-### Visual Design
-- **Semi-transparent background**: Black overlay with 180/255 alpha transparency
-- **Centered text display**: White text with 30px font size (reduced for better fit)
-- **Board-centered positioning**: Centers on game board area (portal center), not full screen
-- **Dice-click dismissal**: Notification disappears when next player clicks dice to throw
-- **Board size constraints**: Maximum 75% of game board width/height
-- **Dynamic font sizing**: Automatically reduces font size if content doesn't fit
-- **Visual feedback**: Subtle blinking effect (90% to 100% opacity) for visual appeal
+## Core Components
 
-### Screen Fit Guarantee
-- **75% maximum overlay**: Never takes more than 75% of game board space
-- **Font scaling**: Dynamically reduces font size to ensure content fits
-- **Minimum font size**: Maintains readability with minimum 14px font
-- **Intelligent text wrapping**: Breaks long messages across multiple lines
-- **Board-aware centering**: Text is centered over the game board portal area
+### CardNotification Class
+- **File**: `src/cardnotification.h`, `src/cardnotification.cpp`
+- **Purpose**: Manages display of card pickup notifications with visual feedback
+- **Features**: 
+  - Inline player portrait rendering
+  - Card sprite display
+  - Content-first overlay sizing
+  - Proper centering and positioning
 
-### Contextual Messages
-The system generates different messages based on:
-- **Card type**: "stop", "card", "diamond", "diamond x 2"
-- **Player who picked the card**: "Player X picked up..."
-- **Target player affected**: Shows which player was affected by the card
+### Key Methods
 
-### Message Examples
-- **Diamond Card**: "Player 1 picked up a DIAMOND card!\nPlayer 2 lost a diamond and\nPlayer 1 gained cash!"
-- **Stop Card**: "Player 3 picked up a STOP card!\nPlayer 4 has been frozen for 1 turn!"
-- **Remove Card**: "Player 2 picked up a REMOVE CARD!\nRemoved a random card from Player 1!"
-- **Double Diamond**: "Player 1 picked up a DOUBLE DIAMOND card!\nPlayer 2 lost 2 diamonds and\nPlayer 1 gained 2 cash!"
+#### `showCardNotification(cardType, playerNumber, targetPlayer, cardPileNumber)`
+- Triggers notification display for card pickup events
+- **Parameters**:
+  - `cardType`: Type of card ("stop", "card", "diamond", "diamond x 2")
+  - `playerNumber`: Player who picked up the card (0-3)
+  - `targetPlayer`: Player affected by the card effect (-1 if self-target)
+  - `cardPileNumber`: Element pile number (0-3) for texture selection
 
-## Technical Implementation
+#### `setupCardSprite(text, cardPileNumber)`
+- Configures card sprite based on card type and element
+- Maps card types to texture indices: stop=0, card=1, diamond=2, diamond x 2=3
+- Uses original texture size (no scaling) to match deck cards
+- Uses `textures->cardsTextures[pileNumber][cardTypeIndex]` texture array
 
-### Files Created/Modified
+## Layout System
 
-#### New Files
-- `src/cardnotification.h` - Header file with class definition
-- `src/cardnotification.cpp` - Implementation with SFML 3.0 compatibility
+### Content-First Sizing Algorithm
+The notification system uses a sophisticated content-first approach:
 
-#### Modified Files
-- `src/game.h` - Added CardNotification include and member variable
-- `src/game.cpp` - Added initialization, update calls, and rendering
-- `src/command.cpp` - Added notification triggers in processCard()
-- `CMakeLists.txt` - Added new source files to build system
+1. **Content Rectangle Calculation**: 
+   - Measure card dimensions from actual texture: `cardSprite->getTexture().getSize()`
+   - Measure text content dimensions by parsing inline segments
+   - Add padding around text content: `textContentWidth + (textPadding * 2)`
+   - Calculate total: `cardWidth + cardSpacing + textAreaWidth`
 
-### Class Design
+2. **Overlay Sizing**:
+   - Create overlay 15% larger than content rectangle
+   - `overlayWidth = contentRectWidth * 1.15f`
+   - `overlayHeight = contentRectHeight * 1.15f`
+
+3. **Text Area Layout**:
+   - Text area gets padding: 10px on each side (20px total)
+   - Card spacing: 30px between card and text area
+   - Text content centered within padded text area
+
+4. **Constraint Handling**:
+   - Check if overlay exceeds board area (`boardSize * MAX_SCREEN_RATIO`)
+   - If too large, calculate text-only scale factor (card remains original size)
+   - Apply scale only to text elements, portraits, labels - NEVER the card
+
+5. **Positioning Hierarchy**:
+   - Center content rectangle within overlay
+   - Position card on left side of content rectangle (always original size)
+   - Position text area after card + spacing
+   - Center text content within text area (respecting padding)
+
+### Scaling Implementation (SFML 3.0)
 ```cpp
-class CardNotification: public sf::Drawable, public sf::Transformable
-{
-public:
-    explicit CardNotification(sf::Font *gameFont);
-    void showCardNotification(const std::string& cardType, int playerNumber, int targetPlayer = -1);
-    void update(sf::Time frameTime);
-    void dismiss();  // Called when next player throws dice
-    bool isActive() const;
+// Content measurement - card always original size
+sf::Vector2u textureSize = cardSprite->getTexture().getSize();
+float originalCardWidth = static_cast<float>(textureSize.x);
+float originalCardHeight = static_cast<float>(textureSize.y);
 
-private:
-    void ensureScreenFit(float maxWidth, float maxHeight);  // New method for screen constraints
+// NEVER scale the card - always enforce original size
+cardSprite->setScale(sf::Vector2f(1.0f, 1.0f));
+
+// Text-only scaling when needed
+if (overlayWidth > maxAllowedSize || overlayHeight > maxAllowedSize) {
+    // Calculate available space for text (card size fixed)
+    float availableTextAreaWidth = maxContentWidth - originalCardWidth - cardSpacing;
+    float textScale = std::min(availableTextAreaWidth / textAreaWidth, 1.0f);
     
-    // Visual components
-    std::unique_ptr<sf::Text> notificationText;
-    std::unique_ptr<sf::RectangleShape> backgroundRect;
+    // Scale text elements only - NEVER the card
+    for (auto& textSeg : textSegments) {
+        unsigned int newSize = static_cast<unsigned int>(TEXT_SIZE * textScale);
+        textSeg->setCharacterSize(std::max(newSize, 12u));
+    }
     
-    // Updated configuration constants
-    static constexpr int TEXT_SIZE = 30;           // Reduced from 60 to 30
-    static constexpr float BACKGROUND_ALPHA = 180.0f;
-    static constexpr float PADDING = 15.0f;        // Reduced from 20 to 15
-    static constexpr float MAX_SCREEN_RATIO = 0.75f; // 75% of screen maximum
-    static constexpr float BLINK_INTERVAL = 1.5f;  // Gentle visual feedback
-};
+    // Scale portraits and labels
+    for (auto& portrait : inlinePortraits) {
+        portrait->setScale(sf::Vector2f(textScale, textScale));
+    }
+    
+    // Card remains untouched at original size
+}
 ```
 
-### Screen Fit Algorithm
-1. **Board Area Calculation**: Determine game board position (15% from left, 10% from top, 640x640px)
-2. **Portal Center**: Calculate center of game board where portal/big diamond is located
-3. **Size Constraints**: Maximum 75% of board area (480x480px), not full screen
-4. **Font Scaling**: If text doesn't fit, reduce font size by 2px increments
-5. **Minimum Size**: Stop reducing at 14px minimum to maintain readability
-6. **Background Sizing**: Cap background at 75% of board dimensions
-7. **Board Centering**: Position notification center over the portal area in game board
+### SFML 3.0 Compliance
+- **Texture Size**: Uses `sf::Vector2u textureSize = texture.getSize()`
+- **Bounds Access**: Uses `bounds.size.x` and `bounds.size.y` instead of `.width/.height`
+- **Vector Construction**: Uses `sf::Vector2f(x, y)` syntax
+- **Texture Rectangles**: Uses `sf::IntRect(sf::Vector2i(x, y), sf::Vector2i(w, h))`
 
-### Integration Points
+### Final Layout Structure
+```
+[Card Image: Original/Scaled] [15px spacing] [Player Portraits + Text Content]
+                                   
+Overlay: Content rectangle + 15% margin, centered on board
+Card: Left side, vertically centered within content area
+Text: Inline portraits before "Player X", centered within text area
+Scaling: Proportional when overlay exceeds board constraints
+```
 
-#### Game Loop Integration
-- **Update**: Called in both `updateGameplayElements()` and `updateMinimalElements()`
-- **Render**: Drawn after banner but before FPS/version info
-- **Initialization**: Constructor initialization list with gameFont
-- **Dismissal**: Automatically dismissed in `throwDiceMove()` when next player clicks dice
+### Content Measurement Process
+1. **Setup Card Sprite**: Configure texture and get dimensions
+2. **Parse Text Segments**: Split into lines, measure each line width
+3. **Calculate Content Bounds**: `max(cardHeight, textHeight)` x `cardWidth + spacing + textWidth`
+4. **Apply Constraints**: Scale proportionally if needed
+5. **Position Elements**: Center overlay, then center content within overlay
 
-#### Card Processing Integration
-- **Trigger Point**: `Command::processCard()` function
-- **Context Aware**: Passes card type, current player, and target player
-- **All Card Types**: Covers all four card types with appropriate messages
-- **Natural Flow**: Stays visible between turns, dismissed when gameplay continues
+### Card Sizing Strategy
+- **Original Size**: Cards use their native texture dimensions (no scaling applied)
+- **Consistency**: Matches the size of cards displayed in the deck on the right side
+- **Dynamic Measurement**: Card dimensions retrieved from texture at runtime
+- **Responsive Layout**: Overlay adjusts to accommodate actual card size
 
-## SFML 3.0 Compatibility
+### Portrait Integration
+- **Character Sprites**: Extracted from `characters-new.png` (32x58 pixels each)
+- **Player Mapping**: Player offset = playerNumber * 32 pixels
+- **Inline Positioning**: Portraits appear directly before each "Player X" text mention
+- **Labels**: "P1", "P2", etc. displayed below each portrait
 
-### Issues Resolved
-1. **sf::Uint8 → std::uint8_t**: Updated type for color alpha channel
-2. **FloatRect members**: Changed from `.width/.height` to `.size.x/.size.y`
-3. **Text constructor**: SFML 3.0 requires font parameter in constructor
-4. **setPosition method**: Updated to use sf::Vector2f parameter
+## Card Texture System
 
-### Modern C++ Features Used
-- `std::make_unique` for memory management
-- `constexpr` for compile-time constants
-- `std::min`/`std::max` for size constraints
-- `std::algorithm` for mathematical operations
-- RAII principles for resource management
+### Texture Organization
+Cards are stored in `textures->cardsTextures[element][cardType]`:
+- **Elements**: 0=Water, 1=Earth, 2=Fire, 3=Air
+- **Card Types**: 0=Stop, 1=Remove Card, 2=Diamond, 3=Diamond x2
 
-## Modular Design Benefits
+### Card Type Extraction
+Text parsing to identify card type from notification message:
+- "DOUBLE DIAMOND" or "DIAMOND X 2" → `diamond x 2`
+- "DIAMOND" → `diamond`  
+- "STOP" → `stop`
+- "REMOVE" → `card`
 
-### Easy Replacement
-- Self-contained class with clear interface
-- Can be replaced with graphics-based implementation
-- No tight coupling with game logic
+## Integration Points
 
-### Configurable
-- Display time, text size, colors easily adjustable
-- Screen ratio constraints easily modified
-- Message generation separated from display logic
-- Font scaling parameters easily tuned
+### Command System
+**File**: `src/command.cpp`, method `processCard()`
+- Triggers notifications when players land on card fields
+- Passes `tokenNumber` as both `targetPlayer` and `cardPileNumber`
+- Called for each card type: diamond, stop, card, diamond x 2
 
-### Extensible
-- Easy to add new card types
-- Message formatting can be enhanced
-- Visual effects can be added (fade in/out, animations)
-- Support for different screen resolutions
+### Visual Rendering
+**File**: `src/cardnotification.cpp`, method `draw()`
+- Renders background rectangle first
+- Draws card sprite with alpha blending
+- Renders inline text segments and portraits  
+- Applies gentle blinking effect (100% to 90% opacity)
 
-## Future Enhancement Possibilities
+## Constants and Configuration
 
-### Visual Improvements
-- Fade in/out animations
-- Card-specific background colors
-- Icon/image support alongside text
-- Sound effects integration
-- Gradient backgrounds
+```cpp
+const unsigned int TEXT_SIZE = 32;        // Main text size
+const unsigned int LABEL_SIZE = 18;       // Portrait label size  
+const unsigned int PORTRAIT_SIZE = 32;    // Portrait display size
+const unsigned int PORTRAIT_SPACING = 8;  // Space between portrait and text
+const float PADDING = 20.0f;             // Overlay internal padding
+const float MAX_SCREEN_RATIO = 0.85f;    // Max overlay size vs board area
+const float BACKGROUND_ALPHA = 180.0f;   // Semi-transparent background
+const float BLINK_INTERVAL = 1.5f;       // Blinking effect timing
+```
 
-### Functional Enhancements
-- Different display durations per card type
-- Queue system for multiple simultaneous notifications
-- Player-specific notification preferences
-- Localization support
-- Rich text formatting
+## Technical Implementation Details
 
-### Performance Optimizations
-- Text caching for repeated messages
-- Reduced string allocations
-- Conditional compilation for debug builds
-- Pre-calculated text bounds
+### SFML 3.0 Compatibility
+- Sprites require texture in constructor: `sf::Sprite(texture)`
+- Uses `sf::Vector2i` for texture rectangles
+- Proper texture binding for card sprites
 
-## Testing Notes
+### Memory Management
+- Smart pointers (`std::unique_ptr`) for all visual components
+- Automatic cleanup when notification dismissed
+- Safe texture access with null checks
 
-### Build Verification
-- ✅ Compiles successfully with SFML 3.0
-- ✅ No linking errors
-- ✅ CMake integration working
-- ✅ macOS app bundle generation successful
-- ✅ Font size reduction working
-- ✅ Screen constraint logic implemented
+### Performance Considerations
+- Pre-calculated layout measurements
+- Minimal redraw operations
+- Efficient text segmentation
+- Single-pass positioning algorithm
 
-### Screen Fit Testing
-- ✅ 75% maximum screen usage enforced
-- ✅ Font scaling algorithm implemented
-- ✅ Minimum readable font size maintained
-- ✅ Text centering within background working
+## Usage Example
 
-### Integration Testing Needed
-- [ ] Test card picking in actual gameplay
-- [ ] Verify message accuracy for all card types
-- [ ] Check display timing and positioning
-- [ ] Test with different screen resolutions
-- [ ] Verify font scaling with very long messages
-- [ ] Test minimum font size behavior
+```cpp
+// Player 0 picks up a diamond card from pile 2 (fire element), targeting player 1
+game.cardNotification.showCardNotification("diamond", 0, 1, 2);
+```
 
-## User Feedback Addressed
-- ✅ **Font too large**: Reduced from 60px to 30px (50% reduction)
-- ✅ **Doesn't fit on screen**: Added 75% board constraint with dynamic sizing
-- ✅ **Overlay too big**: Maximum 75% of game board enforced (not full screen)
-- ✅ **Better text formatting**: Added line breaks for longer messages
-- ✅ **Wrong positioning**: Now centers on game board portal area, not full screen
-- ✅ **Better dismissal flow**: Now disappears when next player clicks dice to throw (natural game flow)
+This creates a notification showing:
+- Fire diamond card image on the left (original texture size)
+- "Player 1 picked up a DIAMOND card!" with Player 1's portrait
+- "Player 2 lost a diamond and Player 1 gained cash!" with both portraits
+- Overlay sized to content bounds + 15% margin, centered on game board
 
-## Documentation Updates
-- Updated `ai-docs/ai-instructions.md` with CardNotification system details
-- Added technical implementation notes
-- Included usage patterns and examples
-- Documented modular design principles
-- Added screen fit algorithm documentation
-- Updated dismissal mechanism to dice-click approach
+## Future Enhancements
 
-## Conclusion
-The CardNotification system successfully addresses the user's feedback about font size and screen fit issues, and now uses a more natural dismissal mechanism. The implementation guarantees that notifications will always fit within 75% of the game board while maintaining readability through intelligent font scaling. The system provides immediate value to players by clearly explaining card effects in an appropriately sized, non-intrusive overlay that disappears naturally when the game flow continues.
+### Potential Improvements
+1. **Animation Effects**: Slide-in animations for card appearance
+2. **Sound Integration**: Unique sound effects per card type
+3. **Enhanced Styling**: Card-specific background colors or effects
+4. **Multi-language Support**: Localized text with proper layout handling
 
-### User Interaction
-- **Natural dismissal**: Notification displays until next player clicks dice to throw
-- **Non-blocking**: Allows players to read at their own pace
-- **Game flow integration**: Dismissal is part of natural gameplay progression
-- **Visual appeal**: Subtle opacity blinking for visual interest without distraction
-- **No manual action**: No need to explicitly dismiss - happens automatically when gameplay continues 
+### Configuration Options
+- Adjustable card display size
+- Customizable spacing parameters  
+- Configurable overlay transparency
+- Optional animation toggles
+
+## Related Files
+
+- `src/cardnotification.h` - Class declaration and constants
+- `

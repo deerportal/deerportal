@@ -552,7 +552,7 @@ Game::Game(bool newTestMode):
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
     banner(&gameFont),
-    cardNotification(&gameFont),
+    cardNotification(&gameFont, &textures),
     bigDiamondActive(false),
     credits(&gameFont),
     sfxClick(sfxClickBuffer),
