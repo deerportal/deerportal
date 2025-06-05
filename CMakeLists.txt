@@ -118,6 +118,8 @@ file(GLOB OTHER_SOURCES
     src/cardnotification.h
     src/credits.cpp
     src/credits.h
+    src/introshader.cpp
+    src/introshader.h
     # Missing files that were causing linking errors
     src/particlesystem.cpp
     src/elem.cpp
