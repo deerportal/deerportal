@@ -24,6 +24,14 @@ After a successful SFML 3.0 migration, we're excited to present version 0.9.0 "W
 - **Linux Packaging**: Updated Debian packages and Snap support
 - **Windows Compatibility**: Maintained full Windows support with improved build process
 
+#### macOS Packaging Excellence
+- **Professional DMG Creation**: Automated DMG generation with proper installer UI
+- **Library Conflict Resolution**: Complete SFML library isolation preventing system conflicts
+- **Self-Contained Distribution**: All dependencies bundled - no external installations required
+- **Code-Signed App Bundles**: Automatic ad-hoc signing for macOS security compatibility
+- **Native Icon Integration**: Custom DeerPortal icon properly displayed in Dock and Finder
+- **Pure CMake Solution**: Zero manual intervention - fully automated packaging pipeline
+
 ### 🎮 Game Features Preserved
 - **Classic Gameplay**: All beloved game mechanics remain unchanged
 - **4-Player Strategy**: Complete support for 0-4 players with AI opponents
@@ -42,6 +50,9 @@ After a successful SFML 3.0 migration, we're excited to present version 0.9.0 "W
 - Event system compatibility with SFML 3.0's new variant-based events
 - Rectangle API compatibility for collision detection and positioning
 - Font and texture loading for all UI elements
+- **macOS SFML Library Conflicts**: Eliminated "Class SFApplication is implemented in both" errors
+- **Library Path Issues**: Fixed @rpath dependencies causing system library loading conflicts
+- **macOS App Bundle Structure**: Resolved nested app bundle issues preventing proper execution
 
 ### 🎯 Looking Forward
 This "Welcome Back" release establishes a solid foundation for future enhancements while preserving the classic DeerPortal experience that players love. The modern codebase is ready for future features and improvements.

@@ -41,7 +41,7 @@ else()
   MESSAGE(STATUS "FPS Counter will be hidden unless in Debug build (NDEBUG not defined)")
 endif()
 
-project(myproject)
+project(DeerPortal)
 
 #target_compile_definitions(DeerPortal PRIVATE FOO=1 BAR=1)
 add_definitions(-DDEERPORTAL_VERSION="${DEERPORTAL_VERSION}.${CMAKE_BUILD_TYPE}")
@@ -157,7 +157,8 @@ endif()
 
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES
   MACOSX_BUNDLE TRUE
-  MACOSX_FRAMEWORK_IDENTIFIER org.cmake.ExecutableTarget
+  MACOSX_FRAMEWORK_IDENTIFIER org.deerportal.DeerPortal
+  MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/packaging/Info.plist"
   RESOURCE "${RESOURCE_FILES}"
 )
 
@@ -169,6 +170,96 @@ if(APPLE)
     ${CMAKE_SOURCE_DIR}/assets
     $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Resources/assets
     COMMENT "Copying assets to macOS app bundle"
+  )
+  
+  # Copy icon to Resources directory
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/packaging/DeerPortal.icns
+    $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Resources/DeerPortal.icns
+    COMMENT "Copying icon to macOS app bundle"
+  )
+  
+  # Bundle SFML libraries for distribution
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+    $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks
+    COMMENT "Creating Frameworks directory"
+  )
+  
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    /opt/homebrew/opt/sfml/lib/libsfml-graphics.3.0.dylib
+    /opt/homebrew/opt/sfml/lib/libsfml-audio.3.0.dylib
+    /opt/homebrew/opt/sfml/lib/libsfml-network.3.0.dylib
+    /opt/homebrew/opt/sfml/lib/libsfml-window.3.0.dylib
+    /opt/homebrew/opt/sfml/lib/libsfml-system.3.0.dylib
+    $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
+    COMMENT "Bundling SFML libraries"
+  )
+  
+  # Bundle additional dependencies that SFML needs
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib
+    /opt/homebrew/opt/libpng/lib/libpng16.16.dylib
+    $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
+    COMMENT "Bundling SFML dependencies"
+  )
+  
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-graphics.3.0.dylib @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-audio.3.0.dylib @executable_path/../Frameworks/libsfml-audio.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-network.3.0.dylib @executable_path/../Frameworks/libsfml-network.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-window.3.0.dylib @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+    COMMENT "Fixing library paths for distribution"
+  )
+  
+  # Fix library identities and internal dependencies
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-audio.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-network.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-network.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-window.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-system.3.0.dylib 2>/dev/null || true
+    COMMENT "Fixing library identities"
+  )
+  
+  # Fix dependency library identities and dependencies
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND install_name_tool -id @executable_path/../Frameworks/libfreetype.6.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libfreetype.6.dylib 2>/dev/null || true
+    COMMAND install_name_tool -id @executable_path/../Frameworks/libpng16.16.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libpng16.16.dylib 2>/dev/null || true
+    COMMENT "Fixing dependency library identities"
+  )
+  
+  # Fix internal library dependencies
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-network.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-window.3.0.dylib 2>/dev/null || true
+    COMMENT "Fixing internal library dependencies"
+  )
+  
+  # Fix @rpath dependencies that could load system libraries
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND install_name_tool -change @rpath/libsfml-window.3.0.dylib @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -change @rpath/libsfml-graphics.3.0.dylib @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
+    COMMENT "Fixing @rpath dependencies"
+  )
+  
+  # Fix SFML dependencies on freetype and libpng
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND install_name_tool -change /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib @executable_path/../Frameworks/libfreetype.6.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
+    COMMAND install_name_tool -change /opt/homebrew/opt/libpng/lib/libpng16.16.dylib @executable_path/../Frameworks/libpng16.16.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libfreetype.6.dylib 2>/dev/null || true
+    COMMENT "Fixing SFML dependencies on bundled libraries"
+  )
+  
+  # Sign the app bundle with ad-hoc signature for macOS compatibility
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND codesign --force --deep --sign - $<TARGET_BUNDLE_DIR:${EXECUTABLE_NAME}>
+    COMMENT "Code signing app bundle"
   )
   
   # For macOS, let runtime detection handle the path
@@ -211,7 +302,7 @@ ELSE()
   endif()
 ENDIF()
 
-# CPack packaging
+# CPack packaging setup (needed for all platforms)
 include(InstallRequiredSystemLibraries)
 
 # Basic package information
@@ -230,22 +321,100 @@ set(CPACK_PACKAGE_VERSION "${DEERPORTAL_VERSION}")
 
 # Platform-specific packaging
 if(APPLE)
-    # macOS DMG configuration
-    set(CPACK_GENERATOR "DragNDrop")
-    set(CPACK_DMG_VOLUME_NAME "DeerPortal")
-    set(CPACK_DMG_FORMAT "UDBZ")  # Compressed format for smaller file size
-    set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${CMAKE_SOURCE_DIR}/packaging/dmg_setup.scpt")
+    # macOS: Create proper app bundle and DMG using pure CMake
+    set(CPACK_GENERATOR "")  # Disable CPack generators for macOS
     
-    # DMG appearance
-    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/packaging/dmg_background.png")
-    
-    # App bundle configuration
-    set(CPACK_BUNDLE_NAME "DeerPortal")
-    set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/packaging/DeerPortal.icns")
-    set(CPACK_BUNDLE_PLIST "${CMAKE_SOURCE_DIR}/packaging/Info.plist")
-    
-    # File name format: DeerPortal-0.9.0-macOS.dmg
+    # File name format: DeerPortal-0.9.0-macOS.dmg  
     set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-macOS")
+    
+    # DMG creation variables
+    set(DMG_NAME "${CPACK_PACKAGE_FILE_NAME}")
+    set(DMG_PATH "${CMAKE_BINARY_DIR}/${DMG_NAME}.dmg")
+    set(DMG_TEMP_DIR "${CMAKE_BINARY_DIR}/dmg_temp")
+    
+    # Custom target to create signed DMG
+    add_custom_target(create_dmg
+        COMMENT "Creating macOS DMG package: ${DMG_NAME}.dmg"
+        DEPENDS ${EXECUTABLE_NAME}
+        
+        # Clean previous temp directory and DMG files
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${DMG_TEMP_DIR}"
+        COMMAND ${CMAKE_COMMAND} -E remove -f "${DMG_PATH}"
+        COMMAND ${CMAKE_COMMAND} -E remove -f "${CMAKE_BINARY_DIR}/${DMG_NAME}-temp.dmg"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${DMG_TEMP_DIR}"
+        
+        # Copy app bundle to temp directory
+        COMMAND ${CMAKE_COMMAND} -E copy_directory 
+                "$<TARGET_BUNDLE_DIR:${EXECUTABLE_NAME}>" 
+                "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app"
+        
+        # Sign the app bundle (suppress warnings)
+        COMMAND codesign --force --deep --sign - "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app" 2>/dev/null || true
+        
+        # Fix library identities in DMG version (suppress warnings)
+        COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-graphics.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-graphics.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-audio.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-audio.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-network.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-network.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-window.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-window.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-system.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-system.3.0.dylib" 2>/dev/null || true
+        
+        # Fix dependency library identities in DMG version (suppress warnings)
+        COMMAND install_name_tool -id @executable_path/../Frameworks/libfreetype.6.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libfreetype.6.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -id @executable_path/../Frameworks/libpng16.16.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libpng16.16.dylib" 2>/dev/null || true
+        
+        # Fix internal library dependencies in DMG version (suppress warnings)
+        COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-graphics.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-audio.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-network.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-window.3.0.dylib" 2>/dev/null || true
+        
+        # Fix @rpath dependencies in DMG version (suppress warnings)
+        COMMAND install_name_tool -change @rpath/libsfml-window.3.0.dylib @executable_path/../Frameworks/libsfml-window.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-graphics.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -change @rpath/libsfml-graphics.3.0.dylib @executable_path/../Frameworks/libsfml-graphics.3.0.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-audio.3.0.dylib" 2>/dev/null || true
+        
+        # Fix SFML dependencies on freetype and libpng in DMG version (suppress warnings)
+        COMMAND install_name_tool -change /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib @executable_path/../Frameworks/libfreetype.6.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libsfml-graphics.3.0.dylib" 2>/dev/null || true
+        COMMAND install_name_tool -change /opt/homebrew/opt/libpng/lib/libpng16.16.dylib @executable_path/../Frameworks/libpng16.16.dylib "${DMG_TEMP_DIR}/${EXECUTABLE_NAME}.app/Contents/Frameworks/libfreetype.6.dylib" 2>/dev/null || true
+        
+        # Copy background image
+        COMMAND ${CMAKE_COMMAND} -E copy 
+                "${CMAKE_SOURCE_DIR}/packaging/dmg_background.png"
+                "${DMG_TEMP_DIR}/.background.png"
+        
+        # Create Applications symlink
+        COMMAND ${CMAKE_COMMAND} -E create_symlink 
+                "/Applications" 
+                "${DMG_TEMP_DIR}/Applications"
+        
+        # Create temporary DMG
+        COMMAND hdiutil create -volname "${DMG_NAME}" 
+                -srcfolder "${DMG_TEMP_DIR}" 
+                -ov -format UDRW 
+                "${CMAKE_BINARY_DIR}/${DMG_NAME}-temp.dmg"
+        
+        # Mount DMG for customization
+        COMMAND ${CMAKE_COMMAND} -E echo "Mounting DMG for customization..."
+        
+        # Convert to final compressed DMG  
+        COMMAND hdiutil convert "${CMAKE_BINARY_DIR}/${DMG_NAME}-temp.dmg" 
+                -format UDBZ -o "${DMG_PATH}"
+        
+        # Clean up
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${DMG_TEMP_DIR}"
+        COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_BINARY_DIR}/${DMG_NAME}-temp.dmg"
+        
+        # Success message
+        COMMAND ${CMAKE_COMMAND} -E echo "✅ DMG created successfully: ${DMG_NAME}.dmg"
+        COMMAND ls -lh "${DMG_PATH}"
+        
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+    
+    # Add dmg target for macOS DMG creation
+    add_custom_target(dmg
+        DEPENDS create_dmg
+        COMMENT "Creating macOS DMG package"
+    )
     
 elseif(WIN32)
     # Windows installer configuration
@@ -270,16 +439,17 @@ set(CPACK_SOURCE_GENERATOR "TGZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
 set(CPACK_SOURCE_IGNORE_FILES
     "/build/"
-    "/\\.git/"
-    "/\\.github/"
-    "/\\.data/"
-    "\\.gitignore"
-    "\\.DS_Store"
+    "/\\\\.git/"
+    "/\\\\.github/"
+    "/\\\\.data/"
+    "\\\\.gitignore"
+    "\\\\.DS_Store"
     "/ai-docs/"
-    ".*\\.dmg$"
-    ".*\\.exe$"
-    ".*\\.deb$"
-    ".*\\.tar\\.gz$"
+    ".*\\\\.dmg$"
+    ".*\\\\.exe$"
+    ".*\\\\.deb$"
+    ".*\\\\.tar\\\\.gz$"
 )
 
+# Include CPack for all platforms
 include(CPack)
