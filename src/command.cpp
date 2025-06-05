@@ -170,13 +170,19 @@ void Command::processCard(int pos)
         {
             removeDiamond(game.boardDiamonds.getNumberForField(pos));
             game.players[game.turn].cash += 1;
+            // Show notification for diamond card
+            game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber);
 
         } else if (cardType == "stop")
         {
             freezePlayer(tokenNumber);
+            // Show notification for stop card
+            game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber);
         } else if (cardType == "card")
         {
             removeCard(game.boardDiamonds.getNumberForField(pos));
+            // Show notification for remove card
+            game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber);
 
         } else if (cardType == "diamond x 2")
         {
@@ -184,6 +190,8 @@ void Command::processCard(int pos)
                 game.players[game.turn].cash += 1;
             if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
                 game.players[game.turn].cash += 1;
+            // Show notification for double diamond card
+            game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber);
 
         }
     }

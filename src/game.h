@@ -32,6 +32,7 @@
 //class Command;
 #include "banner.h"
 #include "credits.h"
+#include "cardnotification.h"
 
 namespace DP {
 
@@ -221,6 +222,7 @@ public:
 
     float cpuTimeThinking;
     Banner banner;
+    CardNotification cardNotification;
 
     std::unique_ptr<sf::Sprite> spriteBigDiamond;
     bool bigDiamondActive;
