@@ -92,3 +92,134 @@ compile_commands.json
 # Build artifacts and temporary files
 *.dylib.dSYM/
 *.app.dSYM/
+
+# DeerPortal .gitignore
+
+# Build directories
+Release/
+Debug/
+RelWithDebInfo/
+MinSizeRel/
+x64/
+x86/
+.vs/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+CMakeSettings.json
+
+# Compiled binaries
+*.exe
+*.app
+*.deb
+*.dmg
+*.tar.gz
+*.zip
+
+# Object files and libraries
+*.o
+*.obj
+*.lib
+*.a
+*.so
+*.dylib
+*.dll
+
+# Debug files
+*.pdb
+*.ilk
+
+# Precompiled headers
+*.gch
+*.pch
+
+# IDE files
+.vscode/
+.idea/
+*.sln
+*.vcproj
+*.vcxproj*
+*.suo
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.user
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.scc
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary data folder (as per user requirements)
+.data/
+
+# Package management
+vcpkg_installed/
+conandata.yml
+conanbuildinfo.cmake
+conaninfo.txt
+
+# Test outputs
+test-build/
+test-sfml*
+versions.txt
+system-info.txt
+preprocessor_output.txt
+
+# Distribution packages
+DeerPortal-*-Windows.exe
+DeerPortal-*-macOS.dmg
+DeerPortal-*-Linux.*
+DeerPortal-*-MSYS2.*
+DeerPortal-*-Cygwin.*
+DeerPortal-Distribution/
+DeerPortal-Portable/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~

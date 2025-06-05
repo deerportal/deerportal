@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Remember to use SFML 3.0.1 https://www.sfml-dev.org/development/changelog/
