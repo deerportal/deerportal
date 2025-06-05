@@ -36,6 +36,26 @@ deerportal-0.9.0/
 deerportal-0.8.2/
 deerportal-sfml2/
 
+# macOS packaging artifacts
+*.dmg
+*-temp.dmg
+dmg_temp/
+_CPack_Packages/
+*.pkg
+
+# macOS system files
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
 # Development cache and generated files
 .cache/
 compile_commands.json
@@ -68,3 +88,7 @@ compile_commands.json
 
 # Temporary data directory
 .data/
+
+# Build artifacts and temporary files
+*.dylib.dSYM/
+*.app.dSYM/

@@ -15,13 +15,15 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>@DEERPORTAL_VERSION@</string>
+    <string>${DEERPORTAL_VERSION}</string>
     <key>CFBundleVersion</key>
-    <string>@DEERPORTAL_VERSION@</string>
+    <string>${DEERPORTAL_VERSION}</string>
     <key>CFBundleDisplayName</key>
     <string>DeerPortal</string>
+    <key>CFBundleIconFile</key>
+    <string>DeerPortal.icns</string>
     <key>CFBundleGetInfoString</key>
-    <string>DeerPortal @DEERPORTAL_VERSION@, Game About How Human Can Be Upgraded to the Deer</string>
+    <string>DeerPortal ${DEERPORTAL_VERSION}, Game About How Human Can Be Upgraded to the Deer</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>NSHumanReadableCopyright</key>

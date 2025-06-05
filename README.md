@@ -45,9 +45,23 @@ $ cmake -DCMAKE_BUILD_TYPE=Release .
 # The FPS counter is automatically shown in Debug builds.
 
 $ make
+
+# Install to Applications (optional)
 $ sudo make install
+
+# Run the app directly
 $ open DeerPortal.app
+
+# Create macOS DMG package for distribution (recommended)
+$ make dmg
 ```
+
+**macOS Packaging Features:**
+- Complete app bundle with proper icon and metadata
+- Self-contained distribution with bundled SFML libraries
+- Professional DMG installer with Applications symlink
+- Code-signed for macOS security compatibility
+- No external dependencies required for end users
 
 #### Requirements
 - **SFML 3.0** (automatically found by CMake if installed via Homebrew)
@@ -78,6 +92,8 @@ $ fakeroot debian/rules binary
 - **Enhanced Stability**: Smart pointer implementation for memory safety
 - **Cross-Platform Excellence**: Improved macOS app bundle and Linux package support
 - **Performance Optimizations**: Better resource management and loading
+- **Professional macOS Packaging**: Native app bundle with proper icon, self-contained libraries, and DMG installer
+- **Library Conflict Resolution**: Complete SFML library isolation for reliable macOS distribution
 
 **Developed with [Devcarpet](https://devcarpet.net) platform.**
 **Contact**: Rafal Zawadzki <bluszcz@gmail.com>
