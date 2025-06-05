@@ -103,417 +103,88 @@ flowchart TD
 ## 🎲 Core Game Mechanics
 
 ### 1. Turn System
-
-**Implementation**: `src/game.cpp::launchNextPlayer()`
-
-```cpp
-void Game::launchNextPlayer() {
-    // Skip finished/frozen players
-    if (players[turn].done == true) {
-        nextPlayer();
-        return;
-    }
-    
-    // Handle frozen players
-    if (players[turn].frozenLeft > 0) {
-        players[turn].frozenLeft -= 1;
-        nextPlayer();
-        return;
-    }
-    
-    // Set active player and roll dice
-    selector.changeColor(turn);
-    diceResultPlayer = 6; // Default value
-    currentState = state_roll_dice;
-}
-```
+The game proceeds in turns, with each of the four players taking a turn to form a round. The game uses `launchNextPlayer()` to manage turn succession, automatically skipping players who are frozen or have finished the game.
 
 ### 2. Dice System
-
-**Implementation**: `src/rounddice.cpp`
-
-```cpp
-int RoundDice::throwDiceSix() {
-    int result = (rand() % 6) + 1;
-    setDiceTexture(result);
-    return result;
-}
-```
+Player movement is determined by a standard six-sided die roll, implemented in `rounddice.cpp`.
 
 ### 3. Movement System
-
-**Implementation**: `src/game.cpp::playerMakeMove()`
-
-Players can move 1-6 spaces based on dice roll. Movement follows predefined paths in the `boards` array.
-
-```cpp
-void Game::playerMakeMove(int mousePos) {
-    players[turn].setFigurePos(mousePos);
-    commandManager.processField(mousePos);  // Handle field effects
-    
-    // Check for portal exit
-    const int *possibleExit = std::find(std::begin(DP::endPlayers),
-                                        std::end(DP::endPlayers), mousePos);
-    if (possibleExit != DP::endPlayers+4) {
-        // Player reached portal
-        players[turn].done = true;
-        players[turn].reachedPortal = true;
-        // ... portal logic
-    }
-}
-```
+Players move along predefined paths on the board. The number of steps is determined by the dice roll.
 
 ### 4. Field Processing System
-
-**Implementation**: `src/command.cpp::processField()`
-
-```mermaid
-flowchart TD
-    A[Player Enters Field] --> B{Start Field?}
-    B -->|Yes| C[Meditation: Regenerate Items]
-    B -->|No| D{Center Position 136?}
-    
-    D -->|Yes| E[Collect Big Diamond +3]
-    D -->|No| F{Field Has Items?}
-    
-    F -->|Yes| G{Item Type?}
-    F -->|No| H[No Action]
-    
-    G -->|Diamond Type 4| I[+1 Cash]
-    G -->|Card Type 0-3| J[Execute Card Action]
-    
-    J --> K{Card Type?}
-    K -->|"stop"| L[Freeze Target Player]
-    K -->|"diamond"| M[Steal Diamond +1 Cash]
-    K -->|"card"| N[Remove Target's Card]
-    K -->|"diamond x 2"| O[Steal 2 Diamonds +2 Cash]
-```
+When a player lands on a tile, the game processes the effects of that tile. This can include collecting diamonds, drawing cards, or meditating. This logic is handled by `command.cpp`.
 
 ### 5. Resource Management System
-
-**Diamond Distribution** (from `src/boarddiamondseq.h`):
-> "We are going to have 2 cards / diamonds of each element per each area, which gives 2*4*4 = 32 cards diamonds of elements on the board. Additionally there will be extra 6 white diamonds per area to collect, which gives 4*6 = 24 diamonds on the board. Together it would give 32 + 24 = 56 diamonds cards/diamonds together, 15 per area."
-
-**Actual Implementation**: 112 total diamonds (28 per player area)
-
-**Resource Types**:
-- **Type 4**: Pure diamonds (+1 cash when collected)
-- **Type 0-3**: Cards corresponding to elements (trigger special effects)
+Players compete to collect diamonds. The board starts with 112 diamonds, and players can gain or lose them through various actions.
 
 ### 6. Card System
-
-**Card Distribution** (from `src/cardslist.h`):
-```cpp
-const static std::array<int,32> cardsDistribution = {{
-    0,0,0,0,0,0,0,0,  // 8 "stop" cards
-    1,1,1,1,1,1,1,1,  // 8 "card" cards  
-    2,2,2,2,2,2,2,2,  // 8 "diamond" cards
-    3,3,3,3,3,3,3,3,  // 8 "diamond x 2" cards
-}};
-```
-
-**Card Types** (from `src/card.h`):
-```cpp
-const static std::array<std::string, 4> cardsTypes = {
-    {"stop", "card", "diamond", "diamond x 2"}
-};
-```
-
-**Card Effects**:
-- **"stop"**: Freezes target player for one turn (`frozenLeft += 1`)
-- **"card"**: Removes random card from target player's area
-- **"diamond"**: Steals one diamond from target player's area (+1 cash)
-- **"diamond x 2"**: Steals two diamonds from target player's area (+2 cash)
-
-**Card Logic** (from `src/command.cpp::processCard()`):
-```cpp
-if (tokenNumber != game.turn) {  // Can't use cards on your own area
-    if (cardType == "diamond") {
-        removeDiamond(game.boardDiamonds.getNumberForField(pos));
-        game.players[game.turn].cash += 1;
-    } else if (cardType == "stop") {
-        freezePlayer(tokenNumber);
-    } else if (cardType == "card") {
-        removeCard(game.boardDiamonds.getNumberForField(pos));
-    } else if (cardType == "diamond x 2") {
-        if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
-            game.players[game.turn].cash += 1;
-        if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
-            game.players[game.turn].cash += 1;
-    }
-}
-game.cardsDeck.nextCard(tokenNumber);  // Advance to next card in pile
-```
+Players can draw cards that provide special actions, such as stealing diamonds from other players, freezing them for a turn, or removing their cards.
 
 ### 7. Big Diamond System (Center Bonus)
-
-**Position**: (320, 320) - Board position 136
-**Logic**: `src/command.cpp` + `src/game.cpp`
-
-```cpp
-// Hide big diamond when player enters center position
-if (pos == 136 && game.bigDiamondActive) {
-    game.bigDiamondActive = false;
-    game.players[game.turn].cash += 3;  // Bonus for collecting center diamond
-}
-
-// Show diamond for player with most diamonds
-if (mostDiamonds() == turn) {
-    players[turn].reachPortalMode = true;
-    bigDiamondActive = true;
-} else {
-    players[turn].reachPortalMode = false;
-    bigDiamondActive = false;
-}
-```
+A special diamond at the center of the board provides a +3 cash bonus. It only becomes visible when a player has the most diamonds, indicating they are eligible to enter the portal.
 
 ### 8. Meditation System
-
-**Trigger**: Player returns to starting position with exact dice roll
-**Effect**: Regenerates all diamonds and cards on player's board section
-
-```cpp
-if ((startField) && (DP::startPlayers[game.turn] == pos)) {
-    game.banner.setText("meditation");
-    game.boardDiamonds.reorder(game.turn);  // Regenerate resources
-    game.sfx.soundMeditation.play();
-}
-```
+If a player lands on their own starting tile with an exact dice roll, they "meditate," which regenerates all the diamonds and cards in their home quadrant.
 
 ### 9. Portal & Deer Mode
-
-**Portal Positions**: `{119, 120, 135, 136}`
-**Deer Mode**: 16 turns (4 rounds × 4 players) after first portal entry
-
-```cpp
-void Game::startDeerMode() {
-    deerModeActive = true;
-    deerModeCounter = 16;
-    banner.setText("deer mode");
-    bigDiamondActive = false;  // Hide center diamond
-    sfx.soundDeerMode.play();
-}
-```
-
-**Portal Entry Logic**:
-```cpp
-// First player bonus
-if (firstPortalReached == false) {
-    firstPortalReached = true;
-    players[turn].reachedPortalFirst = true;
-    players[turn].cash += 5;  // Bonus for first portal entry
-    startDeerMode();
-}
-```
+The first player to reach a portal tile triggers "Deer Mode," a 16-turn countdown to the end of the game. This player also receives a cash bonus.
 
 ### 10. Freeze System
+The "stop" card allows a player to freeze another player, causing them to miss their next turn.
 
-**Implementation**: Players can be frozen by "stop" cards
-```cpp
-void Command::freezePlayer(int playerNumber) {
-    game.players[playerNumber].frozenLeft += 1;
-}
-```
+## 🕹️ Game States
 
-**Effect**: Player skips their next turn(s), `frozenLeft` decrements each turn
+The game's flow is controlled by a state machine defined in `src/game.h`. The `currentState` variable dictates the game's current behavior.
 
-## 🏆 Victory System
+- `state_init`: **Initialization State**. The very first state on game startup. It handles initial setup and immediately transitions to `state_intro_shader`.
+- `state_intro_shader`: **Intro Animation**. Plays a full-screen shader animation as a splash screen. Transitions to `state_menu` when finished.
+- `state_menu`: **Main Menu**. Displays the main menu, waiting for the user to start a new game. Transitions to `state_setup_players`.
+- `state_setup_players`: **Player Configuration**. Allows users to set which players are human-controlled and which are AI. Transitions to `state_lets_begin` on confirmation.
+- `state_lets_begin`: **Game Start Transition**. Displays a "Let's Begin!" message that fades out, giving a visual cue that the game is starting. Transitions to `state_roll_dice`.
+- `state_roll_dice`: **Dice Roll Phase**. The start of a player's turn. The game waits for the current player to roll the dice (either by click for humans or automatically for AI). Transitions to `state_game`.
+- `state_game`: **Main Gameplay Phase**. After the dice roll, the player chooses a valid move. The game then processes the move and its consequences before advancing to the next player (back to `state_roll_dice`).
+- `state_gui_end_round`: **End of Round Summary**. Displays a summary GUI at the end of a full round of play. Serves as an interstitial screen before the next round.
+- `state_end_game`: **Game Over Screen**. Triggered when end conditions are met. It displays final scores and declares the winner.
+- `state_quit`: **Quitting State**. A transient state that triggers the application to close.
+- `state_gui_elem`: **Legacy/Unused**. Renders the game board with a blur effect but is not used by any current game logic.
+- `state_select_building`: **Obsolete/Unused**. Exists in the state enumeration but is not used anywhere.
 
-### Winner Calculation
+## 🏆 Victory & End Game
 
-**Implementation**: `src/game.cpp::setTxtEndGameAmount()`
+**Winning Conditions**:
+1. The player with the **most diamonds** at the end of the game wins.
+2. In case of a tie in diamond count, the player who **reached the portal first** is the winner.
 
-```mermaid
-flowchart TD
-    A[Game Ends] --> B[Collect All Player Results]
-    B --> C[Create ResultTable Array]
-    C --> D[Sort by: 1.Cash 2.Portal 3.FirstPortal]
-    
-    D --> E{Multiple Winners?}
-    E -->|No| F[Single Winner]
-    E -->|Yes| G{Same Cash Amount?}
-    
-    G -->|Yes| H{Who Reached Portal First?}
-    G -->|No| I[Highest Cash Wins]
-    
-    H --> J[First Portal Player Wins]
-    
-    F --> K[Winner = Deer God]
-    I --> K
-    J --> K
-    
-    K --> L[Others = Monks or Heritage]
-```
+**End Game Triggers**:
+- The game ends when all 4 players have reached the portal.
+- The game also ends when the 16-turn "Deer Mode" countdown expires.
 
-```cpp
-struct ResultTable {
-    int playerNumber;
-    int playerResult;      // Cash amount
-    bool reachedPortal;    // Did they reach portal?
-    bool reachedPortalFirst; // Were they first to portal?
-    
-    bool operator < (const ResultTable& other) const {
-        if (playerResult != other.playerResult) 
-            return (playerResult > other.playerResult); // Higher cash wins
-        else if (reachedPortalFirst == true)
-            return true; // First to portal wins ties
-        return false;
-    }
-};
-```
+The final winner is determined in `setTxtEndGameAmount()` by sorting players based on the winning conditions.
 
 ## 🧠 AI System
 
-### AI Decision Logic
+The AI's decision-making logic in `game.cpp` is rule-based:
+1.  **Portal Access**: If eligible to enter the portal (`reachPortalMode == true`), the AI will prioritize moves toward it.
+2.  **Resource Collection**: The AI will prefer moves that land on tiles with diamonds or cards.
+3.  **Random Fallback**: If no other strategic advantage is apparent, the AI chooses a move randomly.
 
-**Implementation**: `src/game.cpp::update()` AI section
+## ✨ Thematic Elements
 
-```mermaid
-flowchart TD
-    A[AI Turn] --> B[Get Possible Moves]
-    B --> C{Number of Moves?}
-    
-    C -->|0| D[Skip Turn]
-    C -->|1| E[Move to Only Option]
-    C -->|2| F{Deer Mode Active?}
-    
-    F -->|Yes| G[Choose Move 1]
-    F -->|No| H{Portal Mode?}
-    
-    H -->|Yes| I[Prioritize Portal]
-    H -->|No| J{Diamond Available?}
-    
-    J -->|Move 1 Has Diamond| K[Choose Move 0]
-    J -->|Move 0 Has Diamond| L[Choose Move 1]
-    J -->|No Diamonds| M[Random Choice]
-```
+### Seasonal System & Calendar
+The game features a full calendar with 59 pagan holidays, implemented in `calendar.h`. Every four rounds, the season changes (Winter, Spring, Summer, Fall), which affects the visual theme of the board. This adds thematic depth but does not directly impact core game mechanics.
 
-**AI Strategy Priorities**:
-1. **Portal Access**: If `reachPortalMode == true`, prioritize portal moves
-2. **Resource Collection**: Prioritize fields with diamonds/cards
-3. **Deer Mode**: During final phase, choose second available move
-4. **Random Fallback**: If no strategic advantage, choose randomly
-
-```cpp
-if (sizeRndPos == 2) {
-    if (deerModeActive) {
-        playerMakeMove(listRandomPos[1]);
-    } else {
-        if (players[turn].reachPortalMode == true) {
-            playerMakeMove(listRandomPos[1]); // Prioritize portal
-        } else {
-            // Prioritize diamond collection
-            if (boardDiamonds.ifFieldIsEmpty(listRandomPos[1]) == false) {
-                playerMakeMove(listRandomPos[1]);
-                return;
-            }
-            if (boardDiamonds.ifFieldIsEmpty(listRandomPos[0]) == false) {
-                playerMakeMove(listRandomPos[0]);
-                return;
-            }
-            // Random if no diamonds
-            int randPos = rand() % 2;
-            playerMakeMove(listRandomPos[randPos]);
-        }
-    }
-}
-```
-
-## 🔧 Technical Implementation
-
-### State Management
-
-**Game States** (from `src/game.h`):
-- `state_menu`: Main menu
-- `state_setup_players`: Player configuration
-- `state_lets_begin`: Game start animation
-- `state_roll_dice`: Dice rolling phase
-- `state_game`: Active gameplay
-- `state_gui_end_round`: Round end display
-- `state_end_game`: Victory screen
+## 🛠️ Implementation Details
 
 ### Asset Management
-
-**Key Textures**:
-- `diamond-big.png`: Center diamond (6.4KB)
-- `board_diamonds.png`: Small diamonds (11KB)
-- `characters.png`: Player sprites
-- `background_land.png`: Main board (1.3MB)
+Key textures are loaded and managed by the `TextureHolder` class. Important visual assets include:
+- `diamond-big.png`: The large center diamond.
+- `board_diamonds.png`: The small collectible diamonds.
+- `characters-new.png`: The player character sprites.
+- `background_land.png`: The main game board texture.
 
 ### Audio System
-
-**Sound Effects**:
-- `dice.ogg`: Dice roll
-- `meditation.ogg`: Meditation action
-- `dp-ok.ogg`: Portal entry (`soundPortal`)
-- `deermode.ogg`: Deer mode activation
-
-## 📊 Game Balance
-
-### Resource Distribution
-
-**Diamonds**: 112 total across board (28 per player area)
-**Cards**: 32 per element type (128 total)
-**Turn Limit**: 16 turns in Deer Mode
-
-### Scoring System
-
-- **Regular Diamond**: +1 cash
-- **Center Diamond**: +3 cash  
-- **Portal Bonus**: +5 cash (first player only)
-- **Card Effects**: Varies by type
-
-## 🔄 Seasonal System & Calendar
-
-**Implementation**: `src/data.cpp` + `src/calendar.h`
-
-```cpp
-std::string seasonsNames[4] = {"winter", "spring", "summer", "fall"};
-```
-
-**Pagan Holiday System**: 59 different pagan holidays throughout the year (from `calendar.h`)
-**Logic**: Every 4 months (turns), season advances. Affects visual theme and provides thematic context but not core mechanics.
-
-**Examples of Holidays**:
-- Imbolg/Brighid (Feb 2) - 1st Cross-Quarter Day
-- Beltane (May 1) - Celtic bonfire festival  
-- Summer Solstice (Jun 20) - Litha
-- Samhain (Nov 1) - Celtic feast of departing Sun
-
-## 🛠️ Code Architecture Summary
-
-### Key Classes
-
-1. **Game** (`src/game.cpp`): Main game controller and state manager
-2. **Command** (`src/command.cpp`): Field action processor and rule enforcer
-3. **Player** (`src/playerhud.cpp`): Individual player state and attributes
-4. **BoardDiamondSeq** (`src/boarddiamondseq.cpp`): Resource distribution and management
-5. **CardsDeck** (`src/cardsdeck.cpp`): Card system and pile management
-6. **CardsList** (`src/cardslist.cpp`): Individual card pile handling
-7. **Card** (`src/card.cpp`): Individual card properties and effects
-8. **RoundDice** (`src/rounddice.cpp`): Dice mechanics and randomization
-
-### Data Structures
-
-- **boards[256][2]**: Movement graph for all positions
-- **occupiedFields[4][39]**: Valid positions per player area
-- **DIAMONDS_SETUP[112][3]**: Initial diamond placement configuration
-- **startPlayers[4]** & **endPlayers[4]**: Start/portal positions
-- **cardsDistribution[32]**: Card type distribution in each pile
-- **PAGAN_HOLIDAYS[59][3]**: Seasonal calendar system
-
-### Game Loop Architecture
-
-```mermaid
-flowchart LR
-    A[Game State] --> B[Player Turn]
-    B --> C[Dice Roll]
-    C --> D[Move Validation]
-    D --> E[Command Processing]
-    E --> F[Resource Updates]
-    F --> G[Victory Check]
-    G --> H[Next Player]
-    H --> A
-```
-
-This implementation successfully translates the spiritual and mythological themes of the original DeerPortal concept into a functional, multi-layered strategy game with complex resource management, strategic card play, multiple victory paths, and sophisticated AI opponents. The game balances simplicity in core mechanics (dice + move) with depth in strategic decision-making through the card system, portal race, and resource competition. 
+Sound effects and music are handled via SFML's audio module. Key sound effects include:
+- `dice.ogg`: Played on dice roll.
+- `meditation.ogg`: Played for the meditation action.
+- `dp-ok.ogg`: Played when a player enters the portal.
+- `deermode.ogg`: Played when Deer Mode is activated.
