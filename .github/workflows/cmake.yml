@@ -12,15 +12,22 @@ env:
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: windows
+    
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Debug Environment
+    - name: Debug Environment (Linux)
+      if: matrix.platform == 'linux'
       run: |
         echo "=== Environment Debug ==="
         echo "Working directory: $(pwd)"
@@ -28,8 +35,20 @@ jobs:
         echo "Available space: $(df -h .)"
         echo "CMAKE version: $(cmake --version)"
         echo "GCC version: $(gcc --version)"
+
+    - name: Debug Environment (Windows)
+      if: matrix.platform == 'windows'
+      shell: bash
+      run: |
+        echo "=== Environment Debug ==="
+        echo "Working directory: $(pwd)"
+        echo "Windows version: $(systeminfo | findstr /B /C:"OS Name" /C:"OS Version")"
+        echo "Available space: $(df -h .)"
+        echo "CMAKE version: $(cmake --version)"
+        echo "MSVC version: $(cl 2>&1 | head -1 || echo 'MSVC not in PATH yet')"
         
-    - name: Install SFML 3.0 Dependencies
+    - name: Install SFML 3.0 Dependencies (Linux)
+      if: matrix.platform == 'linux'
       run: |
         echo "=== Installing SFML Dependencies ==="
         sudo apt update
@@ -50,21 +69,35 @@ jobs:
           pkg-config
         echo "Dependencies installed successfully"
 
-    - name: Cache SFML Build
-      uses: actions/cache@v3
-      id: cache-sfml
+    - name: Setup MSVC (Windows)
+      if: matrix.platform == 'windows'
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Cache SFML Build (Linux)
+      if: matrix.platform == 'linux'
+      uses: actions/cache@v4
+      id: cache-sfml-linux
       with:
         path: |
           /usr/local/lib/libsfml*
           /usr/local/include/SFML
           /usr/local/lib/cmake/SFML
-        key: sfml-3.0.0-ubuntu-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
+        key: sfml-3.0.1-ubuntu-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
 
-    - name: Build and Install SFML 3.0 from Source
-      if: steps.cache-sfml.outputs.cache-hit != 'true'
+    - name: Cache SFML Build (Windows)
+      if: matrix.platform == 'windows'
+      uses: actions/cache@v4
+      id: cache-sfml-windows
+      with:
+        path: |
+          C:/SFML
+        key: sfml-3.0.1-windows-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
+
+    - name: Build and Install SFML 3.0 from Source (Linux)
+      if: matrix.platform == 'linux' && steps.cache-sfml-linux.outputs.cache-hit != 'true'
       run: |
         echo "=== Building SFML 3.0 from Source ==="
-        git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
         cd sfml-source
         echo "SFML source downloaded, configuring build..."
         cmake -B build \
@@ -80,9 +113,32 @@ jobs:
         sudo cmake --install build
         cd ..
         rm -rf sfml-source
-        echo "SFML 3.0 installation completed"
+        echo "SFML 3.0.1 installation completed"
 
-    - name: Verify SFML Installation
+    - name: Build and Install SFML 3.0 from Source (Windows)
+      if: matrix.platform == 'windows' && steps.cache-sfml-windows.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        echo "=== Building SFML 3.0.1 from Source for Windows ==="
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        echo "SFML source downloaded, configuring build..."
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DSFML_BUILD_EXAMPLES=OFF \
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_INSTALL_PREFIX="C:/SFML"
+        echo "Building SFML (this may take a few minutes)..."
+        cmake --build build --config Release
+        echo "Installing SFML..."
+        cmake --install build
+        cd ..
+        rm -rf sfml-source
+        echo "SFML 3.0.1 installation completed"
+
+    - name: Verify SFML Installation (Linux)
+      if: matrix.platform == 'linux'
       run: |
         echo "=== Verifying SFML Installation ==="
         echo "Checking SFML libraries:"
@@ -94,9 +150,20 @@ jobs:
         echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
         echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
 
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+    - name: Verify SFML Installation (Windows)
+      if: matrix.platform == 'windows'
+      shell: bash
+      run: |
+        echo "=== Verifying SFML Installation ==="
+        echo "Checking SFML installation:"
+        ls -la "C:/SFML/" || echo "No SFML installation found"
+        echo "Checking SFML libraries:"
+        ls -la "C:/SFML/lib/" || echo "No SFML libraries found"
+        echo "Checking SFML headers:"
+        ls -la "C:/SFML/include/SFML/" || echo "No SFML headers found"
+
+    - name: Configure CMake (Linux)
+      if: matrix.platform == 'linux'
       run: |
         echo "=== Configuring CMake ==="
         echo "CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH"
@@ -108,15 +175,35 @@ jobs:
           -DSFML_DIR=/usr/local/lib/cmake/SFML \
           -DCMAKE_VERBOSE_MAKEFILE=ON
 
-    - name: Build
-      # Build your program with the given configuration
+    - name: Configure CMake (Windows)
+      if: matrix.platform == 'windows'
       run: |
-        echo "=== Building DeerPortal ==="
+        echo "=== Configuring CMake for Windows ==="
+        cmake -B ${{github.workspace}}/build `
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} `
+          -DCMAKE_PREFIX_PATH="C:/SFML" `
+          -DSFML_DIR="C:/SFML/lib/cmake/SFML" `
+          -DCMAKE_VERBOSE_MAKEFILE=ON
+
+    - name: Build (Linux)
+      if: matrix.platform == 'linux'
+      run: |
+        echo "=== Building DeerPortal for Linux ==="
         cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --verbose
 
-    - name: Test
+    - name: Build (Windows)
+      if: matrix.platform == 'windows'
+      run: |
+        echo "=== Building DeerPortal for Windows ==="
+        cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --verbose
+
+    - name: Test (Linux)
+      if: matrix.platform == 'linux'
       working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: ctest -C ${{env.BUILD_TYPE}} --verbose
+
+    - name: Test (Windows)
+      if: matrix.platform == 'windows'
+      working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}} --verbose
       
