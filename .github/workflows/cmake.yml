@@ -141,19 +141,13 @@ jobs:
           echo "cmake version: $(cmake --version)"
         fi
         
-        # Try to install SFML via Homebrew first (simpler approach)
-        echo "Installing SFML via Homebrew..."
+        # Architecture-specific SFML installation strategy
         if [[ "${{ matrix.arch }}" == "intel" ]]; then
-          # For Intel, try different approaches as Homebrew behavior might vary
-          echo "Intel-specific SFML installation..."
-          brew install --formula sfml || {
-            echo "Primary SFML installation failed, trying alternatives..."
-            # Try updating Homebrew and retrying
-            brew update || true
-            brew install --formula sfml || echo "SFML Homebrew installation failed, will build from source"
-          }
+          # For Intel, skip Homebrew SFML and build from source (like release workflow)
+          echo "Intel build: Will build SFML from source for consistency with release workflow"
         else
-          # ARM installation (working)
+          # ARM installation via Homebrew (working)
+          echo "Installing SFML via Homebrew for ARM..."
           brew install --formula sfml || echo "SFML Homebrew installation failed, will build from source"
         fi
         
@@ -239,53 +233,82 @@ jobs:
       run: |
         echo "=== Setting up SFML for macOS (${{ matrix.arch }}) ==="
         
-        # Check if SFML is available via Homebrew
-        if brew list sfml &> /dev/null; then
-          echo "SFML is available via Homebrew"
-          echo "SFML Homebrew info:"
-          brew info sfml
-          echo "SFML files:"
-          find $(brew --prefix)/lib -name "*sfml*" 2>/dev/null || echo "No SFML libs found in Homebrew"
-          find $(brew --prefix)/include -name "SFML" 2>/dev/null || echo "No SFML headers found in Homebrew"
-        else
-          echo "SFML not available via Homebrew, building from source..."
+        if [[ "${{ matrix.arch }}" == "intel" ]]; then
+          # Intel: Always build from source (like release workflow)
+          echo "Intel build: Building SFML from source..."
           
           # Only build from source if not cached
           if [[ "${{ steps.cache-sfml-macos.outputs.cache-hit }}" != "true" ]]; then
-            echo "Building SFML 3.0.1 from source..."
+            echo "Building SFML 3.0.1 from source for Intel..."
             git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
             cd sfml-source
             
-            # Set architecture-specific flags
-            if [[ "${{ matrix.arch }}" == "intel" ]]; then
-              export CMAKE_OSX_ARCHITECTURES="x86_64"
-              export CMAKE_OSX_DEPLOYMENT_TARGET="10.15"
-              echo "Building for Intel (x86_64) with deployment target 10.15"
-            else
-              export CMAKE_OSX_ARCHITECTURES="arm64"
-              export CMAKE_OSX_DEPLOYMENT_TARGET="11.0"
-              echo "Building for Apple Silicon (arm64) with deployment target 11.0"
-            fi
+            # Intel-specific configuration (matching release workflow)
+            export CMAKE_OSX_ARCHITECTURES="x86_64"
+            export CMAKE_OSX_DEPLOYMENT_TARGET="10.15"
+            echo "Building for Intel (x86_64) with deployment target 10.15"
             
             cmake -B build \
               -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_OSX_DEPLOYMENT_TARGET=$CMAKE_OSX_DEPLOYMENT_TARGET \
-              -DCMAKE_OSX_ARCHITECTURES=$CMAKE_OSX_ARCHITECTURES \
+              -DCMAKE_OSX_DEPLOYMENT_TARGET="10.15" \
+              -DCMAKE_OSX_ARCHITECTURES="x86_64" \
               -DSFML_BUILD_EXAMPLES=OFF \
               -DSFML_BUILD_DOC=OFF \
               -DBUILD_SHARED_LIBS=OFF \
-              -DCMAKE_INSTALL_PREFIX=/usr/local \
-              -DCMAKE_VERBOSE_MAKEFILE=ON
+              -DCMAKE_INSTALL_PREFIX=/usr/local
             
-            echo "Building SFML..."
+            echo "Building SFML for Intel..."
             cmake --build build -j$(sysctl -n hw.ncpu) --config Release
             echo "Installing SFML..."
             sudo cmake --install build
             cd ..
             rm -rf sfml-source
-            echo "SFML 3.0.1 built and installed"
+            echo "SFML 3.0.1 built and installed for Intel"
           else
-            echo "Using cached SFML installation"
+            echo "Using cached SFML installation for Intel"
+          fi
+          
+        else
+          # ARM: Use Homebrew if available, otherwise build from source
+          if brew list sfml &> /dev/null; then
+            echo "SFML is available via Homebrew for ARM"
+            echo "SFML Homebrew info:"
+            brew info sfml
+            echo "SFML files:"
+            find $(brew --prefix)/lib -name "*sfml*" 2>/dev/null || echo "No SFML libs found in Homebrew"
+            find $(brew --prefix)/include -name "SFML" 2>/dev/null || echo "No SFML headers found in Homebrew"
+          else
+            echo "SFML not available via Homebrew, building from source for ARM..."
+            
+            # Only build from source if not cached
+            if [[ "${{ steps.cache-sfml-macos.outputs.cache-hit }}" != "true" ]]; then
+              echo "Building SFML 3.0.1 from source for ARM..."
+              git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+              cd sfml-source
+              
+              export CMAKE_OSX_ARCHITECTURES="arm64"
+              export CMAKE_OSX_DEPLOYMENT_TARGET="11.0"
+              echo "Building for Apple Silicon (arm64) with deployment target 11.0"
+              
+              cmake -B build \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_OSX_DEPLOYMENT_TARGET="11.0" \
+                -DCMAKE_OSX_ARCHITECTURES="arm64" \
+                -DSFML_BUILD_EXAMPLES=OFF \
+                -DSFML_BUILD_DOC=OFF \
+                -DBUILD_SHARED_LIBS=OFF \
+                -DCMAKE_INSTALL_PREFIX=/usr/local
+              
+              echo "Building SFML for ARM..."
+              cmake --build build -j$(sysctl -n hw.ncpu) --config Release
+              echo "Installing SFML..."
+              sudo cmake --install build
+              cd ..
+              rm -rf sfml-source
+              echo "SFML 3.0.1 built and installed for ARM"
+            else
+              echo "Using cached SFML installation for ARM"
+            fi
           fi
         fi
 
@@ -370,37 +393,39 @@ jobs:
         HOMEBREW_PREFIX=$(brew --prefix)
         echo "Homebrew prefix: $HOMEBREW_PREFIX"
         
-        # Intel-specific path handling for macos-13
+        # Architecture-specific path configuration
         if [[ "${{ matrix.arch }}" == "intel" ]]; then
-          # On Intel macOS, Homebrew might be in /usr/local
-          if [[ "$HOMEBREW_PREFIX" == "/opt/homebrew" ]] && [[ -d "/usr/local/lib" ]]; then
-            echo "Intel system detected, checking /usr/local for Homebrew"
-            HOMEBREW_PREFIX="/usr/local"
-          fi
-        fi
-        echo "Using Homebrew prefix: $HOMEBREW_PREFIX"
-        
-        # Check for SFML in different locations (case-insensitive)
-        if [[ -d "$HOMEBREW_PREFIX/lib/cmake/sfml" ]]; then
-          echo "Found SFML CMake config in Homebrew location (lowercase)"
-          SFML_DIR="$HOMEBREW_PREFIX/lib/cmake/sfml"
-          CMAKE_PREFIX_PATH="$HOMEBREW_PREFIX"
-          SFML_STATIC="OFF"
-        elif [[ -d "$HOMEBREW_PREFIX/lib/cmake/SFML" ]]; then
-          echo "Found SFML CMake config in Homebrew location (uppercase)"
-          SFML_DIR="$HOMEBREW_PREFIX/lib/cmake/SFML"
-          CMAKE_PREFIX_PATH="$HOMEBREW_PREFIX"
-          SFML_STATIC="OFF"
-        elif [[ -d "/usr/local/lib/cmake/SFML" ]]; then
-          echo "Found SFML CMake config in /usr/local"
+          # Intel: Use /usr/local (built from source)
+          echo "Intel: Using /usr/local paths (built from source)"
           SFML_DIR="/usr/local/lib/cmake/SFML"
           CMAKE_PREFIX_PATH="/usr/local"
           SFML_STATIC="ON"
         else
-          echo "SFML CMake config not found, using default paths"
-          SFML_DIR=""
-          CMAKE_PREFIX_PATH="$HOMEBREW_PREFIX:/usr/local"
-          SFML_STATIC="OFF"
+          # ARM: Use Homebrew or /usr/local fallback
+          HOMEBREW_PREFIX=$(brew --prefix)
+          echo "ARM: Using Homebrew prefix: $HOMEBREW_PREFIX"
+          
+          if [[ -d "$HOMEBREW_PREFIX/lib/cmake/sfml" ]]; then
+            echo "Found SFML CMake config in Homebrew location (lowercase)"
+            SFML_DIR="$HOMEBREW_PREFIX/lib/cmake/sfml"
+            CMAKE_PREFIX_PATH="$HOMEBREW_PREFIX"
+            SFML_STATIC="OFF"
+          elif [[ -d "$HOMEBREW_PREFIX/lib/cmake/SFML" ]]; then
+            echo "Found SFML CMake config in Homebrew location (uppercase)"
+            SFML_DIR="$HOMEBREW_PREFIX/lib/cmake/SFML"
+            CMAKE_PREFIX_PATH="$HOMEBREW_PREFIX"
+            SFML_STATIC="OFF"
+          elif [[ -d "/usr/local/lib/cmake/SFML" ]]; then
+            echo "Found SFML CMake config in /usr/local"
+            SFML_DIR="/usr/local/lib/cmake/SFML"
+            CMAKE_PREFIX_PATH="/usr/local"
+            SFML_STATIC="ON"
+          else
+            echo "SFML CMake config not found, using default paths"
+            SFML_DIR=""
+            CMAKE_PREFIX_PATH="$HOMEBREW_PREFIX:/usr/local"
+            SFML_STATIC="OFF"
+          fi
         fi
         
         echo "CMake configuration parameters:"
