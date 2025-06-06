@@ -14,12 +14,19 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
         include:
           - os: ubuntu-latest
             platform: linux
+            arch: x64
           - os: windows-latest
             platform: windows
+            arch: x64
+          - os: macos-13
+            platform: macos
+            arch: intel
+          - os: macos-latest
+            platform: macos
+            arch: arm64
     
     runs-on: ${{ matrix.os }}
 
@@ -46,6 +53,18 @@ jobs:
         echo "Available space: $(df -h .)"
         echo "CMAKE version: $(cmake --version)"
         echo "MSVC version: $(cl 2>&1 | head -1 || echo 'MSVC not in PATH yet')"
+
+    - name: Debug Environment (macOS)
+      if: matrix.platform == 'macos'
+      run: |
+        echo "=== Environment Debug ==="
+        echo "Working directory: $(pwd)"
+        echo "macOS version: $(sw_vers)"
+        echo "Architecture: $(uname -m)"
+        echo "Available space: $(df -h .)"
+        echo "CMAKE version: $(cmake --version)"
+        echo "Xcode version: $(xcodebuild -version)"
+        echo "Clang version: $(clang --version)"
         
     - name: Install SFML 3.0 Dependencies (Linux)
       if: matrix.platform == 'linux'
@@ -73,6 +92,14 @@ jobs:
       if: matrix.platform == 'windows'
       uses: microsoft/setup-msbuild@v2
 
+    - name: Install Dependencies (macOS)
+      if: matrix.platform == 'macos'
+      run: |
+        echo "=== Installing macOS Dependencies ==="
+        brew update
+        brew install cmake
+        echo "macOS dependencies installed successfully"
+
     - name: Cache SFML Build (Linux)
       if: matrix.platform == 'linux'
       uses: actions/cache@v4
@@ -92,6 +119,17 @@ jobs:
         path: |
           C:/SFML
         key: sfml-3.0.1-windows-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
+
+    - name: Cache SFML Build (macOS)
+      if: matrix.platform == 'macos'
+      uses: actions/cache@v4
+      id: cache-sfml-macos
+      with:
+        path: |
+          /usr/local/lib/libsfml*
+          /usr/local/include/SFML
+          /usr/local/lib/cmake/SFML
+        key: sfml-3.0.1-macos-${{ matrix.arch }}-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
 
     - name: Build and Install SFML 3.0 from Source (Linux)
       if: matrix.platform == 'linux' && steps.cache-sfml-linux.outputs.cache-hit != 'true'
@@ -137,6 +175,40 @@ jobs:
         rm -rf sfml-source
         echo "SFML 3.0.1 installation completed"
 
+    - name: Build and Install SFML 3.0 from Source (macOS)
+      if: matrix.platform == 'macos' && steps.cache-sfml-macos.outputs.cache-hit != 'true'
+      run: |
+        echo "=== Building SFML 3.0.1 from Source for macOS (${{ matrix.arch }}) ==="
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        echo "SFML source downloaded, configuring build..."
+        
+        # Set architecture-specific flags
+        if [[ "${{ matrix.arch }}" == "intel" ]]; then
+          export CMAKE_OSX_ARCHITECTURES="x86_64"
+          export CMAKE_OSX_DEPLOYMENT_TARGET="10.15"
+        else
+          export CMAKE_OSX_ARCHITECTURES="arm64"
+          export CMAKE_OSX_DEPLOYMENT_TARGET="11.0"
+        fi
+        
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=$CMAKE_OSX_DEPLOYMENT_TARGET \
+          -DCMAKE_OSX_ARCHITECTURES=$CMAKE_OSX_ARCHITECTURES \
+          -DSFML_BUILD_EXAMPLES=OFF \
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_INSTALL_PREFIX=/usr/local
+        
+        echo "Building SFML (this may take a few minutes)..."
+        cmake --build build -j$(sysctl -n hw.ncpu) --config Release
+        echo "Installing SFML..."
+        sudo cmake --install build
+        cd ..
+        rm -rf sfml-source
+        echo "SFML 3.0.1 installation completed for ${{ matrix.arch }}"
+
     - name: Verify SFML Installation (Linux)
       if: matrix.platform == 'linux'
       run: |
@@ -162,6 +234,19 @@ jobs:
         echo "Checking SFML headers:"
         ls -la "C:/SFML/include/SFML/" || echo "No SFML headers found"
 
+    - name: Verify SFML Installation (macOS)
+      if: matrix.platform == 'macos'
+      run: |
+        echo "=== Verifying SFML Installation for macOS (${{ matrix.arch }}) ==="
+        echo "Checking SFML libraries:"
+        ls -la /usr/local/lib/libsfml* || echo "No SFML libraries found"
+        echo "Checking SFML headers:"
+        ls -la /usr/local/include/SFML/ || echo "No SFML headers found"
+        echo "Checking SFML CMake config:"
+        ls -la /usr/local/lib/cmake/SFML/ || echo "No SFML CMake config found"
+        echo "Architecture check:"
+        file /usr/local/lib/libsfml-system.a 2>/dev/null || echo "Could not check architecture of SFML libraries"
+
     - name: Configure CMake (Linux)
       if: matrix.platform == 'linux'
       run: |
@@ -185,6 +270,29 @@ jobs:
           -DSFML_DIR="C:/SFML/lib/cmake/SFML" `
           -DCMAKE_VERBOSE_MAKEFILE=ON
 
+    - name: Configure CMake (macOS)
+      if: matrix.platform == 'macos'
+      run: |
+        echo "=== Configuring CMake for macOS (${{ matrix.arch }}) ==="
+        
+        # Set architecture-specific flags
+        if [[ "${{ matrix.arch }}" == "intel" ]]; then
+          export CMAKE_OSX_ARCHITECTURES="x86_64"
+          export CMAKE_OSX_DEPLOYMENT_TARGET="10.15"
+        else
+          export CMAKE_OSX_ARCHITECTURES="arm64"
+          export CMAKE_OSX_DEPLOYMENT_TARGET="11.0"
+        fi
+        
+        cmake -B ${{github.workspace}}/build \
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=$CMAKE_OSX_DEPLOYMENT_TARGET \
+          -DCMAKE_OSX_ARCHITECTURES=$CMAKE_OSX_ARCHITECTURES \
+          -DCMAKE_PREFIX_PATH=/usr/local \
+          -DSFML_DIR=/usr/local/lib/cmake/SFML \
+          -DSFML_STATIC_LIBRARIES=ON \
+          -DCMAKE_VERBOSE_MAKEFILE=ON
+
     - name: Build (Linux)
       if: matrix.platform == 'linux'
       run: |
@@ -197,6 +305,12 @@ jobs:
         echo "=== Building DeerPortal for Windows ==="
         cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --verbose
 
+    - name: Build (macOS)
+      if: matrix.platform == 'macos'
+      run: |
+        echo "=== Building DeerPortal for macOS (${{ matrix.arch }}) ==="
+        cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --verbose -j$(sysctl -n hw.ncpu)
+
     - name: Test (Linux)
       if: matrix.platform == 'linux'
       working-directory: ${{github.workspace}}/build
@@ -204,6 +318,11 @@ jobs:
 
     - name: Test (Windows)
       if: matrix.platform == 'windows'
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}} --verbose
+
+    - name: Test (macOS)
+      if: matrix.platform == 'macos'
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}} --verbose
       
