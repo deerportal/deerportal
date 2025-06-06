@@ -61,10 +61,15 @@ jobs:
         echo "Working directory: $(pwd)"
         echo "macOS version: $(sw_vers)"
         echo "Architecture: $(uname -m)"
+        echo "Runner architecture: ${{ matrix.arch }}"
         echo "Available space: $(df -h .)"
-        echo "CMAKE version: $(cmake --version)"
-        echo "Xcode version: $(xcodebuild -version)"
-        echo "Clang version: $(clang --version)"
+        echo "CMAKE version: $(cmake --version || echo 'cmake not found')"
+        echo "Xcode version: $(xcodebuild -version || echo 'xcodebuild not found')"
+        echo "Clang version: $(clang --version || echo 'clang not found')"
+        echo "C++ compiler: $(which c++ || echo 'c++ not found')"
+        echo "Available compilers:"
+        ls -la /usr/bin/*clang* || echo "No clang compilers found in /usr/bin"
+        echo "Homebrew prefix: $(brew --prefix || echo 'brew not found')"
         
     - name: Install SFML 3.0 Dependencies (Linux)
       if: matrix.platform == 'linux'
@@ -96,8 +101,28 @@ jobs:
       if: matrix.platform == 'macos'
       run: |
         echo "=== Installing macOS Dependencies ==="
-        brew update
-        brew install cmake
+        
+        # Ensure Xcode command line tools are available
+        echo "Checking Xcode command line tools..."
+        if ! xcode-select -p &> /dev/null; then
+          echo "Installing Xcode command line tools..."
+          sudo xcode-select --install || echo "Xcode command line tools installation failed or already present"
+        else
+          echo "Xcode command line tools are available at: $(xcode-select -p)"
+        fi
+        
+        # Accept Xcode license if needed
+        sudo xcodebuild -license accept || echo "Xcode license already accepted or xcodebuild not available"
+        
+        # Check if cmake is already available
+        if ! command -v cmake &> /dev/null; then
+          echo "Installing cmake via Homebrew..."
+          brew update
+          brew install --formula cmake
+        else
+          echo "cmake is already available: $(which cmake)"
+          echo "cmake version: $(cmake --version)"
+        fi
         echo "macOS dependencies installed successfully"
 
     - name: Cache SFML Build (Linux)
@@ -187,10 +212,16 @@ jobs:
         if [[ "${{ matrix.arch }}" == "intel" ]]; then
           export CMAKE_OSX_ARCHITECTURES="x86_64"
           export CMAKE_OSX_DEPLOYMENT_TARGET="10.15"
+          echo "Building for Intel (x86_64) with deployment target 10.15"
         else
           export CMAKE_OSX_ARCHITECTURES="arm64"
           export CMAKE_OSX_DEPLOYMENT_TARGET="11.0"
+          echo "Building for Apple Silicon (arm64) with deployment target 11.0"
         fi
+        
+        echo "CMake configuration:"
+        echo "  CMAKE_OSX_ARCHITECTURES: $CMAKE_OSX_ARCHITECTURES"
+        echo "  CMAKE_OSX_DEPLOYMENT_TARGET: $CMAKE_OSX_DEPLOYMENT_TARGET"
         
         cmake -B build \
           -DCMAKE_BUILD_TYPE=Release \
@@ -199,12 +230,13 @@ jobs:
           -DSFML_BUILD_EXAMPLES=OFF \
           -DSFML_BUILD_DOC=OFF \
           -DBUILD_SHARED_LIBS=OFF \
-          -DCMAKE_INSTALL_PREFIX=/usr/local
+          -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -DCMAKE_VERBOSE_MAKEFILE=ON
         
         echo "Building SFML (this may take a few minutes)..."
-        cmake --build build -j$(sysctl -n hw.ncpu) --config Release
+        cmake --build build -j$(sysctl -n hw.ncpu) --config Release --verbose
         echo "Installing SFML..."
-        sudo cmake --install build
+        sudo cmake --install build --verbose
         cd ..
         rm -rf sfml-source
         echo "SFML 3.0.1 installation completed for ${{ matrix.arch }}"
@@ -279,10 +311,24 @@ jobs:
         if [[ "${{ matrix.arch }}" == "intel" ]]; then
           export CMAKE_OSX_ARCHITECTURES="x86_64"
           export CMAKE_OSX_DEPLOYMENT_TARGET="10.15"
+          echo "Configuring for Intel (x86_64) with deployment target 10.15"
         else
           export CMAKE_OSX_ARCHITECTURES="arm64"
           export CMAKE_OSX_DEPLOYMENT_TARGET="11.0"
+          echo "Configuring for Apple Silicon (arm64) with deployment target 11.0"
         fi
+        
+        echo "CMake configuration parameters:"
+        echo "  CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE}}"
+        echo "  CMAKE_OSX_ARCHITECTURES: $CMAKE_OSX_ARCHITECTURES"
+        echo "  CMAKE_OSX_DEPLOYMENT_TARGET: $CMAKE_OSX_DEPLOYMENT_TARGET"
+        echo "  CMAKE_PREFIX_PATH: /usr/local"
+        echo "  SFML_DIR: /usr/local/lib/cmake/SFML"
+        
+        # Check if SFML is properly installed
+        echo "Checking SFML installation:"
+        ls -la /usr/local/lib/cmake/SFML/ || echo "SFML CMake config not found"
+        ls -la /usr/local/lib/libsfml* || echo "SFML libraries not found"
         
         cmake -B ${{github.workspace}}/build \
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
