@@ -44,10 +44,10 @@ jobs:
         brew update
         brew install cmake
 
-    - name: Install SFML 3.0
+    - name: Install SFML 3.0.1
       run: |
-        # Build SFML 3.0 from source for macOS
-        git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+        # Build SFML 3.0.1 from source for macOS
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
         cd sfml-source
         cmake -B build \
           -DCMAKE_BUILD_TYPE=Release \
@@ -143,11 +143,11 @@ jobs:
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v1.1
 
-    - name: Install SFML 3.0
+    - name: Install SFML 3.0.1
       shell: bash
       run: |
-        # Download and build SFML 3.0 for Windows
-        git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+        # Download and build SFML 3.0.1 for Windows
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
         cd sfml-source
         cmake -B build \
           -DCMAKE_BUILD_TYPE=Release \
@@ -230,9 +230,9 @@ jobs:
           libx11-dev \
           pkg-config
 
-    - name: Install SFML 3.0
+    - name: Install SFML 3.0.1
       run: |
-        git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
         cd sfml-source
         cmake -B build \
           -DCMAKE_BUILD_TYPE=Release \
