@@ -19,9 +19,10 @@ DeerPortal is a C++ game built with SFML 3.0.1. It's a cross-platform project su
 ### GitHub Actions Workflows
 1. **cmake.yml** - Continuous Integration
    - Triggers on push/PR to master branch
-   - Matrix build testing Linux and Windows platforms
+   - Matrix build testing Linux, Windows, and macOS platforms (Intel + ARM)
    - Validates code compilation without creating release artifacts
    - Uses SFML 3.0.1 built from source for consistency
+   - Architecture-specific builds for macOS (Intel x86_64 and Apple Silicon ARM64)
 
 2. **release.yml** - Release Management  
    - Triggers on version tags (v*) and manual dispatch
@@ -74,11 +75,12 @@ DeerPortal is a C++ game built with SFML 3.0.1. It's a cross-platform project su
 
 ## Current Capabilities
 - ✅ Cross-platform compilation (Linux, macOS, Windows)
-- ✅ Automated CI testing on Linux and Windows
+- ✅ Automated CI testing on Linux, Windows, and macOS (Intel + ARM)
 - ✅ Automated release builds for all platforms
 - ✅ Package generation (DMG, NSIS, DEB, TGZ)
 - ✅ Version management and artifact naming
 - ✅ SFML 3.0.1 integration with proper static/shared library handling
+- ✅ Architecture-specific macOS builds (Intel x86_64 and Apple Silicon ARM64)
 
 ## Development Guidelines
 1. Always maintain cross-platform compatibility
@@ -91,9 +93,12 @@ DeerPortal is a C++ game built with SFML 3.0.1. It's a cross-platform project su
 ## Known Working Configurations
 - Ubuntu Latest + GCC + SFML 3.0.1 (shared libs)
 - Windows Latest + MSVC + SFML 3.0.1 (static libs)  
-- macOS Latest + Clang + SFML 3.0.1 (static libs)
+- macOS Latest (ARM64) + Clang + SFML 3.0.1 (static libs)
+- macOS 13 (Intel x86_64) + Clang + SFML 3.0.1 (static libs)
 
 ## Recent Changes
 - 2024: Added Windows build testing to CI pipeline
+- 2024: Added macOS build testing for both Intel and ARM architectures to CI pipeline
 - 2024: Updated to SFML 3.0.1 across all workflows
-- 2024: Implemented matrix build strategy for multi-platform CI testing 
+- 2024: Implemented matrix build strategy for multi-platform CI testing
+- 2024: Architecture-specific macOS builds with proper deployment targets 
