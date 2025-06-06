@@ -71,6 +71,20 @@ jobs:
         ls -la /usr/bin/*clang* || echo "No clang compilers found in /usr/bin"
         echo "Homebrew prefix: $(brew --prefix || echo 'brew not found')"
         
+        # Intel-specific debugging
+        if [[ "${{ matrix.arch }}" == "intel" ]]; then
+          echo "=== Intel-specific debugging ==="
+          echo "Runner OS: ${{ matrix.os }}"
+          echo "Expected architecture: x86_64"
+          echo "Actual architecture: $(uname -m)"
+          echo "Checking Homebrew installation paths:"
+          ls -la /usr/local/bin/brew 2>/dev/null || echo "No brew in /usr/local/bin"
+          ls -la /opt/homebrew/bin/brew 2>/dev/null || echo "No brew in /opt/homebrew/bin"
+          echo "PATH: $PATH"
+          echo "Homebrew doctor (quick check):"
+          timeout 30s brew doctor || echo "Homebrew doctor failed or timed out"
+        fi
+        
     - name: Install SFML 3.0 Dependencies (Linux)
       if: matrix.platform == 'linux'
       run: |
@@ -129,7 +143,19 @@ jobs:
         
         # Try to install SFML via Homebrew first (simpler approach)
         echo "Installing SFML via Homebrew..."
-        brew install --formula sfml || echo "SFML Homebrew installation failed, will build from source"
+        if [[ "${{ matrix.arch }}" == "intel" ]]; then
+          # For Intel, try different approaches as Homebrew behavior might vary
+          echo "Intel-specific SFML installation..."
+          brew install --formula sfml || {
+            echo "Primary SFML installation failed, trying alternatives..."
+            # Try updating Homebrew and retrying
+            brew update || true
+            brew install --formula sfml || echo "SFML Homebrew installation failed, will build from source"
+          }
+        else
+          # ARM installation (working)
+          brew install --formula sfml || echo "SFML Homebrew installation failed, will build from source"
+        fi
         
         echo "macOS dependencies installed successfully"
 
@@ -344,10 +370,25 @@ jobs:
         HOMEBREW_PREFIX=$(brew --prefix)
         echo "Homebrew prefix: $HOMEBREW_PREFIX"
         
-        # Check for SFML in different locations
+        # Intel-specific path handling for macos-13
+        if [[ "${{ matrix.arch }}" == "intel" ]]; then
+          # On Intel macOS, Homebrew might be in /usr/local
+          if [[ "$HOMEBREW_PREFIX" == "/opt/homebrew" ]] && [[ -d "/usr/local/lib" ]]; then
+            echo "Intel system detected, checking /usr/local for Homebrew"
+            HOMEBREW_PREFIX="/usr/local"
+          fi
+        fi
+        echo "Using Homebrew prefix: $HOMEBREW_PREFIX"
+        
+        # Check for SFML in different locations (case-insensitive)
         if [[ -d "$HOMEBREW_PREFIX/lib/cmake/sfml" ]]; then
-          echo "Found SFML CMake config in Homebrew location"
+          echo "Found SFML CMake config in Homebrew location (lowercase)"
           SFML_DIR="$HOMEBREW_PREFIX/lib/cmake/sfml"
+          CMAKE_PREFIX_PATH="$HOMEBREW_PREFIX"
+          SFML_STATIC="OFF"
+        elif [[ -d "$HOMEBREW_PREFIX/lib/cmake/SFML" ]]; then
+          echo "Found SFML CMake config in Homebrew location (uppercase)"
+          SFML_DIR="$HOMEBREW_PREFIX/lib/cmake/SFML"
           CMAKE_PREFIX_PATH="$HOMEBREW_PREFIX"
           SFML_STATIC="OFF"
         elif [[ -d "/usr/local/lib/cmake/SFML" ]]; then
@@ -370,9 +411,19 @@ jobs:
         echo "  SFML_DIR: $SFML_DIR"
         echo "  SFML_STATIC_LIBRARIES: $SFML_STATIC"
         
-        # Check SFML installation
+        # Check SFML installation with multiple search paths
         echo "Checking SFML installation:"
-        find $CMAKE_PREFIX_PATH -name "*sfml*" -type f 2>/dev/null | head -10 || echo "No SFML files found"
+        echo "Searching in $CMAKE_PREFIX_PATH for SFML files..."
+        for path in $(echo $CMAKE_PREFIX_PATH | tr ':' ' '); do
+          echo "Checking path: $path"
+          find "$path" -name "*sfml*" -type f 2>/dev/null | head -5 || echo "No SFML files found in $path"
+        done
+        
+        # Check for pkg-config as fallback
+        if command -v pkg-config &> /dev/null; then
+          echo "Checking pkg-config for SFML:"
+          pkg-config --list-all | grep -i sfml || echo "No SFML found via pkg-config"
+        fi
         
         # Configure with detected settings
         CMAKE_ARGS="-B ${{github.workspace}}/build \
