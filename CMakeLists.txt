@@ -189,74 +189,138 @@ if(APPLE)
     COMMENT "Creating Frameworks directory"
   )
   
-  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    /opt/homebrew/opt/sfml/lib/libsfml-graphics.3.0.dylib
-    /opt/homebrew/opt/sfml/lib/libsfml-audio.3.0.dylib
-    /opt/homebrew/opt/sfml/lib/libsfml-network.3.0.dylib
-    /opt/homebrew/opt/sfml/lib/libsfml-window.3.0.dylib
-    /opt/homebrew/opt/sfml/lib/libsfml-system.3.0.dylib
-    $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
-    COMMENT "Bundling SFML libraries"
-  )
+  # Detect SFML library location and bundle appropriately
+  if(DEFINED ENV{GITHUB_ACTIONS})
+    # CI environment: Check for static libraries first (source build)
+    if(EXISTS "/usr/local/lib/libsfml-system.a")
+      message(STATUS "CI: Using static SFML libraries from source build - no bundling needed")
+    elseif(EXISTS "/opt/homebrew/lib/libsfml-system.dylib")
+      # ARM macOS with Homebrew SFML
+      add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        /opt/homebrew/lib/libsfml-graphics.3.0.dylib
+        /opt/homebrew/lib/libsfml-audio.3.0.dylib
+        /opt/homebrew/lib/libsfml-network.3.0.dylib
+        /opt/homebrew/lib/libsfml-window.3.0.dylib
+        /opt/homebrew/lib/libsfml-system.3.0.dylib
+        $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
+        COMMENT "Bundling Homebrew SFML libraries (ARM CI)"
+      )
+    endif()
+  else()
+    # Local development: Try Homebrew paths first, then fallback
+    if(EXISTS "/opt/homebrew/opt/sfml/lib/libsfml-system.dylib")
+      add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        /opt/homebrew/opt/sfml/lib/libsfml-graphics.3.0.dylib
+        /opt/homebrew/opt/sfml/lib/libsfml-audio.3.0.dylib
+        /opt/homebrew/opt/sfml/lib/libsfml-network.3.0.dylib
+        /opt/homebrew/opt/sfml/lib/libsfml-window.3.0.dylib
+        /opt/homebrew/opt/sfml/lib/libsfml-system.3.0.dylib
+        $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
+        COMMENT "Bundling SFML libraries (Homebrew)"
+      )
+    elseif(EXISTS "/usr/local/lib/libsfml-system.dylib")
+      add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        /usr/local/lib/libsfml-graphics.3.0.dylib
+        /usr/local/lib/libsfml-audio.3.0.dylib
+        /usr/local/lib/libsfml-network.3.0.dylib
+        /usr/local/lib/libsfml-window.3.0.dylib
+        /usr/local/lib/libsfml-system.3.0.dylib
+        $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
+        COMMENT "Bundling SFML libraries (/usr/local)"
+      )
+    else()
+      message(WARNING "SFML dynamic libraries not found for bundling")
+    endif()
+  endif()
   
-  # Bundle additional dependencies that SFML needs
-  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib
-    /opt/homebrew/opt/libpng/lib/libpng16.16.dylib
-    $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
-    COMMENT "Bundling SFML dependencies"
-  )
+  # Bundle additional dependencies that SFML needs (only for dynamic builds)
+  if(DEFINED ENV{GITHUB_ACTIONS})
+    # CI environment: Only bundle dependencies for ARM Homebrew builds
+    if(EXISTS "/opt/homebrew/lib/libsfml-system.dylib")
+      add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib
+        /opt/homebrew/opt/libpng/lib/libpng16.16.dylib
+        $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
+        COMMENT "Bundling SFML dependencies (ARM CI)"
+      )
+    endif()
+  else()
+    # Local development: Try to bundle dependencies if found
+    if(EXISTS "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib")
+      add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib
+        /opt/homebrew/opt/libpng/lib/libpng16.16.dylib
+        $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
+        COMMENT "Bundling SFML dependencies"
+      )
+    endif()
+  endif()
   
-  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-graphics.3.0.dylib @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
-    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-audio.3.0.dylib @executable_path/../Frameworks/libsfml-audio.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
-    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-network.3.0.dylib @executable_path/../Frameworks/libsfml-network.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
-    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-window.3.0.dylib @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
-    COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
-    COMMENT "Fixing library paths for distribution"
-  )
+  # Fix library paths for distribution (only needed for dynamic builds)
+  if(NOT (DEFINED ENV{GITHUB_ACTIONS} AND EXISTS "/usr/local/lib/libsfml-system.a"))
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+      COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-graphics.3.0.dylib @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-audio.3.0.dylib @executable_path/../Frameworks/libsfml-audio.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-network.3.0.dylib @executable_path/../Frameworks/libsfml-network.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-window.3.0.dylib @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /opt/homebrew/opt/sfml/lib/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /usr/local/lib/libsfml-graphics.3.0.dylib @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /usr/local/lib/libsfml-audio.3.0.dylib @executable_path/../Frameworks/libsfml-audio.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /usr/local/lib/libsfml-network.3.0.dylib @executable_path/../Frameworks/libsfml-network.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /usr/local/lib/libsfml-window.3.0.dylib @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMAND install_name_tool -change /usr/local/lib/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE:${EXECUTABLE_NAME}> 2>/dev/null || true
+      COMMENT "Fixing library paths for distribution"
+    )
+  endif()
   
-  # Fix library identities and internal dependencies
-  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-audio.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-network.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-network.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-window.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-system.3.0.dylib 2>/dev/null || true
-    COMMENT "Fixing library identities"
-  )
+  # Fix library identities and internal dependencies (only for dynamic builds)
+  if(NOT (DEFINED ENV{GITHUB_ACTIONS} AND EXISTS "/usr/local/lib/libsfml-system.a"))
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+      COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-audio.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-network.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-network.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-window.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -id @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-system.3.0.dylib 2>/dev/null || true
+      COMMENT "Fixing library identities"
+    )
+  endif()
   
-  # Fix dependency library identities and dependencies
-  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND install_name_tool -id @executable_path/../Frameworks/libfreetype.6.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libfreetype.6.dylib 2>/dev/null || true
-    COMMAND install_name_tool -id @executable_path/../Frameworks/libpng16.16.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libpng16.16.dylib 2>/dev/null || true
-    COMMENT "Fixing dependency library identities"
-  )
-  
-  # Fix internal library dependencies
-  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-network.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-window.3.0.dylib 2>/dev/null || true
-    COMMENT "Fixing internal library dependencies"
-  )
-  
-  # Fix @rpath dependencies that could load system libraries
-  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND install_name_tool -change @rpath/libsfml-window.3.0.dylib @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -change @rpath/libsfml-graphics.3.0.dylib @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
-    COMMENT "Fixing @rpath dependencies"
-  )
-  
-  # Fix SFML dependencies on freetype and libpng
-  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
-    COMMAND install_name_tool -change /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib @executable_path/../Frameworks/libfreetype.6.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
-    COMMAND install_name_tool -change /opt/homebrew/opt/libpng/lib/libpng16.16.dylib @executable_path/../Frameworks/libpng16.16.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libfreetype.6.dylib 2>/dev/null || true
-    COMMENT "Fixing SFML dependencies on bundled libraries"
-  )
+  # Fix dependency library identities and dependencies (only for dynamic builds)
+  if(NOT (DEFINED ENV{GITHUB_ACTIONS} AND EXISTS "/usr/local/lib/libsfml-system.a"))
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+      COMMAND install_name_tool -id @executable_path/../Frameworks/libfreetype.6.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libfreetype.6.dylib 2>/dev/null || true
+      COMMAND install_name_tool -id @executable_path/../Frameworks/libpng16.16.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libpng16.16.dylib 2>/dev/null || true
+      COMMENT "Fixing dependency library identities"
+    )
+    
+    # Fix internal library dependencies
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+      COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-network.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -change @rpath/libsfml-system.3.0.dylib @executable_path/../Frameworks/libsfml-system.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-window.3.0.dylib 2>/dev/null || true
+      COMMENT "Fixing internal library dependencies"
+    )
+    
+    # Fix @rpath dependencies that could load system libraries
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+      COMMAND install_name_tool -change @rpath/libsfml-window.3.0.dylib @executable_path/../Frameworks/libsfml-window.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -change @rpath/libsfml-graphics.3.0.dylib @executable_path/../Frameworks/libsfml-graphics.3.0.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-audio.3.0.dylib 2>/dev/null || true
+      COMMENT "Fixing @rpath dependencies"
+    )
+    
+    # Fix SFML dependencies on freetype and libpng
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+      COMMAND install_name_tool -change /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib @executable_path/../Frameworks/libfreetype.6.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libsfml-graphics.3.0.dylib 2>/dev/null || true
+      COMMAND install_name_tool -change /opt/homebrew/opt/libpng/lib/libpng16.16.dylib @executable_path/../Frameworks/libpng16.16.dylib $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/libfreetype.6.dylib 2>/dev/null || true
+      COMMENT "Fixing SFML dependencies on bundled libraries"
+    )
+  endif()
   
   # Sign the app bundle with ad-hoc signature for macOS compatibility
   add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
