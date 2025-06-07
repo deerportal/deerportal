@@ -1,5 +1,70 @@
 # DeerPortal Release Notes
 
+## Version 0.9.1 "Stability Improvements" - June 2025
+
+🔧 **Minor Release with Focused Improvements**
+
+This maintenance release builds upon the solid foundation of version 0.9.0 "Welcome Back" with targeted improvements and optimizations.
+
+### 🚀 Improvements
+
+#### Documentation & Release Management
+- **Complete Version Management Documentation**: Comprehensive documentation of the version system for better release management
+- **Enhanced AI Instructions**: Updated memory bank with detailed version management procedures
+- **Release Process Optimization**: Streamlined workflows for consistent version updates across all platforms
+
+#### Build System Enhancements
+- **Improved CMake Configuration**: Better handling of version distribution throughout the build system
+- **Enhanced Cross-Platform Support**: Refined build processes for macOS, Linux, and Windows
+- **Package Generation Improvements**: More reliable packaging with consistent version metadata
+
+#### Stability & Performance
+- **Memory Management Optimizations**: Continued refinement of SFML 3.0 smart pointer usage
+- **Build Reliability**: Enhanced error handling and fallback mechanisms in packaging
+- **Asset Loading Stability**: Further improvements to asset path resolution
+
+### 🔧 Technical Improvements
+
+#### Version System Overhaul
+- **Single Source of Truth**: Reinforced `version.txt` as the authoritative version source
+- **Automated Distribution**: Enhanced CMake-based version propagation to all components
+- **Manual Update Documentation**: Clear guidelines for files requiring manual version updates
+
+#### Development Workflow
+- **Release Pipeline Improvements**: Better GitHub Actions integration with version management
+- **Test Mode Enhancements**: Improved testing workflows without affecting production releases
+- **Documentation Updates**: Comprehensive guides for version management and release processes
+
+### 📋 What's Improved Since 0.9.0
+
+#### Version Management
+- Documented complete version management system with single source of truth
+- Enhanced automation for version distribution across all build outputs
+- Clear separation of automated vs. manual version update requirements
+
+#### Build System
+- Improved CMake version parsing and distribution mechanisms
+- Enhanced package metadata consistency across all platforms
+- Better error handling in automated build processes
+
+#### Documentation
+- Comprehensive version management documentation in `ai-instructions.md`
+- Updated release process guidelines for maintainers
+- Clear identification of all version-dependent files and update procedures
+
+### 🎯 Maintained Features
+All features from version 0.9.0 are preserved and enhanced:
+- Complete SFML 3.0 compatibility
+- Card Notification System with visual overlays
+- Intro Shader Animation with grid-based reveal effect
+- VertexArray Diamond Rendering optimization
+- Cross-platform compatibility (macOS, Linux, Windows)
+- Professional packaging for all platforms
+
+This release focuses on improving the development experience and ensuring consistent, reliable releases while maintaining the excellent gameplay experience of DeerPortal.
+
+---
+
 ## Version 0.9.0 "Welcome Back" - May 2025
 
 🎉 **Welcome Back to the DeerPortal!** 🦌

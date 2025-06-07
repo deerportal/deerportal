@@ -51,7 +51,7 @@ add_definitions(-DDEERPORTAL_VERSION="${DEERPORTAL_VERSION}.${CMAKE_BUILD_TYPE}"
 #   "${PROJECT_BINARY_DIR}/config.h"
 #   )
 include_directories("${PROJECT_BINARY_DIR}")
-include_directories(${YOUR_DIRECTORY})
+# include_directories(${YOUR_DIRECTORY})  # Commented out - undefined variable
 
 # Define sources and executable
 set(EXECUTABLE_NAME "DeerPortal")
@@ -206,6 +206,8 @@ if(APPLE)
         $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../Frameworks/
         COMMENT "Bundling Homebrew SFML libraries (ARM CI)"
       )
+    else()
+      message(STATUS "CI: No dynamic SFML libraries found, assuming static build")
     endif()
   else()
     # Local development: Try Homebrew paths first, then fallback
@@ -239,7 +241,7 @@ if(APPLE)
   # Bundle additional dependencies that SFML needs (only for dynamic builds)
   if(DEFINED ENV{GITHUB_ACTIONS})
     # CI environment: Only bundle dependencies for ARM Homebrew builds
-    if(EXISTS "/opt/homebrew/lib/libsfml-system.dylib")
+    if(EXISTS "/opt/homebrew/lib/libsfml-system.dylib" AND EXISTS "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib")
       add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         /opt/homebrew/opt/freetype/lib/libfreetype.6.dylib
