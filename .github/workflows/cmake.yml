@@ -243,15 +243,12 @@ jobs:
             git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
             cd sfml-source
             
-            # Intel-specific configuration (matching release workflow)
-            export CMAKE_OSX_ARCHITECTURES="x86_64"
-            export CMAKE_OSX_DEPLOYMENT_TARGET="10.15"
-            echo "Building for Intel (x86_64) with deployment target 10.15"
+            # Intel-specific configuration (exactly matching release workflow)
+            echo "Building for Intel (x86_64) with deployment target 10.15 - matching release workflow"
             
             cmake -B build \
               -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_OSX_DEPLOYMENT_TARGET="10.15" \
-              -DCMAKE_OSX_ARCHITECTURES="x86_64" \
+              -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
               -DSFML_BUILD_EXAMPLES=OFF \
               -DSFML_BUILD_DOC=OFF \
               -DBUILD_SHARED_LIBS=OFF \
@@ -286,14 +283,11 @@ jobs:
               git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
               cd sfml-source
               
-              export CMAKE_OSX_ARCHITECTURES="arm64"
-              export CMAKE_OSX_DEPLOYMENT_TARGET="11.0"
-              echo "Building for Apple Silicon (arm64) with deployment target 11.0"
+              echo "Building for Apple Silicon with deployment target 11.0"
               
               cmake -B build \
                 -DCMAKE_BUILD_TYPE=Release \
-                -DCMAKE_OSX_DEPLOYMENT_TARGET="11.0" \
-                -DCMAKE_OSX_ARCHITECTURES="arm64" \
+                -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
                 -DSFML_BUILD_EXAMPLES=OFF \
                 -DSFML_BUILD_DOC=OFF \
                 -DBUILD_SHARED_LIBS=OFF \
@@ -378,15 +372,13 @@ jobs:
       run: |
         echo "=== Configuring CMake for macOS (${{ matrix.arch }}) ==="
         
-        # Set architecture-specific flags
+        # Set deployment target (no architecture flags needed - let CMake auto-detect)
         if [[ "${{ matrix.arch }}" == "intel" ]]; then
-          export CMAKE_OSX_ARCHITECTURES="x86_64"
           export CMAKE_OSX_DEPLOYMENT_TARGET="10.15"
-          echo "Configuring for Intel (x86_64) with deployment target 10.15"
+          echo "Configuring for Intel with deployment target 10.15 (matching release workflow)"
         else
-          export CMAKE_OSX_ARCHITECTURES="arm64"
           export CMAKE_OSX_DEPLOYMENT_TARGET="11.0"
-          echo "Configuring for Apple Silicon (arm64) with deployment target 11.0"
+          echo "Configuring for Apple Silicon with deployment target 11.0"
         fi
         
         # Detect SFML installation location
@@ -430,7 +422,6 @@ jobs:
         
         echo "CMake configuration parameters:"
         echo "  CMAKE_BUILD_TYPE: ${{env.BUILD_TYPE}}"
-        echo "  CMAKE_OSX_ARCHITECTURES: $CMAKE_OSX_ARCHITECTURES"
         echo "  CMAKE_OSX_DEPLOYMENT_TARGET: $CMAKE_OSX_DEPLOYMENT_TARGET"
         echo "  CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH"
         echo "  SFML_DIR: $SFML_DIR"
@@ -454,7 +445,6 @@ jobs:
         CMAKE_ARGS="-B ${{github.workspace}}/build \
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
           -DCMAKE_OSX_DEPLOYMENT_TARGET=$CMAKE_OSX_DEPLOYMENT_TARGET \
-          -DCMAKE_OSX_ARCHITECTURES=$CMAKE_OSX_ARCHITECTURES \
           -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH \
           -DSFML_STATIC_LIBRARIES=$SFML_STATIC \
           -DCMAKE_VERBOSE_MAKEFILE=ON"

@@ -188,6 +188,7 @@ The following files require **manual updates** when releasing new versions:
 - **Added Test Mode**: `test_mode` input to build without creating releases
 - **Updated to action-gh-release@v2**: Better conflict handling
 - **Removed libsfml-dev dependency**: Linux packages now use static SFML builds
+- **Fixed Intel macOS Build**: Removed CMAKE_OSX_ARCHITECTURES flags to match release workflow configuration
 
 ## Development Guidelines
 
