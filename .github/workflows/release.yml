@@ -126,13 +126,14 @@ jobs:
 
     - name: Upload to Release
       if: github.event_name == 'push'
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: build/DeerPortal-*-macOS.dmg
         tag_name: ${{ github.ref }}
         name: DeerPortal v${{ steps.get_version.outputs.VERSION }}
         draft: false
         prerelease: false
+        fail_on_unmatched_files: false
         body: |
           ## DeerPortal v${{ steps.get_version.outputs.VERSION }}
           
@@ -230,10 +231,13 @@ jobs:
 
     - name: Upload to Release
       if: github.event_name == 'push'
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: build/DeerPortal-*-Windows.exe
         tag_name: ${{ github.ref }}
+        # Add files to existing release (macOS job creates the release)
+        fail_on_unmatched_files: false
+        make_latest: false
 
   # Linux Build
   build-linux:
@@ -332,9 +336,12 @@ jobs:
 
     - name: Upload to Release
       if: github.event_name == 'push'
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           build/DeerPortal-*-Linux.tar.gz
           build/DeerPortal-*-Linux.deb
-        tag_name: ${{ github.ref }} 
+        tag_name: ${{ github.ref }}
+        # Add files to existing release (macOS job creates the release)
+        fail_on_unmatched_files: false
+        make_latest: false 
