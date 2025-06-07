@@ -101,4 +101,9 @@ DeerPortal is a C++ game built with SFML 3.0.1. It's a cross-platform project su
 - 2024: Added macOS build testing for both Intel and ARM architectures to CI pipeline
 - 2024: Updated to SFML 3.0.1 across all workflows
 - 2024: Implemented matrix build strategy for multi-platform CI testing
-- 2024: Architecture-specific macOS builds with proper deployment targets 
+- 2024: Architecture-specific macOS builds with proper deployment targets
+- 2025-01: Fixed GitHub Actions release packaging failures:
+  - Updated macOS DMG creation to use custom `make dmg` instead of `cpack -G DragNDrop`
+  - Fixed Linux packaging dependencies (removed SFML dev dependency for static builds)
+  - Added fallback packaging methods for all platforms
+  - Added comprehensive debugging to GitHub Actions workflows 
