@@ -10,6 +10,10 @@ on:
         description: 'Version to build (e.g., 0.9.0)'
         required: true
         default: '0.9.0'
+      test_mode:
+        description: 'Test mode (builds packages but skips GitHub release creation)'
+        type: boolean
+        default: false
 
 env:
   BUILD_TYPE: Release
@@ -22,6 +26,15 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      
+    - name: Test Mode Notification
+      if: inputs.test_mode
+      run: |
+        echo "🧪 ====================================="
+        echo "🧪 TEST MODE ENABLED"
+        echo "🧪 This build will create packages but"
+        echo "🧪 will NOT create a GitHub release"
+        echo "🧪 ====================================="
 
     - name: Get version from tag or input
       id: get_version
@@ -125,14 +138,15 @@ jobs:
         retention-days: 30
 
     - name: Upload to Release
-      if: github.event_name == 'push'
-      uses: softprops/action-gh-release@v1
+      if: github.event_name == 'push' && !inputs.test_mode
+      uses: softprops/action-gh-release@v2
       with:
         files: build/DeerPortal-*-macOS.dmg
         tag_name: ${{ github.ref }}
         name: DeerPortal v${{ steps.get_version.outputs.VERSION }}
         draft: false
         prerelease: false
+        fail_on_unmatched_files: false
         body: |
           ## DeerPortal v${{ steps.get_version.outputs.VERSION }}
           
@@ -229,11 +243,14 @@ jobs:
         retention-days: 30
 
     - name: Upload to Release
-      if: github.event_name == 'push'
-      uses: softprops/action-gh-release@v1
+      if: github.event_name == 'push' && !inputs.test_mode
+      uses: softprops/action-gh-release@v2
       with:
         files: build/DeerPortal-*-Windows.exe
         tag_name: ${{ github.ref }}
+        # Add files to existing release (macOS job creates the release)
+        fail_on_unmatched_files: false
+        make_latest: false
 
   # Linux Build
   build-linux:
@@ -331,10 +348,13 @@ jobs:
         retention-days: 30
 
     - name: Upload to Release
-      if: github.event_name == 'push'
-      uses: softprops/action-gh-release@v1
+      if: github.event_name == 'push' && !inputs.test_mode
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           build/DeerPortal-*-Linux.tar.gz
           build/DeerPortal-*-Linux.deb
-        tag_name: ${{ github.ref }} 
+        tag_name: ${{ github.ref }}
+        # Add files to existing release (macOS job creates the release)
+        fail_on_unmatched_files: false
+        make_latest: false 
