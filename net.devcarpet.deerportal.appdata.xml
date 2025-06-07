@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.1" date="2025-06-30">
+​      <description>
+​        <p>Minor improvements and bug fixes following the major 0.9.0 release.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.0" date="2025-05-31">
 ​      <description>
 ​        <p>Welcome Back - Major SFML 3.0 migration release with enhanced performance and modern C++ implementation.</p>
