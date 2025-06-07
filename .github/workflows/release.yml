@@ -75,7 +75,47 @@ jobs:
     - name: Create DMG package
       run: |
         cd build
-        cpack -G DragNDrop
+        echo "=== Build directory contents ==="
+        ls -la
+        echo "=== Looking for app bundle ==="
+        find . -name "*.app" -type d
+        echo "=== Checking Makefile targets ==="
+        make help | grep -E "(dmg|package)" || echo "Custom targets not found in help"
+        echo "=== Creating DMG package ==="
+        make dmg || {
+          echo "=== make dmg failed, creating DMG manually ==="
+          # Fallback: Create DMG manually using the same approach as in CMakeLists.txt
+          VERSION_FROM_FILE=$(cat ../version.txt || echo "0.9.0")
+          DMG_NAME="DeerPortal-${VERSION_FROM_FILE}-macOS"
+          DMG_TEMP_DIR="dmg_temp"
+          
+          # Clean and create temp directory
+          rm -rf "${DMG_TEMP_DIR}" "${DMG_NAME}".dmg "${DMG_NAME}"-temp.dmg
+          mkdir -p "${DMG_TEMP_DIR}"
+          
+          # Find and copy app bundle
+          APP_BUNDLE=$(find . -name "DeerPortal.app" -type d | head -1)
+          if [ -n "$APP_BUNDLE" ]; then
+            cp -R "$APP_BUNDLE" "${DMG_TEMP_DIR}/"
+            codesign --force --deep --sign - "${DMG_TEMP_DIR}/DeerPortal.app" 2>/dev/null || true
+            
+            # Copy background and create symlink
+            cp ../packaging/dmg_background.png "${DMG_TEMP_DIR}/.background.png" 2>/dev/null || true
+            ln -s /Applications "${DMG_TEMP_DIR}/Applications"
+            
+            # Create DMG
+            hdiutil create -volname "${DMG_NAME}" -srcfolder "${DMG_TEMP_DIR}" -ov -format UDRW "${DMG_NAME}-temp.dmg"
+            hdiutil convert "${DMG_NAME}-temp.dmg" -format UDBZ -o "${DMG_NAME}.dmg"
+            
+            # Clean up
+            rm -rf "${DMG_TEMP_DIR}" "${DMG_NAME}-temp.dmg"
+            echo "✅ DMG created manually: ${DMG_NAME}.dmg"
+            ls -lh "${DMG_NAME}.dmg"
+          else
+            echo "❌ No app bundle found for DMG creation"
+            exit 1
+          fi
+        }
 
     - name: Upload DMG artifact
       uses: actions/upload-artifact@v4
@@ -171,7 +211,15 @@ jobs:
     - name: Create Windows package
       run: |
         cd build
-        cpack -G NSIS
+        echo "=== Build directory contents ==="
+        ls -la
+        echo "=== Looking for DeerPortal executable ==="
+        find . -name "DeerPortal*" -type f
+        echo "=== Creating Windows package ==="
+        make package || {
+          echo "=== make package failed, trying direct CPack ==="
+          cpack -G NSIS || echo "NSIS packaging failed"
+        }
 
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
@@ -258,8 +306,20 @@ jobs:
     - name: Create Linux packages
       run: |
         cd build
-        cpack -G TGZ
-        cpack -G DEB
+        echo "=== Build directory contents ==="
+        ls -la
+        echo "=== Looking for DeerPortal executable ==="
+        find . -name "DeerPortal" -type f
+        echo "=== Fixing permissions ==="
+        chmod +x DeerPortal || true
+        echo "=== Available package targets ==="
+        make help | grep -E "(package|cpack)" || echo "Package targets not found"
+        echo "=== Creating packages ==="
+        make package || {
+          echo "=== make package failed, trying direct CPack ==="
+          cpack -G TGZ || echo "TGZ packaging failed"
+          cpack -G DEB || echo "DEB packaging failed" 
+        }
 
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v4

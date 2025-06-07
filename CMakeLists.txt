@@ -496,7 +496,9 @@ else()
     set(CPACK_GENERATOR "TGZ;DEB")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "DeerPortal Team")
     set(CPACK_DEBIAN_PACKAGE_SECTION "games")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 3.0)")
+    # Remove SFML dependency since we build statically
+    # set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-dev (>= 3.0)")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.17), libgcc-s1 (>= 3.0), libstdc++6 (>= 5.2)")
     set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Linux")
 endif()
 
