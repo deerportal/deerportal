@@ -29,6 +29,14 @@ DeerPortal is a C++ game built with SFML 3.0.1. It's a cross-platform project su
    - Builds for macOS (DMG), Windows (NSIS installer), Linux (DEB/TGZ)
    - Creates GitHub releases with proper artifacts
    - Uses SFML 3.0.1 for all platforms
+   - Supports test mode via workflow_dispatch (builds packages without creating releases)
+
+3. **test-release.yml** - Release Pipeline Testing
+   - Manual trigger only for testing release builds
+   - Creates packages but never creates GitHub releases
+   - Supports testing individual platforms or all platforms
+   - Artifacts retained for 7 days for verification
+   - Provides build summary for quick validation
 
 ### Platform-Specific Notes
 
@@ -108,4 +116,5 @@ DeerPortal is a C++ game built with SFML 3.0.1. It's a cross-platform project su
   - Added fallback packaging methods for all platforms
   - Added comprehensive debugging to GitHub Actions workflows
   - Fixed release upload conflicts (multiple jobs trying to create same release)
-  - Updated to softprops/action-gh-release@v2 for better conflict handling 
+  - Updated to softprops/action-gh-release@v2 for better conflict handling
+  - Added test mode capabilities for release pipeline testing without creating actual releases 

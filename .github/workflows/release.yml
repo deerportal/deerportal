@@ -10,6 +10,10 @@ on:
         description: 'Version to build (e.g., 0.9.0)'
         required: true
         default: '0.9.0'
+      test_mode:
+        description: 'Test mode (builds packages but skips GitHub release creation)'
+        type: boolean
+        default: false
 
 env:
   BUILD_TYPE: Release
@@ -22,6 +26,15 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      
+    - name: Test Mode Notification
+      if: inputs.test_mode
+      run: |
+        echo "🧪 ====================================="
+        echo "🧪 TEST MODE ENABLED"
+        echo "🧪 This build will create packages but"
+        echo "🧪 will NOT create a GitHub release"
+        echo "🧪 ====================================="
 
     - name: Get version from tag or input
       id: get_version
@@ -125,7 +138,7 @@ jobs:
         retention-days: 30
 
     - name: Upload to Release
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && !inputs.test_mode
       uses: softprops/action-gh-release@v2
       with:
         files: build/DeerPortal-*-macOS.dmg
@@ -230,7 +243,7 @@ jobs:
         retention-days: 30
 
     - name: Upload to Release
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && !inputs.test_mode
       uses: softprops/action-gh-release@v2
       with:
         files: build/DeerPortal-*-Windows.exe
@@ -335,7 +348,7 @@ jobs:
         retention-days: 30
 
     - name: Upload to Release
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && !inputs.test_mode
       uses: softprops/action-gh-release@v2
       with:
         files: |

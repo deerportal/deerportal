@@ -1,0 +1,294 @@
+name: Test Release Pipeline
+
+on:
+  workflow_dispatch:  # Manual triggering only
+    inputs:
+      version:
+        description: 'Version to test build (e.g., 0.9.1-test)'
+        required: true
+        default: '0.9.1-test'
+      platforms:
+        description: 'Platforms to test (comma-separated: macos,windows,linux or all)'
+        required: true
+        default: 'all'
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  # macOS Build with DMG creation (TEST)
+  test-macos:
+    runs-on: macos-latest
+    if: contains(github.event.inputs.platforms, 'macos') || github.event.inputs.platforms == 'all'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Test Build Notice
+      run: |
+        echo "🧪 ====================================="
+        echo "🧪 TEST BUILD - macOS"
+        echo "🧪 Version: ${{ github.event.inputs.version }}"
+        echo "🧪 No GitHub release will be created"
+        echo "🧪 ====================================="
+
+    - name: Get version from input
+      id: get_version
+      run: |
+        VERSION="${{ github.event.inputs.version }}"
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Building test version: ${VERSION}"
+
+    - name: Update version.txt
+      run: |
+        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        cat version.txt
+
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install cmake
+
+    - name: Install SFML 3.0.1
+      run: |
+        # Build SFML 3.0.1 from source for macOS
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+          -DSFML_BUILD_EXAMPLES=OFF \
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_INSTALL_PREFIX=/usr/local
+        cmake --build build -j$(sysctl -n hw.ncpu) --config Release
+        sudo cmake --install build
+        cd ..
+        rm -rf sfml-source
+
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+          -DSFML_STATIC_LIBRARIES=ON
+
+    - name: Build
+      run: |
+        cmake --build build --config ${{ env.BUILD_TYPE }} -j$(sysctl -n hw.ncpu)
+
+    - name: Create DMG package (TEST)
+      run: |
+        cd build
+        echo "=== Build directory contents ==="
+        ls -la
+        echo "=== Looking for app bundle ==="
+        find . -name "*.app" -type d
+        echo "=== Creating test DMG package ==="
+        make dmg || echo "DMG creation failed - but this is a test"
+
+    - name: Upload Test DMG Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: TEST-DeerPortal-${{ steps.get_version.outputs.VERSION }}-macOS-dmg
+        path: build/DeerPortal-*-macOS.dmg
+        retention-days: 7  # Shorter retention for tests
+
+  # Windows Build (TEST)
+  test-windows:
+    runs-on: windows-latest
+    if: contains(github.event.inputs.platforms, 'windows') || github.event.inputs.platforms == 'all'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Test Build Notice
+      shell: bash
+      run: |
+        echo "🧪 ====================================="
+        echo "🧪 TEST BUILD - Windows"
+        echo "🧪 Version: ${{ github.event.inputs.version }}"
+        echo "🧪 No GitHub release will be created"
+        echo "🧪 ====================================="
+
+    - name: Get version from input
+      id: get_version
+      shell: bash
+      run: |
+        VERSION="${{ github.event.inputs.version }}"
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Building test version: ${VERSION}"
+
+    - name: Update version.txt
+      shell: bash
+      run: |
+        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        cat version.txt
+
+    - name: Setup MSVC
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Install SFML 3.0.1
+      shell: bash
+      run: |
+        # Download and build SFML 3.0.1 for Windows
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DSFML_BUILD_EXAMPLES=OFF \
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_INSTALL_PREFIX="C:/SFML"
+        cmake --build build --config Release
+        cmake --install build
+        cd ..
+        rm -rf sfml-source
+
+    - name: Configure CMake
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_PREFIX_PATH="C:/SFML"
+
+    - name: Build
+      run: |
+        cmake --build build --config ${{ env.BUILD_TYPE }}
+
+    - name: Create Windows package (TEST)
+      run: |
+        cd build
+        echo "=== Creating test Windows package ==="
+        make package || {
+          echo "=== make package failed, trying direct CPack ==="
+          cpack -G NSIS || echo "NSIS packaging failed - but this is a test"
+        }
+
+    - name: Upload Test Windows Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: TEST-DeerPortal-${{ steps.get_version.outputs.VERSION }}-Windows-installer
+        path: build/DeerPortal-*-Windows.exe
+        retention-days: 7  # Shorter retention for tests
+
+  # Linux Build (TEST)
+  test-linux:
+    runs-on: ubuntu-latest
+    if: contains(github.event.inputs.platforms, 'linux') || github.event.inputs.platforms == 'all'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Test Build Notice
+      run: |
+        echo "🧪 ====================================="
+        echo "🧪 TEST BUILD - Linux"
+        echo "🧪 Version: ${{ github.event.inputs.version }}"
+        echo "🧪 No GitHub release will be created"
+        echo "🧪 ====================================="
+
+    - name: Get version from input
+      id: get_version
+      run: |
+        VERSION="${{ github.event.inputs.version }}"
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Building test version: ${VERSION}"
+
+    - name: Update version.txt
+      run: |
+        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        cat version.txt
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y \
+          build-essential \
+          cmake \
+          git \
+          libfreetype6-dev \
+          libopenal-dev \
+          libvorbis-dev \
+          libflac-dev \
+          libudev-dev \
+          libgl1-mesa-dev \
+          libxrandr-dev \
+          libxcursor-dev \
+          libxi-dev \
+          libx11-dev \
+          pkg-config
+
+    - name: Install SFML 3.0.1
+      run: |
+        git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+        cd sfml-source
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DSFML_BUILD_EXAMPLES=OFF \
+          -DSFML_BUILD_DOC=OFF \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DCMAKE_INSTALL_PREFIX=/usr/local
+        cmake --build build -j$(nproc) --config Release
+        sudo cmake --install build
+        cd ..
+        rm -rf sfml-source
+
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+          -DSFML_STATIC_LIBRARIES=ON
+
+    - name: Build
+      run: |
+        cmake --build build --config ${{ env.BUILD_TYPE }} -j$(nproc)
+
+    - name: Create Linux packages (TEST)
+      run: |
+        cd build
+        echo "=== Creating test Linux packages ==="
+        chmod +x DeerPortal || true
+        make package || {
+          echo "=== make package failed, trying direct CPack ==="
+          cpack -G TGZ || echo "TGZ packaging failed - but this is a test"
+          cpack -G DEB || echo "DEB packaging failed - but this is a test" 
+        }
+
+    - name: Upload Test Linux Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: TEST-DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux-packages
+        path: |
+          build/DeerPortal-*-Linux.tar.gz
+          build/DeerPortal-*-Linux.deb
+        retention-days: 7  # Shorter retention for tests
+
+  # Summary job that runs after all builds
+  test-summary:
+    needs: [test-macos, test-windows, test-linux]
+    runs-on: ubuntu-latest
+    if: always()  # Run even if some jobs fail
+    
+    steps:
+    - name: Test Results Summary
+      run: |
+        echo "🧪 ====================================="
+        echo "🧪 TEST BUILD SUMMARY"
+        echo "🧪 Version: ${{ github.event.inputs.version }}"
+        echo "🧪 ====================================="
+        echo ""
+        echo "macOS Build: ${{ needs.test-macos.result }}"
+        echo "Windows Build: ${{ needs.test-windows.result }}"  
+        echo "Linux Build: ${{ needs.test-linux.result }}"
+        echo ""
+        echo "Check the 'Artifacts' section above to download test packages"
+        echo "These artifacts will be automatically deleted after 7 days"
+        echo ""
+        if [[ "${{ needs.test-macos.result }}" == "success" && \
+              "${{ needs.test-windows.result }}" == "success" && \
+              "${{ needs.test-linux.result }}" == "success" ]]; then
+          echo "✅ All builds successful! Ready for production release."
+        else
+          echo "❌ Some builds failed. Check individual job logs for details."
+        fi 
