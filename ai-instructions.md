@@ -188,7 +188,7 @@ The following files require **manual updates** when releasing new versions:
 - **Added Test Mode**: `test_mode` input to build without creating releases
 - **Updated to action-gh-release@v2**: Better conflict handling
 - **Removed libsfml-dev dependency**: Linux packages now use static SFML builds
-- **Fixed Intel macOS Build**: Removed CMAKE_OSX_ARCHITECTURES flags to match release workflow configuration
+- **Fixed Intel macOS Build**: RESOLVED - Root cause was undefined `YOUR_DIRECTORY` variable in CMakeLists.txt causing configuration failure. Also removed CMAKE_OSX_ARCHITECTURES flags and improved error handling in CI environment detection.
 
 ## Development Guidelines
 
