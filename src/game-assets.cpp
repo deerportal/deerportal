@@ -1,6 +1,8 @@
 #include "game-assets.h"
 #include "game.h"  // For access to Game class members
 #include "tilemap.h"  // For ASSETS_PATH and get_full_path
+#include "safe-asset-loader.h"
+#include "error-handler.h"
 
 namespace DP {
 
@@ -26,21 +28,41 @@ void GameAssets::loadAssets()
 
 void GameAssets::loadFonts()
 {
-    if (!gameFont.openFromFile(get_full_path(ASSETS_PATH"fnt/metal-mania.regular.ttf")))
-    {
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadFont(gameFont, ASSETS_PATH"fnt/metal-mania.regular.ttf");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+        // Try fallback font
+        if (!DeerPortal::SafeAssetLoader::loadFallbackFont(gameFont)) {
+            throw DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::FONT,
+                "metal-mania.regular.ttf",
+                "Failed to load primary font and no fallback available"
+            );
+        }
     }
-    if (!menuFont.openFromFile(get_full_path(ASSETS_PATH"fnt/metal-macabre.regular.ttf")))
-    {
-        std::exit(1);
+    
+    try {
+        DeerPortal::SafeAssetLoader::loadFont(menuFont, ASSETS_PATH"fnt/metal-macabre.regular.ttf");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+        // Use game font as fallback for menu font
+        menuFont = gameFont;
     }
 }
 
 void GameAssets::loadTextures()
 {
-    if (!textureBackgroundArt.loadFromFile(get_full_path(ASSETS_PATH"img/background_land.png")))
-    {
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadTexture(textureBackgroundArt, ASSETS_PATH"img/background_land.png");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+        // Create fallback background (dark green)
+        DeerPortal::SafeAssetLoader::createFallbackTexture(
+            textureBackgroundArt, 
+            sf::Color(0, 100, 0), 
+            sf::Vector2u(800, 600)
+        );
     }
 
     // Load and set window icon (NEW 0.8.2 FEATURE)
@@ -53,29 +75,70 @@ void GameAssets::loadTextures()
 
 void GameAssets::loadShaders()
 {
-    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"shaders/blur.frag"), sf::Shader::Type::Fragment))
-        std::exit(1);
+    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"shaders/blur.frag"), sf::Shader::Type::Fragment)) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SHADER,
+                "blur.frag",
+                "Failed to load blur shader - visual effects disabled"
+            )
+        );
+    }
 
-    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"shaders/pixelate.frag"), sf::Shader::Type::Fragment))
-        std::exit(1);
+    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"shaders/pixelate.frag"), sf::Shader::Type::Fragment)) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SHADER,
+                "pixelate.frag",
+                "Failed to load pixelate shader - visual effects disabled"
+            )
+        );
+    }
         
-    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"shaders/dark.frag"), sf::Shader::Type::Fragment))
-        std::exit(1);
+    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"shaders/dark.frag"), sf::Shader::Type::Fragment)) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SHADER,
+                "dark.frag",
+                "Failed to load dark shader - visual effects disabled"
+            )
+        );
+    }
 }
 
 void GameAssets::loadAudio()
 {
-    if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"audio/game.ogg")))
-        std::exit(1);
+    if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"audio/game.ogg"))) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SOUND,
+                "game.ogg",
+                "Failed to load game music - audio disabled"
+            )
+        );
+    }
         
-    if (!musicMenu.openFromFile(get_full_path(ASSETS_PATH"audio/menu.ogg")))
-        std::exit(1);
+    if (!musicMenu.openFromFile(get_full_path(ASSETS_PATH"audio/menu.ogg"))) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SOUND,
+                "menu.ogg",
+                "Failed to load menu music - audio disabled"
+            )
+        );
+    }
 
-    if (!sfxClickBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/click.ogg")))
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadSound(sfxClickBuffer, ASSETS_PATH"audio/click.ogg");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+    }
 
-    if (!sfxDoneBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/done.ogg")))
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadSound(sfxDoneBuffer, ASSETS_PATH"audio/done.ogg");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+    }
 }
 
 void GameAssets::initializeSprites()
@@ -136,23 +199,7 @@ void GameAssets::unloadAssets()
     // This method is here for potential future manual cleanup needs
 }
 
-void GameAssets::showMenu()
-{
-    playMenuMusic();
-    game->currentState = Game::state_menu;
-}
 
-void GameAssets::hideMenu()
-{
-    stopMenuMusic();
-}
-
-void GameAssets::showGameBoard()
-{
-    playGameMusic();
-    game->sfx.playLetsBegin();
-    game->currentState = Game::state_setup_players;
-}
 
 void GameAssets::playMenuMusic()
 {

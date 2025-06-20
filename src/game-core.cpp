@@ -349,21 +349,8 @@ void GameCore::updatePlayerTimers(const sf::Time& frameTime)
 
 void GameCore::updateVisualEffects(const sf::Time& frameTime)
 {
-    if (game->oscilatorInc)
-    {
-        game->oscilator += frameTime.asSeconds();
-    } else {
-        game->oscilator -= frameTime.asSeconds();
-    }
-
-    if (game->oscilator < -1)
-        game->oscilatorInc = true;
-
-    if (game->oscilator > 1)
-        game->oscilatorInc = false;
-
-    float modifier = sin(game->oscilator/2.5)*30.0f;
-    game->spriteBigDiamond->setPosition(sf::Vector2f(474,342+modifier));
+    // Visual effects are now handled by the animation system
+    // This method is kept for future visual effect coordination
 }
 
 void GameCore::updateAIBehavior(const sf::Time& frameTime)

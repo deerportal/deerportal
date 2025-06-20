@@ -23,10 +23,7 @@ public:
     void loadAssets();
     void unloadAssets();
 
-    // Menu system
-    void showMenu();
-    void hideMenu();
-    void showGameBoard();
+
 
     // Update functionality
     void update(sf::Time frameTime);

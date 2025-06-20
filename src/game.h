@@ -3,48 +3,52 @@
 #include <stdlib.h>
 #include <iostream>
 #include <ctime>
-
 #include <time.h>       /* time */
+#include <memory>
+#include <array>
+#include <set>
+#include <vector>
 
+// Essential SFML includes that are used directly in the header
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "command.h"
-#include "tilemap.h"
-#include "selector.h"
-#include "playerhud.h"
-#include "textureholder.h"
-#include "hover.h"
-#include "guiwindow.h"
-#include "rounddice.h"
-#include "guirounddice.h"
-#include "grouphud.h"
-#include "animatedsprite.h"
-#include "character.h"
-#include "rotateelem.h"
-#include "boarddiamondseq.h"
-#include "soundfx.h"
-#include "cardsdeck.h"
-#include "calendar.h"
-#include "particle.h"
-#include "bubble.h"
-//class Command;
-#include "banner.h"
-#include "credits.h"
-#include "cardnotification.h"
-#include "introshader.h"  // NEW: Intro shader animation
+// Include headers for classes used as direct member variables (cannot be forward declared)
+#include "data.h"           // For Player struct
+#include "selector.h"       // For Selector selector;
+#include "character.h"      // For Character character;
+#include "rounddice.h"      // For RoundDice roundDice;
+#include "guirounddice.h"   // For GuiRoundDice guiRoundDice;
+#include "boarddiamondseq.h" // For BoardDiamondSeq boardDiamonds;
+#include "soundfx.h"        // For SoundFX sfx;
+#include "textureholder.h"  // For TextureHolder textures;
+#include "particle.h"       // For ParticleSystem particleSystem;
+#include "grouphud.h"       // For GroupHud groupHud;
+#include "animation.h"      // For Animation members;
+#include "animatedsprite.h" // For AnimatedSprite animatedSprite;
+#include "rotateelem.h"     // For RotateElem members;
+#include "command.h"        // For Command commandManager;
+#include "cardsdeck.h"      // For CardsDeck cardsDeck;
+#include "banner.h"         // For Banner banner;
+#include "cardnotification.h" // For CardNotification cardNotification;
+#include "bubble.h"         // For Bubble bubble;
+#include "credits.h"        // For Credits credits;
+#include "introshader.h"    // For IntroShader introShader;
+
+// Forward declarations for classes only used as pointers or in function signatures
+// Include module headers for complete type information
+#include "game-assets.h"
+#include "game-input.h"
+#include "game-renderer.h"
+#include "game-core.h"
+#include "game-state-manager.h"
+#include "game-animation-system.h"
 
 namespace DP {
 
 extern int initScreenX;
 extern int initScreenY;
-
-// Forward declarations for modules
-class GameAssets;
-class GameInput;
-class GameRenderer;
-class GameCore;
 
 /*!
  * \brief Game is a main class of the Deer Portal - contains most logic but also rendering.
@@ -56,6 +60,8 @@ class Game
     friend class GameInput; 
     friend class GameRenderer;
     friend class GameCore;
+    friend class GameStateManager;
+    friend class GameAnimationSystem;
 
 public:
     sf::Vector2i screenSize;
@@ -80,6 +86,7 @@ private:
 
 public:
     Game(bool newTestMode);
+    int run(); // Main game loop extracted from constructor
     BoardDiamondSeq boardDiamonds;
     sf::RenderWindow window;
     sf::RenderTexture renderTexture;
@@ -96,8 +103,6 @@ private:
     void drawSquares();
     void drawMenu();
     float runningCounter;
-    float oscilator;
-    bool oscilatorInc;
     std::array<std::unique_ptr<sf::Sprite>, 4> playersSprites;
     int playersSpritesCords[4][2];
 
@@ -167,11 +172,7 @@ private:
     sf::SoundBuffer sfxDoneBuffer;
     sf::Sound sfxDone;
 
-    void showMenu();
 
-    void hideMenu();
-    void showGameBoard();
-    void showIntroShader();
 
     GroupHud groupHud;
 
@@ -198,7 +199,6 @@ private:
     int numberFinishedPlayers;
     RotateElem nextRotateElem;
     RotateElem prevRotateElem;
-    void endGame();
 
     float downTimeCounter;
     Command commandManager;
@@ -207,6 +207,7 @@ private:
     // NEW 0.8.2 FEATURES
     std::unique_ptr<sf::Text> textFPS;  // FPS display text
     float fpsDisplayUpdateTimer;        // Timer for FPS display updates
+    sf::Clock frameClock;               // Frame timing for game loop
 
 public:
     CardsDeck cardsDeck;
@@ -249,6 +250,8 @@ public:
     std::unique_ptr<GameInput> input;
     std::unique_ptr<GameRenderer> renderer;
     std::unique_ptr<GameCore> core;
+    std::unique_ptr<GameStateManager> stateManager;
+    std::unique_ptr<GameAnimationSystem> animationSystem;
 
     // NEW: Intro shader instance
     IntroShader introShader;

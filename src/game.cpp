@@ -1,10 +1,36 @@
 #include "game.h"
+#include "safe-asset-loader.h"
+#include "error-handler.h"
 #include "game-assets.h"
 #include "game-input.h"
 #include "game-renderer.h"
 #include "game-core.h"
-#include "particle.h"
+
+// Include all headers that were moved from game.h
+#include "command.h"
+#include "tilemap.h"
+#include "selector.h"
+#include "playerhud.h"
+#include "textureholder.h"
+#include "hover.h"
+#include "guiwindow.h"
+#include "rounddice.h"
+#include "guirounddice.h"
+#include "grouphud.h"
+#include "animatedsprite.h"
+#include "character.h"
+#include "rotateelem.h"
+#include "boarddiamondseq.h"
+#include "soundfx.h"
+#include "cardsdeck.h"
 #include "calendar.h"
+#include "particle.h"
+#include "bubble.h"
+#include "banner.h"
+#include "credits.h"
+#include "cardnotification.h"
+#include "introshader.h"
+
 #include <algorithm>
 #include <stdexcept>
 
@@ -220,13 +246,24 @@ void Game::setCurrentNeighbours ()
 void Game::loadAssets()
 {
 
-    if (!gameFont.openFromFile(get_full_path(ASSETS_PATH"fnt/metal-mania.regular.ttf")))
-    {
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadFont(gameFont, ASSETS_PATH"fnt/metal-mania.regular.ttf");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+        if (!DeerPortal::SafeAssetLoader::loadFallbackFont(gameFont)) {
+            throw DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::FONT,
+                "metal-mania.regular.ttf",
+                "Failed to load primary font and no fallback available"
+            );
+        }
     }
-    if (!menuFont.openFromFile(get_full_path(ASSETS_PATH"fnt/metal-macabre.regular.ttf")))
-    {
-        std::exit(1);
+    
+    try {
+        DeerPortal::SafeAssetLoader::loadFont(menuFont, ASSETS_PATH"fnt/metal-macabre.regular.ttf");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+        menuFont = gameFont; // Use game font as fallback
     }
 
     // Initialize sprites with textures for SFML 3.0
@@ -234,33 +271,90 @@ void Game::loadAssets()
 
     spriteDeerGod = std::make_unique<sf::Sprite>(textures.textureDeerGod);
 
-    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"shaders/blur.frag"), sf::Shader::Type::Fragment))
-        std::exit(1);
+    if (!shaderBlur.loadFromFile(get_full_path(ASSETS_PATH"shaders/blur.frag"), sf::Shader::Type::Fragment)) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SHADER,
+                "blur.frag",
+                "Failed to load blur shader - visual effects disabled"
+            )
+        );
+    }
 
-    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"shaders/pixelate.frag"), sf::Shader::Type::Fragment))
-        std::exit(1);
-    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"shaders/dark.frag"), sf::Shader::Type::Fragment))
-        std::exit(1);
+    if (!shaderPixel.loadFromFile(get_full_path(ASSETS_PATH"shaders/pixelate.frag"), sf::Shader::Type::Fragment)) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SHADER,
+                "pixelate.frag",
+                "Failed to load pixelate shader - visual effects disabled"
+            )
+        );
+    }
+    if (!shaderDark.loadFromFile(get_full_path(ASSETS_PATH"shaders/dark.frag"), sf::Shader::Type::Fragment)) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SHADER,
+                "dark.frag",
+                "Failed to load dark shader - visual effects disabled"
+            )
+        );
+    }
 
-    if (!textureBackgroundArt.loadFromFile(get_full_path(ASSETS_PATH"img/background_land.png")))
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadTexture(textureBackgroundArt, ASSETS_PATH"img/background_land.png");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+        DeerPortal::SafeAssetLoader::createFallbackTexture(
+            textureBackgroundArt, 
+            sf::Color(0, 100, 0), 
+            sf::Vector2u(800, 600)
+        );
+    }
 
-    if (!textureIntroMenu.loadFromFile(get_full_path(ASSETS_PATH"img/dp_intro_menu.png")))
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadTexture(textureIntroMenu, ASSETS_PATH"img/dp_intro_menu.png");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+        DeerPortal::SafeAssetLoader::createFallbackTexture(
+            textureIntroMenu, 
+            sf::Color(50, 50, 50), 
+            sf::Vector2u(800, 600)
+        );
+    }
 
-    if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"audio/game.ogg")))
-        std::exit(1);
+    if (!musicGame.openFromFile(get_full_path(ASSETS_PATH"audio/game.ogg"))) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SOUND,
+                "game.ogg",
+                "Failed to load game music - audio disabled"
+            )
+        );
+    }
     //    if (!musicBackground.openFromFile(ASSETS_PATH"assets/audio/wind2.ogg"))
     //        std::exit(1);
-    if (!musicMenu.openFromFile(get_full_path(ASSETS_PATH"audio/menu.ogg")))
-        std::exit(1);
+    if (!musicMenu.openFromFile(get_full_path(ASSETS_PATH"audio/menu.ogg"))) {
+        DeerPortal::ErrorHandler::getInstance().logError(
+            DeerPortal::AssetLoadException(
+                DeerPortal::AssetLoadException::SOUND,
+                "menu.ogg",
+                "Failed to load menu music - audio disabled"
+            )
+        );
+    }
 
 
-    if (!sfxClickBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/click.ogg")))
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadSound(sfxClickBuffer, ASSETS_PATH"audio/click.ogg");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+    }
 
-    if (!sfxDoneBuffer.loadFromFile(get_full_path(ASSETS_PATH"audio/done.ogg")))
-        std::exit(1);
+    try {
+        DeerPortal::SafeAssetLoader::loadSound(sfxDoneBuffer, ASSETS_PATH"audio/done.ogg");
+    } catch (const DeerPortal::AssetLoadException& e) {
+        DeerPortal::ErrorHandler::getInstance().handleException(e);
+    }
     //    if (!textureBackground.loadFromFile(ASSETS_PATH"assets/img/background.png"))
     //        std::exit(1);
 
@@ -310,55 +404,7 @@ void Game::loadAssets()
 
 }
 
-void Game::showMenu()
-{
-    musicMenu.play();
-    musicMenu.setLooping(true);
-    currentState = state_menu;
-}
 
-void Game::hideMenu()
-{
-    musicMenu.stop();
-}
-
-void Game::showIntroShader()
-{
-    // Start intro shader animation with menu music
-    musicMenu.play();
-    musicMenu.setLooping(true);
-    
-    // Initialize intro shader with the pre-loaded intro menu image
-    if (!introShader.initialize(sf::Vector2u(screenSize.x, screenSize.y), &textureIntroMenu))
-    {
-        std::cerr << "Failed to initialize intro shader, going to menu" << std::endl;
-        showMenu();
-        return;
-    }
-    
-    currentState = state_intro_shader;
-}
-
-void Game::showGameBoard()
-{
-    // Stop menu music and start game music
-    musicMenu.stop();
-    musicGame.play();
-    musicGame.setLooping(true);
-    
-    currentState = state_setup_players;
-    sfx.playLetsBegin();
-}
-
-void Game::endGame()
-{
-    musicGame.stop();
-    currentState = state_end_game;
-    downTimeCounter = 0;
-    numberFinishedPlayers = 4;
-    setTxtEndGameAmount();
-    //    musicBackground.stop();
-}
 
 void Game::throwDiceMove() {
     // Dismiss any active card notification when dice is thrown
@@ -401,7 +447,7 @@ void Game::playerMakeMove(int mousePos) {
         numberFinishedPlayers += 1;
         if (numberFinishedPlayers > 3)
         {
-            endGame();
+            stateManager->endGame();
             return;
         }
     }
@@ -485,15 +531,15 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
     if (currentState==state_menu)
     {
         downTimeCounter = 0;
-        hideMenu();
-        showGameBoard();
+        stateManager->hideMenu();
+        stateManager->showGameBoard();
         return;
     }
 
     if (currentState==state_intro_shader)
     {
         // Allow skipping the intro shader by clicking
-        showMenu();
+        stateManager->showMenu();
         return;
     }
 
@@ -546,8 +592,6 @@ Game::Game(bool newTestMode):
     boardDiamonds(&textures),
     window(sf::VideoMode(sf::Vector2u(DP::initScreenX, DP::initScreenY)), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
-    oscilator(-1),
-    oscilatorInc(true),
     particleSystem(1, 1),
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
@@ -618,7 +662,7 @@ Game::Game(bool newTestMode):
     // Initialize renderSprite with renderTexture after renderTexture is ready
     renderSprite = std::make_unique<sf::Sprite>(renderTexture.getTexture());
     numberFinishedPlayers = 0;
-    sf::Clock frameClock;
+    // frameClock is now a member variable
     guiRoundDice.active = true;
     showPlayerBoardElems = false;
     // window.setVerticalSyncEnabled(true); // Temporarily disable for testing raw FPS
@@ -634,6 +678,8 @@ Game::Game(bool newTestMode):
     input = std::make_unique<GameInput>(this);
     renderer = std::make_unique<GameRenderer>(this);
     core = std::make_unique<GameCore>(this);
+    stateManager = std::make_unique<GameStateManager>(this);
+    animationSystem = std::make_unique<GameAnimationSystem>(this);
 
     loadAssets();
     textLoading->setFont(menuFont);
@@ -656,15 +702,19 @@ Game::Game(bool newTestMode):
     renderTexture.draw(*textLoading);
     renderTexture.display();
 
-    showIntroShader();
+    stateManager->showIntroShader();
 
-    // run the main loop
+    // Constructor initialization complete
+    // Game loop moved to run() method for proper RAII
+}
 
-    if (testMode){
-
-        std::exit(0);
+int Game::run() {
+    // Handle test mode
+    if (testMode) {
+        return 0; // Exit gracefully for test mode
     }
 
+    // Main game loop
     while (window.isOpen())
     {
         sf::Time frameTime = frameClock.restart();
@@ -752,10 +802,9 @@ Game::Game(bool newTestMode):
         }
         update(frameTime);
         render(frameTime.asSeconds());
-
-
-
     }
+    
+    return 0; // Game ended normally
 }
 
 void Game::update(sf::Time frameTime) {
@@ -768,6 +817,9 @@ void Game::update(sf::Time frameTime) {
     }
 
     runningCounter += frameTime.asSeconds();
+
+    // Update animation system for all states
+    animationSystem->update(frameTime);
 
     // PERFORMANCE OPTIMIZATION: State-aware conditional updates
     switch (currentState) {
@@ -782,7 +834,7 @@ void Game::update(sf::Time frameTime) {
             introShader.update(frameTime.asSeconds());
             if (introShader.isFinished()) {
                 // Transition to menu after intro finishes
-                showMenu();
+                stateManager->showMenu();
             }
             break;
             
@@ -817,22 +869,12 @@ void Game::updateGameplayElements(sf::Time frameTime) {
     
     cpuTimeThinking -= frameTime.asSeconds();
 
-    // Big diamond oscillation only when active and visible
-    if (bigDiamondActive && (currentState == state_game || currentState == state_roll_dice)) {
-        if (oscilatorInc) {
-            oscilator += frameTime.asSeconds();
-        } else {
-            oscilator -= frameTime.asSeconds();
-        }
-
-        if (oscilator < -1)
-            oscilatorInc = true;
-
-        if (oscilator > 1)
-            oscilatorInc = false;
-
-        float modifier = sin(oscilator/2.5)*30.0f;
-        spriteBigDiamond->setPosition(sf::Vector2f(474,342+modifier));
+    // Big diamond animation handled by animation system
+    if (bigDiamondActive) {
+        animationSystem->startBigDiamondAnimation();
+        animationSystem->updateBigDiamondAnimation(frameTime);
+    } else {
+        animationSystem->stopBigDiamondAnimation();
     }
 
     // AI logic for dice rolling
@@ -997,7 +1039,7 @@ void Game::nextPlayer(){
     // End of game - we don't calculate more players
     if (numberFinishedPlayers==4)
     {
-        endGame();
+        stateManager->endGame();
         return ;
     }
 
@@ -1022,7 +1064,7 @@ void Game::launchNextPlayer(){
 
     if (deerModeCounter<0)
     {
-        endGame();
+        stateManager->endGame();
         return ;
     }
     // Just control
@@ -1087,7 +1129,7 @@ void Game::launchNextPlayer(){
             number += 1;
         if (number<0)
         {
-            endGame();
+            stateManager->endGame();
             return;
         }
         groupHud.setDeerModeCounter(number);
