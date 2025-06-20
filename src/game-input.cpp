@@ -188,8 +188,8 @@ void GameInput::processRollDiceInput(sf::Vector2f pos, sf::Vector2f posFull, int
 void GameInput::processMenuInput(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)
 {
     game->downTimeCounter = 0;
-    game->hideMenu();
-    game->showGameBoard();
+    game->stateManager->hideMenu();
+    game->stateManager->showGameBoard();
 }
 
 void GameInput::processGuiEndRoundInput(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)

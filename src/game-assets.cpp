@@ -199,23 +199,7 @@ void GameAssets::unloadAssets()
     // This method is here for potential future manual cleanup needs
 }
 
-void GameAssets::showMenu()
-{
-    playMenuMusic();
-    game->currentState = Game::state_menu;
-}
 
-void GameAssets::hideMenu()
-{
-    stopMenuMusic();
-}
-
-void GameAssets::showGameBoard()
-{
-    playGameMusic();
-    game->sfx.playLetsBegin();
-    game->currentState = Game::state_setup_players;
-}
 
 void GameAssets::playMenuMusic()
 {

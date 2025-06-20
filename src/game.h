@@ -42,6 +42,8 @@
 #include "game-input.h"
 #include "game-renderer.h"
 #include "game-core.h"
+#include "game-state-manager.h"
+#include "game-animation-system.h"
 
 namespace DP {
 
@@ -58,6 +60,8 @@ class Game
     friend class GameInput; 
     friend class GameRenderer;
     friend class GameCore;
+    friend class GameStateManager;
+    friend class GameAnimationSystem;
 
 public:
     sf::Vector2i screenSize;
@@ -99,8 +103,6 @@ private:
     void drawSquares();
     void drawMenu();
     float runningCounter;
-    float oscilator;
-    bool oscilatorInc;
     std::array<std::unique_ptr<sf::Sprite>, 4> playersSprites;
     int playersSpritesCords[4][2];
 
@@ -170,11 +172,7 @@ private:
     sf::SoundBuffer sfxDoneBuffer;
     sf::Sound sfxDone;
 
-    void showMenu();
 
-    void hideMenu();
-    void showGameBoard();
-    void showIntroShader();
 
     GroupHud groupHud;
 
@@ -201,7 +199,6 @@ private:
     int numberFinishedPlayers;
     RotateElem nextRotateElem;
     RotateElem prevRotateElem;
-    void endGame();
 
     float downTimeCounter;
     Command commandManager;
@@ -253,6 +250,8 @@ public:
     std::unique_ptr<GameInput> input;
     std::unique_ptr<GameRenderer> renderer;
     std::unique_ptr<GameCore> core;
+    std::unique_ptr<GameStateManager> stateManager;
+    std::unique_ptr<GameAnimationSystem> animationSystem;
 
     // NEW: Intro shader instance
     IntroShader introShader;

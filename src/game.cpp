@@ -404,55 +404,7 @@ void Game::loadAssets()
 
 }
 
-void Game::showMenu()
-{
-    musicMenu.play();
-    musicMenu.setLooping(true);
-    currentState = state_menu;
-}
 
-void Game::hideMenu()
-{
-    musicMenu.stop();
-}
-
-void Game::showIntroShader()
-{
-    // Start intro shader animation with menu music
-    musicMenu.play();
-    musicMenu.setLooping(true);
-    
-    // Initialize intro shader with the pre-loaded intro menu image
-    if (!introShader.initialize(sf::Vector2u(screenSize.x, screenSize.y), &textureIntroMenu))
-    {
-        std::cerr << "Failed to initialize intro shader, going to menu" << std::endl;
-        showMenu();
-        return;
-    }
-    
-    currentState = state_intro_shader;
-}
-
-void Game::showGameBoard()
-{
-    // Stop menu music and start game music
-    musicMenu.stop();
-    musicGame.play();
-    musicGame.setLooping(true);
-    
-    currentState = state_setup_players;
-    sfx.playLetsBegin();
-}
-
-void Game::endGame()
-{
-    musicGame.stop();
-    currentState = state_end_game;
-    downTimeCounter = 0;
-    numberFinishedPlayers = 4;
-    setTxtEndGameAmount();
-    //    musicBackground.stop();
-}
 
 void Game::throwDiceMove() {
     // Dismiss any active card notification when dice is thrown
@@ -495,7 +447,7 @@ void Game::playerMakeMove(int mousePos) {
         numberFinishedPlayers += 1;
         if (numberFinishedPlayers > 3)
         {
-            endGame();
+            stateManager->endGame();
             return;
         }
     }
@@ -579,15 +531,15 @@ void Game::handleLeftClick(sf::Vector2f pos,sf::Vector2f posFull, int mousePos) 
     if (currentState==state_menu)
     {
         downTimeCounter = 0;
-        hideMenu();
-        showGameBoard();
+        stateManager->hideMenu();
+        stateManager->showGameBoard();
         return;
     }
 
     if (currentState==state_intro_shader)
     {
         // Allow skipping the intro shader by clicking
-        showMenu();
+        stateManager->showMenu();
         return;
     }
 
@@ -640,8 +592,6 @@ Game::Game(bool newTestMode):
     boardDiamonds(&textures),
     window(sf::VideoMode(sf::Vector2u(DP::initScreenX, DP::initScreenY)), "Deerportal - game about how human can be upgraded to the Deer"),
     turn(0),
-    oscilator(-1),
-    oscilatorInc(true),
     particleSystem(1, 1),
     commandManager(*this),
     cardsDeck(&textures, &menuFont,&commandManager),
@@ -728,6 +678,8 @@ Game::Game(bool newTestMode):
     input = std::make_unique<GameInput>(this);
     renderer = std::make_unique<GameRenderer>(this);
     core = std::make_unique<GameCore>(this);
+    stateManager = std::make_unique<GameStateManager>(this);
+    animationSystem = std::make_unique<GameAnimationSystem>(this);
 
     loadAssets();
     textLoading->setFont(menuFont);
@@ -750,7 +702,7 @@ Game::Game(bool newTestMode):
     renderTexture.draw(*textLoading);
     renderTexture.display();
 
-    showIntroShader();
+    stateManager->showIntroShader();
 
     // Constructor initialization complete
     // Game loop moved to run() method for proper RAII
@@ -866,6 +818,9 @@ void Game::update(sf::Time frameTime) {
 
     runningCounter += frameTime.asSeconds();
 
+    // Update animation system for all states
+    animationSystem->update(frameTime);
+
     // PERFORMANCE OPTIMIZATION: State-aware conditional updates
     switch (currentState) {
         case state_game:
@@ -879,7 +834,7 @@ void Game::update(sf::Time frameTime) {
             introShader.update(frameTime.asSeconds());
             if (introShader.isFinished()) {
                 // Transition to menu after intro finishes
-                showMenu();
+                stateManager->showMenu();
             }
             break;
             
@@ -914,22 +869,12 @@ void Game::updateGameplayElements(sf::Time frameTime) {
     
     cpuTimeThinking -= frameTime.asSeconds();
 
-    // Big diamond oscillation only when active and visible
-    if (bigDiamondActive && (currentState == state_game || currentState == state_roll_dice)) {
-        if (oscilatorInc) {
-            oscilator += frameTime.asSeconds();
-        } else {
-            oscilator -= frameTime.asSeconds();
-        }
-
-        if (oscilator < -1)
-            oscilatorInc = true;
-
-        if (oscilator > 1)
-            oscilatorInc = false;
-
-        float modifier = sin(oscilator/2.5)*30.0f;
-        spriteBigDiamond->setPosition(sf::Vector2f(474,342+modifier));
+    // Big diamond animation handled by animation system
+    if (bigDiamondActive) {
+        animationSystem->startBigDiamondAnimation();
+        animationSystem->updateBigDiamondAnimation(frameTime);
+    } else {
+        animationSystem->stopBigDiamondAnimation();
     }
 
     // AI logic for dice rolling
@@ -1094,7 +1039,7 @@ void Game::nextPlayer(){
     // End of game - we don't calculate more players
     if (numberFinishedPlayers==4)
     {
-        endGame();
+        stateManager->endGame();
         return ;
     }
 
@@ -1119,7 +1064,7 @@ void Game::launchNextPlayer(){
 
     if (deerModeCounter<0)
     {
-        endGame();
+        stateManager->endGame();
         return ;
     }
     // Just control
@@ -1184,7 +1129,7 @@ void Game::launchNextPlayer(){
             number += 1;
         if (number<0)
         {
-            endGame();
+            stateManager->endGame();
             return;
         }
         groupHud.setDeerModeCounter(number);

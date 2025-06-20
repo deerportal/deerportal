@@ -209,6 +209,60 @@ The following files require **manual updates** when releasing new versions:
 - Module classes (`GameAssets`, `GameInput`, etc.) are forward declared as they're used as `std::unique_ptr`
 - This improves compilation speed and reduces cascading header dependencies
 
+## Comprehensive Modularization Plan (January 2025)
+
+### Overview
+- **Status**: 📋 PLANNED
+- **Document**: `ai-docs/opusplanmodularity.md` - Comprehensive plan for codebase modularization
+- **Goal**: Transform DeerPortal into a fully modular architecture with no file exceeding 400 lines
+
+### Key Objectives
+1. **File Size Limits**: 400 lines for .cpp files, 100 lines for .h files
+2. **Single Responsibility**: Each module handles one specific aspect
+3. **Minimal Dependencies**: Extensive use of forward declarations
+4. **Component Architecture**: Move towards Entity-Component-System pattern
+5. **Build Optimization**: Precompiled headers and module libraries
+
+### Modules Implemented ✅
+
+#### Phase 1: Complete game.cpp Decomposition (IN PROGRESS)
+- ✅ **game-state-manager.cpp/.h**: State transition logic (256 lines) - COMPLETED
+- ✅ **game-animation-system.cpp/.h**: Animation management (266 lines) - COMPLETED  
+- ⏳ **game-ui-manager.cpp/.h**: UI element management (300 lines) - PLANNED
+
+#### Progress Summary
+- **game.cpp**: Reduced from 1491 → 1436 lines (-55 lines, 3.7% reduction)
+- **game-core.cpp**: Reduced from 527 → 514 lines (-13 lines, 2.5% reduction)
+- **New Modules**: 2 modules created with 522 total lines of extracted functionality
+
+### Planned Modules
+
+#### Phase 2: Large File Splitting
+- **CardNotification**: Split into renderer, logic, and UI modules (3×230 lines)
+- **GameRenderer**: Split into states, effects, and UI modules (3×200 lines)
+- **GameCore**: Split into player, rules, and AI modules (3×175 lines)
+
+#### Phase 3: Component System
+- **IGameComponent**: Base interface for all game components
+- **ComponentSystem**: Manager for component lifecycle
+- **Specific Components**: Movement, Render, Input, Audio
+
+### Expected Improvements
+- **Compilation Time**: 44% reduction (45s → 25s)
+- **File Sizes**: 60-73% reduction per file
+- **Code Complexity**: Cyclomatic complexity from 15 → 8
+- **Test Coverage**: Enable 80%+ unit testing
+
+### Implementation Timeline
+- **Week 1**: Complete game.cpp decomposition
+- **Week 2**: Split large files (CardNotification, GameRenderer, GameCore)
+- **Week 3**: Implement component architecture
+- **Week 4**: Extract data and resource management
+- **Week 5**: Add testing infrastructure
+- **Week 6**: Optimize build system
+
+**Full Details**: See `ai-docs/opusplanmodularity.md` for complete implementation plan
+
 ## Development Guidelines
 
 ### Code Quality
