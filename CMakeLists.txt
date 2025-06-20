@@ -70,6 +70,12 @@ set(GAME_SOURCES
     src/game-renderer.h
     src/game-core.cpp
     src/game-core.h
+    # Error handling infrastructure
+    src/exceptions.h
+    src/error-handler.cpp
+    src/error-handler.h
+    src/safe-asset-loader.cpp
+    src/safe-asset-loader.h
 )
 
 # Other source files

@@ -1,0 +1,127 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+DeerPortal is a hybrid board/card game built with SFML 3.0 and C++17. It's a cross-platform game supporting 0-4 players with AI opponents, featuring elemental mechanics and card-based gameplay.
+
+**Current Version: 0.9.1 "Stability Improvements"**  
+**Technology Stack: SFML 3.0.1, CMake, C++17**
+
+## Build Commands
+
+### Primary Build System (CMake)
+```bash
+# Configure for Release (recommended)
+cmake -DCMAKE_BUILD_TYPE=Release .
+
+# Configure for Debug (development)
+cmake -DCMAKE_BUILD_TYPE=Debug .
+
+# Enable FPS counter in Release build
+cmake -DCMAKE_BUILD_TYPE=Release -DSHOW_FPS_COUNTER=ON .
+
+# Build executable
+make
+
+# Create platform packages
+make package         # Cross-platform packages
+make dmg            # macOS DMG installer  
+make install        # Install to system
+```
+
+### Version Management
+- **Single source of truth**: `version.txt` contains current version
+- **Manual updates required**: `snapcraft.yaml`, `net.devcarpet.deerportal.appdata.xml`, `debian/changelog` when releasing
+- **Runtime display**: Version appears in-game with build type and base path
+
+### Dependencies
+- **SFML 3.0.1** (found via CMake if installed via Homebrew)
+- **CMake 3.16+**
+- **C++17 compatible compiler** (Clang++ 14+, GCC 9+, MSVC 2019+)
+
+## Code Architecture
+
+### Modular Design
+The game uses a modular architecture with clear separation of concerns:
+
+- **GameCore** (`src/game-core.h/cpp`) - Game logic, state management, player turns
+- **GameAssets** (`src/game-assets.h/cpp`) - Asset loading, menu system, resource management
+- **GameInput** (`src/game-input.h/cpp`) - Input handling and user interaction  
+- **GameRenderer** (`src/game-renderer.h/cpp`) - Rendering pipeline and graphics
+- **Main Game Class** (`src/game.h/cpp`) - Central coordinator with ~50 header includes
+
+### Key Technical Details
+- **Memory Management**: Uses `std::unique_ptr` for SFML objects and modern C++ patterns
+- **Asset Management**: Unified loading system with configurable paths in `/assets`
+- **Performance**: VertexArray optimization for diamond rendering (99.1% draw call reduction)
+- **Shaders**: Custom GLSL shaders for blur, pixelation, and intro animations
+- **Card System**: 128 cards across 4 elements with notification overlay system
+
+### File Structure
+```
+src/                 # Main C++ source code (~60 files, ~6,807 lines)
+assets/             # Game assets (images, audio, fonts, shaders)
+packaging/          # Platform-specific packaging resources
+ai-docs/           # AI assistant documentation and context
+scripts/           # Build and utility scripts
+cmake_modules/     # CMake helper modules
+```
+
+## Development Guidelines
+
+### Code Standards
+- **C++17**: Use modern C++ features, smart pointers, RAII
+- **SFML 3.0**: Follow SFML 3.0 patterns and API
+- **Header Dependencies**: Use forward declarations where possible, full includes only for direct members
+- **Memory Safety**: Prefer `std::unique_ptr` for SFML objects
+
+### Testing
+- **No formal unit testing framework** - uses integration testing through CI/CD
+- **Test mode**: Run with `--test` flag for basic testing
+- **CI/CD**: GitHub Actions with matrix builds (Ubuntu, Windows, macOS Intel/ARM)
+
+### Important Files
+- **ai-instructions.md**: Comprehensive development context and memory bank
+- **ai-docs/code-quality-analysis.md**: Complete code quality analysis with improvement tracking
+- **ai-docs/error-handling-improvement-plan.md**: Error handling implementation plan and progress
+- **version.txt**: Single source of truth for version management
+- **CMakeLists.txt**: Primary build configuration with SFML 3.0 detection
+- **README.md**: User installation and setup instructions
+- **CARDS.md**, **HANDBOOK.md**: Game documentation and card reference
+
+## Code Quality Resources
+- **Current Grade**: B+ (85/100) - Major improvement from B- (73/100)
+- **Quality Analysis**: See `ai-docs/code-quality-analysis.md` for detailed assessment
+- **Recent Improvements**: Professional error handling, constructor anti-pattern fixes, safe asset loading
+- **Remaining Priorities**: Particle system memory safety, complete std::exit() migration
+
+## Development Environment
+
+### Cursor IDE Rules
+The project includes Cursor IDE rules in `.cursor/rules/`:
+- **sfml31.mdc**: Ensures SFML 3.0.1 API usage consistency
+- **gitignore.mdc**: Maintains proper .gitignore file updates
+
+When using Cursor IDE, these rules will automatically apply to ensure:
+- Correct SFML 3.0.1 API calls (e.g., `font.openFromFile()` not `loadFromFile()`)
+- Updated .gitignore for temporary files and build artifacts
+
+## Platform-Specific Notes
+
+### macOS
+- **App Bundle**: Professional packaging with proper icon and metadata
+- **DMG Creation**: `make dmg` creates installer with Applications symlink
+- **Code Signing**: Configured for macOS security compatibility
+- **Dependencies**: SFML bundled in app bundle for distribution
+
+### Linux
+- **Debian Packages**: `fakeroot debian/rules binary` for local .deb creation
+- **Snap Package**: Available via snapcraft.yaml (manual version updates)
+- **AppImage**: Cross-distribution portable format support
+
+### Windows  
+- **NSIS Installer**: Windows installer package creation
+- **Cross-Compilation**: MXE toolchain support for Linux→Windows builds
+- **Visual Studio**: CMakeSettings.json for native Windows development

@@ -7,17 +7,10 @@
  */
 
 #include <iostream>
-#include <stdexcept>
-
-// Forward declaration to avoid header include issues
-namespace DP {
-    class Game;
-}
-
-// Function declaration - implementation will be in game.cpp
-DP::Game* createGame(bool testMode);
-void runGame(DP::Game* game);
-void destroyGame(DP::Game* game);
+#include <string>
+#include "game.h"
+#include "exceptions.h"
+#include "error-handler.h"
 
 /*!
  * \brief Main entry point for the DeerPortal application
@@ -41,22 +34,48 @@ int main(int argc, char* argv[])
             }
         }
 
-        // Create and run the game
-        DP::Game* game = createGame(testMode);
-        runGame(game);
-        destroyGame(game);
-        
-        return 0;
+        // Initialize error handler
+        DeerPortal::ErrorHandler::getInstance().setErrorCallback(
+            [](const DeerPortal::GameException& e) {
+                std::cerr << "Game Error: " << e.what() << std::endl;
+                if (!e.getContext().empty()) {
+                    std::cerr << "Context: " << e.getContext() << std::endl;
+                }
+            }
+        );
+
+        // Create and run the game  
+        DP::Game game(testMode);
+        return game.run();
+    }
+    catch (const DeerPortal::AssetLoadException& e) 
+    {
+        std::cerr << "Critical Asset Error: " << e.what() << std::endl;
+        std::cerr << "Failed to load: " << e.getFilename() << std::endl;
+        return 1;
+    }
+    catch (const DeerPortal::SystemResourceException& e) 
+    {
+        std::cerr << "System Resource Error: " << e.what() << std::endl;
+        return 2;
+    }
+    catch (const DeerPortal::GameException& e) 
+    {
+        std::cerr << "Game Error: " << e.what() << std::endl;
+        if (!e.getContext().empty()) {
+            std::cerr << "Context: " << e.getContext() << std::endl;
+        }
+        return 3;
     }
     catch (const std::exception& e) 
     {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
+        std::cerr << "Unexpected Error: " << e.what() << std::endl;
+        return 4;
     }
     catch (...) 
     {
         std::cerr << "Unknown error occurred" << std::endl;
-        return 2;
+        return 5;
     }
 }
 

@@ -190,6 +190,25 @@ The following files require **manual updates** when releasing new versions:
 - **Removed libsfml-dev dependency**: Linux packages now use static SFML builds
 - **Fixed Intel macOS Build**: RESOLVED - Root cause was undefined `YOUR_DIRECTORY` variable in CMakeLists.txt causing configuration failure. Also removed CMAKE_OSX_ARCHITECTURES flags and improved error handling in CI environment detection.
 
+## Recent Optimizations Applied (Latest Updates)
+
+### Header Dependency Reduction (December 2024)
+- **Status**: ✅ COMPLETED
+- **Optimization**: Reduced header compilation dependencies in `game.h`
+- **Approach**: Strategic analysis of which classes can use forward declarations vs require full includes
+- **Key Learning**: Direct member variables require full class definitions (includes), while pointers/references can use forward declarations
+- **Result**: Cleaner dependency structure while maintaining functionality
+- **Files Modified**: 
+  - `src/game.h` - Reorganized includes with detailed comments explaining why each include is necessary
+  - `src/game.cpp` - Added all implementation-only includes
+- **Compilation**: ✅ All builds successful after optimization
+
+**Technical Details:**
+- Classes used as direct members (e.g., `Selector selector;`) MUST be included in header
+- Classes only used as pointers or function parameters CAN be forward declared
+- Module classes (`GameAssets`, `GameInput`, etc.) are forward declared as they're used as `std::unique_ptr`
+- This improves compilation speed and reduces cascading header dependencies
+
 ## Development Guidelines
 
 ### Code Quality
