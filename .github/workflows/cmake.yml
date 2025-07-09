@@ -111,6 +111,12 @@ jobs:
       if: matrix.platform == 'windows'
       uses: microsoft/setup-msbuild@v2
 
+    - name: Install NSIS (Windows)
+      if: matrix.platform == 'windows'
+      run: |
+        choco install nsis -y
+        echo "NSIS installed successfully"
+
     - name: Install Dependencies (macOS)
       if: matrix.platform == 'macos'
       run: |

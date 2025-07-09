@@ -197,6 +197,11 @@ jobs:
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v1.1
 
+    - name: Install NSIS
+      run: |
+        choco install nsis -y
+        echo "NSIS installed successfully"
+
     - name: Install SFML 3.0.1
       shell: bash
       run: |
