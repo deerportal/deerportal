@@ -11,6 +11,51 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+  # PDF Generation Job
+  generate-pdf:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      
+    - name: Get version from version.txt
+      id: get_version
+      run: |
+        VERSION=$(cat version.txt)
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Generating PDF for version: ${VERSION}"
+
+    - name: Install LaTeX dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra
+
+    - name: Update LaTeX file with version
+      run: |
+        # Create a temporary LaTeX file with version
+        cp handbook.tex handbook-versioned.tex
+        sed -i "s/\\\\title{Deer Portal \\\\\\\\ \\\\large Game Handbook \\& Card Reference}/\\\\title{Deer Portal \\\\\\\\ \\\\large Game Handbook \\& Card Reference \\\\\\\\ \\\\small Version ${{ steps.get_version.outputs.VERSION }}}/g" handbook-versioned.tex
+        echo "Updated LaTeX file with version ${{ steps.get_version.outputs.VERSION }}"
+
+    - name: Compile LaTeX to PDF
+      run: |
+        # First pass
+        pdflatex -interaction=nonstopmode handbook-versioned.tex
+        # Second pass for cross-references
+        pdflatex -interaction=nonstopmode handbook-versioned.tex
+        
+        # Rename PDF with version
+        mv handbook-versioned.pdf "DeerPortal-Handbook-${{ steps.get_version.outputs.VERSION }}.pdf"
+        
+        echo "PDF generated successfully: DeerPortal-Handbook-${{ steps.get_version.outputs.VERSION }}.pdf"
+
+    - name: Upload PDF Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: DeerPortal-Handbook-${{ steps.get_version.outputs.VERSION }}-PDF
+        path: DeerPortal-Handbook-${{ steps.get_version.outputs.VERSION }}.pdf
+        retention-days: 90
+
   build:
     strategy:
       matrix:
