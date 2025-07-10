@@ -170,13 +170,13 @@ jobs:
         cd build
         echo "=== Creating test Windows package ==="
         echo "Checking if makensis is available:"
-        where makensis || echo "makensis not found"
+        which makensis || echo "makensis not found"
         echo "=== Build directory contents ==="
         ls -la
         echo "=== Looking for DeerPortal executable ==="
         find . -name "DeerPortal*" -type f
         echo "=== Available CPack generators ==="
-        cpack --help | grep -A 20 "The following generators are available"
+        cpack --help | grep -A 10 -i "generator" || echo "Could not list generators, continuing with packaging"
         echo "=== Trying make package ==="
         make package || {
           echo "=== make package failed, trying direct CPack ==="
