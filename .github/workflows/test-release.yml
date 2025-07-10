@@ -165,6 +165,7 @@ jobs:
         cmake --build build --config ${{ env.BUILD_TYPE }}
 
     - name: Create Windows package (TEST)
+      shell: bash
       run: |
         cd build
         echo "=== Creating test Windows package ==="
