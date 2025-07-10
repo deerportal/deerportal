@@ -1,12 +1,23 @@
 # DeerPortal Release Notes
 
-## Version 0.9.1 "Stability Improvements" - June 2025
+## Version 0.9.1 "Stability Improvements" - July 2025
 
 🔧 **Minor Release with Focused Improvements**
 
-This maintenance release builds upon the solid foundation of version 0.9.0 "Welcome Back" with targeted improvements and optimizations.
+This maintenance release builds upon the solid foundation of version 0.9.0 "Welcome Back" with targeted improvements, code quality enhancements, and robust error handling.
 
-### 🚀 Improvements
+### 🚀 New Features & Improvements
+
+#### Code Quality & Error Handling
+- **Professional Error Handling System**: New comprehensive error handling with custom exception classes
+- **Safe Asset Loading**: Robust asset loading system with fallback mechanisms and detailed error reporting
+- **Modular Architecture**: Game split into specialized modules (GameCore, GameAssets, GameInput, GameRenderer, GameStateManager, GameAnimationSystem)
+- **Memory Safety**: Enhanced RAII patterns and smart pointer usage throughout the codebase
+
+#### Animation System
+- **New Animation Framework**: Dedicated GameAnimationSystem for managing all game animations
+- **Card Notification Improvements**: Enhanced card notification rendering with proper text rendering system
+- **State Management**: Centralized game state management with proper transitions
 
 #### Documentation & Release Management
 - **Complete Version Management Documentation**: Comprehensive documentation of the version system for better release management
@@ -37,20 +48,24 @@ This maintenance release builds upon the solid foundation of version 0.9.0 "Welc
 
 ### 📋 What's Improved Since 0.9.0
 
-#### Version Management
-- Documented complete version management system with single source of truth
-- Enhanced automation for version distribution across all build outputs
-- Clear separation of automated vs. manual version update requirements
+#### Major Code Quality Improvements
+- **4,000+ lines of new code**: Comprehensive improvements across 32 files
+- **Professional Error Handling**: Complete error handling system with custom exceptions (`error-handler.cpp`, `exceptions.h`)
+- **Safe Asset Loading**: Robust asset loading with fallback mechanisms (`safe-asset-loader.cpp`)
+- **Modular Architecture**: Game split into specialized systems for better maintainability
+- **Enhanced Documentation**: Comprehensive code quality analysis and improvement plans
 
-#### Build System
-- Improved CMake version parsing and distribution mechanisms
-- Enhanced package metadata consistency across all platforms
-- Better error handling in automated build processes
+#### New System Architecture
+- **GameStateManager**: Centralized state management for better game flow control
+- **GameAnimationSystem**: Dedicated animation handling system
+- **Card Notification System**: Enhanced rendering with proper text and image handling
+- **Memory Management**: Improved RAII patterns and smart pointer usage throughout
 
-#### Documentation
-- Comprehensive version management documentation in `ai-instructions.md`
-- Updated release process guidelines for maintainers
-- Clear identification of all version-dependent files and update procedures
+#### Build System & CI/CD
+- **GitHub Actions Improvements**: Enhanced CI/CD pipeline with better cross-platform support
+- **Test Release Pipeline**: New testing workflow for safe release validation
+- **Windows Build Fixes**: Resolved shell compatibility issues in CI/CD
+- **Package Exclusions**: Better dev file exclusion from release packages
 
 ### 🎯 Maintained Features
 All features from version 0.9.0 are preserved and enhanced:

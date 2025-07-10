@@ -519,16 +519,32 @@ set(CPACK_SOURCE_GENERATOR "TGZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Source")
 set(CPACK_SOURCE_IGNORE_FILES
     "/build/"
+    "/build-test/"
     "/\\\\.git/"
     "/\\\\.github/"
     "/\\\\.data/"
+    "/\\\\.cursor/"
     "\\\\.gitignore"
     "\\\\.DS_Store"
     "/ai-docs/"
+    "/ai-instructions\\\\.md$"
+    "/game-ai-analysis\\\\.md$"
+    "/CMakeFiles/"
+    "/CMakeCache\\\\.txt$"
+    "/_CPack_Packages/"
+    "/\\\\.app/"
     ".*\\\\.dmg$"
     ".*\\\\.exe$"
     ".*\\\\.deb$"
     ".*\\\\.tar\\\\.gz$"
+    ".*\\\\.o$"
+    ".*\\\\.gch$"
+    "/install_manifest\\\\.txt$"
+    "/CPackConfig\\\\.cmake$"
+    "/CPackSourceConfig\\\\.cmake$"
+    "/cmake_install\\\\.cmake$"
+    "/Makefile$"
+    "/handbook\\\\.(aux|log|out|toc)$"
 )
 
 # Include CPack for all platforms
