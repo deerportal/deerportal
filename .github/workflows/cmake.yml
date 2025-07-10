@@ -109,7 +109,17 @@ jobs:
 
     - name: Setup MSVC (Windows)
       if: matrix.platform == 'windows'
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Install NSIS (Windows)
+      if: matrix.platform == 'windows'
+      run: |
+        choco install nsis -y
+        echo "NSIS installed successfully"
+        echo "Adding NSIS to PATH"
+        echo "C:\Program Files (x86)\NSIS" >> $GITHUB_PATH
+        echo "Checking NSIS installation:"
+        ls "C:\Program Files (x86)\NSIS" || echo "NSIS not found in default location"
 
     - name: Install Dependencies (macOS)
       if: matrix.platform == 'macos'
@@ -488,4 +498,22 @@ jobs:
       if: matrix.platform == 'macos'
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}} --verbose
+
+    - name: Create Windows package
+      if: matrix.platform == 'windows'
+      shell: cmd
+      run: |
+        cd build
+        echo === Creating Windows package ===
+        echo Checking if makensis is available:
+        where makensis || echo makensis not found
+        echo === Build directory contents ===
+        dir
+        echo === Looking for DeerPortal executable ===
+        dir /s DeerPortal*
+        echo === Trying CPack with NSIS ===
+        cpack -G NSIS --verbose || (
+          echo NSIS packaging failed, trying ZIP fallback &&
+          cpack -G ZIP --verbose
+        )
       

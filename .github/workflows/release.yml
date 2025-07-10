@@ -197,6 +197,15 @@ jobs:
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v1.1
 
+    - name: Install NSIS
+      run: |
+        choco install nsis -y
+        echo "NSIS installed successfully"
+        echo "Adding NSIS to PATH"
+        echo "C:\Program Files (x86)\NSIS" >> $GITHUB_PATH
+        echo "Checking NSIS installation:"
+        dir "C:\Program Files (x86)\NSIS" || echo "NSIS not found in default location"
+
     - name: Install SFML 3.0.1
       shell: bash
       run: |
@@ -223,30 +232,38 @@ jobs:
         cmake --build build --config ${{ env.BUILD_TYPE }}
 
     - name: Create Windows package
+      shell: cmd
       run: |
         cd build
-        echo "=== Build directory contents ==="
-        ls -la
-        echo "=== Looking for DeerPortal executable ==="
-        find . -name "DeerPortal*" -type f
-        echo "=== Creating Windows package ==="
-        make package || {
-          echo "=== make package failed, trying direct CPack ==="
-          cpack -G NSIS || echo "NSIS packaging failed"
-        }
+        echo === Creating Windows package ===
+        echo Checking if makensis is available:
+        where makensis || echo makensis not found
+        echo === Build directory contents ===
+        dir
+        echo === Looking for DeerPortal executable ===
+        dir /s DeerPortal*
+        echo === Trying CPack with NSIS ===
+        cpack -G NSIS --verbose || (
+          echo NSIS packaging failed, trying ZIP fallback &&
+          cpack -G ZIP --verbose
+        )
 
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
         name: DeerPortal-${{ steps.get_version.outputs.VERSION }}-Windows-installer
-        path: build/DeerPortal-*-Windows.exe
+        path: |
+          build/DeerPortal-*-Windows.exe
+          build/DeerPortal-*-Windows.zip
         retention-days: 30
 
     - name: Upload to Release
       if: github.event_name == 'push' && !inputs.test_mode
       uses: softprops/action-gh-release@v2
       with:
-        files: build/DeerPortal-*-Windows.exe
+        files: |
+          build/DeerPortal-*-Windows.exe
+          build/DeerPortal-*-Windows.zip
         tag_name: ${{ github.ref }}
         # Add files to existing release (macOS job creates the release)
         fail_on_unmatched_files: false
