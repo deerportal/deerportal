@@ -80,13 +80,14 @@ cmake_modules/     # CMake helper modules
 ### Testing
 - **No formal unit testing framework** - uses integration testing through CI/CD
 - **Test mode**: Run with `--test` flag for basic testing
-- **CI/CD**: GitHub Actions with matrix builds (Ubuntu, Windows, macOS Intel/ARM)
+- **CI/CD**: GitHub Actions with 3-platform matrix builds (Ubuntu, Windows, macOS Apple Silicon)
+- **Workflow Consistency**: cmake.yml (PR/CI) and test-release.yml unified for identical behavior
 
 ### Important Files
-- **ai-instructions.md**: Comprehensive development context and memory bank
+- **DEVELOPMENT.md**: Complete development guide with version management, build system, and release procedures
+- **ai-docs/github-actions.md**: Complete CI/CD pipeline analysis and documentation
 - **ai-docs/code-quality-analysis.md**: Complete code quality analysis with improvement tracking
 - **ai-docs/error-handling-improvement-plan.md**: Error handling implementation plan and progress
-- **ai-docs/github-actions.md**: Complete CI/CD pipeline analysis and documentation
 - **version.txt**: Single source of truth for version management
 - **CMakeLists.txt**: Primary build configuration with SFML 3.0 detection
 - **README.md**: User installation and setup instructions
@@ -126,3 +127,15 @@ When using Cursor IDE, these rules will automatically apply to ensure:
 - **NSIS Installer**: Windows installer package creation
 - **Cross-Compilation**: MXE toolchain support for Linux→Windows builds
 - **Visual Studio**: CMakeSettings.json for native Windows development
+
+## Writing Guidelines
+
+### Content Style
+- **Language Goal**: Write blog posts naturally, simply, and concisely
+- **Writing Approach**: 
+  - Focus on facts
+  - Avoid overly generous AI-style writing
+  - Eliminate unnecessary jokes or elaborate language
+  - Prioritize clarity and directness
+  - Dont assume if players like game, dont show off etc, dont assume that anything is good, just provide facts.
+  - If something is not fact, dont write about this.
