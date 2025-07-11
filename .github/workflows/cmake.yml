@@ -498,19 +498,22 @@ jobs:
 
     - name: Create Windows package
       if: matrix.platform == 'windows'
-      shell: cmd
+      shell: bash
       run: |
         cd build
-        echo === Creating Windows package ===
-        echo Checking if makensis is available:
-        where makensis || echo makensis not found
-        echo === Build directory contents ===
-        dir
-        echo === Looking for DeerPortal executable ===
-        dir /s DeerPortal*
-        echo === Trying CPack with NSIS ===
-        cpack -G NSIS --verbose || (
-          echo NSIS packaging failed, trying ZIP fallback &&
-          cpack -G ZIP --verbose
-        )
+        echo "=== Creating Windows package ==="
+        echo "Checking if makensis is available:"
+        which makensis || echo "makensis not found"
+        echo "=== Build directory contents ==="
+        ls -la
+        echo "=== Looking for DeerPortal executable ==="
+        find . -name "DeerPortal*" -type f
+        echo "=== Trying make package ==="
+        make package || {
+          echo "=== make package failed, trying direct CPack ==="
+          cpack -G NSIS --verbose || {
+            echo "NSIS packaging failed, trying ZIP fallback"
+            cpack -G ZIP --verbose || echo "All packaging methods failed"
+          }
+        }
       
