@@ -2,10 +2,9 @@
 #define GUIROUNDDICE_H
 #include "guiwindow.h"
 
-class GuiRoundDice : public GuiWindow
-{
+class GuiRoundDice : public GuiWindow {
 public:
-    explicit GuiRoundDice(TextureHolder *textures);
+  explicit GuiRoundDice(TextureHolder* textures);
 };
 
 #endif // GUIROUNDDICE_H

@@ -1,0 +1,69 @@
+# DeerPortal C++ Code Formatting Configuration
+# Based on LLVM style with project-specific adjustments
+
+BasedOnStyle: LLVM
+
+# Indentation and spacing
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+ContinuationIndentWidth: 4
+
+# Line length and breaking
+ColumnLimit: 100
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Empty
+
+# Alignment and spacing
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignOperands: true
+AlignTrailingComments: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Pointer and reference alignment
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# Include formatting
+SortIncludes: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  # Standard C++ headers
+  - Regex: '^<[^/]*>'
+    Priority: 1
+  # SFML headers  
+  - Regex: '^<SFML/'
+    Priority: 2
+  # Project headers
+  - Regex: '^".*"'
+    Priority: 3
+
+# Function and class formatting
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BreakConstructorInitializers: BeforeColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerIndentWidth: 4
+
+# Namespace and access modifiers
+CompactNamespaces: false
+FixNamespaceComments: true
+NamespaceIndentation: None
+AccessModifierOffset: -2
+
+# Comments and documentation
+ReflowComments: true
+CommentPragmas: '^ IWYU pragma:'
+
+# Language-specific settings
+Standard: c++17
+Cpp11BracedListStyle: true

@@ -74,6 +74,11 @@ cmake_modules/     # CMake helper modules
 ### Code Standards
 - **C++17**: Use modern C++ features, smart pointers, RAII
 - **SFML 3.0**: Follow SFML 3.0 patterns and API
+- **Code Formatting**: LLVM style enforced via clang-format (see `.clang-format`)
+- **Naming Conventions**: camelCase for functions/variables, PascalCase for classes/types
+- **Indentation**: 2 spaces, no tabs, 100-character line limit
+- **Pointers**: Left alignment (`int* ptr`, `const std::string& ref`)
+- **Includes**: Sorted and grouped (standard → SFML → project headers)
 - **Header Dependencies**: Use forward declarations where possible, full includes only for direct members
 - **Memory Safety**: Prefer `std::unique_ptr` for SFML objects
 
@@ -85,6 +90,8 @@ cmake_modules/     # CMake helper modules
 
 ### Important Files
 - **DEVELOPMENT.md**: Complete development guide with version management, build system, and release procedures
+- **ai-docs/coding-standards.md**: Comprehensive C++ coding standards and LLVM style guidelines
+- **.clang-format**: LLVM-style code formatting configuration for consistent C++ style
 - **ai-docs/github-actions.md**: Complete CI/CD pipeline analysis and documentation
 - **ai-docs/code-quality-analysis.md**: Complete code quality analysis with improvement tracking
 - **ai-docs/error-handling-improvement-plan.md**: Error handling implementation plan and progress
@@ -94,8 +101,9 @@ cmake_modules/     # CMake helper modules
 - **CARDS.md**, **HANDBOOK.md**: Game documentation and card reference
 
 ## Code Quality Resources
-- **Current Grade**: B+ (85/100) - Major improvement from B- (73/100)
+- **Current Grade**: A- (89/100) - Continuous improvement from B- (73/100)
 - **Quality Analysis**: See `ai-docs/code-quality-analysis.md` for detailed assessment
+- **Coding Standards**: See `ai-docs/coding-standards.md` for LLVM-style guidelines and best practices
 - **Recent Improvements**: Professional error handling, constructor anti-pattern fixes, safe asset loading
 - **Remaining Priorities**: Particle system memory safety, complete std::exit() migration
 

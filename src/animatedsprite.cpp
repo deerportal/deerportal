@@ -3,7 +3,8 @@
 // Copyright (C) 2014 Maximilian Wagenbach (aka. Foaly) (foaly.f@web.de)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the use of this
+// software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it freely,
@@ -25,172 +26,149 @@
 // further modificated. Thank you Foaly.
 
 #include "animatedsprite.h"
+
 #include <cmath>
 
-AnimatedSprite::AnimatedSprite(sf::Time frameTime, bool paused, bool looped) :
-    m_animation(NULL), m_frameTime(frameTime), m_currentFrame(0), m_isPaused(paused), m_isLooped(looped), m_texture(NULL)
-{
+AnimatedSprite::AnimatedSprite(sf::Time frameTime, bool paused, bool looped)
+    : m_animation(NULL), m_frameTime(frameTime), m_currentFrame(0), m_isPaused(paused),
+      m_isLooped(looped), m_texture(NULL) {
 
-//    setScale(1.9,1.9);
+  //    setScale(1.9,1.9);
 
-    setFrameTime(sf::seconds(0.5f));
-    setFrameTime(sf::seconds(0.5f));
+  setFrameTime(sf::seconds(0.5f));
+  setFrameTime(sf::seconds(0.5f));
 }
 
-void AnimatedSprite::setAnimation(const Animation& animation)
-{
-    m_animation = &animation;
-    m_texture = m_animation->getSpriteSheet();
-    m_currentFrame = 0;
-    setFrame(m_currentFrame);
+void AnimatedSprite::setAnimation(const Animation& animation) {
+  m_animation = &animation;
+  m_texture = m_animation->getSpriteSheet();
+  m_currentFrame = 0;
+  setFrame(m_currentFrame);
 }
 
-void AnimatedSprite::setFrameTime(sf::Time time)
-{
-    m_frameTime = time;
+void AnimatedSprite::setFrameTime(sf::Time time) {
+  m_frameTime = time;
 }
 
-void AnimatedSprite::play()
-{
-    m_isPaused = false;
+void AnimatedSprite::play() {
+  m_isPaused = false;
 }
 
-void AnimatedSprite::play(const Animation& animation)
-{
-    if (getAnimation() != &animation)
-        setAnimation(animation);
-    play();
+void AnimatedSprite::play(const Animation& animation) {
+  if (getAnimation() != &animation) setAnimation(animation);
+  play();
 }
 
-void AnimatedSprite::pause()
-{
-    m_isPaused = true;
+void AnimatedSprite::pause() {
+  m_isPaused = true;
 }
 
-void AnimatedSprite::stop()
-{
-    m_isPaused = true;
-    m_currentFrame = 0;
-    setFrame(m_currentFrame);
+void AnimatedSprite::stop() {
+  m_isPaused = true;
+  m_currentFrame = 0;
+  setFrame(m_currentFrame);
 }
 
-void AnimatedSprite::setLooped(bool looped)
-{
-    m_isLooped = looped;
+void AnimatedSprite::setLooped(bool looped) {
+  m_isLooped = looped;
 }
 
-void AnimatedSprite::setColor(const sf::Color& color)
-{
-    // Update the vertices' color
-    m_vertices[0].color = color;
-    m_vertices[1].color = color;
-    m_vertices[2].color = color;
-    m_vertices[3].color = color;
+void AnimatedSprite::setColor(const sf::Color& color) {
+  // Update the vertices' color
+  m_vertices[0].color = color;
+  m_vertices[1].color = color;
+  m_vertices[2].color = color;
+  m_vertices[3].color = color;
 }
 
-const Animation* AnimatedSprite::getAnimation() const
-{
-    return m_animation;
+const Animation* AnimatedSprite::getAnimation() const {
+  return m_animation;
 }
 
-sf::FloatRect AnimatedSprite::getLocalBounds() const
-{
-    sf::IntRect rect = m_animation->getFrame(m_currentFrame);
+sf::FloatRect AnimatedSprite::getLocalBounds() const {
+  sf::IntRect rect = m_animation->getFrame(m_currentFrame);
 
-    float width = static_cast<float>(std::fabs(rect.size.x));
-    float height = static_cast<float>(std::fabs(rect.size.y));
+  float width = static_cast<float>(std::fabs(rect.size.x));
+  float height = static_cast<float>(std::fabs(rect.size.y));
 
-    return sf::FloatRect(sf::Vector2f(0.f, 0.f), sf::Vector2f(width, height));
+  return sf::FloatRect(sf::Vector2f(0.f, 0.f), sf::Vector2f(width, height));
 }
 
-sf::FloatRect AnimatedSprite::getGlobalBounds() const
-{
-    return getTransform().transformRect(getLocalBounds());
+sf::FloatRect AnimatedSprite::getGlobalBounds() const {
+  return getTransform().transformRect(getLocalBounds());
 }
 
-bool AnimatedSprite::isLooped() const
-{
-    return m_isLooped;
+bool AnimatedSprite::isLooped() const {
+  return m_isLooped;
 }
 
-bool AnimatedSprite::isPlaying() const
-{
-    return !m_isPaused;
+bool AnimatedSprite::isPlaying() const {
+  return !m_isPaused;
 }
 
-sf::Time AnimatedSprite::getFrameTime() const
-{
-    return m_frameTime;
+sf::Time AnimatedSprite::getFrameTime() const {
+  return m_frameTime;
 }
 
-void AnimatedSprite::setFrame(std::size_t newFrame, bool resetTime)
-{
-    if (m_animation)
-    {
-        //calculate new vertex positions and texture coordiantes
-        sf::IntRect rect = m_animation->getFrame(newFrame);
+void AnimatedSprite::setFrame(std::size_t newFrame, bool resetTime) {
+  if (m_animation) {
+    // calculate new vertex positions and texture coordiantes
+    sf::IntRect rect = m_animation->getFrame(newFrame);
 
-        m_vertices[0].position = sf::Vector2f(0.f, 0.f);
-        m_vertices[1].position = sf::Vector2f(0.f, static_cast<float>(rect.size.y));
-        m_vertices[2].position = sf::Vector2f(static_cast<float>(rect.size.x), static_cast<float>(rect.size.y));
-        m_vertices[3].position = sf::Vector2f(static_cast<float>(rect.size.x), 0.f);
+    m_vertices[0].position = sf::Vector2f(0.f, 0.f);
+    m_vertices[1].position = sf::Vector2f(0.f, static_cast<float>(rect.size.y));
+    m_vertices[2].position =
+        sf::Vector2f(static_cast<float>(rect.size.x), static_cast<float>(rect.size.y));
+    m_vertices[3].position = sf::Vector2f(static_cast<float>(rect.size.x), 0.f);
 
-        float left = static_cast<float>(rect.position.x) + 0.0001f;
-        float right = left + static_cast<float>(rect.size.x);
-        float top = static_cast<float>(rect.position.y);
-        float bottom = top + static_cast<float>(rect.size.y);
+    float left = static_cast<float>(rect.position.x) + 0.0001f;
+    float right = left + static_cast<float>(rect.size.x);
+    float top = static_cast<float>(rect.position.y);
+    float bottom = top + static_cast<float>(rect.size.y);
 
-        m_vertices[0].texCoords = sf::Vector2f(left, top);
-        m_vertices[1].texCoords = sf::Vector2f(left, bottom);
-        m_vertices[2].texCoords = sf::Vector2f(right, bottom);
-        m_vertices[3].texCoords = sf::Vector2f(right, top);
-    }
+    m_vertices[0].texCoords = sf::Vector2f(left, top);
+    m_vertices[1].texCoords = sf::Vector2f(left, bottom);
+    m_vertices[2].texCoords = sf::Vector2f(right, bottom);
+    m_vertices[3].texCoords = sf::Vector2f(right, top);
+  }
 
-    if (resetTime)
-        m_currentTime = sf::Time::Zero;
+  if (resetTime) m_currentTime = sf::Time::Zero;
 }
 
-void AnimatedSprite::update(sf::Time deltaTime)
-{
-    // if not paused and we have a valid animation
-    if (!m_isPaused && m_animation)
-    {
-        // add delta time
-        m_currentTime += deltaTime;
+void AnimatedSprite::update(sf::Time deltaTime) {
+  // if not paused and we have a valid animation
+  if (!m_isPaused && m_animation) {
+    // add delta time
+    m_currentTime += deltaTime;
 
-        // if current time is bigger then the frame time advance one frame
-        if (m_currentTime >= m_frameTime)
-        {
-            // reset time, but keep the remainder
-            m_currentTime = sf::microseconds(m_currentTime.asMicroseconds() % m_frameTime.asMicroseconds());
+    // if current time is bigger then the frame time advance one frame
+    if (m_currentTime >= m_frameTime) {
+      // reset time, but keep the remainder
+      m_currentTime =
+          sf::microseconds(m_currentTime.asMicroseconds() % m_frameTime.asMicroseconds());
 
-            // get next Frame index
-            if (m_currentFrame == 0)
-                m_currentFrame++;
-            else
-            {
-                // animation has ended
-                m_currentFrame = 0; // reset to start
+      // get next Frame index
+      if (m_currentFrame == 0)
+        m_currentFrame++;
+      else {
+        // animation has ended
+        m_currentFrame = 0; // reset to start
 
-                if (!m_isLooped)
-                {
-                    m_isPaused = true;
-                }
-
-            }
-
-            // set the current frame, not reseting the time
-            setFrame(m_currentFrame, false);
+        if (!m_isLooped) {
+          m_isPaused = true;
         }
+      }
+
+      // set the current frame, not reseting the time
+      setFrame(m_currentFrame, false);
     }
+  }
 }
 
-void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-    if (m_animation && m_texture)
-    {
-        states.transform *= getTransform();
-        states.texture = m_texture;
-        target.draw(m_vertices, 4, sf::PrimitiveType::TriangleFan, states);
-    }
+void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  if (m_animation && m_texture) {
+    states.transform *= getTransform();
+    states.texture = m_texture;
+    target.draw(m_vertices, 4, sf::PrimitiveType::TriangleFan, states);
+  }
 }

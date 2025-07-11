@@ -3,7 +3,8 @@
 // Copyright (C) 2014 Maximilian Wagenbach (aka. Foaly) (foaly.f@web.de)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the use of this
+// software.
 //
 // Permission is granted to anyone to use this software for any purpose,
 // including commercial applications, and to alter it and redistribute it freely,
@@ -28,23 +29,23 @@
 #define ANIMATION_INCLUDE
 
 #include <vector>
+
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-class Animation
-{
+class Animation {
 public:
-    Animation();
+  Animation();
 
-    void addFrame(sf::IntRect rect);
-    void setSpriteSheet(const sf::Texture& texture);
-    const sf::Texture* getSpriteSheet() const;
-    std::size_t getSize() const;
-    const sf::IntRect& getFrame(std::size_t n) const;
+  void addFrame(sf::IntRect rect);
+  void setSpriteSheet(const sf::Texture& texture);
+  const sf::Texture* getSpriteSheet() const;
+  std::size_t getSize() const;
+  const sf::IntRect& getFrame(std::size_t n) const;
 
 private:
-    std::vector<sf::IntRect> m_frames;
-    const sf::Texture* m_texture;
+  std::vector<sf::IntRect> m_frames;
+  const sf::Texture* m_texture;
 };
 
 #endif // ANIMATION_INCLUDE

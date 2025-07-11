@@ -265,6 +265,30 @@ See `ai-docs/code-quality-analysis.md` for detailed assessment and improvement t
 - **SFML 3.0**: Follow SFML 3.0 patterns and API
 - **Memory Safety**: Prefer `std::unique_ptr` for SFML objects
 - **Header Dependencies**: Forward declarations where possible
+- **Code Formatting**: LLVM style via clang-format (see `.clang-format`)
+
+### Code Formatting
+
+**Automatic Formatting**
+```bash
+# Format all C++ files
+clang-format -i src/*.cpp src/*.h
+
+# Format specific file
+clang-format -i src/game.cpp
+
+# Check formatting without modifying
+clang-format --dry-run --Werror src/*.cpp src/*.h
+```
+
+**Style Guidelines (LLVM-based)**
+- **Indentation**: 2 spaces, no tabs
+- **Line Length**: 100 characters max
+- **Braces**: Attach style (`if (condition) {`)
+- **Pointers**: Left alignment (`int* ptr`)
+- **Includes**: Sorted and grouped (standard, SFML, project)
+- **Functions**: camelCase for functions and variables
+- **Classes**: PascalCase for classes and types
 
 ## Debugging and Troubleshooting
 

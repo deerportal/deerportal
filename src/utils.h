@@ -5,9 +5,8 @@
 // DEERPORTAL_PATH_ASSETS
 
 namespace DP {
-	std::string get_assets_path(std::string);
-
+std::string get_assets_path(std::string);
 
 }
 
-#endif //UTILS_H
+#endif // UTILS_H

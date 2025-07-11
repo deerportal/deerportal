@@ -1,6 +1,5 @@
 #include "pile.h"
 
-Pile::Pile()
-{
-    elementNumber = 0;
+Pile::Pile() {
+  elementNumber = 0;
 }
