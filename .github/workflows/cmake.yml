@@ -154,7 +154,7 @@ jobs:
 
     - name: Setup MSVC (Windows)
       if: matrix.platform == 'windows'
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v1.1
 
     - name: Install NSIS (Windows)
       if: matrix.platform == 'windows'

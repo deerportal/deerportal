@@ -209,6 +209,15 @@ jobs:
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v1.1
 
+    - name: Install NSIS
+      run: |
+        choco install nsis -y
+        echo "NSIS installed successfully"
+        echo "Adding NSIS to PATH"
+        echo "C:\Program Files (x86)\NSIS" >> $GITHUB_PATH
+        echo "Checking NSIS installation:"
+        ls "C:\Program Files (x86)\NSIS" || echo "NSIS not found in default location"
+
     - name: Install SFML 3.0.1
       shell: bash
       run: |
@@ -235,19 +244,34 @@ jobs:
         cmake --build build --config ${{ env.BUILD_TYPE }}
 
     - name: Create Windows package (TEST)
+      shell: bash
       run: |
         cd build
         echo "=== Creating test Windows package ==="
+        echo "Checking if makensis is available:"
+        which makensis || echo "makensis not found"
+        echo "=== Build directory contents ==="
+        ls -la
+        echo "=== Looking for DeerPortal executable ==="
+        find . -name "DeerPortal*" -type f
+        echo "=== Available CPack generators ==="
+        cpack --help | grep -A 10 -i "generator" || echo "Could not list generators, continuing with packaging"
+        echo "=== Trying make package ==="
         make package || {
           echo "=== make package failed, trying direct CPack ==="
-          cpack -G NSIS || echo "NSIS packaging failed - but this is a test"
+          cpack -G NSIS --verbose || {
+            echo "NSIS packaging failed, trying ZIP fallback"
+            cpack -G ZIP --verbose || echo "All packaging methods failed - but this is a test"
+          }
         }
 
     - name: Upload Test Windows Artifact
       uses: actions/upload-artifact@v4
       with:
         name: TEST-DeerPortal-${{ steps.get_version.outputs.VERSION }}-Windows-installer
-        path: build/DeerPortal-*-Windows.exe
+        path: |
+          build/DeerPortal-*-Windows.exe
+          build/DeerPortal-*-Windows.zip
         retention-days: 7  # Shorter retention for tests
 
   # Linux Build (TEST)
