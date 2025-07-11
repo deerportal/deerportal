@@ -86,6 +86,7 @@ cmake_modules/     # CMake helper modules
 - **ai-instructions.md**: Comprehensive development context and memory bank
 - **ai-docs/code-quality-analysis.md**: Complete code quality analysis with improvement tracking
 - **ai-docs/error-handling-improvement-plan.md**: Error handling implementation plan and progress
+- **ai-docs/github-actions.md**: Complete CI/CD pipeline analysis and documentation
 - **version.txt**: Single source of truth for version management
 - **CMakeLists.txt**: Primary build configuration with SFML 3.0 detection
 - **README.md**: User installation and setup instructions
