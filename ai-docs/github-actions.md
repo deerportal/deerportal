@@ -11,10 +11,9 @@ DeerPortal uses a comprehensive multi-platform CI/CD pipeline system built on Gi
 #### **cmake.yml** - Continuous Integration
 - **Trigger**: Push/PR to `master` branch
 - **Purpose**: Automated build testing and validation
-- **Matrix Strategy**: 4 platform combinations
+- **Matrix Strategy**: 3 platform combinations (unified with release workflow)
   - Ubuntu latest (Linux x64)
   - Windows latest (Windows x64)
-  - macOS-13 (Intel)
   - macOS-latest (Apple Silicon)
 
 #### **release.yml** - Production Release
@@ -74,8 +73,9 @@ MACOSX_BUNDLE_INFO_PLIST packaging/Info.plist
 #### **Package Creation**
 1. **NSIS Installation**: Via Chocolatey package manager
 2. **Executable Building**: CMake with Release configuration
-3. **CPack Integration**: NSIS generator for installer creation
-4. **Fallback Strategy**: ZIP packaging if NSIS fails
+3. **Shell Strategy**: Unified bash shell across all workflows for consistency
+4. **CPack Integration**: Primary NSIS generator, fallback to ZIP
+5. **Error Handling**: Robust fallback mechanisms with detailed logging
 
 ### Linux Pipeline
 
@@ -260,18 +260,34 @@ Format: `sfml-3.0.1-{platform}-{arch}-{runner.os}-{hash}`
 - **SFML Version**: Manual updates with testing
 - **Tool Versions**: Pinned versions for stability
 
+## Recent Improvements (July 2025)
+
+### **Workflow Unification**
+1. **Platform Matrix Reduction**: Removed problematic macOS-13 Intel builds
+2. **Shell Consistency**: Unified all workflows to use bash shell for cross-platform compatibility
+3. **Error Handling**: Standardized fallback mechanisms across cmake.yml and test-release.yml
+4. **Command Compatibility**: Fixed Windows CMD vs Bash syntax conflicts
+
+### **Build Reliability Enhancements**
+- **cmake.yml**: Now mirrors test-release.yml behavior exactly
+- **Windows Packaging**: Resolved shell syntax errors causing "incorrect syntax" failures
+- **macOS Support**: Focused on Apple Silicon with proven reliability
+- **Testing Integration**: Maintained CTest execution in CI pipeline
+
 ## Known Issues and Limitations
 
 ### **Current Issues**
 1. **Windows Signing**: No code signing certificate
 2. **macOS Notarization**: No Apple Developer account
 3. **Linux Distributions**: Limited to Ubuntu base
+4. **Library Linking**: Minor inconsistency between CI (shared) and release (static) builds
 
 ### **Future Improvements**
 1. **Cross-Compilation**: Reduce build times
 2. **Enhanced Testing**: Integration and unit tests
 3. **Security**: Signed binaries and packages
 4. **Documentation**: Automated documentation generation
+5. **Build Consistency**: Harmonize shared vs static library strategies
 
 ## Troubleshooting Guide
 
@@ -280,6 +296,8 @@ Format: `sfml-3.0.1-{platform}-{arch}-{runner.os}-{hash}`
 2. **Missing Dependencies**: Verify apt/brew installation
 3. **Linking Errors**: Check static/dynamic library configuration
 4. **Package Creation**: Verify tool installation (NSIS, etc.)
+5. **Windows Shell Errors**: Ensure bash shell usage, not CMD (fixed July 2025)
+6. **macOS Intel Failures**: Use macOS-latest (Apple Silicon) only (fixed July 2025)
 
 ### **Debug Workflow**
 1. **Check Environment**: Review debug output

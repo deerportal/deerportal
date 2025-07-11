@@ -44,6 +44,37 @@ CMake Error: Could not find a package configuration file provided by "SFML" (req
     rm -rf sfml-source
 ```
 
+### **Windows Shell Syntax Errors**
+
+**Problem**:
+```
+The syntax of the command is incorrect.
+Error: Process completed with exit code 255.
+```
+
+**Root Cause**: Mixed CMD and Bash syntax in Windows packaging steps.
+
+**Solution**: Use consistent bash shell across all platforms:
+```yaml
+# CORRECT: Use bash shell
+- name: Create Windows package
+  shell: bash  # ← Key fix
+  run: |
+    cpack -G NSIS --verbose || {
+      echo "NSIS packaging failed"
+      cpack -G ZIP --verbose
+    }
+
+# INCORRECT: CMD shell with bash syntax
+- name: Create Windows package  
+  shell: cmd   # ← Causes syntax errors
+  run: |
+    cpack -G NSIS --verbose || (
+      echo NSIS packaging failed &&
+      cpack -G ZIP --verbose
+    )
+```
+
 ### **CMake Deprecation Warnings**
 
 **Problem**:
@@ -85,14 +116,15 @@ cmake --build build -j$(nproc)
 
 ## 🔧 **Platform-Specific Issues**
 
-### **macOS vs Linux Differences**
+### **Platform-Specific CI Differences**
 
-| Aspect | macOS (Homebrew) | Linux (Ubuntu CI) |
-|--------|------------------|-------------------|
-| SFML Install | `brew install sfml` | Build from source |
-| Dependencies | Auto-resolved | Manual apt packages |
-| Bundle | App bundle creation | Standard binary |
-| Asset Path | Bundle resources | Install prefix paths |
+| Aspect | macOS (Apple Silicon) | Linux (Ubuntu CI) | Windows (Git Bash) |
+|--------|----------------------|-------------------|---------------------|
+| SFML Install | Build from source | Build from source | Build from source |
+| Dependencies | Homebrew + Xcode tools | Manual apt packages | Chocolatey + MSVC |
+| Shell | bash | bash | bash (unified) |
+| Bundle | App bundle creation | Standard binary | NSIS installer |
+| Asset Path | Bundle resources | Install prefix paths | Relative paths |
 
 ### **Development vs CI Environment**
 
