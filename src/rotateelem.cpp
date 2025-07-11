@@ -1,4 +1,5 @@
 #include "rotateelem.h"
+#include "exceptions.h"
 
 #include <string> // For std::string
 
@@ -6,8 +7,11 @@
 #include "textureholder.h"
 
 RotateElem::RotateElem(TextureHolder* textures) : timeCounter(0), active(true) {
-  if (!textureRotate.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "img/rotate.png")))
-    std::exit(1);
+  if (!textureRotate.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "img/rotate.png"))) {
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/rotate.png", 
+                                       "Failed to load rotate element texture");
+  }
 
   spriteRotate = std::make_unique<sf::Sprite>(textureRotate);
   spriteRotate->scale(sf::Vector2f(0.7f, 0.7f));

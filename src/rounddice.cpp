@@ -1,4 +1,5 @@
 #include "rounddice.h"
+#include "exceptions.h"
 
 #include "data.h"
 #include "filetools.h"
@@ -9,9 +10,17 @@ RoundDice::RoundDice(Player (&players)[4]) : sfxDice(sfxDiceBuffer) {
   diceResult = 1;
   diceResultSix = 6;
   diceSize = 150;
-  if (!sfxDiceBuffer.loadFromFile(get_full_path(ASSETS_PATH "audio/dice.ogg"))) std::exit(1);
+  if (!sfxDiceBuffer.loadFromFile(get_full_path(ASSETS_PATH "audio/dice.ogg"))) {
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::SOUND, 
+                                       "audio/dice.ogg", 
+                                       "Failed to load dice sound effect");
+  }
 
-  if (!textureDice.loadFromFile(get_full_path(ASSETS_PATH "img/diceWhite.png"))) std::exit(1);
+  if (!textureDice.loadFromFile(get_full_path(ASSETS_PATH "img/diceWhite.png"))) {
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/diceWhite.png", 
+                                       "Failed to load dice texture");
+  }
 
   spriteDice = std::make_unique<sf::Sprite>(textureDice);
   sfxDice.setVolume(12);

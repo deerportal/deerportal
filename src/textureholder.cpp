@@ -1,4 +1,5 @@
 #include "textureholder.h"
+#include "exceptions.h"
 
 #include <iostream>
 
@@ -32,7 +33,9 @@ TextureHolder::TextureHolder() {
       if (!cardsTextures[i][j].loadFromFile(
               get_full_path(ASSETS_PATH "img/cards/" + cardsImages[i][j]))) {
         //                std::cout << "assets/img/cards/" << cardsImages[i][j];
-        std::exit(1);
+        throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                           "img/cards/" + cardsImages[i][j], 
+                                           "Failed to load card texture");
       } else {
         //                std::cout << "assets/img/cards/" << cardsImages[i][j] << " ok " << i << "
         //                " <<  j << " " << std::endl;
@@ -41,16 +44,24 @@ TextureHolder::TextureHolder() {
   }
 
   if (!textureCardBases[0].loadFromFile(get_full_path(ASSETS_PATH "img/card-water-2-diam_m.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/card-water-2-diam_m.png", 
+                                       "Failed to load water card base texture");
 
   if (!textureCardBases[1].loadFromFile(get_full_path(ASSETS_PATH "img/card-earth-2-diam_m.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/card-earth-2-diam_m.png", 
+                                       "Failed to load earth card base texture");
 
   if (!textureCardBases[2].loadFromFile(get_full_path(ASSETS_PATH "img/card-fire-2-diam_m.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/card-fire-2-diam_m.png", 
+                                       "Failed to load fire card base texture");
 
   if (!textureCardBases[3].loadFromFile(get_full_path(ASSETS_PATH "img/card-air-2-diam_m.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/card-air-2-diam_m.png", 
+                                       "Failed to load air card base texture");
 
   //    if (!textureGameBackground.loadFromFile(ASSETS_PATH"assets/img/game-ackground.png"))
   //        std::exit(1);
@@ -68,26 +79,48 @@ TextureHolder::TextureHolder() {
   //        std::exit(1);
 
   if (!textureCharacters.loadFromFile(get_full_path(ASSETS_PATH "img/characters-new.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/characters-new.png", 
+                                       "Failed to load characters texture");
 
   if (!backgroundDark.loadFromFile(get_full_path(ASSETS_PATH "img/background_dark.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/background_dark.png", 
+                                       "Failed to load dark background texture");
   if (!textureBoardDiamond.loadFromFile(get_full_path(ASSETS_PATH "img/board_diamonds.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/board_diamonds.png", 
+                                       "Failed to load board diamonds texture");
 
-  if (!textureMenu.loadFromFile(get_full_path(ASSETS_PATH "img/dp_intro_menu.png"))) std::exit(1);
+  if (!textureMenu.loadFromFile(get_full_path(ASSETS_PATH "img/dp_intro_menu.png")))
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/dp_intro_menu.png", 
+                                       "Failed to load intro menu texture");
 
-  if (!textureLetsBegin.loadFromFile(get_full_path(ASSETS_PATH "img/letsbegin.png"))) std::exit(1);
+  if (!textureLetsBegin.loadFromFile(get_full_path(ASSETS_PATH "img/letsbegin.png")))
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/letsbegin.png", 
+                                       "Failed to load lets begin texture");
 
-  if (!textureButtonCpu.loadFromFile(get_full_path(ASSETS_PATH "img/button-cpu.png"))) std::exit(1);
+  if (!textureButtonCpu.loadFromFile(get_full_path(ASSETS_PATH "img/button-cpu.png")))
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/button-cpu.png", 
+                                       "Failed to load CPU button texture");
 
   if (!textureButtonHuman.loadFromFile(get_full_path(ASSETS_PATH "img/button-human.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/button-human.png", 
+                                       "Failed to load human button texture");
 
-  if (!textureDeerGod.loadFromFile(get_full_path(ASSETS_PATH "img/deer-god.png"))) std::exit(1);
+  if (!textureDeerGod.loadFromFile(get_full_path(ASSETS_PATH "img/deer-god.png")))
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/deer-god.png", 
+                                       "Failed to load deer god texture");
 
   if (!textureBigDiamond.loadFromFile(get_full_path(ASSETS_PATH "img/diamond-big.png")))
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
+                                       "img/diamond-big.png", 
+                                       "Failed to load big diamond texture");
 
   int defaultArray[5][8] = {
       // Cash   Food    Energy  Faith

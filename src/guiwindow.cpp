@@ -1,4 +1,5 @@
 #include "guiwindow.h"
+#include "exceptions.h"
 
 #include <iostream> // For std::cerr
 
@@ -15,8 +16,9 @@ void GuiWindow::setTitle(const std::string& newTitle) {
 GuiWindow::GuiWindow(TextureHolder* textures) {
   if (!guiElemFont.openFromFile(
           get_full_path(std::string(ASSETS_PATH) + "fnt/metal-macabre.regular.ttf"))) {
-    std::cerr << "Failed to load font metal-macabre.regular.ttf" << std::endl;
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::FONT, 
+                                       "fnt/metal-macabre.regular.ttf", 
+                                       "Failed to load GUI font metal-macabre.regular.ttf");
   }
 
   // Initialize text and sprites that depend on loaded resources
@@ -45,8 +47,9 @@ GuiWindow::GuiWindow(TextureHolder* textures) {
 GuiWindow::GuiWindow() {
   if (!guiElemFont.openFromFile(
           get_full_path(std::string(ASSETS_PATH) + "fnt/metal-macabre.regular.ttf"))) {
-    std::cerr << "Failed to load font metal-macabre.regular.ttf" << std::endl;
-    std::exit(1);
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::FONT, 
+                                       "fnt/metal-macabre.regular.ttf", 
+                                       "Failed to load GUI font metal-macabre.regular.ttf");
   }
   guiTitleTxt = std::make_unique<sf::Text>(guiElemFont); // Pass font here
 
