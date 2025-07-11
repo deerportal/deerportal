@@ -29,7 +29,6 @@
 #include "grouphud.h"         // For GroupHud groupHud;
 #include "guirounddice.h"     // For GuiRoundDice guiRoundDice;
 #include "introshader.h"      // For IntroShader introShader;
-#include "particle.h"         // For ParticleSystem particleSystem;
 #include "rotateelem.h"       // For RotateElem members;
 #include "rounddice.h"        // For RoundDice roundDice;
 #include "selector.h"         // For Selector selector;
@@ -151,7 +150,6 @@ private:
   void update(sf::Time frameTime);
   void render(float deltaTime);
 
-  ParticleSystem particleSystem;
 
   void setCurrentNeighbours();
   void nextPlayer();

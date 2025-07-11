@@ -91,6 +91,7 @@ cmake_modules/     # CMake helper modules
 ### Important Files
 - **DEVELOPMENT.md**: Complete development guide with version management, build system, and release procedures
 - **ai-docs/coding-standards.md**: Comprehensive C++ coding standards and LLVM style guidelines
+- **ai-docs/memory-management-improvement-plan.md**: Detailed plan for eliminating memory management issues
 - **.clang-format**: LLVM-style code formatting configuration for consistent C++ style
 - **ai-docs/github-actions.md**: Complete CI/CD pipeline analysis and documentation
 - **ai-docs/code-quality-analysis.md**: Complete code quality analysis with improvement tracking
@@ -105,7 +106,7 @@ cmake_modules/     # CMake helper modules
 - **Quality Analysis**: See `ai-docs/code-quality-analysis.md` for detailed assessment
 - **Coding Standards**: See `ai-docs/coding-standards.md` for LLVM-style guidelines and best practices
 - **Recent Improvements**: Professional error handling, constructor anti-pattern fixes, safe asset loading
-- **Remaining Priorities**: Particle system memory safety, complete std::exit() migration
+- **Remaining Priorities**: Remove unused particle system, replace std::exit() with exceptions (see memory management plan)
 
 ## Development Environment
 

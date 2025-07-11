@@ -31,7 +31,6 @@ void GameInput::handleKeyboardInput(const sf::Event& event) {
     }
 
     // Additional keyboard handling can be added here
-    // Original particle system controls were commented out in the original code
   }
 }
 

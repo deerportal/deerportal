@@ -12,7 +12,7 @@ class Game;
 /*!
  * \brief GameAnimationSystem handles all animation logic and visual effects
  *
- * This class manages oscillators, particle systems, sprite animations,
+ * This class manages oscillators, sprite animations,
  * and other time-based visual effects in the game.
  */
 class GameAnimationSystem {
@@ -26,7 +26,6 @@ public:
   // Animation control
   void updateBigDiamondAnimation(sf::Time frameTime);
   void updateCharacterAnimations(sf::Time frameTime);
-  void updateParticleEffects(sf::Time frameTime);
   void updateIntroShaderAnimation(sf::Time frameTime);
 
   // Oscillator management
@@ -48,9 +47,6 @@ public:
   void createVisualEffect(sf::Vector2f position, const std::string& effectType);
   void updateVisualEffects(sf::Time frameTime);
 
-  // Particle system control (currently disabled for performance)
-  void enableParticleSystem(bool enable);
-  void updateParticleSystem(sf::Time frameTime);
 
   // Animation queries
   bool isBigDiamondAnimating() const;
@@ -87,8 +83,6 @@ private:
   };
   std::vector<VisualEffect> activeEffects;
 
-  // Particle system control
-  bool particleSystemEnabled;
 
   // Helper methods
   void initializeAnimationStates();

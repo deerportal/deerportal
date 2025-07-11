@@ -9,8 +9,7 @@ namespace DP {
 
 GameAnimationSystem::GameAnimationSystem(Game* gameInstance)
     : game(gameInstance), oscillator(-1.0f), oscillatorInc(true), oscillatorSpeed(1.0f),
-      bigDiamondAnimationActive(false), bigDiamondBasePosition(474.0f, 342.0f),
-      particleSystemEnabled(false) // Disabled as requested
+      bigDiamondAnimationActive(false), bigDiamondBasePosition(474.0f, 342.0f)
 {
   initializeAnimationStates();
 }
@@ -81,10 +80,6 @@ void GameAnimationSystem::updateCharacterAnimations(sf::Time frameTime) {
   }
 }
 
-void GameAnimationSystem::updateParticleEffects(sf::Time frameTime) {
-  // Particle system intentionally not implemented as per user request
-  // This method is here for interface completeness
-}
 
 void GameAnimationSystem::updateIntroShaderAnimation(sf::Time frameTime) {
   // Intro shader animation is handled by IntroShader class
@@ -152,14 +147,6 @@ void GameAnimationSystem::updateVisualEffects(sf::Time frameTime) {
   cleanupFinishedEffects();
 }
 
-// Particle system control (disabled as requested)
-void GameAnimationSystem::enableParticleSystem(bool enable) {
-  particleSystemEnabled = false; // Always disabled as per user request
-}
-
-void GameAnimationSystem::updateParticleSystem(sf::Time frameTime) {
-  // Intentionally empty - particle system not used
-}
 
 // Animation queries
 bool GameAnimationSystem::isBigDiamondAnimating() const {
