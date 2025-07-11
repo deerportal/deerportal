@@ -1235,16 +1235,3 @@ void Game::startDeerMode() {
 }
 } // namespace DP
 
-// Factory functions for main.cpp to avoid header include issues
-DP::Game* createGame(bool testMode) {
-  return new DP::Game(testMode);
-}
-
-void runGame(DP::Game* game) {
-  // Game constructor already handles the main loop
-  // This function exists for future expansion if needed
-}
-
-void destroyGame(DP::Game* game) {
-  delete game;
-}
