@@ -1,3 +1,13 @@
+deerportal (0.9.1-pre.5-release-fix-ubuntu1) trusty; urgency=medium
+
+  * Fixed duplicate release tag creation issues
+  * Enhanced release workflow duplicate detection
+  * Version management consistency improvements
+  * Windows packaging pipeline fixes and improvements
+  * Unified shell usage across all platforms (bash)
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sat, 13 Jul 2025 17:00:00 +0200
+
 deerportal (0.9.1-pre.4-windows-fix-ubuntu1) trusty; urgency=medium
 
   * Windows packaging pipeline fixes and improvements

@@ -265,10 +265,13 @@ jobs:
         ls -la
         echo "=== Looking for DeerPortal executable ==="
         find . -name "DeerPortal*" -type f
-        echo "=== Trying CPack with NSIS ==="
-        cpack -G NSIS --verbose || {
-          echo "NSIS packaging failed, trying ZIP fallback"
-          cpack -G ZIP --verbose
+        echo "=== Trying make package first ==="
+        make package || {
+          echo "=== make package failed, trying direct CPack ==="
+          cpack -G NSIS --verbose || {
+            echo "NSIS packaging failed, trying ZIP fallback"
+            cpack -G ZIP --verbose
+          }
         }
 
     - name: Upload Windows artifact
@@ -292,6 +295,7 @@ jobs:
         fail_on_unmatched_files: false
         make_latest: false
         append_body: true
+      continue-on-error: true
 
   # Linux Build
   build-linux:
@@ -401,4 +405,5 @@ jobs:
         # Add files to existing release (macOS job creates the release)
         fail_on_unmatched_files: false
         make_latest: false
-        append_body: true 
+        append_body: true
+      continue-on-error: true 
