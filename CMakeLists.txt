@@ -116,8 +116,6 @@ file(GLOB OTHER_SOURCES
     src/cardsdeck.h
     src/calendar.cpp
     src/calendar.h
-    src/particle.cpp
-    src/particle.h
     src/bubble.cpp
     src/bubble.h
     src/command.cpp
@@ -131,7 +129,6 @@ file(GLOB OTHER_SOURCES
     src/introshader.cpp
     src/introshader.h
     # Missing files that were causing linking errors
-    src/particlesystem.cpp
     src/elem.cpp
     src/boardelems.cpp
     src/boarddiamond.cpp

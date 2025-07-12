@@ -1,29 +1,25 @@
 #include "introshader.h"
-#include "tilemap.h"  // For get_full_path
+
 #include <iostream>
+
+#include "tilemap.h" // For get_full_path
 
 namespace DP {
 
 IntroShader::IntroShader()
-    : initialized(false), finished(false), duration(8.0f), currentTime(0.0f)
-{
+    : initialized(false), finished(false), duration(8.0f), currentTime(0.0f) {}
+
+IntroShader::~IntroShader() {}
+
+bool IntroShader::initialize(sf::Vector2u screenSize) {
+  return initialize(screenSize, nullptr);
 }
 
-IntroShader::~IntroShader()
-{
-}
+bool IntroShader::initialize(sf::Vector2u screenSize, const sf::Texture* backgroundTexture) {
+  this->screenSize = screenSize;
 
-bool IntroShader::initialize(sf::Vector2u screenSize)
-{
-    return initialize(screenSize, nullptr);
-}
-
-bool IntroShader::initialize(sf::Vector2u screenSize, const sf::Texture* backgroundTexture)
-{
-    this->screenSize = screenSize;
-    
-    // New grid-based reveal shader that unveils the intro screen rectangle by rectangle
-    const std::string fragmentShaderGrid = R"(
+  // New grid-based reveal shader that unveils the intro screen rectangle by rectangle
+  const std::string fragmentShaderGrid = R"(
 #version 120
 
 // Grid-based reveal shader for DeerPortal intro
@@ -119,22 +115,18 @@ void main()
 }
 )";
 
-    // Try the new grid shader first
-    if (backgroundTexture && shader.loadFromMemory(fragmentShaderGrid, sf::Shader::Type::Fragment))
-    {
-        std::cout << "Grid reveal intro shader loaded successfully with intro texture" << std::endl;
-        shader.setUniform("introTexture", *backgroundTexture);  // Temporarily use background, will be replaced
-        shader.setUniform("useIntroTexture", true);
-    }
-    else if (shader.loadFromMemory(fragmentShaderGrid, sf::Shader::Type::Fragment))
-    {
-        std::cout << "Grid reveal intro shader loaded successfully with fallback colors" << std::endl;
-        shader.setUniform("useIntroTexture", false);
-    }
-    else
-    {
-        // Final fallback to simple shader
-        const std::string simpleShader = R"(
+  // Try the new grid shader first
+  if (backgroundTexture && shader.loadFromMemory(fragmentShaderGrid, sf::Shader::Type::Fragment)) {
+    std::cout << "Grid reveal intro shader loaded successfully with intro texture" << std::endl;
+    shader.setUniform("introTexture",
+                      *backgroundTexture); // Temporarily use background, will be replaced
+    shader.setUniform("useIntroTexture", true);
+  } else if (shader.loadFromMemory(fragmentShaderGrid, sf::Shader::Type::Fragment)) {
+    std::cout << "Grid reveal intro shader loaded successfully with fallback colors" << std::endl;
+    shader.setUniform("useIntroTexture", false);
+  } else {
+    // Final fallback to simple shader
+    const std::string simpleShader = R"(
 uniform float iTime;
 uniform vec2 iResolution;
 
@@ -153,86 +145,77 @@ void main()
 }
 )";
 
-        if (shader.loadFromMemory(simpleShader, sf::Shader::Type::Fragment))
-        {
-            std::cout << "Simple grid intro shader loaded successfully" << std::endl;
-        }
-        else
-        {
-            std::cerr << "Failed to load any intro shader version" << std::endl;
-            return false;
-        }
+    if (shader.loadFromMemory(simpleShader, sf::Shader::Type::Fragment)) {
+      std::cout << "Simple grid intro shader loaded successfully" << std::endl;
+    } else {
+      std::cerr << "Failed to load any intro shader version" << std::endl;
+      return false;
     }
+  }
 
-    // Create render texture
-    if (!renderTexture.resize(screenSize))
-    {
-        std::cerr << "Failed to create intro shader render texture" << std::endl;
-        return false;
-    }
+  // Create render texture
+  if (!renderTexture.resize(screenSize)) {
+    std::cerr << "Failed to create intro shader render texture" << std::endl;
+    return false;
+  }
 
-    // Setup sprite - initialize after render texture is created
-    sprite = std::make_unique<sf::Sprite>(renderTexture.getTexture());
-    
-    initialized = true;
-    return true;
+  // Setup sprite - initialize after render texture is created
+  sprite = std::make_unique<sf::Sprite>(renderTexture.getTexture());
+
+  initialized = true;
+  return true;
 }
 
-void IntroShader::setIntroTexture(const sf::Texture* introTexture)
-{
-    if (introTexture && initialized) {
-        shader.setUniform("introTexture", *introTexture);
-        shader.setUniform("useIntroTexture", true);
-        std::cout << "Intro texture set successfully" << std::endl;
-    }
+void IntroShader::setIntroTexture(const sf::Texture* introTexture) {
+  if (introTexture && initialized) {
+    shader.setUniform("introTexture", *introTexture);
+    shader.setUniform("useIntroTexture", true);
+    std::cout << "Intro texture set successfully" << std::endl;
+  }
 }
 
-void IntroShader::update(float deltaTime)
-{
-    if (!initialized || finished) return;
-    
-    currentTime += deltaTime;
-    
-    // Calculate total animation time based on grid size and timing
-    // 95x63 grid = 5,985 rectangles! With 0.5 frame offset
-    // Total time: (5984 * 0.5 + 5) frames / 60fps = about 50 seconds (way too long!)
-    // Let's use a much shorter duration and fast overlap for tiny rectangles
-    float totalAnimationTime = 8.0f;  // Reasonable duration for massive tiny grid
-    
-    if (currentTime >= totalAnimationTime)
-    {
-        finished = true;
-    }
+void IntroShader::update(float deltaTime) {
+  if (!initialized || finished) return;
+
+  currentTime += deltaTime;
+
+  // Calculate total animation time based on grid size and timing
+  // 95x63 grid = 5,985 rectangles! With 0.5 frame offset
+  // Total time: (5984 * 0.5 + 5) frames / 60fps = about 50 seconds (way too long!)
+  // Let's use a much shorter duration and fast overlap for tiny rectangles
+  float totalAnimationTime = 8.0f; // Reasonable duration for massive tiny grid
+
+  if (currentTime >= totalAnimationTime) {
+    finished = true;
+  }
 }
 
-void IntroShader::render(sf::RenderWindow& window)
-{
-    if (!initialized || finished || !sprite) return;
-    
-    // Set shader uniforms
-    shader.setUniform("iTime", currentTime);
-    shader.setUniform("iResolution", sf::Vector2f(screenSize.x, screenSize.y));
-    
-    // Clear render texture and render fullscreen quad with shader
-    renderTexture.clear(sf::Color::Black);
-    
-    // Create a fullscreen rectangle for the shader
-    sf::RectangleShape fullscreenQuad(sf::Vector2f(screenSize.x, screenSize.y));
-    fullscreenQuad.setPosition(sf::Vector2f(0.0f, 0.0f));
-    
-    // Render with shader
-    renderTexture.draw(fullscreenQuad, &shader);
-    renderTexture.display();
-    
-    // Draw to window
-    window.draw(*sprite);
+void IntroShader::render(sf::RenderWindow& window) {
+  if (!initialized || finished || !sprite) return;
+
+  // Set shader uniforms
+  shader.setUniform("iTime", currentTime);
+  shader.setUniform("iResolution", sf::Vector2f(screenSize.x, screenSize.y));
+
+  // Clear render texture and render fullscreen quad with shader
+  renderTexture.clear(sf::Color::Black);
+
+  // Create a fullscreen rectangle for the shader
+  sf::RectangleShape fullscreenQuad(sf::Vector2f(screenSize.x, screenSize.y));
+  fullscreenQuad.setPosition(sf::Vector2f(0.0f, 0.0f));
+
+  // Render with shader
+  renderTexture.draw(fullscreenQuad, &shader);
+  renderTexture.display();
+
+  // Draw to window
+  window.draw(*sprite);
 }
 
-void IntroShader::reset()
-{
-    currentTime = 0.0f;
-    finished = false;
-    clock.restart();
+void IntroShader::reset() {
+  currentTime = 0.0f;
+  finished = false;
+  clock.restart();
 }
 
-} // namespace DP 
+} // namespace DP

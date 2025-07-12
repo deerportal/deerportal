@@ -1,3 +1,12 @@
+deerportal (0.9.1-pre.1-test-release-ubuntu1) trusty; urgency=medium
+
+  * Pre-release testing for 0.9.1
+  * CI/CD workflow testing
+  * Build system validation
+  * Release process verification
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Thu, 11 Jul 2025 10:00:00 +0200
+
 deerportal (0.9.1-minor-fixes-ubuntu1) trusty; urgency=medium
 
   * Minor improvements and bug fixes

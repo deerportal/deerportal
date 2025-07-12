@@ -4,12 +4,10 @@
 /*!
  * \brief The Pile of the cards
  */
-class Pile
-{
+class Pile {
 public:
-    Pile();
-    int elementNumber;
-
+  Pile();
+  int elementNumber;
 };
 
 #endif // PILE_H

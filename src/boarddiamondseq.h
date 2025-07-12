@@ -4,11 +4,11 @@
 #include <ctime>
 #include <iostream>
 #include <set>
-#include "textureholder.h"
+
 #include <SFML/Graphics.hpp>
+
 #include "boarddiamond.h"
-
-
+#include "textureholder.h"
 
 /*!
  * \brief The BoardDiamondSeq class
@@ -25,35 +25,34 @@
  * Now uses VertexArray for efficient batched rendering instead of 112 individual draw calls.
  */
 
-class BoardDiamondSeq : public sf::Drawable, public sf::Transformable
-{
+class BoardDiamondSeq : public sf::Drawable, public sf::Transformable {
 public:
-    explicit BoardDiamondSeq(TextureHolder *textures);
-    TextureHolder *textures;
-    BoardDiamond diamonds[DP::diamondsNumber];
+  explicit BoardDiamondSeq(TextureHolder* textures);
+  TextureHolder* textures;
+  BoardDiamond diamonds[DP::diamondsNumber];
 
-    std::array<int,DP::diamondsNumber> getBoardPositions();
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    int getRandomPos(int playerNumber);
+  std::array<int, DP::diamondsNumber> getBoardPositions();
+  virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+  int getRandomPos(int playerNumber);
 
-    void reorder();
+  void reorder();
 
-//    bool ifFieldIsEmpty(int pos, int element);
-    bool ifFieldIsEmpty(int pos);
+  //    bool ifFieldIsEmpty(int pos, int element);
+  bool ifFieldIsEmpty(int pos);
 
-    void collectField(int pos);
-    int getNumberForField(int pos);
+  void collectField(int pos);
+  int getNumberForField(int pos);
 
-    void reorder(int element);
+  void reorder(int element);
 
 private:
-    // PERFORMANCE OPTIMIZATION: VertexArray for batched rendering (Issue #68)
-    mutable sf::VertexArray m_vertices;
-    mutable bool m_needsUpdate;
-    
-    // Helper methods for VertexArray optimization
-    void updateVertexArray() const;
-    void updateSingleDiamond(int index) const;
+  // PERFORMANCE OPTIMIZATION: VertexArray for batched rendering (Issue #68)
+  mutable sf::VertexArray m_vertices;
+  mutable bool m_needsUpdate;
+
+  // Helper methods for VertexArray optimization
+  void updateVertexArray() const;
+  void updateSingleDiamond(int index) const;
 };
 
 #endif // BOARDDIAMONDSEQ_H
