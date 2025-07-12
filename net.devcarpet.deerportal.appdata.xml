@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.1-pre.3" date="2025-07-13">
+​      <description>
+​        <p>Release pipeline fixes and CI/CD improvements. Enhanced workflow reliability with checkout action stabilization, release conflict prevention, and proper permissions configuration.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.1-pre.1" date="2025-07-11">
 ​      <description>
 ​        <p>Minor improvements and bug fixes following the major 0.9.0 release.</p>

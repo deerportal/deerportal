@@ -1,3 +1,13 @@
+deerportal (0.9.1-pre.3-release-ubuntu1) trusty; urgency=medium
+
+  * Release pipeline fixes and improvements
+  * Checkout action stabilization with fetch-depth: 0
+  * Release conflict prevention and duplicate detection
+  * Workflow permissions configuration
+  * Enhanced CI/CD reliability and error handling
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sat, 13 Jul 2025 14:00:00 +0200
+
 deerportal (0.9.1-pre.1-test-release-ubuntu1) trusty; urgency=medium
 
   * Pre-release testing for 0.9.1
