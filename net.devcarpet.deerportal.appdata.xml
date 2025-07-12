@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.1-pre.6" date="2025-07-13">
+​      <description>
+​        <p>Multi-platform release coordination improvements. Fixed missing Windows and macOS artifacts in releases, implemented proper job hierarchy, and enhanced cross-platform deployment reliability.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.1-pre.5" date="2025-07-13">
 ​      <description>
 ​        <p>Release workflow and version management improvements. Fixed duplicate release tag issues, enhanced workflow reliability, and resolved Windows packaging pipeline problems.</p>

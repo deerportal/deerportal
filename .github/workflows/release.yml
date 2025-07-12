@@ -144,22 +144,14 @@ jobs:
         path: build/DeerPortal-*-macOS.dmg
         retention-days: 30
 
-    - name: Check if release exists
+    - name: Prepare for release upload
       if: github.event_name == 'push' && !inputs.test_mode
-      id: check_release
       run: |
-        if gh release view ${{ github.ref_name }} >/dev/null 2>&1; then
-          echo "exists=true" >> $GITHUB_OUTPUT
-          echo "Release ${{ github.ref_name }} already exists"
-        else
-          echo "exists=false" >> $GITHUB_OUTPUT
-          echo "Release ${{ github.ref_name }} does not exist, safe to create"
-        fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        echo "Preparing to upload macOS DMG to release ${{ github.ref_name }}"
+        echo "This job will create the release if it doesn't exist, or append to existing release"
 
     - name: Upload to Release
-      if: github.event_name == 'push' && !inputs.test_mode && steps.check_release.outputs.exists == 'false'
+      if: github.event_name == 'push' && !inputs.test_mode
       uses: softprops/action-gh-release@v2
       with:
         files: build/DeerPortal-*-macOS.dmg
@@ -168,6 +160,8 @@ jobs:
         draft: false
         prerelease: false
         fail_on_unmatched_files: false
+        make_latest: false
+        append_body: true
         body: |
           ## DeerPortal v${{ steps.get_version.outputs.VERSION }}
           
@@ -291,11 +285,9 @@ jobs:
           build/DeerPortal-*-Windows.exe
           build/DeerPortal-*-Windows.zip
         tag_name: ${{ github.ref }}
-        # Add files to existing release (macOS job creates the release)
+        # Add files to existing release (created by macOS or Linux job)
         fail_on_unmatched_files: false
         make_latest: false
-        append_body: true
-      continue-on-error: true
 
   # Linux Build
   build-linux:
@@ -402,8 +394,6 @@ jobs:
           build/DeerPortal-*-Linux.tar.gz
           build/DeerPortal-*-Linux.deb
         tag_name: ${{ github.ref }}
-        # Add files to existing release (macOS job creates the release)
+        # Add files to existing release (created by macOS job)
         fail_on_unmatched_files: false
-        make_latest: false
-        append_body: true
-      continue-on-error: true 
+        make_latest: false 

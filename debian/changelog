@@ -1,3 +1,13 @@
+deerportal (0.9.1-pre.6-artifact-fix-ubuntu1) trusty; urgency=medium
+
+  * Fixed release artifact upload coordination issues
+  * Resolved missing Windows and macOS files in releases
+  * Implemented proper job hierarchy for release creation
+  * Enhanced multi-platform release upload reliability
+  * Complete artifact deployment across all platforms
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sat, 13 Jul 2025 18:00:00 +0200
+
 deerportal (0.9.1-pre.5-release-fix-ubuntu1) trusty; urgency=medium
 
   * Fixed duplicate release tag creation issues
