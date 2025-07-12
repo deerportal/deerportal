@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.1-pre.4" date="2025-07-13">
+​      <description>
+​        <p>Windows packaging pipeline fixes and cross-platform build improvements. Fixed CMD syntax errors, unified shell usage, and enhanced GitHub Actions reliability.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.1-pre.1" date="2025-07-11">
 ​      <description>
 ​        <p>Minor improvements and bug fixes following the major 0.9.0 release.</p>
