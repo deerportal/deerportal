@@ -12,6 +12,10 @@ on:
         required: true
         default: 'all'
 
+permissions:
+  contents: read
+  actions: read
+
 env:
   BUILD_TYPE: Release
 
@@ -24,6 +28,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: Test Build Notice
       run: |
@@ -103,6 +109,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: Test Build Notice
       shell: bash
@@ -203,6 +211,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: Test Build Notice
       run: |
