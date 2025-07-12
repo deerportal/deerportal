@@ -1,7 +1,9 @@
 #ifndef TEXTUREHOLDER_H
 #define TEXTUREHOLDER_H
 #include <array>
+#include <map>
 #include <set>
+#include <string>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>

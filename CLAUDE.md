@@ -87,6 +87,7 @@ cmake_modules/     # CMake helper modules
 - **Test mode**: Run with `--test` flag for basic testing
 - **CI/CD**: GitHub Actions with 3-platform matrix builds (Ubuntu, Windows, macOS Apple Silicon)
 - **Workflow Consistency**: cmake.yml (PR/CI) and test-release.yml unified for identical behavior
+- **Release Pipeline**: Robust duplicate detection and conflict resolution (July 2025 fixes)
 
 ### Important Files
 - **DEVELOPMENT.md**: Complete development guide with version management, build system, and release procedures

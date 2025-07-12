@@ -274,6 +274,13 @@ Format: `sfml-3.0.1-{platform}-{arch}-{runner.os}-{hash}`
 - **macOS Support**: Focused on Apple Silicon with proven reliability
 - **Testing Integration**: Maintained CTest execution in CI pipeline
 
+### **Release Pipeline Fixes (July 2025)**
+1. **Checkout Action Stabilization**: Added `fetch-depth: 0` to all workflows preventing manifest parsing errors
+2. **Release Conflict Prevention**: Implemented duplicate release detection with `gh release view` checks
+3. **Permissions Configuration**: Added proper `permissions` blocks for GitHub API access
+4. **Race Condition Elimination**: Only macOS job creates releases, others append with `append_body: true`
+5. **Token Management**: Proper `GITHUB_TOKEN` environment variable usage for release operations
+
 ## Known Issues and Limitations
 
 ### **Current Issues**
@@ -298,6 +305,9 @@ Format: `sfml-3.0.1-{platform}-{arch}-{runner.os}-{hash}`
 4. **Package Creation**: Verify tool installation (NSIS, etc.)
 5. **Windows Shell Errors**: Ensure bash shell usage, not CMD (fixed July 2025)
 6. **macOS Intel Failures**: Use macOS-latest (Apple Silicon) only (fixed July 2025)
+7. **Checkout Action Errors**: Ensure `fetch-depth: 0` in checkout steps (fixed July 2025)
+8. **Release Creation Conflicts**: Check for existing releases with `gh release view` (fixed July 2025)
+9. **Permission Denied**: Verify `permissions` blocks include `contents: write` for releases (fixed July 2025)
 
 ### **Debug Workflow**
 1. **Check Environment**: Review debug output

@@ -15,6 +15,11 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: write
+  actions: read
+  packages: write
+
 env:
   BUILD_TYPE: Release
 
@@ -26,6 +31,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: Test Mode Notification
       if: inputs.test_mode
@@ -137,8 +144,22 @@ jobs:
         path: build/DeerPortal-*-macOS.dmg
         retention-days: 30
 
-    - name: Upload to Release
+    - name: Check if release exists
       if: github.event_name == 'push' && !inputs.test_mode
+      id: check_release
+      run: |
+        if gh release view ${{ github.ref_name }} >/dev/null 2>&1; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+          echo "Release ${{ github.ref_name }} already exists"
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+          echo "Release ${{ github.ref_name }} does not exist, safe to create"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload to Release
+      if: github.event_name == 'push' && !inputs.test_mode && steps.check_release.outputs.exists == 'false'
       uses: softprops/action-gh-release@v2
       with:
         files: build/DeerPortal-*-macOS.dmg
@@ -175,6 +196,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Get version from tag or input
       id: get_version
@@ -268,6 +291,7 @@ jobs:
         # Add files to existing release (macOS job creates the release)
         fail_on_unmatched_files: false
         make_latest: false
+        append_body: true
 
   # Linux Build
   build-linux:
@@ -276,6 +300,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Get version from tag or input
       id: get_version
@@ -374,4 +400,5 @@ jobs:
         tag_name: ${{ github.ref }}
         # Add files to existing release (macOS job creates the release)
         fail_on_unmatched_files: false
-        make_latest: false 
+        make_latest: false
+        append_body: true 

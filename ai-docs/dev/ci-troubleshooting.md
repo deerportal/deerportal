@@ -33,9 +33,9 @@ CMake Error: Could not find a package configuration file provided by "SFML" (req
       libxi-dev \
       libx11-dev
 
-- name: Build and Install SFML 3.0 from Source
+- name: Build and Install SFML 3.0.1 from Source
   run: |
-    git clone --depth 1 --branch 3.0.0 https://github.com/SFML/SFML.git sfml-source
+    git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
     cd sfml-source
     cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
     cmake --build build -j$(nproc)
@@ -99,16 +99,78 @@ cmake_minimum_required(VERSION 3.16)
 | Audio | SFML audio linking errors | `libopenal-dev libvorbis-dev` |
 | Fonts | Font rendering issues | `libfreetype6-dev` |
 
+### **Checkout Action Issues (Fixed July 2025)**
+
+**Problem**: 
+```
+Error: actions/checkout@v4 manifest parsing errors
+The user doesn't want to proceed with this tool use
+```
+
+**Root Cause**: Shallow checkout causing git history issues.
+
+**Solution**: Add `fetch-depth: 0` to checkout actions:
+```yaml
+- name: Checkout code
+  uses: actions/checkout@v4
+  with:
+    fetch-depth: 0  # ← Critical fix
+```
+
+### **Release Creation Conflicts (Fixed July 2025)**
+
+**Problem**: 
+```
+Error: Release already exists
+```
+
+**Root Cause**: Attempting to create duplicate GitHub releases.
+
+**Solution**: Add release existence check:
+```yaml
+- name: Check if release exists
+  id: check_release
+  run: |
+    if gh release view ${{ github.ref_name }} >/dev/null 2>&1; then
+      echo "exists=true" >> $GITHUB_OUTPUT
+    else
+      echo "exists=false" >> $GITHUB_OUTPUT
+    fi
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+- name: Upload to Release
+  if: steps.check_release.outputs.exists == 'false'
+  uses: softprops/action-gh-release@v2
+```
+
+### **Permissions Issues (Fixed July 2025)**
+
+**Problem**: 
+```
+Error: Resource not accessible by integration
+```
+
+**Root Cause**: Missing workflow permissions for GitHub API.
+
+**Solution**: Add permissions block to workflows:
+```yaml
+permissions:
+  contents: write    # For creating releases
+  actions: read     # For workflow access
+  packages: write   # For package uploads (if needed)
+```
+
 ### **Performance Optimization**
 
 **Speed up CI builds**:
 ```yaml
 # Use cached dependencies
 - name: Cache SFML
-  uses: actions/cache@v3
+  uses: actions/cache@v4
   with:
     path: /usr/local
-    key: sfml-3.0.0-${{ runner.os }}
+    key: sfml-3.0.1-${{ runner.os }}
 
 # Parallel builds
 cmake --build build -j$(nproc)
