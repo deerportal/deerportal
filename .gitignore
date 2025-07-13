@@ -1,49 +1,134 @@
-# Generated build files and caches
-linuxdeploy-x86_64.AppImage
+# DeerPortal .gitignore
+# Game About How Human Can Be Upgraded to the Deer
+# https://github.com/deerportal/deerportal
+
+# =============================================================================
+# BUILD ARTIFACTS
+# =============================================================================
+
+# CMake build directories and files
 build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+CMakeSettings.json
+compile_commands.json
+
+# Multi-config build directories
+Release/
+Debug/
+RelWithDebInfo/
+MinSizeRel/
+x64/
+x86/
+
+# CPack packaging artifacts
+_CPack_Packages/
+CPackConfig.cmake
+CPackSourceConfig.cmake
+
+# =============================================================================
+# COMPILED BINARIES & LIBRARIES
+# =============================================================================
+
+# Executables
+*.exe
+DeerPortal
+DeerPortal.app/
+
+# Libraries
+*.o
+*.obj
+*.lib
+*.a
+*.so
+*.dylib
+*.dll
+
+# Debug files
+*.pdb
+*.ilk
+*.dSYM/
+*.app.dSYM/
+*.dylib.dSYM/
+
+# Precompiled headers
+*.gch
+*.pch
+
+# =============================================================================
+# DISTRIBUTION PACKAGES
+# =============================================================================
+
+# Release packages
+*.snap
+*.deb
+*.dmg
+*.tar.gz
+*.zip
+*.AppImage
+DeerPortal-*-Windows.exe
+DeerPortal-*-macOS.dmg
+DeerPortal-*-Linux.*
+DeerPortal-*-MSYS2.*
+DeerPortal-*-Cygwin.*
+DeerPortal-Distribution/
+DeerPortal-Portable/
+
+# Snap packaging
 parts/
 prime/
 snap/
 stage/
-DeerPortal
-*.snap
-*.o
-enfucraft
-enfucraft.pro.user
-Makefile
-docs/
-pagan_board.pro.user
-*.swo
-*.swp
-*.Release
-*.Debug
-*.debhelper.log
-debian/deerportal
-MakeCache.txt
-CMakeFiles/
-CPackConfig.cmake
-CPackSourceConfig.cmake
-cmake_install.cmake
-CMakeCache.txt
-.vs
-out
-install_manifest.txt
-DeerPortal-*.AppImage
-.DS_Store
-DeerPortal.app/
-orig-sfml/
-deerportal-0.9.0/
-deerportal-0.8.2/
-deerportal-sfml2/
 
-# macOS packaging artifacts
-*.dmg
+# macOS packaging
 *-temp.dmg
 dmg_temp/
-_CPack_Packages/
 *.pkg
 
-# macOS system files
+# =============================================================================
+# IDE & EDITOR FILES
+# =============================================================================
+
+# Visual Studio
+.vs/
+*.sln
+*.vcproj
+*.vcxproj*
+*.suo
+*.user
+*.aps
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.tlb
+*.tlh
+*.cache
+*.scc
+
+# Visual Studio Code
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# Vim/Neovim
+*.swp
+*.swo
+*~
+
+# Qt Creator
+*.pro.user
+
+# =============================================================================
+# PLATFORM-SPECIFIC FILES
+# =============================================================================
+
+# macOS
+.DS_Store
 .AppleDouble
 .LSOverride
 Icon?
@@ -55,10 +140,33 @@ Icon?
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
 
-# Development cache and generated files
-.cache/
-compile_commands.json
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# =============================================================================
+# DEPENDENCY MANAGEMENT
+# =============================================================================
+
+# vcpkg
+vcpkg_installed/
+
+# Conan
+conandata.yml
+conanbuildinfo.cmake
+conaninfo.txt
+
+# =============================================================================
+# DOCUMENTATION & LATEX
+# =============================================================================
 
 # LaTeX build artifacts
 *.aux
@@ -83,122 +191,27 @@ compile_commands.json
 *.bak
 *.backup
 
-# Generated handbook PDF (optional - uncomment if you don't want to track the PDF)
+# Generated documentation
+docs/
+
+# Generated handbook PDF (uncomment if you don't want to track the PDF)
 # handbook.pdf
 
-# Temporary data directory
+# =============================================================================
+# TEMPORARY & CACHE FILES
+# =============================================================================
+
+# Temporary data directory (as per user requirements)
 .data/
 
-# Build artifacts and temporary files
-*.dylib.dSYM/
-*.app.dSYM/
+# Cache directories
+.cache/
 
-# DeerPortal .gitignore
-
-# Build directories
-Release/
-Debug/
-RelWithDebInfo/
-MinSizeRel/
-x64/
-x86/
-.vs/
-
-# CMake generated files
-CMakeCache.txt
-CMakeFiles/
-cmake_install.cmake
-install_manifest.txt
-CTestTestfile.cmake
-CMakeSettings.json
-
-# Compiled binaries
-*.exe
-*.app
-*.deb
-*.dmg
-*.tar.gz
-*.zip
-
-# Object files and libraries
-*.o
-*.obj
-*.lib
-*.a
-*.so
-*.dylib
-*.dll
-
-# Debug files
-*.pdb
-*.ilk
-
-# Precompiled headers
-*.gch
-*.pch
-
-# IDE files
-.vscode/
-.idea/
-*.sln
-*.vcproj
-*.vcxproj*
-*.suo
-*.user
-*.aps
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.user
-*.tlb
-*.tlh
-*.bak
-*.cache
-*.ilk
+# Log files
 *.log
-*.scc
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# Temporary data folder (as per user requirements)
-.data/
-
-# Package management
-vcpkg_installed/
-conandata.yml
-conanbuildinfo.cmake
-conaninfo.txt
+*.tmp
+*.temp
+*.debhelper.log
 
 # Test outputs
 test-build/
@@ -207,19 +220,23 @@ versions.txt
 system-info.txt
 preprocessor_output.txt
 
-# Distribution packages
-DeerPortal-*-Windows.exe
-DeerPortal-*-macOS.dmg
-DeerPortal-*-Linux.*
-DeerPortal-*-MSYS2.*
-DeerPortal-*-Cygwin.*
-DeerPortal-Distribution/
-DeerPortal-Portable/
+# =============================================================================
+# LEGACY & DEPRECATED (kept for reference)
+# =============================================================================
 
-# Logs and temporary files
-*.log
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
+# Old SFML versions and deprecated directories
+# (These should not appear in new setups but kept for cleanup)
+orig-sfml/
+deerportal-0.9.0/
+deerportal-0.8.2/
+deerportal-sfml2/
+sfml-source/
+SFML/
+SFML-*/
+
+# Legacy build files
+enfucraft
+enfucraft.pro.user
+pagan_board.pro.user
+Makefile
+MakeCache.txt

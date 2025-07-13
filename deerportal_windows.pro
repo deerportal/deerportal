@@ -45,10 +45,27 @@ DEFINES += "DEERPORTAL_VERSION=$$(DEERPORTAL_VERSION)"
 INCLUDEPATH += .
 LIBPATH     += ~/opt/mxe/usr/i686-w64-mingw32.static/lib/ ~/opt/mxe/usr/lib/gcc/i686-w64-mingw32.static/4.9.3/
 
+# Asset installation configuration
 assets.path    = $${DESTDIR}/assets/
 assets.files   = assets/*
-
 INSTALLS        += assets
+
+# Add PRE_TARGETDEPS for build-time copying (CI ENHANCEMENT)
+win32 {
+  assets_copy.commands = $(COPY_DIR) $$shell_path($$PWD/assets) $$shell_path($$OUT_PWD/assets)
+  assets_copy.depends = FORCE
+  QMAKE_EXTRA_TARGETS += assets_copy
+  PRE_TARGETDEPS += assets_copy
+}
+
+# LICENSE file inclusion
+license.path = $${DESTDIR}/
+license.files = LICENSE
+INSTALLS += license
+
+# Add LICENSE to distribution files
+OTHER_FILES += LICENSE
+DISTFILES += LICENSE
 
 HEADERS += \
     src/game.h \
@@ -87,13 +104,15 @@ HEADERS += \
 
 
 OTHER_FILES += \
-    CREDITS.md
+    CREDITS.md \
+    LICENSE
 QMAKE_CXXFLAGS += -std=gnu++0x -Wpedantic
 
 DISTFILES += \
     assets/shaders/blur.frag \
     assets/shaders/pixelate.frag \
-    assets/shaders/dark.frag
+    assets/shaders/dark.frag \
+    LICENSE
 
 QMAKE_CXXFLAGS += -std=gnu++0x -Wpedantic -mwindows
 QMAKE_LFLAGS = -static -static-libgcc -static-libstdc++ -mwindows

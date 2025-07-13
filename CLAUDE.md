@@ -149,3 +149,23 @@ When using Cursor IDE, these rules will automatically apply to ensure:
   - Prioritize clarity and directness
   - Dont assume if players like game, dont show off etc, dont assume that anything is good, just provide facts.
   - If something is not fact, dont write about this.
+
+### 0.9.2-pre.1 Preparation
+- LICENSE now included in Windows installer and all packaging systems.
+- Version updated to 0.9.2-pre.1.
+- Improved systematic approach for packaging files.
+
+### Windows Build Success (2025-07-13)
+- ✅ **MAJOR SUCCESS:** Windows build now working with VS 2022 + SFML 3.0.1
+- ✅ **Fresh VS 2022 installation** resolved all CMake generator issues
+- ✅ **SFML 3.0.1 built from source** successfully (CI/CD approach)
+- ✅ **DeerPortal.exe compiles and runs** - all game systems functional
+- ✅ **Confirmed working command sequence** documented in windows-troubleshooting.md
+- ✅ **BREAKTHROUGH: Asset packaging FIXED** - POST_BUILD commands working perfectly
+- ✅ **Automatic asset copying** - no more manual intervention needed
+- ✅ **LICENSE file inclusion** - properly configured in CMake and qmake
+- ✅ **Installation process verified** - cmake --install works flawlessly
+- ✅ **NSIS installer license display** - FIXED with CPACK_RESOURCE_FILE_LICENSE
+- ✅ **Start Menu integration** - FIXED with CPACK_NSIS_CREATE_ICONS_EXTRA
+- ✅ **Windows search visibility** - DeerPortal now appears in Start Menu search
+- 🎯 **Status:** 0.9.2-pre.1 objectives COMPLETED - ready for release

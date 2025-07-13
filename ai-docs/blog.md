@@ -96,3 +96,8 @@ Problems resolved from version 0.8.2:
 - 128 cards across 4 elements with strategic mechanics
 
 **Download**: Available on GitHub with packages for all supported platforms.
+
+## [0.9.2-pre.1] - Preparing Release & Windows Installer Fixes
+- Ensured LICENSE file is included in Windows installer and all packaging (qmake, CMake).
+- Updated version to 0.9.2-pre.1 for next release.
+- Systematic review of installer/package file inclusions.

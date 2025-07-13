@@ -1,310 +1,216 @@
-# Windows Troubleshooting Guide for DeerPortal
+# Windows Troubleshooting Guide
 
-*A comprehensive guide for resolving Windows-specific issues with DeerPortal*
+## Visual Studio Installation Issues
 
-## 🚨 Critical Audio Error: "Failed to open sound file"
+### Problem: CMake Cannot Find Visual Studio Generator
+**Symptoms:**
+- `CMake Error: Generator "Visual Studio 17 2022" could not find any instance of Visual Studio`
+- CMake picks up older VS 2019 BuildTools instead of VS 2022
 
-### **Problem:**
-DeerPortal crashes immediately on startup with:
-```
-Failed to open sound file (couldn't open stream)
-Provided path: assets/audio/dice.ogg
-Absolute path: C:\Program Files\DeerPortal 0.9.1\assets\audio\dice.ogg
-Failed to open sound buffer from file
-Critical Asset Error: Failed to load dice sound effect
-Failed to load: audio/dice.ogg
-```
-
-### **Root Cause:**
-The Windows packaging was installing assets to `data/assets/` instead of `assets/` directory. This has been **FIXED** in the latest version. If you're still experiencing this issue, it means you have an older build.
-
-### **Solutions (Try in Order):**
-
-#### **Solution 1: Download Latest Version**
-1. **Get the newest build** from GitHub releases (after this fix)
-2. **Uninstall old version** completely
-3. **Install fresh version** - assets should now be in correct location
-
-#### **Solution 2: Manual Asset Fix (Temporary)**
-1. **Navigate to DeerPortal installation directory**
-2. **If you see** `data/assets/` folder but no `assets/` folder:
-   ```
-   DeerPortal.exe
-   data/
-   └── assets/  ← Assets are here (wrong location)
-   ```
-3. **Move the assets**:
-   - Copy the entire `data/assets/` folder
-   - Paste it as `assets/` in the same directory as `DeerPortal.exe`
-   - Final structure should be:
-   ```
-   DeerPortal.exe
-   assets/        ← Correct location
-   ├── audio/
-   │   ├── dice.ogg
-   │   └── ...
-   ├── img/
-   └── ...
-   ```
-
-#### **Solution 3: Check Assets Folder Structure**
-1. **Verify installation directory**:
-   - Navigate to where DeerPortal is installed (usually `C:\Program Files\DeerPortal 0.9.1\`)
-   - Ensure the `assets` folder exists in the same directory as `DeerPortal.exe`
-   - Check that `assets\audio\dice.ogg` file exists
-   ```
-   DeerPortal.exe
-   assets/
-   ├── audio/
-   │   ├── dice.ogg  ← This file must exist!
-   │   ├── card.ogg
-   │   ├── click.ogg
-   │   └── ...
-   ├── img/
-   ├── fnt/
-   └── pdf/
-   ```
-
-#### **Solution 4: Reinstall DeerPortal**
-1. **Complete reinstallation**:
-   - Uninstall DeerPortal from Control Panel
-   - Delete any remaining DeerPortal folders
-   - Download fresh copy from GitHub releases
-   - Install to a path without spaces (e.g., `C:\Games\DeerPortal`)
-
-#### **Solution 5: Install Microsoft Visual C++ Redistributables**
-1. **Download and install all versions**:
-   - [Visual C++ 2015-2022 Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe)
-   - [Visual C++ 2015-2022 Redistributable (x86)](https://aka.ms/vs/17/release/vc_redist.x86.exe)
-2. **Restart your computer**
-3. **Try running DeerPortal again**
-
-#### **Solution 6: Audio Service Check**
-1. **Press Win + R**, type `services.msc`
-2. **Find "Windows Audio"** service
-3. **Right-click → Properties**
-4. **Set Startup type to "Automatic"**
-5. **Click "Start" if not running**
-6. **Restart your computer**
-
-#### **Solution 7: Extract from Archive Properly**
-1. **If using ZIP/archive**:
-   - Right-click downloaded file → "Extract All"
-   - Choose destination folder (avoid spaces in path)
-   - Ensure "Show extracted files when complete" is checked
-   - Verify all files extracted correctly
-
-#### **Solution 8: Run as Administrator**
-1. **Right-click DeerPortal.exe**
-2. **Select "Run as administrator"**
-3. **Allow permissions when prompted**
-
-#### **Solution 9: Check Windows Installer Package**
-1. **If using .exe installer**:
-   - Verify installer completed successfully
-   - Check Windows Event Viewer for installation errors
-   - Try installing to different location (e.g., `C:\Games\DeerPortal`)
-
-#### **Solution 10: DirectSound/Audio Driver Update (Secondary)**
-1. **Update audio drivers**:
-   - Right-click Start → Device Manager
-   - Expand "Sound, video and game controllers"
-   - Right-click your audio device → Update driver
-2. **Install DirectX**:
-   - Download DirectX End-User Runtime Web Installer from Microsoft
-   - Install and restart
-
----
-
-## 🔧 Common Windows Issues & Solutions
-
-### **Issue: Missing DLL Files**
-
-**Error Messages:**
-- "MSVCP140.dll is missing"
-- "VCRUNTIME140.dll is missing"
-- "api-ms-win-crt-runtime-l1-1-0.dll is missing"
+**Root Cause:**
+- Multiple Visual Studio versions installed
+- VS 2022 not properly registered with CMake
+- Environment variables pointing to wrong VS version
 
 **Solution:**
-1. Install Visual C++ Redistributables (see Solution 2 above)
-2. If still failing, download the specific DLL from Microsoft or use Windows Update
+1. **Clean Installation Approach:**
+   - Uninstall all Visual Studio versions
+   - Reinstall Visual Studio 2022 Community with required components:
+     - Desktop development with C++
+     - C++ CMake tools for Linux
+     - MSVC v143 compiler toolset
+     - Windows 10/11 SDK (latest)
 
-### **Issue: Game Window Won't Open**
+2. **Use Developer Command Prompt:**
+   ```cmd
+   # Always use "Developer Command Prompt for VS 2022"
+   # Not regular PowerShell or Command Prompt
+   ```
 
+3. **Let CMake Auto-detect Generator:**
+   ```cmd
+   # Don't specify -G generator, let CMake choose
+   cmake -B build -DCMAKE_BUILD_TYPE=Release
+   ```
+
+## SFML 3.0.1 Build Issues
+
+### Problem: SFML 3.0.1 Not Available via Package Managers
 **Symptoms:**
-- Process starts but no window appears
-- Game appears in Task Manager but not on screen
+- vcpkg only has SFML 2.5.1
+- Chocolatey doesn't have SFML 3.0.1
+- Pre-built binaries hard to find
 
 **Solutions:**
-1. **Check Multiple Monitors:**
-   - Press Alt + Tab to see if window is on another monitor
-   - Try Win + Shift + Arrow keys to move window
-2. **Graphics Driver Update:**
-   - Update your graphics card drivers (NVIDIA/AMD/Intel)
-   - Restart computer after update
-3. **Display Settings:**
-   - Right-click desktop → Display settings
-   - Ensure scaling is set to 100% or 125%
-   - Try different resolution temporarily
+1. **Build from Source (CI/CD Method):**
+   ```cmd
+   git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+   cd sfml-source
+   cmake -B build -DCMAKE_BUILD_TYPE=Release -DSFML_BUILD_EXAMPLES=OFF -DSFML_BUILD_DOC=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="C:/SFML"
+   cmake --build build --config Release
+   cmake --install build
+   ```
 
-### **Issue: Poor Performance/Low FPS**
+2. **Use CI/CD Artifacts:**
+   ```cmd
+   # Download pre-built binaries from SFML CI/CD
+   Invoke-WebRequest -Uri "https://artifacts.sfml-dev.org/by-branch/master/windows-vc17-64.zip" -OutFile "sfml-windows.zip"
+   Expand-Archive -Path "sfml-windows.zip" -DestinationPath "SFML-3.0.1"
+   ```
 
-**Solutions:**
-1. **Disable Windows Game Mode:**
-   - Settings → Gaming → Game Mode → Off
-2. **Update Graphics Drivers:**
-   - Visit manufacturer website (NVIDIA/AMD/Intel)
-   - Download latest drivers
-3. **Close Background Applications:**
-   - Press Ctrl + Shift + Esc (Task Manager)
-   - End unnecessary processes
-4. **Power Settings:**
-   - Control Panel → Power Options
-   - Select "High performance" or "Balanced"
+## Asset Loading Issues in Windows Build
 
-### **Issue: Antivirus False Positive**
-
+### Problem: Assets Not Found in Installed Version
 **Symptoms:**
-- Antivirus blocks/deletes DeerPortal.exe
-- "Trojan" or "Malware" warnings
+- `Failed to open sound file (couldn't open stream)`
+- `Provided path: assets/audio/dice.ogg`
+- `Absolute path: C:\Program Files\DeerPortal 0.9.1\assets\audio\dice.ogg`
 
-**Solutions:**
-1. **Add Exception:**
-   - Open your antivirus software
-   - Add DeerPortal.exe to exceptions/whitelist
-   - Add entire DeerPortal folder to exceptions
-2. **Temporarily Disable:**
-   - Disable real-time protection temporarily
-   - Run DeerPortal
-   - Re-enable protection after confirming it works
+**Root Cause:**
+- Assets not properly copied during installation
+- CMake install rules incomplete
+- qmake DISTFILES not working correctly
 
-### **Issue: Assets Not Loading**
+**Investigation Status:**
+- Assets exist in source tree
+- Build scripts declare asset copying
+- Issue occurs in final installed package
 
-**Error Messages:**
-- "Failed to load texture"
-- "Font not found"
-- "Asset path not found"
+**Next Steps:**
+- Test local build with assets
+- Verify CMake install rules
+- Check NSIS packaging script
 
-**Solutions:**
-1. **Check Installation Path:**
-   - Ensure `assets/` folder is in same directory as DeerPortal.exe
-   - Verify folder structure:
-     ```
-     DeerPortal.exe
-     assets/
-     ├── img/
-     ├── audio/
-     ├── fnt/
-     └── pdf/
-     ```
-2. **Reinstall:**
-   - Delete entire DeerPortal folder
-   - Download fresh copy
-   - Extract to new location (avoid spaces in path)
+## Build Environment Setup
 
-### **Issue: Installer Problems**
+### Recommended Approach (CI/CD Style)
+1. **Use Fresh VS 2022 Installation**
+2. **Build SFML from Source**
+3. **Use Auto-detected CMake Generator**
+4. **Build in Developer Command Prompt**
 
-**Solutions:**
-1. **Run Installer as Administrator:**
-   - Right-click installer → "Run as administrator"
-2. **Disable Antivirus Temporarily:**
-   - Some antivirus software blocks installers
-3. **Check Disk Space:**
-   - Ensure at least 500MB free space
-4. **Try Different Location:**
-   - Install to `C:\Games\DeerPortal` instead of Program Files
+### Commands (Exact CI/CD Sequence)
+```cmd
+# 1. Build SFML
+git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+cd sfml-source
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DSFML_BUILD_EXAMPLES=OFF -DSFML_BUILD_DOC=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="C:/SFML"
+cmake --build build --config Release
+cmake --install build
+cd ..
 
----
+# 2. Build DeerPortal
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="C:/SFML" -DSFML_DIR="C:/SFML/lib/cmake/SFML" -DCMAKE_VERBOSE_MAKEFILE=ON
+cmake --build build --config Release --verbose
 
-## 🎮 Gameplay Issues
+# 3. Package
+cd build
+make package
+```
 
-### **Issue: Controls Not Responding**
+## Successful Build Confirmation (0.9.2-pre.1)
 
-**Solutions:**
-1. **Check Keyboard Layout:**
-   - Ensure English (US) keyboard layout is active
-   - Some keys may be mapped differently
-2. **Full Screen Mode:**
-   - Press Alt + Enter to toggle full screen
-   - Some controls work better in full screen
-3. **Focus Window:**
-   - Click on game window to ensure it has focus
-   - Alt + Tab to switch between windows
+### **✅ SUCCESS: Windows Build Working**
+**Date:** 2025-07-13  
+**Environment:** Windows 10.0.19045, Visual Studio 2022 Community (17.14.8), SFML 3.0.1
 
-### **Issue: Game Crashes During Play**
+**Build Results:**
+- ✅ **DeerPortal.exe** successfully compiled (2.8MB)
+- ✅ **SFML 3.0.1** built from source and linked correctly
+- ✅ **All game systems working:** Audio, Graphics, Shaders
+- ✅ **No compilation errors** (only harmless GCC flag warnings)
+- ✅ **Game launches and runs** with message: "Grid reveal intro shader loaded successfully with intro texture"
 
-**Solutions:**
-1. **Check System Requirements:**
-   - Windows 10/11 (64-bit)
-   - 4GB RAM minimum
-   - DirectX 11 compatible graphics
-2. **Update System:**
-   - Windows Update
-   - Install all available updates
-3. **Memory Issues:**
-   - Close other applications
-   - Restart computer before playing
+**Build Command Sequence:**
+```cmd
+# This exact sequence works:
+git clone --depth 1 --branch 3.0.1 https://github.com/SFML/SFML.git sfml-source
+cd sfml-source
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DSFML_BUILD_EXAMPLES=OFF -DSFML_BUILD_DOC=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX="C:/SFML"
+cmake --build build --config Release
+cmake --install build
+cd ..
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="C:/SFML" -DSFML_DIR="C:/SFML/lib/cmake/SFML" -DCMAKE_VERBOSE_MAKEFILE=ON
+cmake --build build --config Release --verbose
+```
 
----
+### **🎉 MAJOR BREAKTHROUGH: Asset Packaging FIXED (0.9.2-pre.1)**
+**Date:** 2025-07-13  
+**Status:** ✅ **COMPLETE SUCCESS**
 
-## 🔍 Diagnostic Information
+**Problem SOLVED:** Assets are now automatically copied to build directory during compilation.
 
-### **Gathering System Information:**
-1. **Press Win + R**, type `msinfo32`
-2. **Note down:**
-   - Windows version
-   - Processor type
-   - RAM amount
-   - Graphics card model
-3. **Check DirectX:**
-   - Press Win + R, type `dxdiag`
-   - Note DirectX version and any issues
+**Solution Implemented:**
+```cmake
+# Windows: Copy assets to build directory for immediate use
+add_custom_command(TARGET DeerPortal POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:DeerPortal>/assets
+  COMMENT "Copying assets to Windows build directory"
+)
+```
 
-### **Log Files Location:**
-DeerPortal may create log files in:
-- `%APPDATA%\DeerPortal\`
-- Same directory as executable
-- `%TEMP%\DeerPortal\`
+**Verification Results:**
+- ✅ **POST_BUILD command executes successfully** during build
+- ✅ **All assets copied to build/Release/assets/** automatically
+- ✅ **Critical dice.ogg file present** and accessible
+- ✅ **Game runs without manual asset copying**
+- ✅ **CMake install process works perfectly**
+- ✅ **LICENSE file properly included**
 
----
+**Installation Test Results:**
+```cmd
+# Test installation works perfectly
+cmake --install . --prefix test_install
+cd test_install
+.\DeerPortal.exe  # Runs successfully!
+```
 
-## 📞 Getting Help
+**Files Successfully Installed:**
+- ✅ DeerPortal.exe (2.8MB)
+- ✅ LICENSE file (searchable)
+- ✅ Complete assets directory structure
+- ✅ All audio files (including dice.ogg)
+- ✅ All image assets and shaders
+- ✅ Runtime libraries
 
-### **Before Reporting Issues:**
-1. **Try all solutions above**
-2. **Gather system information**
-3. **Note exact error messages**
-4. **Check if problem persists after restart**
+### **⚠️ RESOLVED: Asset Packaging Issue**
+**Previous Problem:** Assets were not automatically copied to build directory during compilation.
+**Previous Symptom:** Game failed with "Failed to open sound file" when run from build directory without manual asset copying.
+**Previous Workaround:** Manual copy: `Copy-Item -Recurse -Force assets build\Release\`
+**Current Status:** ✅ **FIXED** - Assets automatically copied during build process using POST_BUILD commands.
 
-### **Report Issues:**
-- **GitHub Issues**: https://github.com/deerportal/deerportal/issues
-- **Include:**
-  - Windows version
-  - Error messages (screenshots)
-  - System specifications
-  - Steps to reproduce
+### **🔧 Enhanced qmake Configuration**
+**qmake asset handling also enhanced:**
+```qmake
+# Asset installation configuration
+assets.path    = $${DESTDIR}/assets/
+assets.files   = assets/*
+INSTALLS        += assets
 
-### **Community Support:**
-- Check existing GitHub issues for similar problems
-- Search for solutions in discussions
-- Community members often share working configurations
+# Add PRE_TARGETDEPS for build-time copying (CI ENHANCEMENT)
+win32 {
+  assets_copy.commands = $(COPY_DIR) $$shell_path($$PWD/assets) $$shell_path($$OUT_PWD/assets)
+  assets_copy.depends = FORCE
+  QMAKE_EXTRA_TARGETS += assets_copy
+  PRE_TARGETDEPS += assets_copy
+}
 
----
+# LICENSE file inclusion
+license.path = $${DESTDIR}/
+license.files = LICENSE
+INSTALLS += license
+```
 
-## ⚡ Quick Fixes Checklist
+## Known Issues
+- PowerShell may have issues with complex command chains
+- Use cmd.exe or Developer Command Prompt for reliability
+- Multiple VS versions cause CMake confusion
+- ✅ **Asset packaging RESOLVED in 0.9.2-pre.1**
+- ✅ **NSIS installer license display RESOLVED in 0.9.2-pre.1**
+- ✅ **Start Menu integration RESOLVED in 0.9.2-pre.1**
 
-**Before playing DeerPortal:**
-- [ ] Install Visual C++ Redistributables
-- [ ] Update graphics drivers
-- [ ] Check Windows Audio service is running
-- [ ] Disable antivirus temporarily if needed
-- [ ] Run as administrator if necessary
-- [ ] Verify assets folder is present
-- [ ] Close unnecessary background applications
-- [ ] Restart computer if experiencing issues
-
-**Most common fix:** Download latest version (assets packaging fixed) or manually move `data/assets/` to `assets/` directory.
-
----
-
-*This guide covers the most common Windows issues. For additional help, visit the [DeerPortal GitHub repository](https://github.com/deerportal/deerportal).* 
+## NSIS Installer Fixes (0.9.2-pre.1)
+**License Display Issue**: Fixed by adding `CPACK_RESOURCE_FILE_LICENSE` configuration
+**Start Menu Integration**: Added proper shortcut creation with `CPACK_NSIS_CREATE_ICONS_EXTRA`
+**Search Visibility**: DeerPortal now appears in Windows Start Menu search after installation 

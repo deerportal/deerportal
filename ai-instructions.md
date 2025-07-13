@@ -281,3 +281,7 @@ The following files require **manual updates** when releasing new versions:
 - **Data Storage**: Use `.data/` folder for temporary downloads
 - **Documentation**: Maintain this `ai-instructions.md` as memory bank
 - **Systematic Approach**: Consider all impacted files when making changes
+
+# Context Update 0.9.2-pre.1
+- Always ensure LICENSE and legal files are included in all installer and package outputs (qmake, CMake, etc).
+- Systematic check for all required documentation in every release.

@@ -1,0 +1,2 @@
+- [ ] Verify LICENSE file appears in all installer outputs and is searchable in Windows.
+- [ ] Test 0.9.2-pre.1 build for completeness and compliance. 

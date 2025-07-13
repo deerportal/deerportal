@@ -335,6 +335,17 @@ if(APPLE)
   # For macOS, let runtime detection handle the path
   add_definitions(-DASSETS_PATH="assets/")
   add_definitions(-DBASE_PATH="app_bundle")
+elseif(WIN32)
+  # Windows: Copy assets to build directory for immediate use
+  add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/assets
+    COMMENT "Copying assets to Windows build directory"
+  )
+  
+  # Windows-specific asset path definitions
+  add_definitions(-DASSETS_PATH="assets/")
+  add_definitions(-DBASE_PATH=".")
 else()
   # Original logic for other platforms
   # Ensure BASE_PATH is set correctly for non-Apple builds if using CMAKE_INSTALL_PREFIX
@@ -346,13 +357,9 @@ else()
     add_definitions(-DBASE_PATH=".") 
   endif()
 
-  IF (WIN32)
-    set (ASSETS_BASE_PATH data)
-    add_definitions(-DASSETS_PATH="assets/")
-  ELSE()
-    set (ASSETS_BASE_PATH share/games/deerportal)
-    add_definitions(-DASSETS_PATH="assets/")
-  ENDIF()
+  # Asset path definitions for Linux/Unix
+  set (ASSETS_BASE_PATH share/games/deerportal)
+  add_definitions(-DASSETS_PATH="assets/")
 endif()
 
 # Install target
@@ -360,6 +367,7 @@ IF (WIN32)
   set (ASSETS_BASE_PATH data)
   install(TARGETS ${EXECUTABLE_NAME} DESTINATION .)
   install(DIRECTORY assets DESTINATION .)
+  install(FILES LICENSE DESTINATION .)
 ELSE()
   if(APPLE)
     # For macOS, install the app bundle
@@ -494,6 +502,19 @@ elseif(WIN32)
     set(CPACK_NSIS_CONTACT "https://github.com/deerportal/deerportal")
     set(CPACK_NSIS_URL_INFO_ABOUT "https://github.com/deerportal/deerportal")
     set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Windows")
+    
+    # License file for installer
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+    
+    # Start Menu shortcuts and desktop integration
+    set(CPACK_NSIS_MODIFY_PATH ON)
+    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+    set(CPACK_NSIS_CREATE_ICONS_EXTRA 
+        "CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\DeerPortal.lnk' '$INSTDIR\\\\DeerPortal.exe'"
+    )
+    set(CPACK_NSIS_DELETE_ICONS_EXTRA 
+        "Delete '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\DeerPortal.lnk'"
+    )
     
 else()
     # Linux packaging
