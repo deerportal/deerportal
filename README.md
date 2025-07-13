@@ -7,7 +7,7 @@ Deerportal
 
 Deerportal is an open source (free as speech, free as beer) hybrid game that utilizes board and card game mechanisms. The world of the game is driven by four classical elements along with the Almighty Deer God.
 
-**Current Version: 0.9.2-pre.2 "Windows Build Refinements" (January 2025)**
+**Current Version: 0.9.2 "Computer Player Card Notification Delay" (July 2025)**
 
 Homepage: https://devcarpet.net/deerportal/
 

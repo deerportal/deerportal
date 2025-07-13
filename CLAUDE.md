@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DeerPortal is a hybrid board/card game built with SFML 3.0 and C++17. It's a cross-platform game supporting 0-4 players with AI opponents, featuring elemental mechanics and card-based gameplay.
 
-**Current Version: 0.9.2-pre.2 "Pre-release Windows Build"**  
+**Current Version: 0.9.2 "Computer Player Card Notification Delay"**  
 **Technology Stack: SFML 3.0.1, CMake, C++17**
 
 ## Build Commands
@@ -171,6 +171,12 @@ When using Cursor IDE, these rules will automatically apply to ensure:
 - 🎯 **Status:** 0.9.2-pre.1 objectives COMPLETED - ready for release
 
 ## Recent Updates
+
+### Version 0.9.2 Updates
+- ✅ **Computer Player Card Notification Delay**: Implemented 4-second delay for computer player card notifications
+- ✅ **Enhanced Game Flow**: Human players now have sufficient time to read card messages before computer continues
+- ✅ **User Experience Improvement**: Fixed rapid computer turn progression issue in turn-based gameplay
+- ✅ **Timer System Integration**: Added cardNotificationDelay system integrated with existing AI behavior
 
 ### Version 0.9.2-pre.2 Updates
 - Enhanced Windows build process with SFML 3.0.1

@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.2" date="2025-07-13">
+​      <description>
+​        <p>Computer Player Card Notification Delay - Final Release. Implemented 4-second delay for computer player card notifications allowing human players sufficient time to read card messages. Enhanced game flow timing and user experience improvements for turn-based gameplay.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.2-pre.2" date="2025-01-15">
 ​      <description>
 ​        <p>Windows Build Refinements - Pre-release. Enhanced Windows executable generation and testing, resolved PowerShell execution policy compatibility issues, improved Windows build scripts for SFML 3.0.1 integration, and version management updated for new pre-release cycle.</p>

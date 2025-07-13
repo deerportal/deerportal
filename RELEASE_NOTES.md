@@ -1,5 +1,34 @@
 # DeerPortal Release Notes
 
+## Version 0.9.2 "Computer Player Card Notification Delay" - July 2025
+
+🎮 **Final Release with Enhanced User Experience**
+
+This release addresses a critical gameplay issue where computer players' card notifications appeared and disappeared too quickly for human players to read.
+
+### 🚀 Major Improvements
+
+- **4-Second Notification Delay**: Computer players now wait 4 seconds after picking up cards before proceeding to their next turn
+- **Enhanced Game Flow**: Human players have sufficient time to read and understand card effects during computer turns
+- **User Experience**: Fixed rapid computer turn progression that made following game state difficult
+- **Timer System Integration**: Added `cardNotificationDelay` system seamlessly integrated with existing AI behavior
+
+### 🔧 Technical Implementation
+
+- **Files Modified**: `game.h`, `game.cpp`, `command.cpp`, `game-core.cpp`
+- **New Timer System**: `CARD_NOTIFICATION_DELAY_TIME` constant set to 4.0 seconds
+- **AI Behavior**: Computer players respect notification delay before making moves
+- **Human Players**: Unaffected - continue normal gameplay flow
+
+### 🎯 User Impact
+
+- **Improved Readability**: Card notifications remain visible long enough to read
+- **Better Game Understanding**: Players can follow computer actions more easily
+- **Maintained Performance**: No impact on human player turn speed
+- **Seamless Integration**: Delay feels natural within existing game rhythm
+
+---
+
 ## Version 0.9.2-pre.2 "Windows Build Refinements" - January 2025
 
 🔧 **Pre-release with Windows Build Improvements**
