@@ -86,21 +86,21 @@ private:
 public:
   Game(bool newTestMode);
   int run(); // Main game loop extracted from constructor
-  
+
   /*!
    * \brief Toggle fullscreen mode
    * \return true if toggle was successful, false otherwise
    */
   bool toggleFullscreen();
-  
+
   /*!
    * \brief Restore window properties after fullscreen toggle
    */
   void restoreWindowProperties();
-  
+
   BoardDiamondSeq boardDiamonds;
   sf::RenderWindow window;
-  WindowManager windowManager;  // NEW: Window manager for fullscreen handling
+  WindowManager windowManager; // NEW: Window manager for fullscreen handling
   sf::RenderTexture renderTexture;
   std::unique_ptr<sf::Sprite> renderSprite;
   Player players[4];
@@ -163,7 +163,6 @@ private:
 
   void update(sf::Time frameTime);
   void render(float deltaTime);
-
 
   void setCurrentNeighbours();
   void nextPlayer();

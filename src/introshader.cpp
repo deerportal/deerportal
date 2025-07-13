@@ -117,12 +117,10 @@ void main()
 
   // Try the new grid shader first
   if (backgroundTexture && shader.loadFromMemory(fragmentShaderGrid, sf::Shader::Type::Fragment)) {
-    std::cout << "Grid reveal intro shader loaded successfully with intro texture" << std::endl;
     shader.setUniform("introTexture",
                       *backgroundTexture); // Temporarily use background, will be replaced
     shader.setUniform("useIntroTexture", true);
   } else if (shader.loadFromMemory(fragmentShaderGrid, sf::Shader::Type::Fragment)) {
-    std::cout << "Grid reveal intro shader loaded successfully with fallback colors" << std::endl;
     shader.setUniform("useIntroTexture", false);
   } else {
     // Final fallback to simple shader
@@ -146,7 +144,6 @@ void main()
 )";
 
     if (shader.loadFromMemory(simpleShader, sf::Shader::Type::Fragment)) {
-      std::cout << "Simple grid intro shader loaded successfully" << std::endl;
     } else {
       std::cerr << "Failed to load any intro shader version" << std::endl;
       return false;

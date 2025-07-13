@@ -29,9 +29,27 @@ void GameInput::handleKeyboardInput(const sf::Event& event) {
     if (keyPressed->code == sf::Keyboard::Key::Escape) {
       game->window.close();
     }
-    
-    // F key: Toggle fullscreen mode
-    if (keyPressed->code == sf::Keyboard::Key::F && !keyPressed->repeat) {
+
+    // Fullscreen toggle - multiple key combinations for better UX
+    bool shouldToggleFullscreen = false;
+
+    // F key (simple)
+    if (keyPressed->code == sf::Keyboard::Key::F) {
+      shouldToggleFullscreen = true;
+    }
+
+    // F11 key (standard fullscreen key)
+    if (keyPressed->code == sf::Keyboard::Key::F11) {
+      shouldToggleFullscreen = true;
+    }
+
+    // Cmd+Enter (macOS pattern) - check if Cmd key is held
+    if (keyPressed->code == sf::Keyboard::Key::Enter &&
+        sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LSystem)) {
+      shouldToggleFullscreen = true;
+    }
+
+    if (shouldToggleFullscreen) {
       bool success = game->toggleFullscreen();
       if (success) {
         std::cout << "Fullscreen toggled successfully" << std::endl;
