@@ -51,11 +51,13 @@ void GameInput::handleKeyboardInput(const sf::Event& event) {
 
     if (shouldToggleFullscreen) {
       bool success = game->toggleFullscreen();
+#ifndef NDEBUG
       if (success) {
         std::cout << "Fullscreen toggled successfully" << std::endl;
       } else {
         std::cout << "Fullscreen toggle failed" << std::endl;
       }
+#endif
     }
 
     // Additional keyboard handling can be added here

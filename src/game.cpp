@@ -647,9 +647,13 @@ void Game::restoreWindowProperties() {
   if (windowManager.isFullscreen()) {
     // In fullscreen, we might need to adjust scaling
     // For now, keep the original render texture size
+#ifndef NDEBUG
     std::cout << "Fullscreen mode active, render texture maintained at original size" << std::endl;
+#endif
   } else {
+#ifndef NDEBUG
     std::cout << "Windowed mode active, views restored" << std::endl;
+#endif
   }
 }
 

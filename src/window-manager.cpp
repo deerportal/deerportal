@@ -25,7 +25,9 @@ void WindowManager::initialize(sf::RenderWindow& window, const std::string& wind
     m_windowedPosition = window.getPosition();
   }
 
+#ifndef NDEBUG
   std::cout << "WindowManager initialized with title: " << windowTitle << std::endl;
+#endif
 }
 
 void WindowManager::initializeVideoModes() {
@@ -35,17 +37,21 @@ void WindowManager::initializeVideoModes() {
   // Set up fullscreen mode using desktop resolution
   m_fullscreenMode = sf::VideoMode::getDesktopMode();
 
+#ifndef NDEBUG
   std::cout << "Window modes initialized:" << std::endl;
   std::cout << "  Windowed: " << m_windowedMode.size.x << "x" << m_windowedMode.size.y << std::endl;
   std::cout << "  Fullscreen: " << m_fullscreenMode.size.x << "x" << m_fullscreenMode.size.y
             << std::endl;
+#endif
 }
 
 bool WindowManager::toggleFullscreen(sf::RenderWindow& window) {
   try {
     if (m_isFullscreen) {
       // Switch to windowed mode
+#ifndef NDEBUG
       std::cout << "Switching to windowed mode..." << std::endl;
+#endif
 
       // Close current window
       window.close();
@@ -57,11 +63,15 @@ bool WindowManager::toggleFullscreen(sf::RenderWindow& window) {
       restoreWindowPosition(window);
 
       m_isFullscreen = false;
+#ifndef NDEBUG
       std::cout << "Switched to windowed mode successfully" << std::endl;
+#endif
 
     } else {
       // Switch to fullscreen mode
+#ifndef NDEBUG
       std::cout << "Switching to fullscreen mode..." << std::endl;
+#endif
 
       // Save current window position
       saveWindowPosition(window);
@@ -73,7 +83,9 @@ bool WindowManager::toggleFullscreen(sf::RenderWindow& window) {
       createWindow(window, m_fullscreenMode, 8); // Fullscreen
 
       m_isFullscreen = true;
+#ifndef NDEBUG
       std::cout << "Switched to fullscreen mode successfully" << std::endl;
+#endif
     }
 
     return true;
@@ -95,14 +107,18 @@ bool WindowManager::isFullscreen() const {
 }
 
 void WindowManager::forceWindowedMode(sf::RenderWindow& window) {
+#ifndef NDEBUG
   std::cout << "Forcing windowed mode for recovery..." << std::endl;
+#endif
 
   try {
     window.close();
     createWindow(window, m_windowedMode, 1 | 4); // Titlebar | Close
     restoreWindowPosition(window);
     m_isFullscreen = false;
+#ifndef NDEBUG
     std::cout << "Recovery to windowed mode successful" << std::endl;
+#endif
   } catch (const std::exception& e) {
     std::cerr << "Recovery to windowed mode failed: " << e.what() << std::endl;
   }
@@ -119,16 +135,20 @@ sf::VideoMode WindowManager::getFullscreenMode() const {
 void WindowManager::saveWindowPosition(sf::RenderWindow& window) {
   if (window.isOpen()) {
     m_windowedPosition = window.getPosition();
+#ifndef NDEBUG
     std::cout << "Saved window position: " << m_windowedPosition.x << ", " << m_windowedPosition.y
               << std::endl;
+#endif
   }
 }
 
 void WindowManager::restoreWindowPosition(sf::RenderWindow& window) {
   if (window.isOpen()) {
     window.setPosition(m_windowedPosition);
+#ifndef NDEBUG
     std::cout << "Restored window position: " << m_windowedPosition.x << ", "
               << m_windowedPosition.y << std::endl;
+#endif
   }
 }
 
@@ -145,8 +165,10 @@ void WindowManager::createWindow(sf::RenderWindow& window, const sf::VideoMode& 
   window.setFramerateLimit(60);
   window.setVerticalSyncEnabled(true);
 
+#ifndef NDEBUG
   std::cout << "Window created: " << videoMode.size.x << "x" << videoMode.size.y
             << " (Style: " << style << ")" << std::endl;
+#endif
 }
 
 } // namespace DP
