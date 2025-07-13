@@ -143,15 +143,27 @@ void Command::processCard(int pos) {
       game.players[game.turn].cash += 1;
       // Show notification for diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
+      // Set delay for computer players
+      if (!game.players[game.turn].human) {
+        game.cardNotificationDelay = game.CARD_NOTIFICATION_DELAY_TIME;
+      }
 
     } else if (cardType == "stop") {
       freezePlayer(tokenNumber);
       // Show notification for stop card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
+      // Set delay for computer players
+      if (!game.players[game.turn].human) {
+        game.cardNotificationDelay = game.CARD_NOTIFICATION_DELAY_TIME;
+      }
     } else if (cardType == "card") {
       removeCard(game.boardDiamonds.getNumberForField(pos));
       // Show notification for remove card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
+      // Set delay for computer players
+      if (!game.players[game.turn].human) {
+        game.cardNotificationDelay = game.CARD_NOTIFICATION_DELAY_TIME;
+      }
 
     } else if (cardType == "diamond x 2") {
       if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
@@ -160,6 +172,10 @@ void Command::processCard(int pos) {
         game.players[game.turn].cash += 1;
       // Show notification for double diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
+      // Set delay for computer players
+      if (!game.players[game.turn].human) {
+        game.cardNotificationDelay = game.CARD_NOTIFICATION_DELAY_TIME;
+      }
     }
   }
   game.cardsDeck.nextCard(tokenNumber);

@@ -307,6 +307,11 @@ void GameCore::update(const sf::Time& frameTime) {
 
 void GameCore::updatePlayerTimers(const sf::Time& frameTime) {
   game->cpuTimeThinking -= frameTime.asSeconds();
+  
+  // Update card notification delay for computer players
+  if (game->cardNotificationDelay > 0) {
+    game->cardNotificationDelay -= frameTime.asSeconds();
+  }
 }
 
 void GameCore::updateVisualEffects(const sf::Time& frameTime) {
@@ -316,7 +321,7 @@ void GameCore::updateVisualEffects(const sf::Time& frameTime) {
 
 void GameCore::updateAIBehavior(const sf::Time& frameTime) {
   if (game->currentState == Game::state_roll_dice) {
-    if ((game->cpuTimeThinking < 0) && (game->players[game->turn].human == false)) {
+    if ((game->cpuTimeThinking < 0) && (game->players[game->turn].human == false) && (game->cardNotificationDelay <= 0)) {
       game->cpuTimeThinking = game->cpuTimeThinkingInterval;
       throwDiceMove();
     }
@@ -326,7 +331,7 @@ void GameCore::updateAIBehavior(const sf::Time& frameTime) {
     std::array<int, 2> currentMovements =
         game->players[game->turn].getMovements(game->diceResultPlayer);
 
-    if ((game->cpuTimeThinking < 0) && (game->players[game->turn].human == false)) {
+    if ((game->cpuTimeThinking < 0) && (game->players[game->turn].human == false) && (game->cardNotificationDelay <= 0)) {
       std::vector<int> listRandomPos;
 
       if (currentMovements[0] > -1) {

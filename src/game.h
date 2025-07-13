@@ -242,6 +242,10 @@ public:
   Credits credits;
 
   float cpuTimeThinkingInterval;
+  
+  // Card notification delay for computer players
+  float cardNotificationDelay;
+  static constexpr float CARD_NOTIFICATION_DELAY_TIME = 4.0f;
 
 private:
   Bubble bubble;

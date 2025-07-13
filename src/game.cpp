@@ -515,7 +515,7 @@ Game::Game(bool newTestMode)
       banner(&gameFont), cardNotification(&gameFont, &textures), bigDiamondActive(false),
       credits(&gameFont), sfxClick(sfxClickBuffer), sfxDone(sfxDoneBuffer),
       nextRotateElem(&textures), prevRotateElem(&textures), cpuTimeThinkingInterval(1.0f),
-      deerModeCounter(4), deerModeActive(false), v1(0.0f), fpsDisplayUpdateTimer(0.0f) {
+      cardNotificationDelay(0.0f), deerModeCounter(4), deerModeActive(false), v1(0.0f), fpsDisplayUpdateTimer(0.0f) {
   testMode = newTestMode;
   // Initialize unique_ptr text members (these have font constructors)
   txtWinner = std::make_unique<sf::Text>(gameFont);
@@ -787,6 +787,11 @@ void Game::updateGameplayElements(sf::Time frameTime) {
 
   cpuTimeThinking -= frameTime.asSeconds();
 
+  // Update card notification delay for computer players
+  if (cardNotificationDelay > 0) {
+    cardNotificationDelay -= frameTime.asSeconds();
+  }
+
   // Big diamond animation handled by animation system
   if (bigDiamondActive) {
     animationSystem->startBigDiamondAnimation();
@@ -797,7 +802,7 @@ void Game::updateGameplayElements(sf::Time frameTime) {
 
   // AI logic for dice rolling
   if (currentState == state_roll_dice) {
-    if ((cpuTimeThinking < 0) && (players[turn].human == false)) {
+    if ((cpuTimeThinking < 0) && (players[turn].human == false) && (cardNotificationDelay <= 0)) {
       cpuTimeThinking = cpuTimeThinkingInterval;
       throwDiceMove();
     }
@@ -807,7 +812,7 @@ void Game::updateGameplayElements(sf::Time frameTime) {
   if (currentState == state_game) {
     std::array<int, 2> currentMovements = players[turn].getMovements(diceResultPlayer);
 
-    if ((cpuTimeThinking < 0) && (players[turn].human == false)) {
+    if ((cpuTimeThinking < 0) && (players[turn].human == false) && (cardNotificationDelay <= 0)) {
       std::vector<int> listRandomPos;
 
       if (currentMovements[0] > -1) {
