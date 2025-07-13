@@ -1,3 +1,23 @@
+deerportal (0.9.1-pre.14-upload-fix-ubuntu1) trusty; urgency=medium
+
+  * Fixed upload annotations by adding file existence checks before uploads
+  * Eliminated "no files matching glob pattern" errors with conditional uploads
+  * Enhanced debugging to show exactly which package files exist
+  * Prevented upload attempts for non-existent package types
+  * Improved workflow reliability and cleaner action logs
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sun, 14 Jul 2025 02:00:00 +0200
+
+deerportal (0.9.1-pre.13-pdf-handbook-ubuntu1) trusty; urgency=medium
+
+  * Added PDF handbook generation to both release and test workflows
+  * Automated conversion of HANDBOOK.md to PDF using Pandoc and LaTeX
+  * PDF artifacts uploaded to releases as DeerPortal-Handbook-VERSION.pdf
+  * Enhanced release notes to include documentation download
+  * Comprehensive documentation delivery with game packages
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sun, 14 Jul 2025 01:00:00 +0200
+
 deerportal (0.9.1-pre.12-version-update-ubuntu1) trusty; urgency=medium
 
   * Version bump to 0.9.1-pre.12 for continued testing

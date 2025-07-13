@@ -1,6 +1,6 @@
 base: core18
 name: deerportal
-version: "0.9.1-pre.12"
+version: "0.9.1-pre.14"
 summary: Deer Portal" snap
 description: Board game where you need to transfer yourself into the Deer God
 grade: stable

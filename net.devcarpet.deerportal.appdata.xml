@@ -32,6 +32,16 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.1-pre.14" date="2025-07-14">
+​      <description>
+​        <p>Upload fix. Fixed upload annotations by adding file existence checks before uploads, eliminated "no files matching glob pattern" errors with conditional uploads, and improved workflow reliability with cleaner action logs.</p>
+​      </description>
+​    </release>
+​    <release version="0.9.1-pre.13" date="2025-07-14">
+​      <description>
+​        <p>PDF handbook generation. Added automated PDF handbook generation to both release and test workflows, automated conversion of HANDBOOK.md to PDF using Pandoc and LaTeX, and comprehensive documentation delivery with game packages.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.1-pre.12" date="2025-07-14">
 ​      <description>
 ​        <p>Version update for continued testing. All debugging improvements from previous versions included, enhanced packaging and upload reliability testing, and comprehensive workflow fixes validation.</p>

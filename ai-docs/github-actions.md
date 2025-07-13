@@ -179,6 +179,7 @@ Format: `sfml-3.0.1-{platform}-{arch}-{runner.os}-{hash}`
 - **macOS**: `DeerPortal-{version}-macOS.dmg`
 - **Windows**: `DeerPortal-{version}-Windows.exe`
 - **Linux**: `DeerPortal-{version}-Linux.{tar.gz|deb}`
+- **Documentation**: `DeerPortal-Handbook-{version}.pdf`
 
 ### **Upload Strategy**
 - **Test Workflows**: Artifacts only
@@ -275,11 +276,91 @@ Format: `sfml-3.0.1-{platform}-{arch}-{runner.os}-{hash}`
 - **Testing Integration**: Maintained CTest execution in CI pipeline
 
 ### **Release Pipeline Fixes (July 2025)**
-1. **Checkout Action Stabilization**: Added `fetch-depth: 0` to all workflows preventing manifest parsing errors
-2. **Release Conflict Prevention**: Implemented duplicate release detection with `gh release view` checks
-3. **Permissions Configuration**: Added proper `permissions` blocks for GitHub API access
-4. **Race Condition Elimination**: Only macOS job creates releases, others append with `append_body: true`
-5. **Token Management**: Proper `GITHUB_TOKEN` environment variable usage for release operations
+
+#### **Race Condition Resolution (pre.7-pre.12)**
+The release workflow experienced critical race condition issues where multiple platform jobs simultaneously tried to create the same GitHub release, causing conflicts and missing artifacts.
+
+**Problem Identified:**
+- All three platform jobs (macOS, Windows, Linux) were racing to create releases
+- `softprops/action-gh-release@v2` creates releases if they don't exist
+- Race conditions resulted in only one platform's artifacts being uploaded
+
+**Solution Implemented (Scout + Warrior Pattern):**
+1. **create-release job (Scout)**: Dedicated job that runs first and creates the GitHub release
+2. **Platform jobs (Warriors)**: All build jobs depend on `create-release` using `needs: create-release`
+3. **Upload Actions**: Switched to `svenstaro/upload-release-action@v2` for upload-only behavior
+4. **Job Dependencies**: Proper dependency chain ensures sequential execution
+5. **Version Handling**: Centralized version management through `create-release` job outputs
+
+**Workflow Architecture:**
+```yaml
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        # Creates release with comprehensive installation instructions
+
+  build-macos:
+    needs: create-release  # Waits for release creation
+    steps:
+      - name: Upload to Release
+        uses: svenstaro/upload-release-action@v2  # Upload-only action
+        
+  build-windows:
+    needs: create-release  # Waits for release creation
+    
+  build-linux:
+    needs: create-release  # Waits for release creation
+```
+
+**File Pattern Fixes:**
+- **Flexible Patterns**: Changed from specific patterns like `DeerPortal-*-Linux.tar.gz` to generic `*.tar.gz`
+- **Continue on Error**: Added `continue-on-error: true` for missing package types
+- **Comprehensive Debugging**: Enhanced packaging steps to show exactly what files are created
+
+**Key Improvements:**
+1. **Eliminated Race Conditions**: Only one job creates releases, others upload to existing release
+2. **Guaranteed All Artifacts**: All platform artifacts now upload to single release
+3. **Enhanced Debugging**: Comprehensive file listing after packaging on all platforms
+4. **Graceful Error Handling**: Missing package types don't fail entire workflow
+5. **Dependency Chain**: Proper job coordination through `needs` declarations
+
+#### **PDF Documentation Generation (pre.13)**
+Added automated PDF handbook generation to both release and test workflows using Pandoc and LaTeX.
+
+**Implementation:**
+```yaml
+generate-handbook-pdf:
+  runs-on: ubuntu-latest
+  needs: create-release
+  steps:
+    - name: Install LaTeX and Pandoc
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended pandoc
+        
+    - name: Generate PDF from Markdown
+      run: |
+        pandoc HANDBOOK.md \
+          -o "DeerPortal-Handbook-${{ needs.create-release.outputs.version }}.pdf" \
+          --pdf-engine=pdflatex \
+          --variable=geometry:margin=1in \
+          --variable=fontsize:12pt \
+          --variable=documentclass:article \
+          --table-of-contents \
+          --highlight-style=tango
+```
+
+**Features:**
+- Converts `HANDBOOK.md` to professionally formatted PDF
+- Includes table of contents and syntax highlighting
+- Version-specific naming: `DeerPortal-Handbook-VERSION.pdf`
+- Uploaded as both artifact and release asset
+- Available in both release and test workflows
 
 ## Known Issues and Limitations
 

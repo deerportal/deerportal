@@ -20,6 +20,51 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+  # Generate PDF Handbook (Documentation Job - TEST)
+  test-handbook-pdf:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Test Build Notice
+      run: |
+        echo "🧪 ====================================="
+        echo "🧪 TEST BUILD - PDF Handbook Generation"
+        echo "🧪 Version: ${{ github.event.inputs.version }}"
+        echo "🧪 No GitHub release will be created"
+        echo "🧪 ====================================="
+        
+    - name: Install LaTeX and Pandoc
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended pandoc
+        
+    - name: Generate PDF from Markdown
+      run: |
+        # Convert HANDBOOK.md to PDF using pandoc
+        pandoc HANDBOOK.md \
+          -o "DeerPortal-Handbook-${{ github.event.inputs.version }}.pdf" \
+          --pdf-engine=pdflatex \
+          --variable=geometry:margin=1in \
+          --variable=fontsize:12pt \
+          --variable=documentclass:article \
+          --table-of-contents \
+          --highlight-style=tango
+        
+        echo "=== Generated PDF ==="
+        ls -lh DeerPortal-Handbook-*.pdf
+        
+    - name: Upload PDF artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: DeerPortal-Handbook-${{ github.event.inputs.version }}-TEST
+        path: DeerPortal-Handbook-*.pdf
+        retention-days: 7
+
   # macOS Build with DMG creation (TEST)
   test-macos:
     runs-on: macos-latest
