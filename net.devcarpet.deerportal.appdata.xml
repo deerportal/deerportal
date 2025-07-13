@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.2-pre.2" date="2025-01-15">
+​      <description>
+​        <p>Windows Build Refinements - Pre-release. Enhanced Windows executable generation and testing, resolved PowerShell execution policy compatibility issues, improved Windows build scripts for SFML 3.0.1 integration, and version management updated for new pre-release cycle.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.1" date="2025-07-14">
 ​      <description>
 ​        <p>Stability Improvements - Final Release. Complete GitHub Actions CI/CD pipeline overhaul with race condition fixes, Scout+Warrior release pattern, automated PDF handbook generation, enhanced cross-platform build reliability, and comprehensive documentation improvements.</p>

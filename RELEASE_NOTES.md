@@ -1,5 +1,26 @@
 # DeerPortal Release Notes
 
+## Version 0.9.2-pre.2 "Windows Build Refinements" - January 2025
+
+🔧 **Pre-release with Windows Build Improvements**
+
+This pre-release focuses on enhancing Windows platform compatibility and build processes.
+
+### 🚀 Major Improvements
+
+**Windows Build Enhancements**
+- Enhanced Windows executable generation and testing
+- Resolved PowerShell execution policy compatibility issues
+- Improved Windows build scripts for SFML 3.0.1 integration
+- Version management updated for new pre-release cycle
+
+**Known Issues**
+- PowerShell execution policy may show error messages when running .exe files directly
+- Application runs correctly despite PowerShell warnings
+- Solutions documented in ai-docs/errors.md
+
+---
+
 ## Version 0.9.1 "Stability Improvements" - July 2025
 
 🔧 **Final Release with Major CI/CD Overhaul**

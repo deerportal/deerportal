@@ -6,7 +6,7 @@ This file serves as a memory bank and context for AI assistants working on the D
 
 DeerPortal is a hybrid board/card game built with SFML 3.0, featuring the journey of becoming a Deer God through collecting diamonds and playing cards driven by classical elements. The game supports 0-4 players with AI opponents.
 
-**Current Version: 0.9.1 "Stability Improvements" (June 2025)**
+**Current Version: 0.9.2-pre.2 "Windows Build Refinements" (January 2025)**
 **Technology Stack**: SFML 3.0.1, CMake, C++17
 
 ## Core Technical Details

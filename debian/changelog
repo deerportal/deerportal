@@ -1,3 +1,13 @@
+deerportal (0.9.2-pre.2-windows-build-refinements-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.2-pre.2 "Windows Build Refinements"
+  * Enhanced Windows executable generation and testing
+  * Resolved PowerShell execution policy compatibility issues
+  * Improved Windows build scripts for SFML 3.0.1 integration
+  * Version management updated for new pre-release cycle
+
+ -- DeerPortal Team <dev@devcarpet.net>  Wed, 15 Jan 2025 12:00:00 +0000
+
 deerportal (0.9.1-stability-improvements-ubuntu1) trusty; urgency=medium
 
   * FINAL RELEASE 0.9.1 "Stability Improvements"
