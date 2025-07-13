@@ -1,3 +1,13 @@
+deerportal (0.9.1-pre.8-dependency-fix-ubuntu1) trusty; urgency=medium
+
+  * Fixed missing needs dependency in Linux build job
+  * Corrected job dependency chain for proper workflow execution
+  * Enhanced GitHub Actions workflow reliability
+  * Ensured all build jobs wait for release creation
+  * Complete race condition elimination
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sat, 13 Jul 2025 20:00:00 +0200
+
 deerportal (0.9.1-pre.7-race-condition-fix-ubuntu1) trusty; urgency=medium
 
   * Fixed GitHub Actions race condition in release creation

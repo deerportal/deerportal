@@ -320,6 +320,7 @@ jobs:
   # Linux Build
   build-linux:
     runs-on: ubuntu-latest
+    needs: create-release
     
     steps:
     - name: Checkout code

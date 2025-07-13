@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.1-pre.8" date="2025-07-13">
+​      <description>
+​        <p>Workflow dependency fix. Fixed missing needs dependency in Linux build job, corrected job dependency chain for proper workflow execution, and enhanced GitHub Actions workflow reliability.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.1-pre.7" date="2025-07-13">
 ​      <description>
 ​        <p>GitHub Actions race condition fix. Implemented dedicated release creation job with proper dependencies, eliminated simultaneous release creation conflicts, and guaranteed all artifacts upload to single release.</p>
