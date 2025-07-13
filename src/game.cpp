@@ -607,6 +607,50 @@ Game::Game(bool newTestMode)
 
   // Constructor initialization complete
   // Game loop moved to run() method for proper RAII
+  
+  // Initialize window manager
+  windowManager.initialize(window, "Deerportal - game about how human can be upgraded to the Deer");
+}
+
+bool Game::toggleFullscreen() {
+  // Use window manager to toggle fullscreen
+  bool success = windowManager.toggleFullscreen(window);
+  
+  if (success) {
+    // Restore window properties after successful toggle
+    restoreWindowProperties();
+  }
+  
+  return success;
+}
+
+void Game::restoreWindowProperties() {
+  // Adjust views to new window size
+  sf::Vector2u size = window.getSize();
+  
+  // Update screen size
+  screenSize.x = static_cast<int>(size.x);
+  screenSize.y = static_cast<int>(size.y);
+  
+  // Update views
+  viewFull = sf::View(sf::FloatRect(0, 0, static_cast<float>(size.x), static_cast<float>(size.y)));
+  viewGui = sf::View(sf::FloatRect(0, 0, static_cast<float>(size.x), static_cast<float>(size.y)));
+  
+  // Keep viewTiles at original resolution for game consistency
+  viewTiles = sf::View(sf::FloatRect(0, 0, 1360, 768));
+  
+  // Set window properties
+  window.setFramerateLimit(60);
+  window.setVerticalSyncEnabled(false); // Match original settings
+  
+  // Update render texture if needed
+  if (windowManager.isFullscreen()) {
+    // In fullscreen, we might need to adjust scaling
+    // For now, keep the original render texture size
+    std::cout << "Fullscreen mode active, render texture maintained at original size" << std::endl;
+  } else {
+    std::cout << "Windowed mode active, views restored" << std::endl;
+  }
 }
 
 int Game::run() {

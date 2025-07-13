@@ -169,3 +169,19 @@ When using Cursor IDE, these rules will automatically apply to ensure:
 - ✅ **Start Menu integration** - FIXED with CPACK_NSIS_CREATE_ICONS_EXTRA
 - ✅ **Windows search visibility** - DeerPortal now appears in Start Menu search
 - 🎯 **Status:** 0.9.2-pre.1 objectives COMPLETED - ready for release
+
+## Recent Updates
+
+### Version 0.9.2-pre.2 Updates
+- Enhanced Windows build process with SFML 3.0.1
+- Documented PowerShell execution policy workarounds
+- Fixed grid reveal intro shader loading confirmation
+- Created detailed fullscreen implementation plan (F key toggle)
+
+### Planned Features
+- **Fullscreen Mode**: Comprehensive plan created for cross-platform fullscreen toggle using F key
+  - See `ai-docs/fullscreen-implementation-plan.md` for detailed implementation strategy
+  - Will support Windows, macOS, and Linux with proper resource management
+  - Includes configuration persistence and graceful error handling
+
+## Build and Development

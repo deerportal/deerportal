@@ -34,6 +34,7 @@
 #include "selector.h"         // For Selector selector;
 #include "soundfx.h"          // For SoundFX sfx;
 #include "textureholder.h"    // For TextureHolder textures;
+#include "window-manager.h"   // For WindowManager windowManager;
 
 // Forward declarations for classes only used as pointers or in function signatures
 // Include module headers for complete type information
@@ -85,8 +86,21 @@ private:
 public:
   Game(bool newTestMode);
   int run(); // Main game loop extracted from constructor
+  
+  /*!
+   * \brief Toggle fullscreen mode
+   * \return true if toggle was successful, false otherwise
+   */
+  bool toggleFullscreen();
+  
+  /*!
+   * \brief Restore window properties after fullscreen toggle
+   */
+  void restoreWindowProperties();
+  
   BoardDiamondSeq boardDiamonds;
   sf::RenderWindow window;
+  WindowManager windowManager;  // NEW: Window manager for fullscreen handling
   sf::RenderTexture renderTexture;
   std::unique_ptr<sf::Sprite> renderSprite;
   Player players[4];

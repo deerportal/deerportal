@@ -240,3 +240,11 @@ enfucraft.pro.user
 pagan_board.pro.user
 Makefile
 MakeCache.txt
+
+# Windows build artifacts
+DeerPortal-*-Windows.exe
+*.dll
+build_win/
+# Note: build_sfml*.bat files are tracked for Windows SFML building
+
+# macOS build artifacts

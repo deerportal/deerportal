@@ -29,6 +29,16 @@ void GameInput::handleKeyboardInput(const sf::Event& event) {
     if (keyPressed->code == sf::Keyboard::Key::Escape) {
       game->window.close();
     }
+    
+    // F key: Toggle fullscreen mode
+    if (keyPressed->code == sf::Keyboard::Key::F && !keyPressed->repeat) {
+      bool success = game->toggleFullscreen();
+      if (success) {
+        std::cout << "Fullscreen toggled successfully" << std::endl;
+      } else {
+        std::cout << "Fullscreen toggle failed" << std::endl;
+      }
+    }
 
     // Additional keyboard handling can be added here
   }

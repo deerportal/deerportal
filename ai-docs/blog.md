@@ -1,3 +1,35 @@
+# DeerPortal Version 0.9.2-pre.2 - Windows Build Refinements (PRE-RELEASE)
+
+**Development Date**: January 2025  
+**Platforms**: Windows (Primary), macOS, Linux
+
+## Version 0.9.2-pre.2 Progress
+
+**Windows Build Improvements**
+- Enhanced Windows executable generation and testing
+- Resolved PowerShell execution policy compatibility issues
+- Improved Windows build scripts for SFML 3.0.1 integration
+- Version management updated for new pre-release cycle
+- ✅ Grid reveal intro shader loading successfully verified and fixed
+
+**Fullscreen Implementation Planning**
+- Created comprehensive plan for cross-platform fullscreen toggle
+- F key chosen as toggle (F11 problematic on macOS)
+- Detailed architecture for SFML 3.0.1 window recreation approach
+- Platform-specific considerations documented
+- Resource management and error handling strategies defined
+
+**Known Issues**
+- PowerShell execution policy may show error messages when running .exe files directly
+- Application runs correctly despite PowerShell warnings
+- Solutions documented in ai-docs/errors.md
+
+**Development Notes**
+- Systematic approach to Windows platform compatibility
+- Grid reveal intro shader loading successfully verified
+- Continuous integration improvements for Windows builds
+- Fullscreen feature planned for future implementation
+
 # DeerPortal Version 0.9.1 - Stability Improvements (FINAL RELEASE)
 
 **Release Date**: July 14, 2025  

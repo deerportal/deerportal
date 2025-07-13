@@ -1,2 +1,12 @@
 - [ ] Verify LICENSE file appears in all installer outputs and is searchable in Windows.
 - [ ] Test 0.9.2-pre.1 build for completeness and compliance. 
+- [ ] Test multiple solutions for PowerShell execution policy workarounds
+- [ ] Consider adding Windows-specific execution instructions to README
+- [ ] Verify Windows build script improvements for SFML 3.0.1
+- [ ] Test grid reveal intro shader functionality in Windows environment
+- [ ] Prepare for 0.9.2-pre.3 if additional Windows fixes needed
+- [ ] Implement fullscreen toggle functionality with F key (see ai-docs/fullscreen-implementation-plan.md)
+- [ ] Create window-manager module for handling fullscreen transitions
+- [ ] Add configuration persistence for fullscreen preference
+- [ ] Test fullscreen on Windows, macOS, and Linux platforms
+- [ ] Update documentation with fullscreen controls 

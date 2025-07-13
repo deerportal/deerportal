@@ -66,6 +66,7 @@ file(GLOB GAME_SOURCES
     src/game-core.cpp
     src/game-state-manager.cpp
     src/game-animation-system.cpp
+    src/window-manager.cpp
     src/cardnotification.cpp
     src/pile.cpp
     src/utils.cpp
