@@ -205,7 +205,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: DeerPortal-${{ needs.create-release.outputs.version }}-macOS-dmg
-        path: build/DeerPortal-*-macOS.dmg
+        path: |
+          build/*.dmg
+          build/*DeerPortal*
         retention-days: 30
 
     - name: Upload to Release
@@ -213,10 +215,11 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/DeerPortal-*-macOS.dmg
+        file: build/*.dmg
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
+      continue-on-error: true
 
   # Windows Build
   build-windows:
@@ -295,14 +298,19 @@ jobs:
             cpack -G ZIP --verbose
           }
         }
+        echo "=== Files created after packaging ==="
+        ls -la *.tar.gz *.deb *.zip *.exe *.dmg 2>/dev/null || echo "No packages found with common extensions"
+        echo "=== All files in build directory ==="
+        find . -maxdepth 1 -type f -name "*DeerPortal*" -o -name "*.exe" -o -name "*.zip" | sort
 
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
         name: DeerPortal-${{ needs.create-release.outputs.version }}-Windows-installer
         path: |
-          build/DeerPortal-*-Windows.exe
-          build/DeerPortal-*-Windows.zip
+          build/*.exe
+          build/*.zip
+          build/*DeerPortal*
         retention-days: 30
 
     - name: Upload Windows EXE to Release
@@ -310,20 +318,22 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/DeerPortal-*-Windows.exe
+        file: build/*.exe
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
+      continue-on-error: true
 
     - name: Upload Windows ZIP to Release
       if: github.event_name == 'push' && !inputs.test_mode
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/DeerPortal-*-Windows.zip
+        file: build/*.zip
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
+      continue-on-error: true
 
   # Linux Build
   build-linux:
@@ -406,14 +416,19 @@ jobs:
           cpack -G TGZ || echo "TGZ packaging failed"
           cpack -G DEB || echo "DEB packaging failed" 
         }
+        echo "=== Files created after packaging ==="
+        ls -la *.tar.gz *.deb *.zip *.exe *.dmg 2>/dev/null || echo "No packages found with common extensions"
+        echo "=== All files in build directory ==="
+        find . -maxdepth 1 -type f -name "*DeerPortal*" -o -name "*.tar.gz" -o -name "*.deb" | sort
 
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v4
       with:
         name: DeerPortal-${{ needs.create-release.outputs.version }}-Linux-packages
         path: |
-          build/DeerPortal-*-Linux.tar.gz
-          build/DeerPortal-*-Linux.deb
+          build/*.tar.gz
+          build/*.deb
+          build/*DeerPortal*
         retention-days: 30
 
     - name: Upload Linux TGZ to Release
@@ -421,17 +436,19 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/DeerPortal-*-Linux.tar.gz
+        file: build/*.tar.gz
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
+      continue-on-error: true
 
     - name: Upload Linux DEB to Release
       if: github.event_name == 'push' && !inputs.test_mode
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/DeerPortal-*-Linux.deb
+        file: build/*.deb
         tag: ${{ github.ref }}
         overwrite: true
-        file_glob: true 
+        file_glob: true
+      continue-on-error: true 

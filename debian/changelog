@@ -1,3 +1,23 @@
+deerportal (0.9.1-pre.11-windows-debug-ubuntu1) trusty; urgency=medium
+
+  * Enhanced Windows packaging debug output to show created files
+  * Improved file pattern matching for Windows ZIP and EXE uploads
+  * Added comprehensive debugging across all platforms
+  * Enhanced error handling for missing package files
+  * Flexible upload patterns to handle CPack naming variations
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sat, 13 Jul 2025 23:00:00 +0200
+
+deerportal (0.9.1-pre.10-packaging-fix-ubuntu1) trusty; urgency=medium
+
+  * Fixed Linux packaging file pattern matching issues
+  * Enhanced packaging debug output to show created files
+  * Improved upload patterns to handle various naming conventions
+  * Added continue-on-error for missing package types
+  * Flexible artifact collection across all platforms
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sat, 13 Jul 2025 22:00:00 +0200
+
 deerportal (0.9.1-pre.9-upload-action-fix-ubuntu1) trusty; urgency=medium
 
   * Switched to svenstaro/upload-release-action for artifact uploads
