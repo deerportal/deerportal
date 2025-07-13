@@ -1,649 +1,310 @@
-# DeerPortal Windows Troubleshooting Guide
-
-## Overview
-
-This guide addresses common issues encountered when compiling and running DeerPortal on Windows across all three build environments: Visual Studio, MSYS2, and Cygwin.
-
-## Quick Diagnostic Checklist
-
-### Initial Environment Check
-```cmd
-# Check Windows version
-winver
-
-# Check system architecture
-echo %PROCESSOR_ARCHITECTURE%
-# Should be AMD64 for 64-bit
-
-# Check available memory
-systeminfo | findstr "Available Physical Memory"
-```
-
-### Compiler Verification
-```bash
-# For all environments, verify compiler
-gcc --version || echo "GCC not found"
-g++ --version || echo "G++ not found"
-cmake --version || echo "CMake not found"
-```
-
-## Build System Issues
-
-### CMake Configuration Problems
-
-#### Issue: "CMake not found"
-**Symptoms:**
-```
-'cmake' is not recognized as an internal or external command
-```
-
-**Solutions by Environment:**
-
-**Visual Studio:**
-```cmd
-# Install CMake via Visual Studio Installer
-# Or standalone: winget install Kitware.CMake
-# Add to PATH: C:\Program Files\CMake\bin
-```
-
-**MSYS2:**
-```bash
-pacman -S mingw-w64-x86_64-cmake
-# Ensure using MinGW64 terminal, not base MSYS2
-```
-
-**Cygwin:**
-```bash
-# Re-run setup-x86_64.exe and install cmake package
-# Verify: which cmake
-```
-
-#### Issue: "Generator not found"
-**Symptoms:**
-```
-CMake Error: Could not create named generator Visual Studio 17 2022
-```
-
-**Solutions:**
-```cmd
-# Check available generators
-cmake --help
-
-# Common fixes:
-cmake -G "Visual Studio 16 2019" -A x64 ..    # VS 2019
-cmake -G "Visual Studio 17 2022" -A x64 ..    # VS 2022
-cmake -G "MSYS Makefiles" ..                  # MSYS2
-cmake -G "Unix Makefiles" ..                  # Cygwin
-```
-
-#### Issue: "C++ compiler not found"
-**Symptoms:**
-```
-No CMAKE_CXX_COMPILER could be found
-```
-
-**Solutions:**
-
-**Visual Studio:**
-```cmd
-# Install "Desktop development with C++" workload
-# Verify: cl.exe should be in PATH during VS Command Prompt
-```
-
-**MSYS2:**
-```bash
-# Install toolchain
-pacman -S mingw-w64-x86_64-toolchain
-
-# Verify
-which g++
-g++ --version
-```
-
-**Cygwin:**
-```bash
-# Install via setup-x86_64.exe:
-# - gcc-core
-# - gcc-g++
-```
-
-## SFML 3.0 Related Issues
-
-### SFML Not Found
-
-#### Issue: "Could not find SFML"
-**Symptoms:**
-```
-CMake Error: Could not find package configuration file provided by "SFML"
-```
-
-**Solutions by Environment:**
-
-**Visual Studio + vcpkg:**
-```cmd
-# Verify vcpkg installation
-C:\vcpkg\vcpkg list sfml
-
-# If empty, install:
-C:\vcpkg\vcpkg install sfml:x64-windows
-
-# Ensure CMake uses vcpkg:
-cmake -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake ..
-```
-
-**Visual Studio + Manual SFML:**
-```cmd
-# Download SFML 3.0 from sfml-dev.org
-# Extract to C:\SFML-3.0.0
-cmake -DSFML_DIR="C:/SFML-3.0.0/lib/cmake/SFML" ..
-```
-
-**MSYS2:**
-```bash
-# Install SFML package
-pacman -S mingw-w64-x86_64-sfml
-
-# If not available, try:
-pacman -Sy  # Update package database
-pacman -Ss sfml  # Search for SFML packages
-```
-
-**Cygwin:**
-```bash
-# SFML 3.0 usually not available in Cygwin repos
-# Compile from source (see Cygwin setup guide)
-# Or try: apt-cyg install libsfml-dev  # if apt-cyg is installed
-```
-
-#### Issue: "SFML version mismatch"
-**Symptoms:**
-```
-SFML found version 2.5.1 but version 3.0 is required
-```
-
-**Solutions:**
-```bash
-# Remove old SFML versions first
-# Visual Studio: vcpkg remove sfml
-# MSYS2: pacman -R mingw-w64-x86_64-sfml
-# Cygwin: Remove old installations manually
-
-# Install SFML 3.0 specifically
-```
-
-### Runtime SFML Issues
-
-#### Issue: "SFML DLLs not found"
-**Symptoms:**
-```
-The program can't start because sfml-graphics-3.dll is missing
-```
-
-**Solutions:**
-
-**Visual Studio + vcpkg:**
-```cmd
-# Copy DLLs to executable directory
-copy "C:\vcpkg\installed\x64-windows\bin\sfml-*.dll" Release\
-
-# Or add to PATH:
-set PATH=C:\vcpkg\installed\x64-windows\bin;%PATH%
-```
-
-**MSYS2:**
-```bash
-# Copy required DLLs
-cp /mingw64/bin/libsfml-*.dll .
-
-# Or add to PATH:
-export PATH="/mingw64/bin:$PATH"
-```
-
-**Cygwin:**
-```bash
-# Ensure SFML libraries are accessible
-export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
-```
-
-## Build Compilation Errors
-
-### C++17 Standard Issues
-
-#### Issue: "C++17 features not supported"
-**Symptoms:**
-```
-error: 'std::unique_ptr' was not declared in this scope
-```
-
-**Solutions:**
-```bash
-# Verify compiler supports C++17
-g++ -std=c++17 --version
-
-# Add C++17 flag explicitly:
-cmake -DCMAKE_CXX_STANDARD=17 ..
-
-# Or set environment:
-export CXXFLAGS="-std=c++17"
-```
-
-### Memory and Resource Issues
-
-#### Issue: "Out of memory during compilation"
-**Symptoms:**
-```
-g++: internal compiler error: Killed (program cc1plus)
-virtual memory exhausted: Cannot allocate memory
-```
-
-**Solutions:**
-```bash
-# Reduce parallel jobs
-make -j2  # Instead of make -j$(nproc)
-
-# For Visual Studio:
-# Close other applications
-# Use x64 instead of x86 toolchain
-
-# Increase virtual memory (Windows)
-# System Properties → Advanced → Performance → Settings → Advanced → Virtual Memory
-```
-
-#### Issue: "Linker out of memory"
-**Symptoms:**
-```
-collect2.exe: fatal error: ld terminated with signal 9 [Killed]
-```
-
-**Solutions:**
-```bash
-# Disable LTO temporarily
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="-O2 -DNDEBUG" ..
-
-# Use gold linker (MSYS2/Cygwin)
-export LDFLAGS="-fuse-ld=gold"
-```
-
-## Runtime Issues
-
-### Asset Loading Problems
-
-#### Issue: "Assets not found"
-**Symptoms:**
-```
-Failed to load texture: assets/img/texture.png
-```
-
-**Solutions:**
-```bash
-# Check asset directory structure
-ls -la assets/
-# Should contain: img/, audio/, fonts/, data/
-
-# Verify working directory
-pwd
-# Should be same directory as DeerPortal.exe
-
-# For relative paths, ensure executable and assets are together:
-DeerPortal.exe
-assets/
-├── img/
-├── audio/
-├── fonts/
-└── data/
-```
-
-#### Issue: "Font loading errors"
-**Symptoms:**
-```
-Failed to load font from file: assets/fonts/default.ttf
-```
-
-**Solutions:**
-```bash
-# Check font file permissions
-ls -la assets/fonts/
-
-# Windows: Ensure files aren't marked as "blocked"
-# Right-click → Properties → Unblock
-
-# Copy fonts to system fonts directory (alternative)
-copy assets\fonts\*.ttf C:\Windows\Fonts\
-```
-
-### Performance Issues {#performance}
-
-#### Issue: "Low FPS / Poor Performance"
-**Symptoms:**
-- FPS counter shows <30 FPS
-- Sluggish gameplay
-- High CPU usage
-
-**Solutions:**
-
-**Build Configuration:**
-```bash
-# Ensure Release build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-
-# Verify optimization flags
-make VERBOSE=1 | grep -E "O[0-9]"
-# Should show -O3 for Release builds
-```
-
-**Runtime Optimization:**
-```bash
-# Close unnecessary background programs
-# Disable Windows Defender real-time protection for game directory
-# Use dedicated graphics card (not integrated)
-
-# Check graphics drivers are updated
-# Windows: Device Manager → Display Adapters
-```
-
-**Environment-Specific:**
-```bash
-# MSYS2: Use native Windows paths for assets if possible
-# Cygwin: Consider MSYS2 for better performance
-# Visual Studio: Use Release configuration, not Debug
-```
-
-#### Issue: "Audio Problems"
-**Symptoms:**
-- No sound
-- Audio crackling
-- High audio latency
-
-**Solutions:**
-```bash
-# Check audio drivers
-# Windows: Settings → System → Sound → Troubleshoot
-
-# Verify SFML audio module
-ldd DeerPortal.exe | grep sfml-audio  # MSYS2/Cygwin
-# Should show sfml-audio library
-
-# Audio format issues - check asset files:
-file assets/audio/*.ogg
-# Should show valid Ogg Vorbis files
-```
-
-## Environment-Specific Issues
-
-### Visual Studio Specific
-
-#### Issue: "IntelliSense errors"
-**Symptoms:**
-- Red squiggly lines in code editor
-- "Cannot open include file: 'SFML/Graphics.hpp'"
-
-**Solutions:**
-```cmd
-# Regenerate CMake cache
-# Delete .vs folder in project root
-# Project → CMake → Delete Cache and Reconfigure
-
-# Check CMakeSettings.json
-# Ensure CMAKE_TOOLCHAIN_FILE points to vcpkg
-```
-
-#### Issue: "Debug symbols not loading"
-**Symptoms:**
-- Cannot set breakpoints
-- Debugging shows assembly instead of source
-
-**Solutions:**
-```cmd
-# Build Debug configuration
-cmake --build . --config Debug
-
-# Verify PDB files are generated
-dir *.pdb
-
-# Check debugging settings:
-# Right-click project → Properties → Debugging
-# Working Directory: $(OutDir)
-```
-
-### MSYS2 Specific
-
-#### Issue: "Wrong terminal environment"
-**Symptoms:**
-```
-bash: gcc: command not found
-```
-
-**Solutions:**
-```bash
-# Use correct MSYS2 terminal:
-# NOT: MSYS2 MSYS
-# USE: MSYS2 MinGW x64
-
-# Verify environment:
-echo $MSYSTEM
-# Should output: MINGW64
-```
-
-#### Issue: "Package conflicts"
-**Symptoms:**
-```
-error: failed to commit transaction (conflicting files)
-```
-
-**Solutions:**
-```bash
-# Update package database
-pacman -Sy
-
-# Force reinstall
-pacman -S --overwrite '*' mingw-w64-x86_64-sfml
-
-# Clean package cache
-pacman -Scc
-```
-
-### Cygwin Specific
-
-#### Issue: "Cygwin DLL version mismatch"
-**Symptoms:**
-```
-Cygwin DLL version mismatch detected
-```
-
-**Solutions:**
-```bash
-# Update all Cygwin packages
-# Re-run setup-x86_64.exe
-# Select "Update" for all packages
-
-# Alternatively, reinstall Cygwin completely
-```
-
-#### Issue: "POSIX path issues"
-**Symptoms:**
-```
-Cannot find file: /cygdrive/c/path/to/file
-```
-
-**Solutions:**
-```bash
-# Use cygpath for path conversion
-cygpath -w /cygdrive/c/path/to/file
-# Output: C:\path\to\file
-
-# Configure Git for Windows line endings
-git config --global core.autocrlf input
-```
-
-## Distribution and Packaging Issues
-
-### Missing Dependencies
-
-#### Issue: "Application won't run on other machines"
-**Symptoms:**
-- Works on development machine
-- Fails on clean Windows installation
-
-**Solutions:**
-
-**Identify Dependencies:**
-```bash
-# Visual Studio: Use Dependency Walker or dumpbin
-dumpbin /dependents DeerPortal.exe
-
-# MSYS2/Cygwin: Use ldd
-ldd DeerPortal.exe
-```
-
-**Bundle Dependencies:**
-```bash
-# Visual Studio + vcpkg:
-copy "C:\vcpkg\installed\x64-windows\bin\*.dll" Release\
-
-# MSYS2:
-cp /mingw64/bin/{libgcc_s_seh-1.dll,libstdc++-6.dll,libwinpthread-1.dll} .
-cp /mingw64/bin/libsfml-*.dll .
-
-# Cygwin:
-cp /usr/bin/cygwin1.dll .
-cp /usr/bin/cyg*.dll .  # All required Cygwin DLLs
-```
-
-### Installer Creation Issues
-
-#### Issue: "NSIS installer fails"
-**Symptoms:**
-```
-CPack Error: Cannot find NSIS compiler makensis
-```
-
-**Solutions:**
-```cmd
-# Install NSIS
-winget install NSIS.NSIS
-
-# Add to PATH
-set PATH=C:\Program Files (x86)\NSIS;%PATH%
-
-# Create installer
-cpack -G NSIS -C Release
-```
-
-## Advanced Debugging Techniques
-
-### Build System Debugging
-
-#### CMake Verbose Output
-```bash
-# See actual compiler commands
-make VERBOSE=1
-
-# CMake debug mode
-cmake --debug-output ..
-
-# Show CMake variables
-cmake -LAH ..
-```
-
-#### Preprocessor Debugging
-```bash
-# See preprocessor output
-g++ -E -dM src/main.cpp > preprocessor_output.txt
-
-# Check defined macros
-grep -E "(SFML|DEERPORTAL)" preprocessor_output.txt
-```
-
-### Runtime Debugging
-
-#### System Monitoring
-```cmd
-# Monitor file access
-# Use Process Monitor (ProcMon) from Microsoft Sysinternals
-
-# Check DLL loading
-# Use Dependency Walker or Dependency Walker 2.2
-```
-
-#### Memory Analysis
-```bash
-# Windows: Use Application Verifier
-# MSYS2: Install Dr. Memory
-pacman -S mingw-w64-x86_64-drmemory
-drmemory -- ./DeerPortal.exe
-
-# Cygwin: Limited options, use valgrind alternatives
-```
-
-## Prevention and Best Practices
-
-### Development Environment Setup
-
-#### Version Consistency
-```bash
-# Pin SFML version in documentation
-# Test on clean Windows installations
-# Use consistent build flags across team
-
-# Document exact tool versions
-cmake --version > versions.txt
-gcc --version >> versions.txt
-```
-
-#### Automated Testing
-```bash
-# Create test script
-# test-build.bat for Windows batch
-# test-build.sh for MSYS2/Cygwin
-
-#!/bin/bash
-# Basic build test
-set -e
-mkdir -p test-build
-cd test-build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j2
-./DeerPortal.exe --test
-echo "Build test passed!"
-```
-
-### Documentation Updates
-
-#### Keep Instructions Current
-- Update compiler versions annually
-- Verify SFML compatibility with new releases
-- Test instructions on fresh Windows installations
-- Update troubleshooting based on user feedback
-
-## Getting Additional Help
-
-### Information to Gather
-When seeking help, provide:
-
-```bash
-# System information
-systeminfo > system-info.txt
-
-# Build environment
-cmake --version
-gcc --version
-# Tool-specific version info
-
-# Full error messages
-# Copy complete error output, not just last line
-
-# Build configuration
-cat CMakeCache.txt | grep -E "(CMAKE_BUILD_TYPE|SFML|CMAKE_CXX_COMPILER)"
-```
-
-### Support Channels
-- **GitHub Issues**: Include full system info and error logs
-- **Community Forums**: SFML forum, Reddit r/cpp
-- **Stack Overflow**: Tag with `sfml`, `cmake`, `windows`
+# Windows Troubleshooting Guide for DeerPortal
+
+*A comprehensive guide for resolving Windows-specific issues with DeerPortal*
+
+## 🚨 Critical Audio Error: "Failed to open sound file"
+
+### **Problem:**
+DeerPortal crashes immediately on startup with:
+```
+Failed to open sound file (couldn't open stream)
+Provided path: assets/audio/dice.ogg
+Absolute path: C:\Program Files\DeerPortal 0.9.1\assets\audio\dice.ogg
+Failed to open sound buffer from file
+Critical Asset Error: Failed to load dice sound effect
+Failed to load: audio/dice.ogg
+```
+
+### **Root Cause:**
+The Windows packaging was installing assets to `data/assets/` instead of `assets/` directory. This has been **FIXED** in the latest version. If you're still experiencing this issue, it means you have an older build.
+
+### **Solutions (Try in Order):**
+
+#### **Solution 1: Download Latest Version**
+1. **Get the newest build** from GitHub releases (after this fix)
+2. **Uninstall old version** completely
+3. **Install fresh version** - assets should now be in correct location
+
+#### **Solution 2: Manual Asset Fix (Temporary)**
+1. **Navigate to DeerPortal installation directory**
+2. **If you see** `data/assets/` folder but no `assets/` folder:
+   ```
+   DeerPortal.exe
+   data/
+   └── assets/  ← Assets are here (wrong location)
+   ```
+3. **Move the assets**:
+   - Copy the entire `data/assets/` folder
+   - Paste it as `assets/` in the same directory as `DeerPortal.exe`
+   - Final structure should be:
+   ```
+   DeerPortal.exe
+   assets/        ← Correct location
+   ├── audio/
+   │   ├── dice.ogg
+   │   └── ...
+   ├── img/
+   └── ...
+   ```
+
+#### **Solution 3: Check Assets Folder Structure**
+1. **Verify installation directory**:
+   - Navigate to where DeerPortal is installed (usually `C:\Program Files\DeerPortal 0.9.1\`)
+   - Ensure the `assets` folder exists in the same directory as `DeerPortal.exe`
+   - Check that `assets\audio\dice.ogg` file exists
+   ```
+   DeerPortal.exe
+   assets/
+   ├── audio/
+   │   ├── dice.ogg  ← This file must exist!
+   │   ├── card.ogg
+   │   ├── click.ogg
+   │   └── ...
+   ├── img/
+   ├── fnt/
+   └── pdf/
+   ```
+
+#### **Solution 4: Reinstall DeerPortal**
+1. **Complete reinstallation**:
+   - Uninstall DeerPortal from Control Panel
+   - Delete any remaining DeerPortal folders
+   - Download fresh copy from GitHub releases
+   - Install to a path without spaces (e.g., `C:\Games\DeerPortal`)
+
+#### **Solution 5: Install Microsoft Visual C++ Redistributables**
+1. **Download and install all versions**:
+   - [Visual C++ 2015-2022 Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+   - [Visual C++ 2015-2022 Redistributable (x86)](https://aka.ms/vs/17/release/vc_redist.x86.exe)
+2. **Restart your computer**
+3. **Try running DeerPortal again**
+
+#### **Solution 6: Audio Service Check**
+1. **Press Win + R**, type `services.msc`
+2. **Find "Windows Audio"** service
+3. **Right-click → Properties**
+4. **Set Startup type to "Automatic"**
+5. **Click "Start" if not running**
+6. **Restart your computer**
+
+#### **Solution 7: Extract from Archive Properly**
+1. **If using ZIP/archive**:
+   - Right-click downloaded file → "Extract All"
+   - Choose destination folder (avoid spaces in path)
+   - Ensure "Show extracted files when complete" is checked
+   - Verify all files extracted correctly
+
+#### **Solution 8: Run as Administrator**
+1. **Right-click DeerPortal.exe**
+2. **Select "Run as administrator"**
+3. **Allow permissions when prompted**
+
+#### **Solution 9: Check Windows Installer Package**
+1. **If using .exe installer**:
+   - Verify installer completed successfully
+   - Check Windows Event Viewer for installation errors
+   - Try installing to different location (e.g., `C:\Games\DeerPortal`)
+
+#### **Solution 10: DirectSound/Audio Driver Update (Secondary)**
+1. **Update audio drivers**:
+   - Right-click Start → Device Manager
+   - Expand "Sound, video and game controllers"
+   - Right-click your audio device → Update driver
+2. **Install DirectX**:
+   - Download DirectX End-User Runtime Web Installer from Microsoft
+   - Install and restart
 
 ---
 
-**Last Updated**: January 2025  
-**Covers**: Visual Studio 2019/2022, MSYS2, Cygwin  
-**SFML Version**: 3.0.x  
-**Windows Versions**: 10/11 x64 
+## 🔧 Common Windows Issues & Solutions
+
+### **Issue: Missing DLL Files**
+
+**Error Messages:**
+- "MSVCP140.dll is missing"
+- "VCRUNTIME140.dll is missing"
+- "api-ms-win-crt-runtime-l1-1-0.dll is missing"
+
+**Solution:**
+1. Install Visual C++ Redistributables (see Solution 2 above)
+2. If still failing, download the specific DLL from Microsoft or use Windows Update
+
+### **Issue: Game Window Won't Open**
+
+**Symptoms:**
+- Process starts but no window appears
+- Game appears in Task Manager but not on screen
+
+**Solutions:**
+1. **Check Multiple Monitors:**
+   - Press Alt + Tab to see if window is on another monitor
+   - Try Win + Shift + Arrow keys to move window
+2. **Graphics Driver Update:**
+   - Update your graphics card drivers (NVIDIA/AMD/Intel)
+   - Restart computer after update
+3. **Display Settings:**
+   - Right-click desktop → Display settings
+   - Ensure scaling is set to 100% or 125%
+   - Try different resolution temporarily
+
+### **Issue: Poor Performance/Low FPS**
+
+**Solutions:**
+1. **Disable Windows Game Mode:**
+   - Settings → Gaming → Game Mode → Off
+2. **Update Graphics Drivers:**
+   - Visit manufacturer website (NVIDIA/AMD/Intel)
+   - Download latest drivers
+3. **Close Background Applications:**
+   - Press Ctrl + Shift + Esc (Task Manager)
+   - End unnecessary processes
+4. **Power Settings:**
+   - Control Panel → Power Options
+   - Select "High performance" or "Balanced"
+
+### **Issue: Antivirus False Positive**
+
+**Symptoms:**
+- Antivirus blocks/deletes DeerPortal.exe
+- "Trojan" or "Malware" warnings
+
+**Solutions:**
+1. **Add Exception:**
+   - Open your antivirus software
+   - Add DeerPortal.exe to exceptions/whitelist
+   - Add entire DeerPortal folder to exceptions
+2. **Temporarily Disable:**
+   - Disable real-time protection temporarily
+   - Run DeerPortal
+   - Re-enable protection after confirming it works
+
+### **Issue: Assets Not Loading**
+
+**Error Messages:**
+- "Failed to load texture"
+- "Font not found"
+- "Asset path not found"
+
+**Solutions:**
+1. **Check Installation Path:**
+   - Ensure `assets/` folder is in same directory as DeerPortal.exe
+   - Verify folder structure:
+     ```
+     DeerPortal.exe
+     assets/
+     ├── img/
+     ├── audio/
+     ├── fnt/
+     └── pdf/
+     ```
+2. **Reinstall:**
+   - Delete entire DeerPortal folder
+   - Download fresh copy
+   - Extract to new location (avoid spaces in path)
+
+### **Issue: Installer Problems**
+
+**Solutions:**
+1. **Run Installer as Administrator:**
+   - Right-click installer → "Run as administrator"
+2. **Disable Antivirus Temporarily:**
+   - Some antivirus software blocks installers
+3. **Check Disk Space:**
+   - Ensure at least 500MB free space
+4. **Try Different Location:**
+   - Install to `C:\Games\DeerPortal` instead of Program Files
+
+---
+
+## 🎮 Gameplay Issues
+
+### **Issue: Controls Not Responding**
+
+**Solutions:**
+1. **Check Keyboard Layout:**
+   - Ensure English (US) keyboard layout is active
+   - Some keys may be mapped differently
+2. **Full Screen Mode:**
+   - Press Alt + Enter to toggle full screen
+   - Some controls work better in full screen
+3. **Focus Window:**
+   - Click on game window to ensure it has focus
+   - Alt + Tab to switch between windows
+
+### **Issue: Game Crashes During Play**
+
+**Solutions:**
+1. **Check System Requirements:**
+   - Windows 10/11 (64-bit)
+   - 4GB RAM minimum
+   - DirectX 11 compatible graphics
+2. **Update System:**
+   - Windows Update
+   - Install all available updates
+3. **Memory Issues:**
+   - Close other applications
+   - Restart computer before playing
+
+---
+
+## 🔍 Diagnostic Information
+
+### **Gathering System Information:**
+1. **Press Win + R**, type `msinfo32`
+2. **Note down:**
+   - Windows version
+   - Processor type
+   - RAM amount
+   - Graphics card model
+3. **Check DirectX:**
+   - Press Win + R, type `dxdiag`
+   - Note DirectX version and any issues
+
+### **Log Files Location:**
+DeerPortal may create log files in:
+- `%APPDATA%\DeerPortal\`
+- Same directory as executable
+- `%TEMP%\DeerPortal\`
+
+---
+
+## 📞 Getting Help
+
+### **Before Reporting Issues:**
+1. **Try all solutions above**
+2. **Gather system information**
+3. **Note exact error messages**
+4. **Check if problem persists after restart**
+
+### **Report Issues:**
+- **GitHub Issues**: https://github.com/deerportal/deerportal/issues
+- **Include:**
+  - Windows version
+  - Error messages (screenshots)
+  - System specifications
+  - Steps to reproduce
+
+### **Community Support:**
+- Check existing GitHub issues for similar problems
+- Search for solutions in discussions
+- Community members often share working configurations
+
+---
+
+## ⚡ Quick Fixes Checklist
+
+**Before playing DeerPortal:**
+- [ ] Install Visual C++ Redistributables
+- [ ] Update graphics drivers
+- [ ] Check Windows Audio service is running
+- [ ] Disable antivirus temporarily if needed
+- [ ] Run as administrator if necessary
+- [ ] Verify assets folder is present
+- [ ] Close unnecessary background applications
+- [ ] Restart computer if experiencing issues
+
+**Most common fix:** Download latest version (assets packaging fixed) or manually move `data/assets/` to `assets/` directory.
+
+---
+
+*This guide covers the most common Windows issues. For additional help, visit the [DeerPortal GitHub repository](https://github.com/deerportal/deerportal).* 

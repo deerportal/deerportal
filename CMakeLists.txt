@@ -56,33 +56,23 @@ include_directories("${PROJECT_BINARY_DIR}")
 # Define sources and executable
 set(EXECUTABLE_NAME "DeerPortal")
 
-# Main game files
-set(GAME_SOURCES
+# Collect all source files
+file(GLOB GAME_SOURCES 
     src/main.cpp
     src/game.cpp
-    src/game.h
-    # New modular files
     src/game-assets.cpp
-    src/game-assets.h
     src/game-input.cpp
-    src/game-input.h
     src/game-renderer.cpp
-    src/game-renderer.h
     src/game-core.cpp
-    src/game-core.h
     src/game-state-manager.cpp
-    src/game-state-manager.h
     src/game-animation-system.cpp
-    src/game-animation-system.h
-    # Error handling infrastructure
-    src/exceptions.h
-    src/error-handler.cpp
-    src/error-handler.h
+    src/cardnotification.cpp
+    src/pile.cpp
+    src/utils.cpp
     src/safe-asset-loader.cpp
-    src/safe-asset-loader.h
+    src/error-handler.cpp
 )
 
-# Other source files
 file(GLOB OTHER_SOURCES 
     src/tilemap.cpp
     src/tilemap.h
@@ -138,6 +128,11 @@ file(GLOB OTHER_SOURCES
     src/boardelem.cpp
     src/card.cpp
 )
+
+# Add Windows icon resource file
+if(WIN32)
+    list(APPEND OTHER_SOURCES scripts/DeerPortal.rc)
+endif()
 
 add_executable(${EXECUTABLE_NAME} ${GAME_SOURCES} ${OTHER_SOURCES})
 
@@ -364,7 +359,7 @@ endif()
 IF (WIN32)
   set (ASSETS_BASE_PATH data)
   install(TARGETS ${EXECUTABLE_NAME} DESTINATION .)
-  install(DIRECTORY assets DESTINATION "${ASSETS_BASE_PATH}/")
+  install(DIRECTORY assets DESTINATION .)
 ELSE()
   if(APPLE)
     # For macOS, install the app bundle
