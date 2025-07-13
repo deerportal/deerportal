@@ -210,13 +210,13 @@ jobs:
 
     - name: Upload to Release
       if: github.event_name == 'push' && !inputs.test_mode
-      uses: softprops/action-gh-release@v2
+      uses: svenstaro/upload-release-action@v2
       with:
-        files: build/DeerPortal-*-macOS.dmg
-        tag_name: ${{ github.ref }}
-        # Add files to existing release (created by create-release job)
-        fail_on_unmatched_files: false
-        make_latest: false
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/DeerPortal-*-macOS.dmg
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
 
   # Windows Build
   build-windows:
@@ -305,17 +305,25 @@ jobs:
           build/DeerPortal-*-Windows.zip
         retention-days: 30
 
-    - name: Upload to Release
+    - name: Upload Windows EXE to Release
       if: github.event_name == 'push' && !inputs.test_mode
-      uses: softprops/action-gh-release@v2
+      uses: svenstaro/upload-release-action@v2
       with:
-        files: |
-          build/DeerPortal-*-Windows.exe
-          build/DeerPortal-*-Windows.zip
-        tag_name: ${{ github.ref }}
-        # Add files to existing release (created by create-release job)
-        fail_on_unmatched_files: false
-        make_latest: false
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/DeerPortal-*-Windows.exe
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+
+    - name: Upload Windows ZIP to Release
+      if: github.event_name == 'push' && !inputs.test_mode
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/DeerPortal-*-Windows.zip
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
 
   # Linux Build
   build-linux:
@@ -408,14 +416,22 @@ jobs:
           build/DeerPortal-*-Linux.deb
         retention-days: 30
 
-    - name: Upload to Release
+    - name: Upload Linux TGZ to Release
       if: github.event_name == 'push' && !inputs.test_mode
-      uses: softprops/action-gh-release@v2
+      uses: svenstaro/upload-release-action@v2
       with:
-        files: |
-          build/DeerPortal-*-Linux.tar.gz
-          build/DeerPortal-*-Linux.deb
-        tag_name: ${{ github.ref }}
-        # Add files to existing release (created by create-release job)
-        fail_on_unmatched_files: false
-        make_latest: false 
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/DeerPortal-*-Linux.tar.gz
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+
+    - name: Upload Linux DEB to Release
+      if: github.event_name == 'push' && !inputs.test_mode
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/DeerPortal-*-Linux.deb
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true 

@@ -1,3 +1,13 @@
+deerportal (0.9.1-pre.9-upload-action-fix-ubuntu1) trusty; urgency=medium
+
+  * Switched to svenstaro/upload-release-action for artifact uploads
+  * Prevented build jobs from creating duplicate releases
+  * Enhanced upload reliability with explicit upload-only actions
+  * Eliminated release creation conflicts in build jobs
+  * Dedicated release creation with subsequent artifact uploads
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sat, 13 Jul 2025 21:00:00 +0200
+
 deerportal (0.9.1-pre.8-dependency-fix-ubuntu1) trusty; urgency=medium
 
   * Fixed missing needs dependency in Linux build job
