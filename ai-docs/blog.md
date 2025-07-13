@@ -1,23 +1,28 @@
-# DeerPortal Version 0.9.1 - Stability Improvements
+# DeerPortal Version 0.9.1 - Stability Improvements (FINAL RELEASE)
 
-**Release Date**: July 2025  
+**Release Date**: July 14, 2025  
 **Platforms**: Windows, macOS, Linux
 
-## Version 0.9.1 Updates
+## Version 0.9.1 Final Updates
 
-This maintenance release focuses on development infrastructure improvements and build system reliability.
+This final release delivers comprehensive CI/CD pipeline improvements and automated documentation generation.
 
-**Version Management**
-- Complete version management system documentation
-- Streamlined release process with automated version distribution  
-- Enhanced CMake configuration for consistent version tracking
+**GitHub Actions CI/CD Overhaul**
+- Scout+Warrior release pattern eliminates race conditions
+- Smart upload system with conditional file detection
+- Enhanced cross-platform reliability and debugging
+- Professional packaging across all platforms with consistent naming
 
-**Build System**
-- Improved cross-platform build processes
-- Enhanced error handling in packaging systems
-- Better asset loading stability across Windows, macOS, and Linux
+**Automated Documentation Generation**
+- PDF handbook generation using Pandoc and LaTeX
+- Version-specific documentation included in every release
+- Enhanced release notes with comprehensive installation instructions
 
-**Documentation**
+**Workflow Reliability**
+- Complete artifact deployment guaranteed across all platforms
+- Eliminated upload annotations with smart file existence checks
+- Centralized version management through dedicated release creation job
+- Professional packaging: DMG (macOS), NSIS/ZIP (Windows), DEB/TGZ (Linux)
 - Complete developer guides for version management
 - Updated development workflow documentation
 - Comprehensive build and release procedures

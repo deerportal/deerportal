@@ -261,7 +261,7 @@ Format: `sfml-3.0.1-{platform}-{arch}-{runner.os}-{hash}`
 - **SFML Version**: Manual updates with testing
 - **Tool Versions**: Pinned versions for stability
 
-## Recent Improvements (July 2025)
+## Recent Improvements (July 2025) - Final Release 0.9.1
 
 ### **Workflow Unification**
 1. **Platform Matrix Reduction**: Removed problematic macOS-13 Intel builds
@@ -362,6 +362,30 @@ generate-handbook-pdf:
 - Uploaded as both artifact and release asset
 - Available in both release and test workflows
 
+#### **Smart Upload System (pre.14 - Final)**
+Eliminated upload annotations and improved reliability with conditional file uploads.
+
+**Implementation:**
+```yaml
+- name: Check for Linux packages
+  id: check_linux_files
+  run: |
+    if ls *.tar.gz 1> /dev/null 2>&1; then
+      echo "TGZ files found:"
+      ls -la *.tar.gz
+      echo "tgz_exists=true" >> $GITHUB_OUTPUT
+    fi
+
+- name: Upload Linux TGZ to Release
+  if: github.event_name == 'push' && !inputs.test_mode && steps.check_linux_files.outputs.tgz_exists == 'true'
+```
+
+**Benefits:**
+- Eliminates "no files matching glob pattern" annotations
+- Only uploads files that actually exist
+- Clear debugging output showing what packages are created
+- Improved workflow reliability and cleaner action logs
+
 ## Known Issues and Limitations
 
 ### **Current Issues**
@@ -413,13 +437,21 @@ generate-handbook-pdf:
 
 ## Conclusion
 
-The DeerPortal CI/CD pipeline represents a robust, multi-platform build system that ensures consistent, high-quality releases across all supported platforms. The pipeline balances automation with reliability, using proven tools and techniques while maintaining flexibility for future enhancements.
+The DeerPortal CI/CD pipeline represents a robust, multi-platform build system that ensures consistent, high-quality releases across all supported platforms. **Version 0.9.1 "Stability Improvements"** marks the completion of major pipeline overhauls that have transformed the system into a reliable, professional-grade deployment solution.
+
+**Major Achievements (0.9.1):**
+- **Scout+Warrior Pattern**: Eliminated race conditions with dedicated release creation job
+- **Smart Upload System**: Conditional file uploads prevent annotation spam
+- **PDF Documentation**: Automated handbook generation using Pandoc/LaTeX
+- **Cross-Platform Reliability**: Enhanced debugging and error handling
+- **Professional Packaging**: DMG, NSIS/ZIP, DEB/TGZ with consistent naming
 
 The system successfully handles the complexity of:
-- Cross-platform C++ compilation
-- SFML 3.0.1 dependency management
-- Native packaging for each platform
-- Automated testing and deployment
+- Cross-platform C++ compilation with SFML 3.0.1
+- Multi-platform dependency management and static linking
+- Professional native packaging for each platform
+- Automated testing, documentation, and deployment
 - Version management and release automation
+- Race condition elimination and upload reliability
 
-This comprehensive pipeline enables rapid development cycles while maintaining production-quality standards for all releases.
+This comprehensive pipeline enables rapid development cycles while maintaining production-quality standards for all releases. The 0.9.1 release represents a stable foundation for future DeerPortal development with proven CI/CD reliability across all supported platforms.

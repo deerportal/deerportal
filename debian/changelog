@@ -1,12 +1,15 @@
-deerportal (0.9.1-pre.14-upload-fix-ubuntu1) trusty; urgency=medium
+deerportal (0.9.1-stability-improvements-ubuntu1) trusty; urgency=medium
 
-  * Fixed upload annotations by adding file existence checks before uploads
-  * Eliminated "no files matching glob pattern" errors with conditional uploads
-  * Enhanced debugging to show exactly which package files exist
-  * Prevented upload attempts for non-existent package types
-  * Improved workflow reliability and cleaner action logs
+  * FINAL RELEASE 0.9.1 "Stability Improvements"
+  * Complete GitHub Actions CI/CD pipeline overhaul and race condition fixes
+  * Scout+Warrior release pattern eliminates multi-platform upload conflicts
+  * Automated PDF handbook generation from HANDBOOK.md using Pandoc/LaTeX
+  * Enhanced cross-platform build reliability with smart file detection
+  * Professional packaging: DMG (macOS), NSIS/ZIP (Windows), DEB/TGZ (Linux)
+  * Comprehensive documentation and error handling improvements
+  * Complete artifact deployment across all supported platforms
 
- -- Rafal Zawadzki <bluszcz@gmail.com>  Sun, 14 Jul 2025 02:00:00 +0200
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sun, 14 Jul 2025 03:00:00 +0200
 
 deerportal (0.9.1-pre.13-pdf-handbook-ubuntu1) trusty; urgency=medium
 

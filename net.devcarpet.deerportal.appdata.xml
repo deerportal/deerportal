@@ -32,9 +32,9 @@
 ​  </provides>
 ​
 ​  <releases>
-​    <release version="0.9.1-pre.14" date="2025-07-14">
+​    <release version="0.9.1" date="2025-07-14">
 ​      <description>
-​        <p>Upload fix. Fixed upload annotations by adding file existence checks before uploads, eliminated "no files matching glob pattern" errors with conditional uploads, and improved workflow reliability with cleaner action logs.</p>
+​        <p>Stability Improvements - Final Release. Complete GitHub Actions CI/CD pipeline overhaul with race condition fixes, Scout+Warrior release pattern, automated PDF handbook generation, enhanced cross-platform build reliability, and comprehensive documentation improvements.</p>
 ​      </description>
 ​    </release>
 ​    <release version="0.9.1-pre.13" date="2025-07-14">

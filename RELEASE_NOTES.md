@@ -1,33 +1,37 @@
 # DeerPortal Release Notes
 
-## Version 0.9.1 "Stability Improvements" - June 2025
+## Version 0.9.1 "Stability Improvements" - July 2025
 
-🔧 **Minor Release with Focused Improvements**
+🔧 **Final Release with Major CI/CD Overhaul**
 
-This maintenance release builds upon the solid foundation of version 0.9.0 "Welcome Back" with targeted improvements and optimizations.
+This maintenance release builds upon the solid foundation of version 0.9.0 "Welcome Back" with comprehensive CI/CD pipeline improvements, automated documentation generation, and enhanced cross-platform reliability.
 
-### 🚀 Improvements
+### 🚀 Major Improvements
 
-#### Documentation & Release Management
-- **Complete Version Management Documentation**: Comprehensive documentation of the version system for better release management
-- **Enhanced AI Instructions**: Updated memory bank with detailed version management procedures
-- **Release Process Optimization**: Streamlined workflows for consistent version updates across all platforms
+#### GitHub Actions CI/CD Pipeline Overhaul
+- **Scout+Warrior Release Pattern**: Eliminated race conditions where multiple platform jobs competed to create releases
+- **Smart Upload System**: Conditional file uploads prevent "no files matching glob pattern" annotations
+- **Enhanced Cross-Platform Reliability**: Comprehensive debugging and error handling across all platforms
+- **Professional Packaging**: DMG (macOS), NSIS/ZIP (Windows), DEB/TGZ (Linux) with consistent naming
 
-#### Build System Enhancements
-- **Improved CMake Configuration**: Better handling of version distribution throughout the build system
-- **Enhanced Cross-Platform Support**: Refined build processes for macOS, Linux, and Windows
-- **Package Generation Improvements**: More reliable packaging with consistent version metadata
+#### Automated Documentation Generation
+- **PDF Handbook Generation**: Automated conversion of HANDBOOK.md to professionally formatted PDF using Pandoc and LaTeX
+- **Version-Specific Documentation**: Each release includes `DeerPortal-Handbook-VERSION.pdf` with complete game rules
+- **Enhanced Release Notes**: Comprehensive installation instructions and system requirements in GitHub releases
 
-#### Stability & Performance
-- **Memory Management Optimizations**: Continued refinement of SFML 3.0 smart pointer usage
-- **Build Reliability**: Enhanced error handling and fallback mechanisms in packaging
-- **Asset Loading Stability**: Further improvements to asset path resolution
+#### Workflow Reliability Enhancements
+- **Checkout Action Stabilization**: Added `fetch-depth: 0` preventing manifest parsing errors
+- **File Pattern Fixes**: Flexible upload patterns handle varying CPack output naming conventions
+- **Continue-on-Error Elimination**: Replaced error masking with smart file detection
+- **Complete Artifact Deployment**: Guaranteed all platform artifacts upload to single release
 
 ### 🔧 Technical Improvements
 
 #### Version System Overhaul
 - **Single Source of Truth**: Reinforced `version.txt` as the authoritative version source
 - **Automated Distribution**: Enhanced CMake-based version propagation to all components
+- **Centralized Version Management**: All workflows now use single version source from create-release job
+- **Cross-Platform Consistency**: Unified version handling across macOS, Windows, and Linux builds
 - **Manual Update Documentation**: Clear guidelines for files requiring manual version updates
 
 #### Development Workflow

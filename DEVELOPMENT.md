@@ -41,22 +41,22 @@ set(CPACK_PACKAGE_VERSION "${DEERPORTAL_VERSION}")
 
 #### 1. `snapcraft.yaml` (Line 3)
 ```yaml
-version: "0.9.1-pre.1"
+version: "0.9.1"
 ```
 
 #### 2. `debian/changelog` (Top entry)
 ```
-deerportal (0.9.1-pre.1-test-release-ubuntu1) trusty; urgency=medium
+deerportal (0.9.1-stability-improvements-ubuntu1) trusty; urgency=medium
 
-  * Release description
-  * Key changes and improvements
+  * FINAL RELEASE 0.9.1 "Stability Improvements"
+  * Complete GitHub Actions CI/CD pipeline overhaul and race condition fixes
 
- -- Rafal Zawadzki <bluszcz@gmail.com>  Thu, 11 Jul 2025 10:00:00 +0200
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sun, 14 Jul 2025 03:00:00 +0200
 ```
 
 #### 3. `net.devcarpet.deerportal.appdata.xml` (Line 35)
 ```xml
-<release version="0.9.1-pre.1" date="2025-07-11">
+<release version="0.9.1" date="2025-07-14">
   <description>
     <p>Release description.</p>
   </description>
