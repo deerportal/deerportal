@@ -1,3 +1,13 @@
+deerportal (0.9.1-pre.7-race-condition-fix-ubuntu1) trusty; urgency=medium
+
+  * Fixed GitHub Actions race condition in release creation
+  * Implemented dedicated release creation job with proper dependencies
+  * Eliminated simultaneous release creation conflicts
+  * Enhanced workflow coordination across all platform builds
+  * Guaranteed all artifacts upload to single release
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Sat, 13 Jul 2025 19:00:00 +0200
+
 deerportal (0.9.1-pre.6-artifact-fix-ubuntu1) trusty; urgency=medium
 
   * Fixed release artifact upload coordination issues

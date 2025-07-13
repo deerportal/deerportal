@@ -24,9 +24,80 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  # macOS Build with DMG creation
+  # Create GitHub Release First (Scout Job)
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Get version from tag or input
+      id: get_version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Creating release for version: ${VERSION}"
+        
+    - name: Create GitHub Release
+      if: github.event_name == 'push' && !inputs.test_mode
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref }}
+        name: DeerPortal v${{ steps.get_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+        body: |
+          ## DeerPortal v${{ steps.get_version.outputs.VERSION }}
+          
+          ### Installation Instructions
+          
+          #### macOS
+          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-macOS.dmg`
+          2. Open the DMG file
+          3. Drag DeerPortal.app to Applications folder
+          4. Launch from Applications
+          
+          #### Windows
+          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-Windows.exe`
+          2. Run the installer
+          3. Follow installation wizard
+          4. Launch from Start Menu
+          
+          #### Linux
+          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux.deb` (Debian/Ubuntu)
+          2. Install with: `sudo dpkg -i DeerPortal-*.deb`
+          3. Or download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux.tar.gz` (Universal)
+          4. Launch with: `./DeerPortal`
+          
+          ### System Requirements
+          - **macOS**: 10.15 (Catalina) or later
+          - **Windows**: Windows 10 or later
+          - **Linux**: Ubuntu 18.04+ or equivalent
+          - **RAM**: 4GB recommended
+          - **Graphics**: OpenGL 3.3 support
+          
+          ### Controls
+          - Mouse: Navigate menus and select moves
+          - Escape: Exit game
+          - Space: Various game actions
+          
+          Enjoy your journey to becoming a deer! 🦌
+
+  # macOS Build with DMG creation (Warrior Job 1)
   build-macos:
     runs-on: macos-latest
+    needs: create-release
     
     steps:
     - name: Checkout code
@@ -43,20 +114,13 @@ jobs:
         echo "🧪 will NOT create a GitHub release"
         echo "🧪 ====================================="
 
-    - name: Get version from tag or input
-      id: get_version
+    - name: Use version from release job
       run: |
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          VERSION="${{ github.event.inputs.version }}"
-        else
-          VERSION=${GITHUB_REF#refs/tags/v}
-        fi
-        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
-        echo "Building version: ${VERSION}"
+        echo "Building version: ${{ needs.create-release.outputs.version }}"
 
     - name: Update version.txt
       run: |
-        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        echo "${{ needs.create-release.outputs.version }}" > version.txt
         cat version.txt
 
     - name: Install dependencies
@@ -140,15 +204,9 @@ jobs:
     - name: Upload DMG artifact
       uses: actions/upload-artifact@v4
       with:
-        name: DeerPortal-${{ steps.get_version.outputs.VERSION }}-macOS-dmg
+        name: DeerPortal-${{ needs.create-release.outputs.version }}-macOS-dmg
         path: build/DeerPortal-*-macOS.dmg
         retention-days: 30
-
-    - name: Prepare for release upload
-      if: github.event_name == 'push' && !inputs.test_mode
-      run: |
-        echo "Preparing to upload macOS DMG to release ${{ github.ref_name }}"
-        echo "This job will create the release if it doesn't exist, or append to existing release"
 
     - name: Upload to Release
       if: github.event_name == 'push' && !inputs.test_mode
@@ -156,36 +214,14 @@ jobs:
       with:
         files: build/DeerPortal-*-macOS.dmg
         tag_name: ${{ github.ref }}
-        name: DeerPortal v${{ steps.get_version.outputs.VERSION }}
-        draft: false
-        prerelease: false
+        # Add files to existing release (created by create-release job)
         fail_on_unmatched_files: false
         make_latest: false
-        append_body: true
-        body: |
-          ## DeerPortal v${{ steps.get_version.outputs.VERSION }}
-          
-          ### macOS Installation
-          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-macOS.dmg`
-          2. Open the DMG file
-          3. Drag DeerPortal.app to Applications folder
-          4. Launch from Applications
-          
-          ### System Requirements
-          - macOS 10.15 (Catalina) or later
-          - 4GB RAM recommended
-          - Graphics card with OpenGL 3.3 support
-          
-          ### Controls
-          - Mouse: Navigate menus and select moves
-          - Escape: Exit game
-          - Space: Various game actions
-          
-          Enjoy your journey to becoming a deer! 🦌
 
   # Windows Build
   build-windows:
     runs-on: windows-latest
+    needs: create-release
     
     steps:
     - name: Checkout code
@@ -193,22 +229,14 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Get version from tag or input
-      id: get_version
-      shell: bash
+    - name: Use version from release job
       run: |
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          VERSION="${{ github.event.inputs.version }}"
-        else
-          VERSION=${GITHUB_REF#refs/tags/v}
-        fi
-        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
-        echo "Building version: ${VERSION}"
+        echo "Building version: ${{ needs.create-release.outputs.version }}"
 
     - name: Update version.txt
       shell: bash
       run: |
-        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        echo "${{ needs.create-release.outputs.version }}" > version.txt
         cat version.txt
 
     - name: Setup MSVC
@@ -271,7 +299,7 @@ jobs:
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
-        name: DeerPortal-${{ steps.get_version.outputs.VERSION }}-Windows-installer
+        name: DeerPortal-${{ needs.create-release.outputs.version }}-Windows-installer
         path: |
           build/DeerPortal-*-Windows.exe
           build/DeerPortal-*-Windows.zip
@@ -285,7 +313,7 @@ jobs:
           build/DeerPortal-*-Windows.exe
           build/DeerPortal-*-Windows.zip
         tag_name: ${{ github.ref }}
-        # Add files to existing release (created by macOS or Linux job)
+        # Add files to existing release (created by create-release job)
         fail_on_unmatched_files: false
         make_latest: false
 
@@ -299,20 +327,13 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Get version from tag or input
-      id: get_version
+    - name: Use version from release job
       run: |
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          VERSION="${{ github.event.inputs.version }}"
-        else
-          VERSION=${GITHUB_REF#refs/tags/v}
-        fi
-        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
-        echo "Building version: ${VERSION}"
+        echo "Building version: ${{ needs.create-release.outputs.version }}"
 
     - name: Update version.txt
       run: |
-        echo "${{ steps.get_version.outputs.VERSION }}" > version.txt
+        echo "${{ needs.create-release.outputs.version }}" > version.txt
         cat version.txt
 
     - name: Install dependencies
@@ -380,7 +401,7 @@ jobs:
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux-packages
+        name: DeerPortal-${{ needs.create-release.outputs.version }}-Linux-packages
         path: |
           build/DeerPortal-*-Linux.tar.gz
           build/DeerPortal-*-Linux.deb
@@ -394,6 +415,6 @@ jobs:
           build/DeerPortal-*-Linux.tar.gz
           build/DeerPortal-*-Linux.deb
         tag_name: ${{ github.ref }}
-        # Add files to existing release (created by macOS job)
+        # Add files to existing release (created by create-release job)
         fail_on_unmatched_files: false
         make_latest: false 
