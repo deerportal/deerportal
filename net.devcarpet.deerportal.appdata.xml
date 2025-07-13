@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.1-pre.12" date="2025-07-14">
+​      <description>
+​        <p>Version update for continued testing. All debugging improvements from previous versions included, enhanced packaging and upload reliability testing, and comprehensive workflow fixes validation.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.1-pre.11" date="2025-07-13">
 ​      <description>
 ​        <p>Windows debug enhancement. Enhanced Windows packaging debug output, improved file pattern matching for Windows ZIP and EXE uploads, and added comprehensive debugging across all platforms.</p>
