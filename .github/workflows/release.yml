@@ -651,11 +651,31 @@ jobs:
         
         # Copy icon (using existing packaging icon)
         echo "Copying application icon..."
-        if [ -f "../packaging/net.devcarpet.deerportal.png" ]; then
-          cp ../packaging/net.devcarpet.deerportal.png DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
-          cp ../packaging/net.devcarpet.deerportal.png DeerPortal.AppDir/net.devcarpet.deerportal.png
+        if [ -f "../packaging/DeerPortal.iconset/icon_256x256.png" ]; then
+          echo "Found 256x256 icon in iconset"
+          cp ../packaging/DeerPortal.iconset/icon_256x256.png DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
+          cp ../packaging/DeerPortal.iconset/icon_256x256.png DeerPortal.AppDir/net.devcarpet.deerportal.png
+        elif [ -f "../assets/img/deerportal.png" ]; then
+          echo "Using fallback icon from assets"
+          cp ../assets/img/deerportal.png DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
+          cp ../assets/img/deerportal.png DeerPortal.AppDir/net.devcarpet.deerportal.png
         else
-          echo "Warning: Icon file not found, AppImage will use default icon"
+          echo "Warning: No suitable icon found, creating minimal icon"
+          # Create a simple 256x256 PNG as fallback
+          convert -size 256x256 xc:blue DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png 2>/dev/null || {
+            echo "ImageMagick not available, copying any available PNG as icon"
+            find ../packaging -name "*.png" | head -1 | xargs -I {} cp {} DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
+          }
+          cp DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png DeerPortal.AppDir/net.devcarpet.deerportal.png
+        fi
+        
+        # Verify icon was copied successfully
+        if [ -f "DeerPortal.AppDir/net.devcarpet.deerportal.png" ]; then
+          echo "✅ Icon copied successfully"
+          ls -la DeerPortal.AppDir/net.devcarpet.deerportal.png
+        else
+          echo "❌ Icon copy failed"
+          exit 1
         fi
         
         # Copy AppStream metadata if available

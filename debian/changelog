@@ -1,3 +1,14 @@
+deerportal (0.9.3-pre.4-appimage-icon-path-fix-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.3-pre.4 "AppImage Icon Path Fix"
+  * Fixed AppImage icon path issues that prevented AppImage creation
+  * Corrected icon file paths from non-existent net.devcarpet.deerportal.png to actual DeerPortal.iconset/icon_256x256.png
+  * Enhanced AppImage creation robustness with comprehensive icon fallback strategies
+  * Added multiple icon path detection methods in both release and test workflows
+  * Resolved "net.devcarpet.deerportal{.png,.svg,.xpm} defined in desktop file but not found" error
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 12:00:00 +0000
+
 deerportal (0.9.3-pre.3-fuse-group-creation-fix-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.3-pre.3 "FUSE Group Creation Fix"

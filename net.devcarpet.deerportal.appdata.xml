@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.3-pre.4" date="2025-07-15">
+​      <description>
+​        <p>AppImage Icon Path Fix - Pre-release. Fixed AppImage icon path issues that prevented AppImage creation, corrected icon file paths from non-existent net.devcarpet.deerportal.png to actual DeerPortal.iconset/icon_256x256.png, enhanced AppImage creation robustness with comprehensive icon fallback strategies.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.3-pre.3" date="2025-07-15">
 ​      <description>
 ​        <p>FUSE Group Creation Fix - Pre-release. Fixed FUSE group creation issue in GitHub Actions workflows, enhanced group management with automatic fuse group creation and immediate group changes application, comprehensive FUSE setup reliability improvements for AppImage creation.</p>
