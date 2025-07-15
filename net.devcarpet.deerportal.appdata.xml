@@ -32,7 +32,12 @@
 ​  </provides>
 ​
 ​  <releases>
-​    <release version="0.9.3-pre.5" date="2025-07-15">
+​    <release version="0.9.3-pre.6" date="2025-07-15">
+      <description>
+        <p>Windows ZIP Packaging Fix - Pre-release. Fixed Windows ZIP package generation by adding ZIP to CPACK_GENERATOR alongside NSIS, ensuring both EXE installer and ZIP archive are created during Windows builds, resolved missing ZIP artifacts in GitHub releases.</p>
+      </description>
+    </release>
+    <release version="0.9.3-pre.5" date="2025-07-15">
       <description>
         <p>CI/CD Artifact Upload Fix - Pre-release. Fixed conditional logic in GitHub Actions workflows preventing TGZ and ZIP artifacts from being uploaded to releases. Corrected input.test_mode handling for tag-triggered builds, ensuring all package formats reach GitHub releases reliably.</p>
       </description>

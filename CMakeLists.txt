@@ -497,7 +497,7 @@ if(APPLE)
     
 elseif(WIN32)
     # Windows installer configuration
-    set(CPACK_GENERATOR "NSIS")
+    set(CPACK_GENERATOR "NSIS;ZIP")
     set(CPACK_NSIS_DISPLAY_NAME "DeerPortal")
     set(CPACK_NSIS_PACKAGE_NAME "DeerPortal")
     set(CPACK_NSIS_CONTACT "https://github.com/deerportal/deerportal")
