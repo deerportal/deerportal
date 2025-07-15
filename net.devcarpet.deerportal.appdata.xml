@@ -37,9 +37,18 @@
         <p>Windows ZIP Packaging Fix Enhanced - Pre-release. Enhanced Windows ZIP package generation by explicitly enabling CPACK_BINARY_ZIP, improved workflow to always attempt both NSIS and ZIP packaging, and enhanced debugging output for Windows package creation process.</p>
       </description>
     </release>
-​    <release version="0.9.3-pre.8" date="2025-07-15">
+​    <release version="0.9.3" date="2025-07-15">
       <description>
-        <p>Regular Builds Alignment Fix - Pre-release. Fixed regular builds (cmake.yml) workflow to match release workflow with proper FUSE setup for AppImage creation, enhanced Windows packaging consistency, added comprehensive FUSE configuration and icon path fixes for reliable CI/CD builds.</p>
+        <p>Major CI/CD Pipeline Enhancement - Final Release. Comprehensive overhaul of build and release infrastructure with robust cross-platform packaging, enhanced input system reliability, and streamlined development workflows.</p>
+        <p><strong>Key Improvements:</strong></p>
+        <ul>
+          <li><strong>Input System Enhancements:</strong> Fixed intro mouse click skipping functionality, improved fullscreen toggle behavior, and enhanced user interaction responsiveness</li>
+          <li><strong>CI/CD Pipeline Robustness:</strong> Complete AppImage creation reliability with proper FUSE setup, automatic group management, and comprehensive error handling</li>
+          <li><strong>Cross-Platform Packaging:</strong> Enhanced Windows ZIP package generation alongside NSIS installers, fixed artifact upload logic, and unified packaging workflows</li>
+          <li><strong>Development Workflow:</strong> Synchronized regular builds with release workflows, improved debugging output, and enhanced build consistency across all platforms</li>
+          <li><strong>Technical Infrastructure:</strong> Comprehensive FUSE configuration, icon path fixes, conditional logic improvements, and build process optimization</li>
+        </ul>
+        <p>This release represents a major step forward in build reliability and developer experience, ensuring consistent package creation across Windows, macOS, and Linux platforms.</p>
       </description>
     </release>
     <release version="0.9.3-pre.7" date="2025-07-15">

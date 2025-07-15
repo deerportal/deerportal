@@ -9,17 +9,42 @@ deerportal (0.9.3-pre.5-cicd-artifact-upload-fix-ubuntu1) trusty; urgency=medium
 
  -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 15:00:00 +0000
 
-deerportal (0.9.3-pre.8-regular-builds-alignment-fix-ubuntu1) trusty; urgency=medium
+deerportal (0.9.3-cicd-pipeline-enhancement-ubuntu1) trusty; urgency=medium
 
-  * PRE-RELEASE 0.9.3-pre.8 "Regular Builds Alignment Fix"
-  * Fixed regular builds (cmake.yml) workflow to match release workflow with proper FUSE setup
-  * Added comprehensive FUSE configuration for AppImage creation in regular builds
-  * Enhanced Windows packaging consistency between regular and release builds
-  * Fixed AppImage icon path issues in regular builds workflow
-  * Resolved "dlopen(): error loading libfuse.so.2" error in CI/CD builds
-  * Synchronized build processes across all workflows for reliability
+  * MAJOR RELEASE 0.9.3 "CI/CD Pipeline Enhancement"
+  * Comprehensive overhaul of build and release infrastructure with robust cross-platform packaging
+  * Enhanced input system reliability and streamlined development workflows
+  
+  * INPUT SYSTEM ENHANCEMENTS:
+    - Fixed intro mouse click skipping functionality
+    - Improved fullscreen toggle behavior and user interaction responsiveness
+    - Enhanced game flow timing and user experience improvements
+  
+  * CI/CD PIPELINE ROBUSTNESS:
+    - Complete AppImage creation reliability with proper FUSE setup
+    - Automatic FUSE group management with immediate group changes application
+    - Comprehensive error handling and build process optimization
+    - Resolved "dlopen(): error loading libfuse.so.2" error in CI/CD builds
+  
+  * CROSS-PLATFORM PACKAGING:
+    - Enhanced Windows ZIP package generation alongside NSIS installers
+    - Fixed artifact upload conditional logic for tag-triggered builds
+    - Unified packaging workflows across all platforms
+    - Corrected AppImage icon path issues with comprehensive fallback strategies
+  
+  * DEVELOPMENT WORKFLOW:
+    - Synchronized regular builds with release workflows
+    - Enhanced debugging output and build consistency
+    - Improved Windows packaging consistency between regular and release builds
+    - Added comprehensive FUSE configuration for AppImage creation
+  
+  * TECHNICAL INFRASTRUCTURE:
+    - Explicit CPACK_BINARY_ZIP configuration for reliable ZIP archive creation
+    - Dual generator execution ensuring both EXE and ZIP packages on Windows
+    - Fixed conditional logic preventing TGZ and ZIP artifacts from reaching releases
+    - Enhanced workflow debugging with robust file detection and error handling
 
- -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 17:00:00 +0000
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 18:00:00 +0000
 
 deerportal (0.9.3-pre.7-windows-zip-packaging-fix-enhanced-ubuntu1) trusty; urgency=medium
 
