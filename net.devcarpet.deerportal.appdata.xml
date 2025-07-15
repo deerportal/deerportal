@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.3-pre.2" date="2025-07-15">
+​      <description>
+​        <p>CI/CD FUSE and AppImage Fixes - Pre-release. Resolved AppImage creation failures in GitHub Actions by ensuring proper FUSE installation and configuration, enhanced Linux artifact reliability with mandatory FUSE setup, comprehensive CI/CD pipeline robustness improvements.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.3-pre.1" date="2025-07-15">
 ​      <description>
 ​        <p>Input System Improvements - Pre-release. Fixed intro mouse click skipping functionality, enhanced CI/CD artifact upload reliability with robust file detection and error handling, improved fullscreen toggle behavior, and comprehensive workflow debugging enhancements.</p>

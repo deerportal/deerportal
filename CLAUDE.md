@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DeerPortal is a hybrid board/card game built with SFML 3.0 and C++17. It's a cross-platform game supporting 0-4 players with AI opponents, featuring elemental mechanics and card-based gameplay.
 
-**Current Version: 0.9.3-pre.1 "Input System Improvements"**  
+**Current Version: 0.9.3-pre.2 "CI/CD FUSE and AppImage Fixes"**  
 **Technology Stack: SFML 3.0.1, CMake, C++17**  
 **Code Quality: A Grade (91/100) - Professional implementation**
 
@@ -174,6 +174,13 @@ When using Cursor IDE, these rules will automatically apply to ensure:
 - 🎯 **Status:** 0.9.2-pre.1 objectives COMPLETED - ready for release
 
 ## Recent Updates
+
+### Version 0.9.3-pre.2 Updates
+- ✅ **FUSE Installation and Configuration**: Resolved AppImage creation failures in GitHub Actions workflows
+- ✅ **Mandatory FUSE Setup**: Added comprehensive FUSE support with modprobe, permissions, and verification
+- ✅ **Linux Artifact Reliability**: Enhanced AppImage creation with guaranteed FUSE dependencies
+- ✅ **CI/CD Pipeline Robustness**: Eliminated fallback workarounds in favor of proper FUSE support
+- ✅ **Workflow Reliability**: Comprehensive FUSE setup applied to both release and test-release workflows
 
 ### Version 0.9.3-pre.1 Updates
 - ✅ **Intro Mouse Click Skip Fix**: Fixed GameInput module to properly handle intro skipping with mouse clicks

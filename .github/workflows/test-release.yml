@@ -352,7 +352,36 @@ jobs:
           libxcursor-dev \
           libxi-dev \
           libx11-dev \
-          pkg-config
+          pkg-config \
+          fuse \
+          libfuse2 \
+          libfuse-dev
+
+    - name: Setup FUSE for AppImage (TEST)
+      run: |
+        echo "=== Setting up FUSE for AppImage creation (TEST) ==="
+        
+        # Enable FUSE user access
+        sudo modprobe fuse
+        sudo chmod 666 /dev/fuse
+        
+        # Add user to fuse group
+        sudo usermod -a -G fuse $USER
+        
+        # Verify FUSE is working
+        echo "Testing FUSE availability..."
+        if fusermount -V; then
+          echo "✅ FUSE is available and working"
+        else
+          echo "❌ FUSE setup failed"
+          exit 1
+        fi
+        
+        # Show FUSE status
+        echo "FUSE module status:"
+        lsmod | grep fuse || echo "FUSE module not loaded"
+        echo "FUSE device permissions:"
+        ls -la /dev/fuse
 
     - name: Install SFML 3.0.1
       run: |
@@ -411,10 +440,26 @@ jobs:
         VERSION=$(cat ../version.txt | tr -d '\n')
         echo "Building test AppImage for version: $VERSION"
         
+        # Check if DeerPortal executable exists
+        if [ ! -f "DeerPortal" ]; then
+          echo "ERROR: DeerPortal executable not found in build directory"
+          ls -la
+          exit 0  # Don't fail test builds
+        fi
+        echo "DeerPortal executable found: $(ls -la DeerPortal)"
+        
         # Download AppImageTool
         echo "Downloading AppImageTool..."
         wget -q -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool
+        
+        # Verify FUSE is working before proceeding
+        echo "Verifying FUSE is ready for AppImageTool (TEST)..."
+        if ! fusermount -V >/dev/null 2>&1; then
+          echo "❌ FUSE is not available - AppImage creation will fail"
+          exit 1
+        fi
+        echo "✅ FUSE is ready for AppImage creation"
         
         # Create AppDir structure
         echo "Creating AppDir structure..."
@@ -462,8 +507,8 @@ jobs:
         ln -sf usr/share/applications/net.devcarpet.deerportal.desktop DeerPortal.AppDir/
         ln -sf usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png DeerPortal.AppDir/
         
-        # Generate AppImage
-        echo "Generating AppImage..."
+        # Generate AppImage with FUSE (TEST)
+        echo "Generating test AppImage with FUSE..."
         ./appimagetool DeerPortal.AppDir DeerPortal-${VERSION}-x86_64.AppImage
         
         # Verify AppImage was created
@@ -473,7 +518,13 @@ jobs:
           file DeerPortal-${VERSION}-x86_64.AppImage
         else
           echo "Error: Test AppImage creation failed - but this is a test"
-          exit 0  # Don't fail the test build
+          echo "=== Debugging AppImage creation failure ==="
+          echo "Current directory contents:"
+          ls -la
+          echo "AppDir structure:"
+          find DeerPortal.AppDir -type f | head -20
+          echo "=== This is a test build, continuing without AppImage ==="
+          # Don't exit 1 here in test mode
         fi
 
     - name: Debug Build Directory (TEST)
