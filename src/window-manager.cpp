@@ -161,9 +161,9 @@ void WindowManager::createWindow(sf::RenderWindow& window, const sf::VideoMode& 
     throw std::runtime_error("Failed to create window");
   }
 
-  // Set window properties
-  window.setFramerateLimit(60);
-  window.setVerticalSyncEnabled(true);
+  // Set window properties - use V-Sync for optimal performance
+  window.setVerticalSyncEnabled(true);  // Sync to monitor refresh rate
+  // Remove framerate limit when using V-Sync to avoid conflicts
 
 #ifndef NDEBUG
   std::cout << "Window created: " << videoMode.size.x << "x" << videoMode.size.y

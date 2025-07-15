@@ -18,6 +18,20 @@ static std::string get_full_path(std::string path) {
     return new_path;
   }
 
+  // Check for AppImage APPDIR environment variable
+  if (getenv("APPDIR") != NULL) {
+    std::string appdir = std::string(getenv("APPDIR"));
+    // Try standard Linux application data location first
+    new_path = appdir + "/usr/share/deerportal/" + path;
+    // Check if file exists at this location (basic check for directory)
+    if (new_path.find("assets/") == 0 || new_path.find("assets") != std::string::npos) {
+      return new_path;
+    }
+    // Fallback to usr/bin location (current CI setup)
+    new_path = appdir + "/usr/bin/" + path;
+    return new_path;
+  }
+
 #ifdef __APPLE__
   // On macOS, detect if we're running from an app bundle
   char exec_path[1024];

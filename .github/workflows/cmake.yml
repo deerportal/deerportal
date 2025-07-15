@@ -492,6 +492,81 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}} --verbose
 
+    - name: Create AppImage (Linux)
+      if: matrix.platform == 'linux'
+      run: |
+        cd build
+        echo "=== Creating AppImage package ==="
+        
+        # Get version from version.txt
+        VERSION=$(cat ../version.txt | tr -d '\n')
+        echo "Building AppImage for version: $VERSION"
+        
+        # Download AppImageTool
+        echo "Downloading AppImageTool..."
+        wget -q -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+        chmod +x appimagetool
+        
+        # Create AppDir structure
+        echo "Creating AppDir structure..."
+        mkdir -p DeerPortal.AppDir/usr/bin
+        mkdir -p DeerPortal.AppDir/usr/share/applications
+        mkdir -p DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps
+        mkdir -p DeerPortal.AppDir/usr/share/metainfo
+        
+        # Copy executable and assets
+        echo "Copying executable and assets..."
+        cp DeerPortal DeerPortal.AppDir/usr/bin/
+        mkdir -p DeerPortal.AppDir/usr/share/deerportal/
+        cp -r ../assets DeerPortal.AppDir/usr/share/deerportal/
+        
+        # Create desktop file
+        echo "Creating desktop file..."
+        cat > DeerPortal.AppDir/usr/share/applications/net.devcarpet.deerportal.desktop << 'EOF'
+        [Desktop Entry]
+        Name=DeerPortal
+        Comment=A hybrid board/card game with elemental mechanics
+        Exec=DeerPortal
+        Icon=net.devcarpet.deerportal
+        Type=Application
+        Categories=Game;BoardGame;CardGame;
+        Keywords=game;board;card;elemental;strategy;
+        StartupNotify=true
+        EOF
+        
+        # Copy icon (using existing packaging icon)
+        echo "Copying application icon..."
+        if [ -f "../packaging/net.devcarpet.deerportal.png" ]; then
+          cp ../packaging/net.devcarpet.deerportal.png DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
+          cp ../packaging/net.devcarpet.deerportal.png DeerPortal.AppDir/net.devcarpet.deerportal.png
+        else
+          echo "Warning: Icon file not found, AppImage will use default icon"
+        fi
+        
+        # Copy AppStream metadata if available
+        if [ -f "../packaging/net.devcarpet.deerportal.appdata.xml" ]; then
+          cp ../packaging/net.devcarpet.deerportal.appdata.xml DeerPortal.AppDir/usr/share/metainfo/
+        fi
+        
+        # Make executable and create symlinks for AppImage requirements
+        chmod +x DeerPortal.AppDir/usr/bin/DeerPortal
+        ln -sf usr/share/applications/net.devcarpet.deerportal.desktop DeerPortal.AppDir/
+        ln -sf usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png DeerPortal.AppDir/
+        
+        # Generate AppImage
+        echo "Generating AppImage..."
+        ./appimagetool DeerPortal.AppDir DeerPortal-${VERSION}-x86_64.AppImage
+        
+        # Verify AppImage was created
+        if [ -f "DeerPortal-${VERSION}-x86_64.AppImage" ]; then
+          echo "AppImage created successfully: DeerPortal-${VERSION}-x86_64.AppImage"
+          ls -la DeerPortal-${VERSION}-x86_64.AppImage
+          file DeerPortal-${VERSION}-x86_64.AppImage
+        else
+          echo "Error: AppImage creation failed"
+          exit 1
+        fi
+
     - name: Test (Windows)
       if: matrix.platform == 'windows'
       working-directory: ${{github.workspace}}/build
@@ -522,4 +597,18 @@ jobs:
             cpack -G ZIP --verbose || echo "All packaging methods failed"
           }
         }
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: deerportal-${{ matrix.platform }}-${{ matrix.arch }}
+        path: |
+          build/DeerPortal*
+          build/*.tar.gz
+          build/*.deb
+          build/*.AppImage
+          build/*.dmg
+          build/*.exe
+          build/*.msi
+        retention-days: 7
       

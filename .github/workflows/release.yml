@@ -75,10 +75,20 @@ jobs:
           4. Launch from Start Menu
           
           #### Linux
-          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux.deb` (Debian/Ubuntu)
+          
+          **Debian/Ubuntu:**
+          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux.deb`
           2. Install with: `sudo dpkg -i DeerPortal-*.deb`
-          3. Or download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux.tar.gz` (Universal)
-          4. Launch with: `./DeerPortal`
+          3. Launch from Applications menu or: `DeerPortal`
+          
+          **AppImage (Universal):**
+          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-x86_64.AppImage`
+          2. Make executable: `chmod +x DeerPortal-*.AppImage`
+          3. Run directly: `./DeerPortal-*.AppImage`
+          
+          **Archive:**
+          1. Download `DeerPortal-${{ steps.get_version.outputs.VERSION }}-Linux.tar.gz`
+          2. Extract and launch with: `./DeerPortal`
           
           #### Game Documentation
           📖 **Game Handbook**: Download `DeerPortal-Handbook-${{ steps.get_version.outputs.VERSION }}.pdf` for complete game rules, card reference, and strategic gameplay guide.
@@ -381,33 +391,55 @@ jobs:
           build/*DeerPortal*
         retention-days: 30
 
+    - name: Debug Windows Build Directory
+      shell: bash
+      run: |
+        cd build
+        echo "=== Windows Build Directory Listing ==="
+        find . -type f -name "*DeerPortal*" -o -name "*.exe" -o -name "*.zip" -o -name "*.msi" | sort
+        echo "=== All files in build directory ==="
+        ls -la
+        echo "=== CPack generators available ==="
+        make help | grep -E "(package|cpack)" || echo "No package targets found"
+
     - name: Check for Windows packages
       id: check_windows_files
       shell: bash
       run: |
         cd build
-        echo "=== Checking for package files ==="
-        EXE_EXISTS="false"
-        ZIP_EXISTS="false"
+        echo "=== Enhanced Windows Package Detection ==="
         
-        if ls *.exe 1> /dev/null 2>&1; then
+        # Use robust file detection with find command
+        EXE_COUNT=$(find . -name "*.exe" -type f | wc -l)
+        ZIP_COUNT=$(find . -name "*.zip" -type f | wc -l)
+        MSI_COUNT=$(find . -name "*.msi" -type f | wc -l)
+        
+        # Set existence flags
+        EXE_EXISTS=$([[ $EXE_COUNT -gt 0 ]] && echo 'true' || echo 'false')
+        ZIP_EXISTS=$([[ $ZIP_COUNT -gt 0 ]] && echo 'true' || echo 'false')
+        MSI_EXISTS=$([[ $MSI_COUNT -gt 0 ]] && echo 'true' || echo 'false')
+        
+        echo "=== Detection Results ==="
+        echo "Found $EXE_COUNT EXE files, $ZIP_COUNT ZIP files, $MSI_COUNT MSI files"
+        
+        if [[ $EXE_COUNT -gt 0 ]]; then
           echo "EXE files found:"
-          ls -la *.exe
-          EXE_EXISTS="true"
-        else
-          echo "No EXE files found"
+          find . -name "*.exe" -type f -exec ls -la {} \;
         fi
         
-        if ls *.zip 1> /dev/null 2>&1; then
+        if [[ $ZIP_COUNT -gt 0 ]]; then
           echo "ZIP files found:"
-          ls -la *.zip
-          ZIP_EXISTS="true"
-        else
-          echo "No ZIP files found"
+          find . -name "*.zip" -type f -exec ls -la {} \;
+        fi
+        
+        if [[ $MSI_COUNT -gt 0 ]]; then
+          echo "MSI files found:"
+          find . -name "*.msi" -type f -exec ls -la {} \;
         fi
         
         echo "exe_exists=${EXE_EXISTS}" >> $GITHUB_OUTPUT
         echo "zip_exists=${ZIP_EXISTS}" >> $GITHUB_OUTPUT
+        echo "msi_exists=${MSI_EXISTS}" >> $GITHUB_OUTPUT
 
     - name: Upload Windows EXE to Release
       if: github.event_name == 'push' && !inputs.test_mode && steps.check_windows_files.outputs.exe_exists == 'true'
@@ -515,6 +547,80 @@ jobs:
         echo "=== All files in build directory ==="
         find . -maxdepth 1 -type f -name "*DeerPortal*" -o -name "*.tar.gz" -o -name "*.deb" | sort
 
+    - name: Create AppImage
+      run: |
+        cd build
+        echo "=== Creating AppImage package ==="
+        
+        # Get version from release job
+        VERSION="${{ needs.create-release.outputs.version }}"
+        echo "Building AppImage for version: $VERSION"
+        
+        # Download AppImageTool
+        echo "Downloading AppImageTool..."
+        wget -q -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+        chmod +x appimagetool
+        
+        # Create AppDir structure
+        echo "Creating AppDir structure..."
+        mkdir -p DeerPortal.AppDir/usr/bin
+        mkdir -p DeerPortal.AppDir/usr/share/applications
+        mkdir -p DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps
+        mkdir -p DeerPortal.AppDir/usr/share/metainfo
+        
+        # Copy executable and assets
+        echo "Copying executable and assets..."
+        cp DeerPortal DeerPortal.AppDir/usr/bin/
+        mkdir -p DeerPortal.AppDir/usr/share/deerportal/
+        cp -r ../assets DeerPortal.AppDir/usr/share/deerportal/
+        
+        # Create desktop file
+        echo "Creating desktop file..."
+        cat > DeerPortal.AppDir/usr/share/applications/net.devcarpet.deerportal.desktop << 'EOF'
+        [Desktop Entry]
+        Name=DeerPortal
+        Comment=A hybrid board/card game with elemental mechanics
+        Exec=DeerPortal
+        Icon=net.devcarpet.deerportal
+        Type=Application
+        Categories=Game;BoardGame;CardGame;
+        Keywords=game;board;card;elemental;strategy;
+        StartupNotify=true
+        EOF
+        
+        # Copy icon (using existing packaging icon)
+        echo "Copying application icon..."
+        if [ -f "../packaging/net.devcarpet.deerportal.png" ]; then
+          cp ../packaging/net.devcarpet.deerportal.png DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
+          cp ../packaging/net.devcarpet.deerportal.png DeerPortal.AppDir/net.devcarpet.deerportal.png
+        else
+          echo "Warning: Icon file not found, AppImage will use default icon"
+        fi
+        
+        # Copy AppStream metadata if available
+        if [ -f "../packaging/net.devcarpet.deerportal.appdata.xml" ]; then
+          cp ../packaging/net.devcarpet.deerportal.appdata.xml DeerPortal.AppDir/usr/share/metainfo/
+        fi
+        
+        # Make executable and create symlinks for AppImage requirements
+        chmod +x DeerPortal.AppDir/usr/bin/DeerPortal
+        ln -sf usr/share/applications/net.devcarpet.deerportal.desktop DeerPortal.AppDir/
+        ln -sf usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png DeerPortal.AppDir/
+        
+        # Generate AppImage
+        echo "Generating AppImage..."
+        ./appimagetool DeerPortal.AppDir DeerPortal-${VERSION}-x86_64.AppImage
+        
+        # Verify AppImage was created
+        if [ -f "DeerPortal-${VERSION}-x86_64.AppImage" ]; then
+          echo "AppImage created successfully: DeerPortal-${VERSION}-x86_64.AppImage"
+          ls -la DeerPortal-${VERSION}-x86_64.AppImage
+          file DeerPortal-${VERSION}-x86_64.AppImage
+        else
+          echo "Error: AppImage creation failed"
+          exit 1
+        fi
+
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -522,37 +628,60 @@ jobs:
         path: |
           build/*.tar.gz
           build/*.deb
+          build/*.AppImage
           build/*DeerPortal*
         retention-days: 30
+
+    - name: Debug Build Directory
+      run: |
+        cd build
+        echo "=== Complete Build Directory Listing ==="
+        find . -type f -name "*DeerPortal*" -o -name "*.tar.gz" -o -name "*.deb" -o -name "*.AppImage" | sort
+        echo "=== All files in build directory ==="
+        ls -la
+        echo "=== CPack generators available ==="
+        make help | grep -E "(package|cpack)" || echo "No package targets found"
 
     - name: Check for Linux packages
       id: check_linux_files
       run: |
         cd build
-        echo "=== Checking for package files ==="
-        TGZ_EXISTS="false"
-        DEB_EXISTS="false"
+        echo "=== Enhanced Package File Detection ==="
         
-        if ls *.tar.gz 1> /dev/null 2>&1; then
+        # Use robust file detection with find command
+        TGZ_COUNT=$(find . -name "*.tar.gz" -type f | wc -l)
+        DEB_COUNT=$(find . -name "*.deb" -type f | wc -l)
+        APPIMAGE_COUNT=$(find . -name "*.AppImage" -type f | wc -l)
+        
+        # Set existence flags
+        TGZ_EXISTS=$([[ $TGZ_COUNT -gt 0 ]] && echo 'true' || echo 'false')
+        DEB_EXISTS=$([[ $DEB_COUNT -gt 0 ]] && echo 'true' || echo 'false')
+        APPIMAGE_EXISTS=$([[ $APPIMAGE_COUNT -gt 0 ]] && echo 'true' || echo 'false')
+        
+        echo "=== Detection Results ==="
+        echo "Found $TGZ_COUNT TGZ files, $DEB_COUNT DEB files, $APPIMAGE_COUNT AppImage files"
+        
+        if [[ $TGZ_COUNT -gt 0 ]]; then
           echo "TGZ files found:"
-          ls -la *.tar.gz
-          TGZ_EXISTS="true"
-        else
-          echo "No TGZ files found"
+          find . -name "*.tar.gz" -type f -exec ls -la {} \;
         fi
         
-        if ls *.deb 1> /dev/null 2>&1; then
+        if [[ $DEB_COUNT -gt 0 ]]; then
           echo "DEB files found:"
-          ls -la *.deb
-          DEB_EXISTS="true"
-        else
-          echo "No DEB files found"
+          find . -name "*.deb" -type f -exec ls -la {} \;
+        fi
+        
+        if [[ $APPIMAGE_COUNT -gt 0 ]]; then
+          echo "AppImage files found:"
+          find . -name "*.AppImage" -type f -exec ls -la {} \;
         fi
         
         echo "tgz_exists=${TGZ_EXISTS}" >> $GITHUB_OUTPUT
         echo "deb_exists=${DEB_EXISTS}" >> $GITHUB_OUTPUT
+        echo "appimage_exists=${APPIMAGE_EXISTS}" >> $GITHUB_OUTPUT
 
     - name: Upload Linux TGZ to Release
+      id: upload_tgz
       if: github.event_name == 'push' && !inputs.test_mode && steps.check_linux_files.outputs.tgz_exists == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
@@ -561,6 +690,7 @@ jobs:
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
+      continue-on-error: true
 
     - name: Upload Linux DEB to Release
       if: github.event_name == 'push' && !inputs.test_mode && steps.check_linux_files.outputs.deb_exists == 'true'
@@ -568,6 +698,16 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: build/*.deb
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+
+    - name: Upload Linux AppImage to Release
+      if: github.event_name == 'push' && !inputs.test_mode && steps.check_linux_files.outputs.appimage_exists == 'true'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/*.AppImage
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true 

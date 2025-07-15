@@ -22,12 +22,24 @@ void GameInput::processEvents(sf::RenderWindow& window) {
     handleKeyboardInput(event);
     handleMouseInput(event);
   }
+  
+  // Update mouse position and selector continuously (not just on events)
+  sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
+  sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp, game->viewTiles);
+  updateSelector(localPosition);
 }
 
 void GameInput::handleKeyboardInput(const sf::Event& event) {
   if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
     if (keyPressed->code == sf::Keyboard::Key::Escape) {
-      game->window.close();
+      // Context-aware Escape behavior
+      if (game->currentState == Game::state_menu) {
+        // If in menu, exit the game
+        game->window.close();
+      } else {
+        // If in game, go back to menu
+        game->stateManager->showMenu();
+      }
     }
 
     // Fullscreen toggle - multiple key combinations for better UX
@@ -73,9 +85,6 @@ void GameInput::handleMouseInput(const sf::Event& event) {
   int mousePosX = (int)localPosition.x / DP::TILE_SIZE;
   int mousePosY = (int)localPosition.y / DP::TILE_SIZE;
   int mousePos = DP::transCords(sf::Vector2i(mousePosX, mousePosY));
-
-  // Update selector position and board hover state
-  updateSelector(localPosition);
 
   // Handle mouse click events
   if (const auto* mouseButtonReleased = event.getIf<sf::Event::MouseButtonReleased>()) {
@@ -136,6 +145,11 @@ void GameInput::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mous
     processEndGameInput(pos, posFull, mousePos);
     break;
 
+  case Game::state_intro_shader:
+    // Skip intro and go to main menu on mouse click
+    game->stateManager->showMenu();
+    break;
+
   default:
     // Handle other states if needed
     break;
@@ -174,7 +188,10 @@ void GameInput::processRollDiceInput(sf::Vector2f pos, sf::Vector2f posFull, int
   if (game->players[game->turn].human) {
     sf::FloatRect diceRect(game->roundDice.spriteDice->getGlobalBounds());
     if (diceRect.contains(posFull)) {
-      game->throwDiceMove();
+      // Only allow dice throwing if notification delay has expired
+      if (game->cardNotificationDelay <= 0) {
+        game->throwDiceMove();
+      }
     }
   }
 }

@@ -458,7 +458,10 @@ void Game::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)
     if (players[turn].human) {
       sf::FloatRect diceRect(roundDice.spriteDice->getGlobalBounds());
       if (diceRect.contains(posFull)) {
-        throwDiceMove();
+        // Only allow dice throwing if notification delay has expired
+        if (cardNotificationDelay <= 0) {
+          throwDiceMove();
+        }
       }
     }
   }
@@ -564,8 +567,7 @@ Game::Game(bool newTestMode)
   // frameClock is now a member variable
   guiRoundDice.active = true;
   showPlayerBoardElems = false;
-  // window.setVerticalSyncEnabled(true); // Temporarily disable for testing raw FPS
-  window.setVerticalSyncEnabled(false); // V-Sync OFF
+  // V-Sync is now properly configured in window creation and fullscreen toggle
 
   std::srand(time(NULL));
   window.clear(sf::Color(55, 55, 55));
@@ -639,9 +641,9 @@ void Game::restoreWindowProperties() {
   // Keep viewTiles at original resolution for game consistency
   viewTiles = sf::View(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(1360, 768)));
 
-  // Set window properties
-  window.setFramerateLimit(60);
-  window.setVerticalSyncEnabled(false); // Match original settings
+  // Set window properties - use V-Sync for optimal performance
+  window.setVerticalSyncEnabled(true);  // Sync to monitor refresh rate
+  // Remove framerate limit when using V-Sync to avoid conflicts
 
   // Update render texture if needed
   if (windowManager.isFullscreen()) {
@@ -673,51 +675,10 @@ int Game::run() {
     float xgrv = 0.0f;
     float ygrv = 0.0f;
 
-    while (const std::optional<sf::Event> eventOpt = window.pollEvent()) {
-      const sf::Event& event = *eventOpt;
+    // Let GameInput handle ALL events (including F11 fullscreen and Escape)
+    input->processEvents(window);
 
-      if (event.is<sf::Event::Closed>()) {
-        window.close();
-      } else if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
-        if (keyPressed->code == sf::Keyboard::Key::Escape) window.close();
-      }
-
-      sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
-      sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp, viewTiles);
-      //            sf::Vector2f localPositionGui =
-      //            window.mapPixelToCoords(localPositionTmp,viewGui);
-      sf::Vector2f localPositionFull = window.mapPixelToCoords(localPositionTmp, viewFull);
-      int mousePosX = (int)localPosition.x / DP::TILE_SIZE;
-      int mousePosY = (int)localPosition.y / DP::TILE_SIZE;
-      int mousePos = DP::transCords(sf::Vector2i(mousePosX, mousePosY));
-
-      if (event.is<sf::Event::Closed>()) window.close();
-
-      // Showing mouse hover
-      if (currentState == state_game) {
-        if ((localPosition.x > DP::TILE_SIZE * DP::BOARD_SIZE) || (localPosition.x < 0) ||
-            (localPosition.y > DP::TILE_SIZE * DP::BOARD_SIZE) || (localPosition.y < 0)) {
-          showPlayerBoardElems = false;
-        } else {
-          showPlayerBoardElems = true;
-        }
-      }
-
-      if ((localPosition.x >= 0) && (localPosition.y >= 0) &&
-          (localPosition.x <= DP::BOARD_SIZE * DP::TILE_SIZE) &&
-          (localPosition.y <= DP::BOARD_SIZE * DP::TILE_SIZE)) {
-        selector.setPosition(sf::Vector2f((int)(localPosition.x / DP::TILE_SIZE) * DP::TILE_SIZE,
-                                          ((int)localPosition.y / DP::TILE_SIZE) * DP::TILE_SIZE));
-      }
-
-      /*!
-       * Handling mouse click
-       */
-      if (const auto* mouseButtonReleased = event.getIf<sf::Event::MouseButtonReleased>()) {
-        if (mouseButtonReleased->button == sf::Mouse::Button::Left)
-          handleLeftClick(localPosition, localPositionFull, mousePos);
-      }
-    }
+    // All event handling (including mouse) is now managed by GameInput
     update(frameTime);
     render(frameTime.asSeconds());
   }
