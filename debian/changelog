@@ -9,6 +9,17 @@ deerportal (0.9.3-pre.5-cicd-artifact-upload-fix-ubuntu1) trusty; urgency=medium
 
  -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 15:00:00 +0000
 
+deerportal (0.9.3-pre.7-windows-zip-packaging-fix-enhanced-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.3-pre.7 "Windows ZIP Packaging Fix Enhanced"
+  * Fixed Windows ZIP package generation workflow logic to ensure both NSIS and ZIP generators run independently
+  * Added explicit CPACK_BINARY_ZIP configuration to force ZIP file generation
+  * Enhanced packaging workflow with dual generator execution for reliable ZIP archive creation
+  * Improved error handling and fallback logic for Windows package generation
+  * Comprehensive fix for missing ZIP artifacts in GitHub releases
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 16:00:00 +0000
+
 deerportal (0.9.3-pre.6-windows-zip-packaging-fix-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.3-pre.6 "Windows ZIP Packaging Fix"

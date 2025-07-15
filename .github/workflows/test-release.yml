@@ -233,11 +233,16 @@ jobs:
         echo "=== Trying make package ==="
         make package || {
           echo "=== make package failed, trying direct CPack ==="
-          cpack -G NSIS --verbose || {
-            echo "NSIS packaging failed, trying ZIP fallback"
-            cpack -G ZIP --verbose || echo "All packaging methods failed - but this is a test"
-          }
+          cpack -G NSIS --verbose || echo "NSIS generation failed - but this is a test"
+          cpack -G ZIP --verbose || echo "ZIP generation failed - but this is a test"
         }
+        
+        echo "=== Ensuring both NSIS and ZIP packages are created (TEST) ==="
+        if [ ! -f "*.exe" ] && [ ! -f "*.zip" ]; then
+          echo "No packages found, trying individual generators"
+          cpack -G NSIS --verbose || echo "NSIS generation failed - but this is a test"
+          cpack -G ZIP --verbose || echo "ZIP generation failed - but this is a test"
+        fi
         echo "=== Files created after packaging ==="
         ls -la *.tar.gz *.deb *.zip *.exe *.dmg 2>/dev/null || echo "No packages found with common extensions"
         echo "=== All files in build directory ==="

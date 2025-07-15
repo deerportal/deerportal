@@ -589,14 +589,43 @@ jobs:
         ls -la
         echo "=== Looking for DeerPortal executable ==="
         find . -name "DeerPortal*" -type f
-        echo "=== Trying make package ==="
-        make package || {
-          echo "=== make package failed, trying direct CPack ==="
-          cpack -G NSIS --verbose || {
-            echo "NSIS packaging failed, trying ZIP fallback"
-            cpack -G ZIP --verbose || echo "All packaging methods failed"
-          }
-        }
+        
+        echo "=== Checking CPack configuration ==="
+        echo "CPack generators configured:"
+        grep -r "CPACK_GENERATOR" CPackConfig.cmake || echo "No CPackConfig.cmake found"
+        echo "CPack binary settings:"
+        grep -r "CPACK_BINARY_" CPackConfig.cmake || echo "No binary settings found"
+        
+        echo "=== Trying make package (should create both NSIS and ZIP) ==="
+        MAKE_PACKAGE_SUCCESS=false
+        if make package; then
+          echo "make package succeeded"
+          MAKE_PACKAGE_SUCCESS=true
+        else
+          echo "make package failed with exit code $?"
+        fi
+        
+        # Always try direct CPack commands to ensure both packages are created
+        echo "=== Creating packages with direct CPack commands ==="
+        echo "=== Creating NSIS installer ==="
+        if cpack -G NSIS --verbose; then
+          echo "NSIS packaging succeeded"
+        else
+          echo "NSIS packaging failed with exit code $?"
+        fi
+        
+        echo "=== Creating ZIP package ==="
+        if cpack -G ZIP --verbose; then
+          echo "ZIP packaging succeeded"
+        else
+          echo "ZIP packaging failed with exit code $?"
+        fi
+        
+        echo "=== Final package inventory ==="
+        echo "All package files created:"
+        find . -name "*.exe" -o -name "*.zip" -o -name "*.msi" | sort
+        echo "Package file sizes:"
+        find . -name "*.exe" -o -name "*.zip" -o -name "*.msi" -exec ls -lh {} \;
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
@@ -609,6 +638,7 @@ jobs:
           build/*.AppImage
           build/*.dmg
           build/*.exe
+          build/*.zip
           build/*.msi
         retention-days: 7
       

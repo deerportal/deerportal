@@ -498,6 +498,11 @@ if(APPLE)
 elseif(WIN32)
     # Windows installer configuration
     set(CPACK_GENERATOR "NSIS;ZIP")
+    
+    # Explicitly enable ZIP binary generation (fix for missing ZIP files)
+    set(CPACK_BINARY_ZIP ON)
+    set(CPACK_BINARY_NSIS ON)
+    
     set(CPACK_NSIS_DISPLAY_NAME "DeerPortal")
     set(CPACK_NSIS_PACKAGE_NAME "DeerPortal")
     set(CPACK_NSIS_CONTACT "https://github.com/deerportal/deerportal")
