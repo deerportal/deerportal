@@ -107,8 +107,54 @@ jobs:
           libxcursor-dev \
           libxi-dev \
           libx11-dev \
-          pkg-config
+          pkg-config \
+          fuse \
+          libfuse2 \
+          libfuse-dev
         echo "Dependencies installed successfully"
+
+    - name: Setup FUSE for AppImage (Linux)
+      if: matrix.platform == 'linux'
+      run: |
+        echo "=== Setting up FUSE for AppImage creation ==="
+        
+        # Enable FUSE user access
+        sudo modprobe fuse
+        sudo chmod 666 /dev/fuse
+        
+        # Create fuse group if it doesn't exist
+        if ! getent group fuse > /dev/null 2>&1; then
+          echo "Creating fuse group..."
+          sudo groupadd fuse
+        else
+          echo "FUSE group already exists"
+        fi
+        
+        # Add user to fuse group
+        sudo usermod -a -G fuse $USER
+        
+        # Apply group changes immediately (create new shell session)
+        echo "Applying group changes..."
+        newgrp fuse << 'EOFGRP'
+        echo "Group changes applied successfully"
+        EOFGRP
+        
+        # Verify FUSE is working
+        echo "Testing FUSE availability..."
+        if fusermount -V; then
+          echo "✅ FUSE is available and working"
+        else
+          echo "❌ FUSE setup failed"
+          exit 1
+        fi
+        
+        # Show FUSE status
+        echo "FUSE module status:"
+        lsmod | grep fuse || echo "FUSE module not loaded"
+        echo "FUSE device permissions:"
+        ls -la /dev/fuse
+        echo "Current user groups:"
+        groups
 
     - name: Setup MSVC (Windows)
       if: matrix.platform == 'windows'
@@ -507,6 +553,14 @@ jobs:
         wget -q -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool
         
+        # Verify FUSE is working before proceeding
+        echo "Verifying FUSE is ready for AppImageTool..."
+        if ! fusermount -V >/dev/null 2>&1; then
+          echo "❌ FUSE is not available - AppImage creation will fail"
+          exit 1
+        fi
+        echo "✅ FUSE is ready for AppImage creation"
+        
         # Create AppDir structure
         echo "Creating AppDir structure..."
         mkdir -p DeerPortal.AppDir/usr/bin
@@ -536,11 +590,31 @@ jobs:
         
         # Copy icon (using existing packaging icon)
         echo "Copying application icon..."
-        if [ -f "../packaging/net.devcarpet.deerportal.png" ]; then
-          cp ../packaging/net.devcarpet.deerportal.png DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
-          cp ../packaging/net.devcarpet.deerportal.png DeerPortal.AppDir/net.devcarpet.deerportal.png
+        if [ -f "../packaging/DeerPortal.iconset/icon_256x256.png" ]; then
+          echo "Found 256x256 icon in iconset"
+          cp ../packaging/DeerPortal.iconset/icon_256x256.png DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
+          cp ../packaging/DeerPortal.iconset/icon_256x256.png DeerPortal.AppDir/net.devcarpet.deerportal.png
+        elif [ -f "../assets/img/deerportal.png" ]; then
+          echo "Using fallback icon from assets"
+          cp ../assets/img/deerportal.png DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
+          cp ../assets/img/deerportal.png DeerPortal.AppDir/net.devcarpet.deerportal.png
         else
-          echo "Warning: Icon file not found, AppImage will use default icon"
+          echo "Warning: No suitable icon found, creating minimal icon"
+          # Create a simple 256x256 PNG as fallback
+          convert -size 256x256 xc:blue DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png 2>/dev/null || {
+            echo "ImageMagick not available, copying any available PNG as icon"
+            find ../packaging -name "*.png" | head -1 | xargs -I {} cp {} DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png
+          }
+          cp DeerPortal.AppDir/usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png DeerPortal.AppDir/net.devcarpet.deerportal.png
+        fi
+        
+        # Verify icon was copied successfully
+        if [ -f "DeerPortal.AppDir/net.devcarpet.deerportal.png" ]; then
+          echo "✅ Icon copied successfully"
+          ls -la DeerPortal.AppDir/net.devcarpet.deerportal.png
+        else
+          echo "❌ Icon copy failed"
+          exit 1
         fi
         
         # Copy AppStream metadata if available
@@ -553,8 +627,8 @@ jobs:
         ln -sf usr/share/applications/net.devcarpet.deerportal.desktop DeerPortal.AppDir/
         ln -sf usr/share/icons/hicolor/256x256/apps/net.devcarpet.deerportal.png DeerPortal.AppDir/
         
-        # Generate AppImage
-        echo "Generating AppImage..."
+        # Generate AppImage with FUSE
+        echo "Generating AppImage with FUSE..."
         ./appimagetool DeerPortal.AppDir DeerPortal-${VERSION}-x86_64.AppImage
         
         # Verify AppImage was created
@@ -596,29 +670,18 @@ jobs:
         echo "CPack binary settings:"
         grep -r "CPACK_BINARY_" CPackConfig.cmake || echo "No binary settings found"
         
-        echo "=== Trying make package (should create both NSIS and ZIP) ==="
-        MAKE_PACKAGE_SUCCESS=false
-        if make package; then
-          echo "make package succeeded"
-          MAKE_PACKAGE_SUCCESS=true
-        else
-          echo "make package failed with exit code $?"
-        fi
+        echo "=== Trying make package first ==="
+        make package || {
+          echo "=== make package failed, trying direct CPack ==="
+          cpack -G NSIS --verbose || echo "NSIS generation failed"
+          cpack -G ZIP --verbose || echo "ZIP generation failed"
+        }
         
-        # Always try direct CPack commands to ensure both packages are created
-        echo "=== Creating packages with direct CPack commands ==="
-        echo "=== Creating NSIS installer ==="
-        if cpack -G NSIS --verbose; then
-          echo "NSIS packaging succeeded"
-        else
-          echo "NSIS packaging failed with exit code $?"
-        fi
-        
-        echo "=== Creating ZIP package ==="
-        if cpack -G ZIP --verbose; then
-          echo "ZIP packaging succeeded"
-        else
-          echo "ZIP packaging failed with exit code $?"
+        echo "=== Ensuring both NSIS and ZIP packages are created ==="
+        if [ ! -f "*.exe" ] && [ ! -f "*.zip" ]; then
+          echo "No packages found, trying individual generators"
+          cpack -G NSIS --verbose || echo "NSIS generation failed"
+          cpack -G ZIP --verbose || echo "ZIP generation failed"
         fi
         
         echo "=== Final package inventory ==="

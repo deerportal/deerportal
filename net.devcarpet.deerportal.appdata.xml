@@ -37,7 +37,12 @@
         <p>Windows ZIP Packaging Fix Enhanced - Pre-release. Enhanced Windows ZIP package generation by explicitly enabling CPACK_BINARY_ZIP, improved workflow to always attempt both NSIS and ZIP packaging, and enhanced debugging output for Windows package creation process.</p>
       </description>
     </release>
-​    <release version="0.9.3-pre.7" date="2025-07-15">
+​    <release version="0.9.3-pre.8" date="2025-07-15">
+      <description>
+        <p>Regular Builds Alignment Fix - Pre-release. Fixed regular builds (cmake.yml) workflow to match release workflow with proper FUSE setup for AppImage creation, enhanced Windows packaging consistency, added comprehensive FUSE configuration and icon path fixes for reliable CI/CD builds.</p>
+      </description>
+    </release>
+    <release version="0.9.3-pre.7" date="2025-07-15">
       <description>
         <p>Windows ZIP Packaging Fix Enhanced - Pre-release. Fixed Windows ZIP package generation workflow logic to ensure both NSIS and ZIP generators run independently, added explicit CPACK_BINARY_ZIP configuration, enhanced packaging workflow with dual generator execution for reliable ZIP archive creation.</p>
       </description>

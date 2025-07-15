@@ -9,6 +9,18 @@ deerportal (0.9.3-pre.5-cicd-artifact-upload-fix-ubuntu1) trusty; urgency=medium
 
  -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 15:00:00 +0000
 
+deerportal (0.9.3-pre.8-regular-builds-alignment-fix-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.3-pre.8 "Regular Builds Alignment Fix"
+  * Fixed regular builds (cmake.yml) workflow to match release workflow with proper FUSE setup
+  * Added comprehensive FUSE configuration for AppImage creation in regular builds
+  * Enhanced Windows packaging consistency between regular and release builds
+  * Fixed AppImage icon path issues in regular builds workflow
+  * Resolved "dlopen(): error loading libfuse.so.2" error in CI/CD builds
+  * Synchronized build processes across all workflows for reliability
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 17:00:00 +0000
+
 deerportal (0.9.3-pre.7-windows-zip-packaging-fix-enhanced-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.3-pre.7 "Windows ZIP Packaging Fix Enhanced"
