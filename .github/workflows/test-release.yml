@@ -365,8 +365,22 @@ jobs:
         sudo modprobe fuse
         sudo chmod 666 /dev/fuse
         
+        # Create fuse group if it doesn't exist
+        if ! getent group fuse > /dev/null 2>&1; then
+          echo "Creating fuse group..."
+          sudo groupadd fuse
+        else
+          echo "FUSE group already exists"
+        fi
+        
         # Add user to fuse group
         sudo usermod -a -G fuse $USER
+        
+        # Apply group changes immediately (create new shell session)
+        echo "Applying group changes..."
+        newgrp fuse << 'EOFGRP'
+        echo "Group changes applied successfully"
+        EOFGRP
         
         # Verify FUSE is working
         echo "Testing FUSE availability..."
@@ -382,6 +396,8 @@ jobs:
         lsmod | grep fuse || echo "FUSE module not loaded"
         echo "FUSE device permissions:"
         ls -la /dev/fuse
+        echo "Current user groups:"
+        groups
 
     - name: Install SFML 3.0.1
       run: |

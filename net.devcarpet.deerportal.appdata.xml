@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.3-pre.3" date="2025-07-15">
+​      <description>
+​        <p>FUSE Group Creation Fix - Pre-release. Fixed FUSE group creation issue in GitHub Actions workflows, enhanced group management with automatic fuse group creation and immediate group changes application, comprehensive FUSE setup reliability improvements for AppImage creation.</p>
+​      </description>
+​    </release>
 ​    <release version="0.9.3-pre.2" date="2025-07-15">
 ​      <description>
 ​        <p>CI/CD FUSE and AppImage Fixes - Pre-release. Resolved AppImage creation failures in GitHub Actions by ensuring proper FUSE installation and configuration, enhanced Linux artifact reliability with mandatory FUSE setup, comprehensive CI/CD pipeline robustness improvements.</p>

@@ -1,3 +1,15 @@
+deerportal (0.9.3-pre.3-fuse-group-creation-fix-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.3-pre.3 "FUSE Group Creation Fix"
+  * Fixed FUSE group creation issue in GitHub Actions workflows
+  * Added automatic fuse group creation with groupadd when group doesn't exist
+  * Enhanced group management with immediate group changes application via newgrp
+  * Comprehensive FUSE setup reliability improvements for AppImage creation
+  * Enhanced debugging output for FUSE group membership verification
+  * Resolved "usermod: group 'fuse' does not exist" error in CI/CD pipelines
+
+ -- Rafal Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 22:00:00 +0200
+
 deerportal (0.9.3-pre.2-cicd-fuse-appimage-fixes-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.3-pre.2 "CI/CD FUSE and AppImage Fixes"
