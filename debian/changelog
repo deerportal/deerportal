@@ -1,3 +1,14 @@
+deerportal (0.9.3-pre.5-cicd-artifact-upload-fix-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.3-pre.5 "CI/CD Artifact Upload Fix"
+  * Fixed conditional logic in GitHub Actions workflows preventing TGZ and ZIP artifacts from being uploaded to releases
+  * Corrected input.test_mode handling for tag-triggered builds (changed !inputs.test_mode to inputs.test_mode != true)
+  * Ensured all package formats (TGZ, ZIP, EXE, DEB, DMG, AppImage) reach GitHub releases reliably
+  * Fixed conditional evaluation bug where undefined inputs.test_mode caused upload steps to be skipped
+  * Enhanced artifact upload reliability across all platforms and package formats
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 15 Jul 2025 15:00:00 +0000
+
 deerportal (0.9.3-pre.4-appimage-icon-path-fix-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.3-pre.4 "AppImage Icon Path Fix"

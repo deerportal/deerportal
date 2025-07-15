@@ -377,7 +377,7 @@ ELSE()
     # For Linux/Unix
     set (ASSETS_BASE_PATH share/games/deerportal)
     install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
-    install(DIRECTORY assets DESTINATION "${CMAKE_INSTALL_PREFIX}/${ASSETS_BASE_PATH}/")
+    install(DIRECTORY assets DESTINATION ${ASSETS_BASE_PATH})
   endif()
 ENDIF()
 

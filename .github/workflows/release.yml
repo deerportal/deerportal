@@ -49,7 +49,7 @@ jobs:
         echo "Creating release for version: ${VERSION}"
         
     - name: Create GitHub Release
-      if: github.event_name == 'push' && !inputs.test_mode
+      if: github.event_name == 'push' && (inputs.test_mode != true)
       id: create_release
       uses: softprops/action-gh-release@v2
       with:
@@ -146,7 +146,7 @@ jobs:
         retention-days: 30
         
     - name: Upload PDF to Release
-      if: github.event_name == 'push' && !inputs.test_mode
+      if: github.event_name == 'push' && (inputs.test_mode != true)
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -290,7 +290,7 @@ jobs:
         echo "dmg_exists=${DMG_EXISTS}" >> $GITHUB_OUTPUT
 
     - name: Upload DMG to Release
-      if: github.event_name == 'push' && !inputs.test_mode && steps.check_macos_files.outputs.dmg_exists == 'true'
+      if: github.event_name == 'push' && (inputs.test_mode != true) && steps.check_macos_files.outputs.dmg_exists == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -442,7 +442,7 @@ jobs:
         echo "msi_exists=${MSI_EXISTS}" >> $GITHUB_OUTPUT
 
     - name: Upload Windows EXE to Release
-      if: github.event_name == 'push' && !inputs.test_mode && steps.check_windows_files.outputs.exe_exists == 'true'
+      if: github.event_name == 'push' && (inputs.test_mode != true) && steps.check_windows_files.outputs.exe_exists == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -452,7 +452,7 @@ jobs:
         file_glob: true
 
     - name: Upload Windows ZIP to Release
-      if: github.event_name == 'push' && !inputs.test_mode && steps.check_windows_files.outputs.zip_exists == 'true'
+      if: github.event_name == 'push' && (inputs.test_mode != true) && steps.check_windows_files.outputs.zip_exists == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -769,7 +769,7 @@ jobs:
 
     - name: Upload Linux TGZ to Release
       id: upload_tgz
-      if: github.event_name == 'push' && !inputs.test_mode && steps.check_linux_files.outputs.tgz_exists == 'true'
+      if: github.event_name == 'push' && (inputs.test_mode != true) && steps.check_linux_files.outputs.tgz_exists == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -780,7 +780,7 @@ jobs:
       continue-on-error: true
 
     - name: Upload Linux DEB to Release
-      if: github.event_name == 'push' && !inputs.test_mode && steps.check_linux_files.outputs.deb_exists == 'true'
+      if: github.event_name == 'push' && (inputs.test_mode != true) && steps.check_linux_files.outputs.deb_exists == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -790,7 +790,7 @@ jobs:
         file_glob: true
 
     - name: Upload Linux AppImage to Release
-      if: github.event_name == 'push' && !inputs.test_mode && steps.check_linux_files.outputs.appimage_exists == 'true'
+      if: github.event_name == 'push' && (inputs.test_mode != true) && steps.check_linux_files.outputs.appimage_exists == 'true'
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}

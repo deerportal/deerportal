@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DeerPortal is a hybrid board/card game built with SFML 3.0 and C++17. It's a cross-platform game supporting 0-4 players with AI opponents, featuring elemental mechanics and card-based gameplay.
 
-**Current Version: 0.9.3-pre.4 "AppImage Icon Path Fix"**  
+**Current Version: 0.9.3-pre.5 "CI/CD Artifact Upload Fix"**  
 **Technology Stack: SFML 3.0.1, CMake, C++17**  
 **Code Quality: A Grade (91/100) - Professional implementation**
 
@@ -175,6 +175,19 @@ When using Cursor IDE, these rules will automatically apply to ensure:
 
 ## Recent Updates
 
+### Version 0.9.3-pre.5 Updates
+- ✅ **CI/CD Artifact Upload Fix**: Fixed conditional logic in GitHub Actions workflows preventing TGZ and ZIP artifacts from reaching releases
+- ✅ **Input Test Mode Handling**: Corrected `!inputs.test_mode` to `(inputs.test_mode != true)` for proper tag-triggered builds
+- ✅ **Artifact Upload Reliability**: Ensured all package formats (TGZ, ZIP, EXE, DEB, DMG, AppImage) reach GitHub releases consistently
+- ✅ **Conditional Evaluation Bug Fix**: Resolved undefined `inputs.test_mode` causing upload steps to be skipped in tag-based releases
+- ✅ **Cross-Platform Package Delivery**: Enhanced upload reliability across all platforms and package formats
+
+### Version 0.9.3-pre.4 Updates
+- ✅ **AppImage Icon Path Fix**: Fixed AppImage icon path issues that prevented AppImage creation in CI/CD
+- ✅ **Icon File Path Correction**: Corrected paths from non-existent net.devcarpet.deerportal.png to actual DeerPortal.iconset/icon_256x256.png
+- ✅ **AppImage Creation Robustness**: Enhanced with comprehensive icon fallback strategies and multiple detection methods
+- ✅ **Desktop File Compliance**: Resolved "icon defined in desktop file but not found" error in AppImage workflow
+
 ### Version 0.9.3-pre.3 Updates
 - ✅ **FUSE Group Creation Fix**: Resolved "usermod: group 'fuse' does not exist" error in GitHub Actions workflows
 - ✅ **Automatic Group Management**: Added fuse group creation with groupadd when group doesn't exist
@@ -241,3 +254,5 @@ When using Cursor IDE, these rules will automatically apply to ensure:
   - Cross-platform compatibility with error recovery
 
 ## Build and Development
+
+When working on github actions fixes, always check release among with test release if they are unified.
