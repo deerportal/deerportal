@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+​    <release version="0.9.4-pre.1" date="2025-07-16">
+      <description>
+        <p>Version 0.9.4-pre.1 - Pre-release. Version bump for continued development and testing.</p>
+      </description>
+    </release>
 ​    <release version="0.9.3-pre.7" date="2025-07-15">
       <description>
         <p>Windows ZIP Packaging Fix Enhanced - Pre-release. Enhanced Windows ZIP package generation by explicitly enabling CPACK_BINARY_ZIP, improved workflow to always attempt both NSIS and ZIP packaging, and enhanced debugging output for Windows package creation process.</p>
