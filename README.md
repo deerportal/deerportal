@@ -84,39 +84,3 @@ $ git clone https://github.com/bluszcz/deerportal-2025-Q3.git
 $ cd deerportal-2025-Q3
 $ fakeroot debian/rules binary
 ```
-
-## What's New in 0.9.0 "Welcome Back"
-
-- **SFML 3.0 Migration**: Complete upgrade to modern SFML 3.0 API
-- **C++17 Support**: Modern C++ features and improved memory management
-- **Enhanced Stability**: Smart pointer implementation for memory safety
-- **Cross-Platform Excellence**: Improved macOS app bundle and Linux package support
-- **Performance Optimizations**: Better resource management and loading
-- **Professional macOS Packaging**: Native app bundle with proper icon, self-contained libraries, and DMG installer
-- **Library Conflict Resolution**: Complete SFML library isolation for reliable macOS distribution
-
-### 🎮 New Game Features
-- **Card Notification System**: Beautiful overlay notifications when players pick up cards, showing card images, player portraits, and contextual messages
-- **Intro Shader Animation**: Professional grid-based reveal animation using GLSL shaders with dynamic zoom effects
-- **Enhanced Card System**: Complete documentation of all 128 cards across four elements with visual reference guide
-
-### ⚡ Performance Improvements  
-- **VertexArray Optimization**: Replaced 112 individual diamond sprites with single batched draw call (99.1% draw call reduction)
-- **Advanced Shader Pipeline**: Blur, pixelation, and animation shaders with SFML 3.0 compatibility
-- **Memory Management**: Comprehensive smart pointer implementation for better stability
-- **Conditional Rendering**: Performance-optimized rendering pipeline with state-aware updates
-
-### 🔧 Technical Enhancements
-- **Windows Documentation**: Complete Windows compilation guide with dependency management
-- **macOS DMG Packaging**: Automated DMG creation with professional installer UI and code signing
-- **SFML Library Isolation**: Resolved "Class SFApplication is implemented in both" conflicts on macOS
-- **Build System Improvements**: Enhanced CMake configuration with better cross-platform support
-
-### 📚 Documentation & Resources
-- **Comprehensive Game Manual**: LaTeX-generated PDF handbook covering all game mechanics
-- **Cards Reference Guide**: Complete visual guide to all 128 cards with mechanics and strategy
-- **AI Documentation**: Enhanced memory bank system for development context
-- **Development Guides**: Platform-specific compilation and packaging instructions
-
-**Developed with [Devcarpet](https://devcarpet.net) platform.**
-**Contact**: Rafal Zawadzki <bluszcz@gmail.com>
