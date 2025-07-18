@@ -239,8 +239,7 @@ void GameAnimationSystem::drawCircleParticles(sf::RenderTarget& target) const {
             // Update sprite position
             m_particleSprite->setPosition(particle.position);
             
-            // Make particles VERY visible - bright yellow, no fade
-            m_particleSprite->setColor(sf::Color::Yellow);
+            // Use completely natural diamond texture (no color modification)
             
 #ifndef NDEBUG
             std::cout << "DEBUG: Drawing particle at " << particle.position.x << ", " << particle.position.y << std::endl;
