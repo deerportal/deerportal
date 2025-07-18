@@ -125,12 +125,15 @@ void Command::processField(int pos) {
       // YOUR PREFERRED APPROACH: Simple circle burst effect - ONLY for diamonds!
       // Use character CENTER position for perfect particle placement
       sf::Vector2f characterPos = game.players[game.turn].characters[0].getPosition();
-      sf::FloatRect characterBounds = game.players[game.turn].characters[0].getLocalBounds();
+      
+      // Character dimensions from character.cpp: 32x58 pixels
+      const float charWidth = 32.0f;
+      const float charHeight = 58.0f;
       
       // Center the particles on the character sprite
       sf::Vector2f centerPos(
-        characterPos.x + characterBounds.size.x / 2.0f,
-        characterPos.y + characterBounds.size.y / 2.0f
+        characterPos.x + charWidth / 2.0f,
+        characterPos.y + charHeight / 2.0f
       );
       
 #ifndef NDEBUG
