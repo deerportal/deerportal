@@ -180,18 +180,21 @@ void GameAnimationSystem::createCollectionBurst(sf::Vector2f position, const Par
     std::cout << "DEBUG: Config - count: " << config.count << ", speed: " << config.speed << ", lifetime: " << config.lifetime << std::endl;
 #endif
     
-    // Create particle sprite if not exists (currently uses diamond texture for all types)
+    // Determine which texture to use
+    sf::Texture* textureToUse = config.customTexture ? config.customTexture : &game->textures.textureBoardDiamond;
+    
+    // Create particle sprite if not exists
     if (!m_particleSprite) {
-        m_particleSprite = std::make_unique<sf::Sprite>(game->textures.textureBoardDiamond);
+        m_particleSprite = std::make_unique<sf::Sprite>(*textureToUse);
         m_particleSprite->setTextureRect(config.textureRect);
         m_particleSprite->setScale({config.scale, config.scale});
 #ifndef NDEBUG
-        std::cout << "DEBUG: Created particle sprite with scale: " << config.scale << std::endl;
+        std::cout << "DEBUG: Created particle sprite with scale: " << config.scale << " using texture: " << config.textureId << std::endl;
 #endif
     }
     
-    // Set texture reference for VertexArray batching (TODO: support different textures)
-    m_particleTexture = &game->textures.textureBoardDiamond;
+    // Set texture reference for VertexArray batching
+    m_particleTexture = textureToUse;
     
     // Create particles based on burst pattern
     for (int i = 0; i < particleCount; ++i) {

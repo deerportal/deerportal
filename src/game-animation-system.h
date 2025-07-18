@@ -33,6 +33,7 @@ public:
     // Texture configuration
     sf::IntRect textureRect = sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44));
     const char* textureId = "diamond";  // Use const char* for constexpr compatibility
+    sf::Texture* customTexture = nullptr;  // Override texture (for cards)
     
     // Visual effects
     bool fadeOut = true;

@@ -265,6 +265,7 @@ public:
   
   // Module accessors
   GameAnimationSystem* getAnimationSystem() const { return animationSystem.get(); }
+  TextureHolder& getTextures() { return textures; }
 
   // NEW: Intro shader instance
   IntroShader introShader;

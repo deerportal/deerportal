@@ -159,6 +159,7 @@ void Command::processField(int pos) {
 void Command::processCard(int pos) {
   int tokenNumber = game.boardDiamonds.getNumberForField(pos);
   std::string cardType = game.cardsDeck.getTitle(tokenNumber);
+  int cardTypeInt = game.cardsDeck.getCardTypeInt(tokenNumber);
   
   // Calculate character center position for particle effects
   sf::Vector2f characterPos = game.players[game.turn].characters[0].getPosition();
@@ -174,8 +175,11 @@ void Command::processCard(int pos) {
       removeDiamond(game.boardDiamonds.getNumberForField(pos));
       game.players[game.turn].cash += 1;
       
-      // Add particle effect for diamond card collection
-      game.getAnimationSystem()->createCollectionBurst(centerPos, DP::ParticlePresets::CARD_COLLECT);
+      // Create particle config with correct board sprite texture (element-colored diamond)
+      DP::GameAnimationSystem::ParticleConfig cardConfig = DP::ParticlePresets::CARD_COLLECT;
+      cardConfig.customTexture = &game.getTextures().textureBoardDiamond; // Use board diamond texture
+      cardConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44)); // Element sprite
+      game.getAnimationSystem()->createCollectionBurst(centerPos, cardConfig);
       
       // Show notification for diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
@@ -185,8 +189,11 @@ void Command::processCard(int pos) {
     } else if (cardType == "stop") {
       freezePlayer(tokenNumber);
       
-      // Add particle effect for stop card (falling particles)
-      game.getAnimationSystem()->createCollectionBurst(centerPos, DP::ParticlePresets::STOP_CARD);
+      // Create particle config with correct board sprite texture for stop card
+      DP::GameAnimationSystem::ParticleConfig stopConfig = DP::ParticlePresets::STOP_CARD;
+      stopConfig.customTexture = &game.getTextures().textureBoardDiamond; // Use board diamond texture
+      stopConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44)); // Element sprite
+      game.getAnimationSystem()->createCollectionBurst(centerPos, stopConfig);
       
       // Show notification for stop card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
@@ -195,8 +202,11 @@ void Command::processCard(int pos) {
     } else if (cardType == "card") {
       removeCard(game.boardDiamonds.getNumberForField(pos));
       
-      // Add particle effect for card collection
-      game.getAnimationSystem()->createCollectionBurst(centerPos, DP::ParticlePresets::CARD_COLLECT);
+      // Create particle config with correct board sprite texture
+      DP::GameAnimationSystem::ParticleConfig cardConfig = DP::ParticlePresets::CARD_COLLECT;
+      cardConfig.customTexture = &game.getTextures().textureBoardDiamond; // Use board diamond texture
+      cardConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44)); // Element sprite
+      game.getAnimationSystem()->createCollectionBurst(centerPos, cardConfig);
       
       // Show notification for remove card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
@@ -209,10 +219,12 @@ void Command::processCard(int pos) {
       if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
         game.players[game.turn].cash += 1;
       
-      // Add enhanced particle effect for double diamond card (more particles)
+      // Create enhanced particle config with correct board sprite texture (more particles)
       DP::GameAnimationSystem::ParticleConfig doubleConfig = DP::ParticlePresets::DIAMOND_BURST;
       doubleConfig.count = 10;  // More particles for double effect
       doubleConfig.speed = 140.0f;  // Slightly faster
+      doubleConfig.customTexture = &game.getTextures().textureBoardDiamond; // Use board diamond texture
+      doubleConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44)); // Element sprite
       game.getAnimationSystem()->createCollectionBurst(centerPos, doubleConfig);
       
       // Show notification for double diamond card

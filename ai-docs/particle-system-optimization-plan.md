@@ -334,7 +334,13 @@ animationSystem->createCollectionBurst(position, ParticlePresets::DIAMOND_BURST)
 animationSystem->createCollectionBurst(position, ParticlePresets::CARD_COLLECT);
 animationSystem->createCollectionBurst(position, ParticlePresets::STOP_CARD);
 
-// Creating custom configuration
+// Creating custom configuration with specific card texture
+GameAnimationSystem::ParticleConfig cardConfig = ParticlePresets::CARD_COLLECT;
+cardConfig.customTexture = &game.getTextures().cardsTextures[elementType][actionType];
+cardConfig.textureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(64, 64));
+animationSystem->createCollectionBurst(position, cardConfig);
+
+// Creating custom configuration with other properties
 GameAnimationSystem::ParticleConfig customConfig = {
     .count = 8,
     .speed = 150.0f,
@@ -349,6 +355,35 @@ animationSystem->createCollectionBurst(position, customConfig);
 // Legacy method (still works)
 animationSystem->createDiamondCollectionBurst(position);
 ```
+
+### Board Sprite Texture Integration ✅
+
+The particle system now uses the correct **board sprite textures** that match the actual collectible items:
+
+**Board Sprite Elements (board_diamonds.png):**
+- **tokenNumber 0**: Water element (blue diamond/triangle sprite)
+- **tokenNumber 1**: Earth element (green diamond/triangle sprite)
+- **tokenNumber 2**: Fire element (red diamond/triangle sprite)
+- **tokenNumber 3**: Air element (yellow diamond/triangle sprite)
+- **tokenNumber 4**: White diamond (neutral collectible sprite)
+
+**Particle Effects by Card Type:**
+- **Diamond Cards**: Collection burst with element-colored board sprite
+- **Stop Cards**: Falling particles with gravity using element-colored board sprite
+- **Remove Cards**: Quick burst with element-colored board sprite
+- **Diamond x2**: Enhanced burst (10 particles) with element-colored board sprite
+
+**Texture Coordinate System:**
+```cpp
+// Board sprite texture coordinates (44x44 pixels each)
+sf::IntRect textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44));
+// Uses textureBoardDiamond texture with element-specific coordinates
+```
+
+**Visual Consistency:**
+- Particles now match the exact sprites that players see on the board
+- Element colors are preserved: blue water, green earth, red fire, yellow air
+- Players see the same visual element in the particle effect as what they collected
 
 ### Related Systems
 - **BoardDiamondSeq**: Good example of VertexArray batching in same codebase
