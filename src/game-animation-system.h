@@ -3,6 +3,11 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <functional>
+#include <vector>
+#include <memory>
+#include <algorithm>
+#include "easing.h"
 
 namespace DP {
 
@@ -17,11 +22,60 @@ class Game;
  */
 class GameAnimationSystem {
 public:
+  struct AnimationEffect {
+    // Core properties
+    sf::Time lifetime = sf::seconds(1.0f);
+    sf::Time elapsed = sf::Time::Zero;
+    bool active = true;
+
+    // Target (what is being animated)
+    sf::Transformable* target = nullptr; // e.g., a sprite or text
+
+    // Modules for different kinds of animation
+    struct Move {
+        sf::Vector2f startPos;
+        sf::Vector2f endPos;
+        std::function<float(float)> ease = Easing::linear;
+    } move;
+
+    struct Scale {
+        sf::Vector2f startScale;
+        sf::Vector2f endScale;
+        std::function<float(float)> ease = Easing::linear;
+    } scale;
+    
+    struct Fade {
+        float startAlpha = 255.f;
+        float endAlpha = 0.f;
+        std::function<float(float)> ease = Easing::linear;
+    } fade;
+
+    // Particle burst on completion
+    struct ParticleBurst {
+        int count = 0;
+        std::string textureId; // From GameAssets
+        sf::Time particleLifetime = sf::seconds(1.0f);
+    } particleBurst;
+
+    // Chaining: what to trigger when this effect finishes
+    std::function<void()> onComplete;
+  };
+
   GameAnimationSystem(Game* gameInstance);
   ~GameAnimationSystem();
 
   // Main update method
   void update(sf::Time frameTime);
+
+  // A new, generic way to add effects
+  void addEffect(AnimationEffect effect);
+
+  // Convenience methods for common effects
+  void createDiamondCollectionEffect(sf::Sprite* diamondSprite, sf::Vector2f playerHudPos);
+  void createDiamondCollectionEffect(int boardPosition, sf::Vector2f playerHudPos);
+  
+  // Your preferred approach: Simple circle burst effect
+  void createDiamondCollectionBurst(sf::Vector2f position);
 
   // Animation control
   void updateBigDiamondAnimation(sf::Time frameTime);
@@ -52,9 +106,27 @@ public:
   bool isBigDiamondAnimating() const;
   bool isCharacterAnimating(int playerId) const;
   bool hasActiveAnimations() const;
+  
+  // Rendering support
+  void drawTemporarySprites(sf::RenderTarget& target) const;
+  void drawCircleParticles(sf::RenderTarget& target) const;
 
 private:
   Game* game; // Reference to main game instance
+
+  std::vector<AnimationEffect> m_effects;
+  std::vector<std::unique_ptr<sf::Sprite>> m_temporarySprites; // For diamond collection animations
+  
+  // Simple circle burst particles (your preferred approach)
+  struct CircleParticle {
+    sf::Vector2f position;
+    sf::Vector2f velocity;
+    sf::Time lifetime;
+    sf::Time totalLifetime;
+    bool active = true;
+  };
+  std::vector<CircleParticle> m_circleParticles;
+  std::unique_ptr<sf::Sprite> m_particleSprite; // Reused for all particles
 
   // Oscillator state
   float oscillator;
@@ -89,6 +161,7 @@ private:
   void updateSingleCharacterAnimation(int playerId, sf::Time frameTime);
   void cleanupFinishedEffects();
   float calculateOscillatorModifier() const;
+  void updateCircleParticles(sf::Time frameTime);
 };
 
 } // namespace DP

@@ -121,9 +121,16 @@ void Command::processField(int pos) {
     game.sfx.playCollect();
     if (game.boardDiamonds.getNumberForField(pos) == 4) {
       game.players[game.turn].cash += 1;
+      
+      // YOUR PREFERRED APPROACH: Simple circle burst effect - ONLY for diamonds!
+      sf::Vector2i cords = DP::transPosition(pos);
+      sf::Vector2f collectionPos = DP::getScreenPos(cords);
+      std::cout << "🔥 DIAMOND COLLECTED! 🔥 Position: " << pos << ", Screen: " << collectionPos.x << ", " << collectionPos.y << std::endl;
+      game.getAnimationSystem()->createDiamondCollectionBurst(collectionPos);
 
     } else if (game.boardDiamonds.getNumberForField(pos) < 4) {
       processCard(pos);
+      std::cout << "💳 CARD collected (not diamond) at position " << pos << std::endl;
     }
 
     game.boardDiamonds.collectField(pos);

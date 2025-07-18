@@ -2,6 +2,12 @@
 
 #include <cmath>
 #include <iostream>
+#include <algorithm>
+#include <cstdint>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 #include "game.h"
 
@@ -30,8 +36,249 @@ void GameAnimationSystem::update(sf::Time frameTime) {
 
   // Update visual effects
   updateVisualEffects(frameTime);
+  
+  // Update circle particles (your preferred approach)
+  updateCircleParticles(frameTime);
 
   // Note: Particle system intentionally skipped as per user request
+}
+
+void GameAnimationSystem::addEffect(AnimationEffect effect) {
+    m_effects.push_back(effect);
+}
+
+// Diamond collection effect - multi-stage animation as per Gemini plan
+void GameAnimationSystem::createDiamondCollectionEffect(sf::Sprite* diamondSprite, sf::Vector2f playerHudPos) {
+    if (!diamondSprite) return;
+    
+    sf::Vector2f startPos = diamondSprite->getPosition();
+    
+    // Stage 1: "Pop" effect - scale up with bounce
+    AnimationEffect pop;
+    pop.target = diamondSprite;
+    pop.lifetime = sf::seconds(0.2f);
+    pop.scale.startScale = {1.0f, 1.0f};
+    pop.scale.endScale = {1.3f, 1.3f};
+    pop.scale.ease = Easing::easeOutQuad;
+    
+    // Stage 2: Fly to HUD with scale down and fade
+    pop.onComplete = [this, diamondSprite, startPos, playerHudPos]() {
+        AnimationEffect fly;
+        fly.target = diamondSprite;
+        fly.lifetime = sf::seconds(0.8f);
+        
+        // Move to player HUD
+        fly.move.startPos = startPos;
+        fly.move.endPos = playerHudPos;
+        fly.move.ease = Easing::easeInOutCubic;
+        
+        // Scale down as it flies
+        fly.scale.startScale = {1.3f, 1.3f};
+        fly.scale.endScale = {0.5f, 0.5f};
+        fly.scale.ease = Easing::easeInCubic;
+        
+        // Fade out as it approaches HUD
+        fly.fade.startAlpha = 255.0f;
+        fly.fade.endAlpha = 0.0f;
+        fly.fade.ease = Easing::easeInQuad;
+        
+        // Stage 3: Complete - hide sprite
+        fly.onComplete = [diamondSprite]() {
+            diamondSprite->setColor(sf::Color::Transparent);
+        };
+        
+        addEffect(fly);
+    };
+    
+    addEffect(pop);
+}
+
+// Overloaded method for board position (works with vertex array system)
+void GameAnimationSystem::createDiamondCollectionEffect(int boardPosition, sf::Vector2f playerHudPos) {
+    // Create temporary sprite for animation (SFML 3.0 requires texture in constructor)
+    auto tempSprite = std::make_unique<sf::Sprite>(game->textures.textureBoardDiamond);
+    
+    // Set diamond texture rect (SFML 3.0 IntRect constructor)
+    tempSprite->setTextureRect(sf::IntRect({4 * 44, 0}, {44, 44}));
+    
+    // Calculate position from board position
+    sf::Vector2i cords = DP::transPosition(boardPosition);
+    sf::Vector2f tilePos = DP::getScreenPos(cords);
+    float offsetX = (DP::TILE_SIZE - 44.0f) / 2.0f;
+    float offsetY = (DP::TILE_SIZE - 44.0f) / 2.0f;
+    tempSprite->setPosition({tilePos.x + offsetX, tilePos.y + offsetY});
+    
+    // Store the sprite for the animation duration
+    m_temporarySprites.push_back(std::move(tempSprite));
+    sf::Sprite* spritePtr = m_temporarySprites.back().get();
+    
+    // Stage 1: "Pop" effect
+    AnimationEffect pop;
+    pop.target = spritePtr;
+    pop.lifetime = sf::seconds(0.2f);
+    pop.scale.startScale = {1.0f, 1.0f};
+    pop.scale.endScale = {1.3f, 1.3f};
+    pop.scale.ease = Easing::easeOutQuad;
+    
+    sf::Vector2f startPos = spritePtr->getPosition();
+    
+    // Stage 2: Fly to HUD
+    pop.onComplete = [this, spritePtr, startPos, playerHudPos]() {
+        AnimationEffect fly;
+        fly.target = spritePtr;
+        fly.lifetime = sf::seconds(0.8f);
+        
+        fly.move.startPos = startPos;
+        fly.move.endPos = playerHudPos;
+        fly.move.ease = Easing::easeInOutCubic;
+        
+        fly.scale.startScale = {1.3f, 1.3f};
+        fly.scale.endScale = {0.5f, 0.5f};
+        fly.scale.ease = Easing::easeInCubic;
+        
+        fly.fade.startAlpha = 255.0f;
+        fly.fade.endAlpha = 0.0f;
+        fly.fade.ease = Easing::easeInQuad;
+        
+        // Clean up temporary sprite when done
+        fly.onComplete = [this, spritePtr]() {
+            // Remove from temporary sprites vector
+            m_temporarySprites.erase(
+                std::remove_if(m_temporarySprites.begin(), m_temporarySprites.end(),
+                    [spritePtr](const std::unique_ptr<sf::Sprite>& sprite) {
+                        return sprite.get() == spritePtr;
+                    }),
+                m_temporarySprites.end()
+            );
+        };
+        
+        addEffect(fly);
+    };
+    
+    addEffect(pop);
+}
+
+// Rendering support for temporary sprites
+void GameAnimationSystem::drawTemporarySprites(sf::RenderTarget& target) const {
+    for (const auto& sprite : m_temporarySprites) {
+        target.draw(*sprite);
+    }
+}
+
+// Your preferred approach: Simple circle burst effect
+void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
+    const int particleCount = 6;
+    const float radius = 30.0f;
+    const float speed = 120.0f; // Increased speed for better visibility
+    
+    std::cout << "DEBUG: Creating diamond collection burst at position: " << position.x << ", " << position.y << std::endl;
+    
+    // Create particle sprite if not exists
+    if (!m_particleSprite) {
+        m_particleSprite = std::make_unique<sf::Sprite>(game->textures.textureBoardDiamond);
+        m_particleSprite->setTextureRect(sf::IntRect({4 * 44, 0}, {44, 44})); // Diamond texture
+        m_particleSprite->setScale({0.5f, 0.5f}); // Larger for better visibility
+        std::cout << "DEBUG: Created particle sprite" << std::endl;
+    }
+    
+    // Create particles in a circle
+    for (int i = 0; i < particleCount; ++i) {
+        CircleParticle particle;
+        
+        // Calculate angle for even distribution
+        float angle = (i * 2.0f * M_PI) / particleCount;
+        
+        // Start position (center)
+        particle.position = position;
+        
+        // Velocity in circle pattern
+        particle.velocity = sf::Vector2f(
+            std::cos(angle) * speed,
+            std::sin(angle) * speed
+        );
+        
+        // Lifetime - longer for better visibility
+        particle.lifetime = sf::seconds(1.2f);
+        particle.totalLifetime = sf::seconds(1.2f);
+        particle.active = true;
+        
+        m_circleParticles.push_back(particle);
+    }
+    
+    std::cout << "DEBUG: Created " << particleCount << " particles. Total particles: " << m_circleParticles.size() << std::endl;
+}
+
+// Draw circle particles (called from event loop)
+void GameAnimationSystem::drawCircleParticles(sf::RenderTarget& target) const {
+    // Debug output every time when particles exist
+    if (!m_circleParticles.empty()) {
+        std::cout << "DEBUG: drawCircleParticles called with " << m_circleParticles.size() << " particles" << std::endl;
+    }
+    
+    if (!m_particleSprite) {
+        if (!m_circleParticles.empty()) {
+            std::cout << "DEBUG: ERROR - No particle sprite available but have " << m_circleParticles.size() << " particles!" << std::endl;
+        }
+        return;
+    }
+    
+    int activeCount = 0;
+    for (const auto& particle : m_circleParticles) {
+        if (particle.active) {
+            activeCount++;
+            // Update sprite position
+            m_particleSprite->setPosition(particle.position);
+            
+            // Make particles VERY visible - bright yellow, no fade
+            m_particleSprite->setColor(sf::Color::Yellow);
+            
+            std::cout << "DEBUG: Drawing particle at " << particle.position.x << ", " << particle.position.y << std::endl;
+            
+            // Draw the particle
+            target.draw(*m_particleSprite);
+        }
+    }
+    
+    if (activeCount > 0) {
+        std::cout << "DEBUG: Drawing " << activeCount << " active particles" << std::endl;
+    }
+}
+
+// Update circle particles in the event loop (your preferred approach)
+void GameAnimationSystem::updateCircleParticles(sf::Time frameTime) {
+    // Update all particles
+    int activeCount = 0;
+    for (auto& particle : m_circleParticles) {
+        if (particle.active) {
+            activeCount++;
+            // Update position
+            particle.position += particle.velocity * frameTime.asSeconds();
+            
+            // Update lifetime
+            particle.lifetime -= frameTime;
+            
+            // Deactivate if expired
+            if (particle.lifetime <= sf::Time::Zero) {
+                particle.active = false;
+            }
+        }
+    }
+    
+    if (activeCount > 0) {
+        std::cout << "DEBUG: Updating " << activeCount << " active particles" << std::endl;
+    }
+    
+    // Clean up inactive particles
+    size_t beforeSize = m_circleParticles.size();
+    m_circleParticles.erase(
+        std::remove_if(m_circleParticles.begin(), m_circleParticles.end(),
+            [](const CircleParticle& p) { return !p.active; }),
+        m_circleParticles.end()
+    );
+    
+    if (beforeSize != m_circleParticles.size()) {
+        std::cout << "DEBUG: Cleaned up particles, before: " << beforeSize << ", after: " << m_circleParticles.size() << std::endl;
+    }
 }
 
 // Oscillator management (extracted from game.cpp)
@@ -134,17 +381,56 @@ void GameAnimationSystem::createVisualEffect(sf::Vector2f position, const std::s
 }
 
 void GameAnimationSystem::updateVisualEffects(sf::Time frameTime) {
-  for (auto& effect : activeEffects) {
-    if (effect.active) {
-      effect.lifetime += frameTime.asSeconds();
-      if (effect.lifetime >= effect.maxLifetime) {
-        effect.active = false;
-      }
-    }
-  }
+    for (auto& effect : m_effects) {
+        if (!effect.active) continue;
 
-  // Clean up finished effects
-  cleanupFinishedEffects();
+        effect.elapsed += frameTime;
+        float t = effect.elapsed.asSeconds() / effect.lifetime.asSeconds();
+        if (t > 1.0f) t = 1.0f;
+
+        if (effect.target) {
+            // Move
+            if (effect.move.endPos != effect.move.startPos) {
+                sf::Vector2f newPos = effect.move.startPos + (effect.move.endPos - effect.move.startPos) * effect.move.ease(t);
+                effect.target->setPosition(newPos);
+            }
+
+            // Scale
+            if (effect.scale.endScale != effect.scale.startScale) {
+                sf::Vector2f newScale = effect.scale.startScale + (effect.scale.endScale - effect.scale.startScale) * effect.scale.ease(t);
+                effect.target->setScale(newScale);
+            }
+
+            // Fade
+            if (effect.fade.endAlpha != effect.fade.startAlpha) {
+                float newAlpha = effect.fade.startAlpha + (effect.fade.endAlpha - effect.fade.startAlpha) * effect.fade.ease(t);
+                if (auto* shape = dynamic_cast<sf::Shape*>(effect.target)) {
+                    sf::Color color = shape->getFillColor();
+                    color.a = static_cast<uint8_t>(newAlpha);
+                    shape->setFillColor(color);
+                } else if (auto* sprite = dynamic_cast<sf::Sprite*>(effect.target)) {
+                    sf::Color color = sprite->getColor();
+                    color.a = static_cast<uint8_t>(newAlpha);
+                    sprite->setColor(color);
+                } else if (auto* text = dynamic_cast<sf::Text*>(effect.target)) {
+                    sf::Color color = text->getFillColor();
+                    color.a = static_cast<uint8_t>(newAlpha);
+                    text->setFillColor(color);
+                }
+            }
+        }
+
+        if (effect.elapsed >= effect.lifetime) {
+            effect.active = false;
+            if (effect.onComplete) {
+                effect.onComplete();
+            }
+        }
+    }
+
+    m_effects.erase(std::remove_if(m_effects.begin(), m_effects.end(),
+                                   [](const AnimationEffect& effect) { return !effect.active; }),
+                    m_effects.end());
 }
 
 
@@ -168,9 +454,7 @@ bool GameAnimationSystem::hasActiveAnimations() const {
     if (charAnim.isAnimating) return true;
   }
 
-  for (const auto& effect : activeEffects) {
-    if (effect.active) return true;
-  }
+  if (!m_effects.empty()) return true;
 
   return false;
 }

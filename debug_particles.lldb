@@ -1,0 +1,13 @@
+# LLDB script to debug particle system
+target create "./DeerPortal.app/Contents/MacOS/DeerPortal"
+
+# Set breakpoints
+breakpoint set --name "DP::GameAnimationSystem::createDiamondCollectionBurst"
+breakpoint set --name "DP::GameAnimationSystem::drawCircleParticles"
+breakpoint set --name "DP::GameAnimationSystem::updateCircleParticles"
+
+# Run the game
+run
+
+# Continue and show info when breakpoints hit
+continue
