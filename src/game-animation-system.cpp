@@ -15,9 +15,13 @@ namespace DP {
 
 GameAnimationSystem::GameAnimationSystem(Game* gameInstance)
     : game(gameInstance), oscillator(-1.0f), oscillatorInc(true), oscillatorSpeed(1.0f),
-      bigDiamondAnimationActive(false), bigDiamondBasePosition(474.0f, 342.0f)
+      bigDiamondAnimationActive(false), bigDiamondBasePosition(474.0f, 342.0f),
+      m_particleTexture(nullptr)
 {
   initializeAnimationStates();
+  
+  // Initialize VertexArray for batched particle rendering
+  m_particleVertices.setPrimitiveType(sf::PrimitiveType::Triangles);
 }
 
 GameAnimationSystem::~GameAnimationSystem() {}
@@ -185,6 +189,9 @@ void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
 #endif
     }
     
+    // Set texture reference for VertexArray batching
+    m_particleTexture = &game->textures.textureBoardDiamond;
+    
     // Create particles in a circle
     for (int i = 0; i < particleCount; ++i) {
         CircleParticle particle;
@@ -214,23 +221,40 @@ void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
 #endif
 }
 
-// Draw circle particles (called from event loop)
+// Draw circle particles (called from event loop) - OPTIMIZED with VertexArray batching
 void GameAnimationSystem::drawCircleParticles(sf::RenderTarget& target) const {
 #ifndef NDEBUG
     // Debug output every time when particles exist
     if (!m_circleParticles.empty()) {
-        std::cout << "DEBUG: drawCircleParticles called with " << m_circleParticles.size() << " particles" << std::endl;
+        std::cout << "DEBUG: drawCircleParticles called with " << m_circleParticles.size() << " particles (VertexArray mode)" << std::endl;
     }
 #endif
     
+    // Use VertexArray for batched rendering (6 draw calls -> 1 draw call)
+    if (m_particleVertices.getVertexCount() > 0 && m_particleTexture) {
+#ifndef NDEBUG
+        size_t triangleCount = m_particleVertices.getVertexCount() / 6;
+        std::cout << "DEBUG: Drawing " << triangleCount << " particles with single VertexArray draw call" << std::endl;
+#endif
+        
+        // SINGLE draw call for all particles
+        target.draw(m_particleVertices, m_particleTexture);
+        return;
+    }
+    
+    // Fallback to old method if VertexArray not available
     if (!m_particleSprite) {
 #ifndef NDEBUG
         if (!m_circleParticles.empty()) {
-            std::cout << "DEBUG: ERROR - No particle sprite available but have " << m_circleParticles.size() << " particles!" << std::endl;
+            std::cout << "DEBUG: ERROR - No particle sprite or VertexArray available!" << std::endl;
         }
 #endif
         return;
     }
+    
+#ifndef NDEBUG
+    std::cout << "DEBUG: Fallback to individual sprite drawing" << std::endl;
+#endif
     
     int activeCount = 0;
     for (const auto& particle : m_circleParticles) {
@@ -239,20 +263,14 @@ void GameAnimationSystem::drawCircleParticles(sf::RenderTarget& target) const {
             // Update sprite position
             m_particleSprite->setPosition(particle.position);
             
-            // Use completely natural diamond texture (no color modification)
-            
-#ifndef NDEBUG
-            std::cout << "DEBUG: Drawing particle at " << particle.position.x << ", " << particle.position.y << std::endl;
-#endif
-            
-            // Draw the particle
+            // Draw the particle (individual draw call)
             target.draw(*m_particleSprite);
         }
     }
     
 #ifndef NDEBUG
     if (activeCount > 0) {
-        std::cout << "DEBUG: Drawing " << activeCount << " active particles" << std::endl;
+        std::cout << "DEBUG: Drew " << activeCount << " particles using individual draw calls" << std::endl;
     }
 #endif
 }
@@ -296,6 +314,16 @@ void GameAnimationSystem::updateCircleParticles(sf::Time frameTime) {
         std::cout << "DEBUG: Cleaned up particles, before: " << beforeSize << ", after: " << m_circleParticles.size() << std::endl;
     }
 #endif
+    
+    // Rebuild VertexArray for batched rendering
+    m_particleVertices.clear();
+    if (m_particleTexture) {
+        for (const auto& particle : m_circleParticles) {
+            if (particle.active) {
+                addParticleToVertexArray(particle);
+            }
+        }
+    }
 }
 
 // Oscillator management (extracted from game.cpp)
@@ -519,6 +547,61 @@ float GameAnimationSystem::calculateOscillatorModifier() const {
   // Calculate the sine-based modifier for big diamond animation
   // This is the extracted logic from game.cpp
   return sin(oscillator / 2.5f) * 30.0f;
+}
+
+void GameAnimationSystem::addParticleToVertexArray(const CircleParticle& particle) {
+  if (!m_particleTexture) return;
+  
+  // Calculate particle sprite size (diamond texture rect: 44x44)
+  const float particleSize = 44.0f * 0.5f; // Scale factor from sprite
+  const float halfSize = particleSize * 0.5f;
+  
+  // Particle position (center-based)
+  sf::Vector2f pos = particle.position;
+  
+  // Calculate alpha based on lifetime for fade effect
+  float alpha = 255.0f;
+  if (particle.totalLifetime > sf::Time::Zero) {
+    float lifeRatio = particle.lifetime.asSeconds() / particle.totalLifetime.asSeconds();
+    alpha = 255.0f * lifeRatio; // Fade out as lifetime decreases
+  }
+  
+  // Texture coordinates for diamond sprite (from createDiamondCollectionBurst)
+  sf::IntRect textureRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44));
+  
+  // Create two triangles for this particle (since we use PrimitiveType::Triangles)
+  sf::Vertex vertices[6];
+  
+  // First triangle (top-left, top-right, bottom-left)
+  vertices[0].position = sf::Vector2f(pos.x - halfSize, pos.y - halfSize);
+  vertices[0].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y);
+  vertices[0].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
+  
+  vertices[1].position = sf::Vector2f(pos.x + halfSize, pos.y - halfSize);
+  vertices[1].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y);
+  vertices[1].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
+  
+  vertices[2].position = sf::Vector2f(pos.x - halfSize, pos.y + halfSize);
+  vertices[2].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y + textureRect.size.y);
+  vertices[2].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
+  
+  // Second triangle (top-right, bottom-right, bottom-left)
+  vertices[3].position = sf::Vector2f(pos.x + halfSize, pos.y - halfSize);
+  vertices[3].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y);
+  vertices[3].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
+  
+  vertices[4].position = sf::Vector2f(pos.x + halfSize, pos.y + halfSize);
+  vertices[4].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y + textureRect.size.y);
+  vertices[4].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
+  
+  vertices[5].position = sf::Vector2f(pos.x - halfSize, pos.y + halfSize);
+  vertices[5].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y + textureRect.size.y);
+  vertices[5].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
+  
+  // Add vertices to the VertexArray
+  for (int i = 0; i < 6; ++i) {
+    m_particleVertices.append(vertices[i]);
+  }
 }
 
 } // namespace DP

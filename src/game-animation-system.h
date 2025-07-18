@@ -127,6 +127,10 @@ private:
   };
   std::vector<CircleParticle> m_circleParticles;
   std::unique_ptr<sf::Sprite> m_particleSprite; // Reused for all particles
+  
+  // VertexArray optimization for batched particle rendering
+  sf::VertexArray m_particleVertices;
+  sf::Texture* m_particleTexture;
 
   // Oscillator state
   float oscillator;
@@ -162,6 +166,7 @@ private:
   void cleanupFinishedEffects();
   float calculateOscillatorModifier() const;
   void updateCircleParticles(sf::Time frameTime);
+  void addParticleToVertexArray(const CircleParticle& particle);
 };
 
 } // namespace DP
