@@ -216,8 +216,22 @@ namespace ParticlePresets {
     .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE
   };
   
-  // Card collection effect (smaller, quicker)
+  // Card collection effect (smaller, quicker) - consistent circle pattern
   constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
+    .count = 4,
+    .speed = 80.0f,
+    .lifetime = 0.8f,
+    .scale = 0.3f,
+    .textureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),
+    .textureId = "card",
+    .fadeOut = true,
+    .scaleDown = true,
+    .gravity = 0.0f,
+    .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE
+  };
+  
+  // Card collection effect (random explosion pattern) - for variety
+  constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
     .count = 4,
     .speed = 80.0f,
     .lifetime = 0.8f,

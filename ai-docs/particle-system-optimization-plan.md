@@ -385,6 +385,24 @@ sf::IntRect textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vec
 - Element colors are preserved: blue water, green earth, red fire, yellow air
 - Players see the same visual element in the particle effect as what they collected
 
+### Animation Consistency Fix ✅
+
+**Issue Found:** Card collection animations were inconsistent/random due to using `BurstPattern::EXPLOSION` 
+
+**Problem:** The `CARD_COLLECT` preset used random explosion pattern:
+```cpp
+float angle = (static_cast<float>(rand()) / RAND_MAX) * 2.0f * M_PI;
+float speedVariation = 0.5f + (static_cast<float>(rand()) / RAND_MAX) * 0.5f;
+```
+
+**Solution:** Changed to consistent circle pattern like diamonds:
+- **CARD_COLLECT**: Now uses `BurstPattern::CIRCLE` (consistent)
+- **CARD_COLLECT_RANDOM**: Available for random explosion pattern (if desired)
+- **DIAMOND_BURST**: Always used consistent circle pattern
+- **STOP_CARD**: Uses consistent directional pattern
+
+**Result:** All card collection animations now show the same pattern every time, providing predictable and consistent visual feedback.
+
 ### Related Systems
 - **BoardDiamondSeq**: Good example of VertexArray batching in same codebase
 - **GameRenderer**: Target location for all particle rendering
