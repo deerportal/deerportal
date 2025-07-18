@@ -123,14 +123,26 @@ void Command::processField(int pos) {
       game.players[game.turn].cash += 1;
       
       // YOUR PREFERRED APPROACH: Simple circle burst effect - ONLY for diamonds!
-      sf::Vector2i cords = DP::transPosition(pos);
-      sf::Vector2f collectionPos = DP::getScreenPos(cords);
-      std::cout << "🔥 DIAMOND COLLECTED! 🔥 Position: " << pos << ", Screen: " << collectionPos.x << ", " << collectionPos.y << std::endl;
-      game.getAnimationSystem()->createDiamondCollectionBurst(collectionPos);
+      // Use character CENTER position for perfect particle placement
+      sf::Vector2f characterPos = game.players[game.turn].characters[0].getPosition();
+      sf::FloatRect characterBounds = game.players[game.turn].characters[0].getLocalBounds();
+      
+      // Center the particles on the character sprite
+      sf::Vector2f centerPos(
+        characterPos.x + characterBounds.size.x / 2.0f,
+        characterPos.y + characterBounds.size.y / 2.0f
+      );
+      
+#ifndef NDEBUG
+      std::cout << "DEBUG: DIAMOND COLLECTED - Character center: " << centerPos.x << ", " << centerPos.y << std::endl;
+#endif
+      game.getAnimationSystem()->createDiamondCollectionBurst(centerPos);
 
     } else if (game.boardDiamonds.getNumberForField(pos) < 4) {
       processCard(pos);
-      std::cout << "💳 CARD collected (not diamond) at position " << pos << std::endl;
+#ifndef NDEBUG
+      std::cout << "DEBUG: CARD collected (not diamond) at position " << pos << std::endl;
+#endif
     }
 
     game.boardDiamonds.collectField(pos);

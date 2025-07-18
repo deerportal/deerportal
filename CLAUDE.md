@@ -74,6 +74,12 @@ cmake_modules/     # CMake helper modules
 
 ## Development Guidelines
 
+### Language
+
+* Don't use emoji in the code
+* Don't use excited language, just document what is happening in the code without commenting value of it.
+
+
 ### Code Standards
 - **C++17**: Use modern C++ features, smart pointers, RAII
 - **SFML 3.0**: Follow SFML 3.0 patterns and API
@@ -84,6 +90,8 @@ cmake_modules/     # CMake helper modules
 - **Includes**: Sorted and grouped (standard → SFML → project headers)
 - **Header Dependencies**: Use forward declarations where possible, full includes only for direct members
 - **Memory Safety**: Prefer `std::unique_ptr` for SFML objects
+- **Always when debug some text ensure it is being debug only for the DEBUG compiled version
+- **When making release ensure that docs are update and version number is being updated in all necessary files, always check all dependencies and how version is being handled before finishing this task.
 
 ### Testing
 - **No formal unit testing framework** - uses integration testing through CI/CD

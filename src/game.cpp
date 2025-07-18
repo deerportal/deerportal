@@ -1113,7 +1113,9 @@ void Game::render(float deltaTime) {
     renderTexture.draw(bubble);
     
     // Draw particles LAST so they appear on top of everything
+#ifndef NDEBUG
     std::cout << "DEBUG: About to draw particles in Game::render() path" << std::endl;
+#endif
     getAnimationSystem()->drawCircleParticles(renderTexture);
     renderTexture.setView(viewFull);
     drawPlayersGui();

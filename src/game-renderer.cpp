@@ -44,18 +44,24 @@ GameRenderer::GameRenderer(Game* gameInstance)
 GameRenderer::~GameRenderer() {}
 
 void GameRenderer::render(float deltaTime) {
+#ifndef NDEBUG
   std::cout << "DEBUG: GameRenderer::render called, state=" << game->currentState << ", useDirectRendering=" << useDirectRendering << std::endl;
+#endif
   clearBuffers();
 
   // PERFORMANCE OPTIMIZATION: Direct rendering for gameplay states
   if (useDirectRendering &&
       (game->currentState == Game::state_game || game->currentState == Game::state_roll_dice)) {
+#ifndef NDEBUG
     std::cout << "DEBUG: Using direct rendering path" << std::endl;
+#endif
     renderDirectToWindow(deltaTime);
     return;
   }
   
+#ifndef NDEBUG
   std::cout << "DEBUG: Using render-to-texture path, state: " << game->currentState << std::endl;
+#endif
 
   // Route to state-specific rendering (with post-processing)
   switch (game->currentState) {
@@ -120,7 +126,9 @@ void GameRenderer::renderStateGame() {
   game->renderTexture.draw(game->bubble);
   
   // Draw particles LAST so they appear on top
+#ifndef NDEBUG
   std::cout << "DEBUG: About to draw particles in render-to-texture path" << std::endl;
+#endif
   game->getAnimationSystem()->drawCircleParticles(game->renderTexture);
 
   game->renderTexture.setView(game->viewFull);
@@ -461,7 +469,9 @@ void GameRenderer::renderDirectToWindow(float deltaTime) {
   // Draw UI elements directly
   drawUIElementsDirect();
   // Draw particles LAST so they appear on top of everything
+#ifndef NDEBUG
   std::cout << "DEBUG: About to draw particles in direct rendering path" << std::endl;
+#endif
   game->getAnimationSystem()->drawCircleParticles(game->window);
   game->window.display();
 }

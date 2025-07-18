@@ -171,14 +171,18 @@ void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
     const float radius = 30.0f;
     const float speed = 120.0f; // Increased speed for better visibility
     
+#ifndef NDEBUG
     std::cout << "DEBUG: Creating diamond collection burst at position: " << position.x << ", " << position.y << std::endl;
+#endif
     
     // Create particle sprite if not exists
     if (!m_particleSprite) {
         m_particleSprite = std::make_unique<sf::Sprite>(game->textures.textureBoardDiamond);
         m_particleSprite->setTextureRect(sf::IntRect({4 * 44, 0}, {44, 44})); // Diamond texture
         m_particleSprite->setScale({0.5f, 0.5f}); // Larger for better visibility
+#ifndef NDEBUG
         std::cout << "DEBUG: Created particle sprite" << std::endl;
+#endif
     }
     
     // Create particles in a circle
@@ -205,20 +209,26 @@ void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
         m_circleParticles.push_back(particle);
     }
     
+#ifndef NDEBUG
     std::cout << "DEBUG: Created " << particleCount << " particles. Total particles: " << m_circleParticles.size() << std::endl;
+#endif
 }
 
 // Draw circle particles (called from event loop)
 void GameAnimationSystem::drawCircleParticles(sf::RenderTarget& target) const {
+#ifndef NDEBUG
     // Debug output every time when particles exist
     if (!m_circleParticles.empty()) {
         std::cout << "DEBUG: drawCircleParticles called with " << m_circleParticles.size() << " particles" << std::endl;
     }
+#endif
     
     if (!m_particleSprite) {
+#ifndef NDEBUG
         if (!m_circleParticles.empty()) {
             std::cout << "DEBUG: ERROR - No particle sprite available but have " << m_circleParticles.size() << " particles!" << std::endl;
         }
+#endif
         return;
     }
     
@@ -232,16 +242,20 @@ void GameAnimationSystem::drawCircleParticles(sf::RenderTarget& target) const {
             // Make particles VERY visible - bright yellow, no fade
             m_particleSprite->setColor(sf::Color::Yellow);
             
+#ifndef NDEBUG
             std::cout << "DEBUG: Drawing particle at " << particle.position.x << ", " << particle.position.y << std::endl;
+#endif
             
             // Draw the particle
             target.draw(*m_particleSprite);
         }
     }
     
+#ifndef NDEBUG
     if (activeCount > 0) {
         std::cout << "DEBUG: Drawing " << activeCount << " active particles" << std::endl;
     }
+#endif
 }
 
 // Update circle particles in the event loop (your preferred approach)
@@ -264,9 +278,11 @@ void GameAnimationSystem::updateCircleParticles(sf::Time frameTime) {
         }
     }
     
+#ifndef NDEBUG
     if (activeCount > 0) {
         std::cout << "DEBUG: Updating " << activeCount << " active particles" << std::endl;
     }
+#endif
     
     // Clean up inactive particles
     size_t beforeSize = m_circleParticles.size();
@@ -276,9 +292,11 @@ void GameAnimationSystem::updateCircleParticles(sf::Time frameTime) {
         m_circleParticles.end()
     );
     
+#ifndef NDEBUG
     if (beforeSize != m_circleParticles.size()) {
         std::cout << "DEBUG: Cleaned up particles, before: " << beforeSize << ", after: " << m_circleParticles.size() << std::endl;
     }
+#endif
 }
 
 // Oscillator management (extracted from game.cpp)
