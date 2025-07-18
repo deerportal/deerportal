@@ -1,3 +1,11 @@
+deerportal (0.9.4-pre.1-version-bump-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.4-pre.1 "Version Bump"
+  * Version bump to 0.9.4-pre.1 for continued development and testing
+  * Preparatory release for upcoming features and improvements
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Tue, 16 Jul 2025 10:00:00 +0000
+
 deerportal (0.9.3-pre.5-cicd-artifact-upload-fix-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.3-pre.5 "CI/CD Artifact Upload Fix"
