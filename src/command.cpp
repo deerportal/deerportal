@@ -121,23 +121,21 @@ void Command::processField(int pos) {
     game.sfx.playCollect();
     if (game.boardDiamonds.getNumberForField(pos) == 4) {
       game.players[game.turn].cash += 1;
-      
+
       // Create circle burst particle effect for diamond collection
       // Use character center position for particle placement
       sf::Vector2f characterPos = game.players[game.turn].characters[0].getPosition();
-      
+
       // Character dimensions from character.cpp: 32x58 pixels
       const float charWidth = 32.0f;
       const float charHeight = 58.0f;
-      
+
       // Center the particles on the character sprite
-      sf::Vector2f centerPos(
-        characterPos.x + charWidth / 2.0f,
-        characterPos.y + charHeight / 2.0f
-      );
-      
+      sf::Vector2f centerPos(characterPos.x + charWidth / 2.0f, characterPos.y + charHeight / 2.0f);
+
 #ifndef NDEBUG
-      std::cout << "DEBUG: DIAMOND COLLECTED - Character center: " << centerPos.x << ", " << centerPos.y << std::endl;
+      std::cout << "DEBUG: DIAMOND COLLECTED - Character center: " << centerPos.x << ", "
+                << centerPos.y << std::endl;
 #endif
       game.getAnimationSystem()->createDiamondCollectionBurst(centerPos);
 
@@ -160,16 +158,13 @@ void Command::processCard(int pos) {
   int tokenNumber = game.boardDiamonds.getNumberForField(pos);
   std::string cardType = game.cardsDeck.getTitle(tokenNumber);
   int cardTypeInt = game.cardsDeck.getCardTypeInt(tokenNumber);
-  
+
   // Calculate character center position for particle effects
   sf::Vector2f characterPos = game.players[game.turn].characters[0].getPosition();
   const float charWidth = 32.0f;
   const float charHeight = 58.0f;
-  sf::Vector2f centerPos(
-    characterPos.x + charWidth / 2.0f,
-    characterPos.y + charHeight / 2.0f
-  );
-  
+  sf::Vector2f centerPos(characterPos.x + charWidth / 2.0f, characterPos.y + charHeight / 2.0f);
+
   // Always show particle animation for visual feedback
   if (cardType == "diamond") {
     DP::GameAnimationSystem::ParticleConfig cardConfig = DP::ParticlePresets::CARD_COLLECT;
@@ -194,13 +189,13 @@ void Command::processCard(int pos) {
     doubleConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44));
     game.getAnimationSystem()->createCollectionBurst(centerPos, doubleConfig);
   }
-  
+
   // Execute card effects only against other elements
   if (tokenNumber != game.turn) {
     if (cardType == "diamond") {
       removeDiamond(game.boardDiamonds.getNumberForField(pos));
       game.players[game.turn].cash += 1;
-      
+
       // Show notification for diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time
@@ -208,14 +203,14 @@ void Command::processCard(int pos) {
 
     } else if (cardType == "stop") {
       freezePlayer(tokenNumber);
-      
+
       // Show notification for stop card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time
       game.cardNotificationDelay = game.CARD_NOTIFICATION_DELAY_TIME;
     } else if (cardType == "card") {
       removeCard(game.boardDiamonds.getNumberForField(pos));
-      
+
       // Show notification for remove card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time
@@ -226,7 +221,7 @@ void Command::processCard(int pos) {
         game.players[game.turn].cash += 1;
       if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
         game.players[game.turn].cash += 1;
-      
+
       // Show notification for double diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time

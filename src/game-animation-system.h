@@ -1,12 +1,14 @@
 #ifndef GAME_ANIMATION_SYSTEM_H
 #define GAME_ANIMATION_SYSTEM_H
 
+#include <algorithm>
+#include <functional>
+#include <memory>
+#include <vector>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include <functional>
-#include <vector>
-#include <memory>
-#include <algorithm>
+
 #include "easing.h"
 
 namespace DP {
@@ -29,17 +31,17 @@ public:
     float speed = 120.0f;
     float lifetime = 1.2f;
     float scale = 0.5f;
-    
+
     // Texture configuration
     sf::IntRect textureRect = sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44));
-    const char* textureId = "diamond";  // Use const char* for constexpr compatibility
-    sf::Texture* customTexture = nullptr;  // Override texture (for cards)
-    
+    const char* textureId = "diamond";    // Use const char* for constexpr compatibility
+    sf::Texture* customTexture = nullptr; // Override texture (for cards)
+
     // Visual effects
     bool fadeOut = true;
     bool scaleDown = false;
     float gravity = 0.0f;
-    
+
     // Pattern configuration
     enum class BurstPattern { CIRCLE, EXPLOSION, DIRECTIONAL };
     BurstPattern pattern = BurstPattern::CIRCLE;
@@ -55,28 +57,28 @@ public:
 
     // Modules for different kinds of animation
     struct Move {
-        sf::Vector2f startPos;
-        sf::Vector2f endPos;
-        std::function<float(float)> ease = Easing::linear;
+      sf::Vector2f startPos;
+      sf::Vector2f endPos;
+      std::function<float(float)> ease = Easing::linear;
     } move;
 
     struct Scale {
-        sf::Vector2f startScale;
-        sf::Vector2f endScale;
-        std::function<float(float)> ease = Easing::linear;
+      sf::Vector2f startScale;
+      sf::Vector2f endScale;
+      std::function<float(float)> ease = Easing::linear;
     } scale;
-    
+
     struct Fade {
-        float startAlpha = 255.f;
-        float endAlpha = 0.f;
-        std::function<float(float)> ease = Easing::linear;
+      float startAlpha = 255.f;
+      float endAlpha = 0.f;
+      std::function<float(float)> ease = Easing::linear;
     } fade;
 
     // Particle burst on completion
     struct ParticleBurst {
-        int count = 0;
-        std::string textureId; // From GameAssets
-        sf::Time particleLifetime = sf::seconds(1.0f);
+      int count = 0;
+      std::string textureId; // From GameAssets
+      sf::Time particleLifetime = sf::seconds(1.0f);
     } particleBurst;
 
     // Chaining: what to trigger when this effect finishes
@@ -95,10 +97,10 @@ public:
   // Convenience methods for common effects
   void createDiamondCollectionEffect(sf::Sprite* diamondSprite, sf::Vector2f playerHudPos);
   void createDiamondCollectionEffect(int boardPosition, sf::Vector2f playerHudPos);
-  
+
   // Generic particle burst system (replaces createDiamondCollectionBurst)
   void createCollectionBurst(sf::Vector2f position, const ParticleConfig& config);
-  
+
   // Legacy method for backward compatibility
   void createDiamondCollectionBurst(sf::Vector2f position);
 
@@ -126,12 +128,11 @@ public:
   void createVisualEffect(sf::Vector2f position, const std::string& effectType);
   void updateVisualEffects(sf::Time frameTime);
 
-
   // Animation queries
   bool isBigDiamondAnimating() const;
   bool isCharacterAnimating(int playerId) const;
   bool hasActiveAnimations() const;
-  
+
   // Rendering support
   void drawTemporarySprites(sf::RenderTarget& target) const;
   void drawCircleParticles(sf::RenderTarget& target) const;
@@ -149,7 +150,7 @@ private:
     sf::Time lifetime;
     sf::Time totalLifetime;
     bool active = true;
-    
+
     // Enhanced properties for generic system
     float scale = 0.5f;
     sf::IntRect textureRect = sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44));
@@ -158,7 +159,7 @@ private:
   };
   std::vector<CircleParticle> m_circleParticles;
   std::unique_ptr<sf::Sprite> m_particleSprite; // Reused for all particles
-  
+
   // VertexArray optimization for batched particle rendering
   sf::VertexArray m_particleVertices;
   sf::Texture* m_particleTexture;
@@ -190,7 +191,6 @@ private:
   };
   std::vector<VisualEffect> activeEffects;
 
-
   // Helper methods
   void initializeAnimationStates();
   void updateSingleCharacterAnimation(int playerId, sf::Time frameTime);
@@ -202,62 +202,66 @@ private:
 
 // Predefined particle configurations for different collectible types
 namespace ParticlePresets {
-  // Diamond collection burst (current default)
-  constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
-    .count = 6,
-    .speed = 120.0f,
-    .lifetime = 1.2f,
-    .scale = 0.5f,
-    .textureRect = sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44)),
-    .textureId = "diamond",
-    .fadeOut = true,
-    .scaleDown = false,
-    .gravity = 0.0f,
-    .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE
-  };
-  
-  // Card collection effect (smaller, quicker) - consistent circle pattern
-  constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
-    .count = 4,
-    .speed = 80.0f,
-    .lifetime = 0.8f,
-    .scale = 0.3f,
-    .textureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),
-    .textureId = "card",
-    .fadeOut = true,
-    .scaleDown = true,
-    .gravity = 0.0f,
-    .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE
-  };
-  
-  // Card collection effect (random explosion pattern) - for variety
-  constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
-    .count = 4,
-    .speed = 80.0f,
-    .lifetime = 0.8f,
-    .scale = 0.3f,
-    .textureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),
-    .textureId = "card",
-    .fadeOut = true,
-    .scaleDown = true,
-    .gravity = 0.0f,
-    .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::EXPLOSION
-  };
-  
-  // Stop card effect (falling particles)
-  constexpr GameAnimationSystem::ParticleConfig STOP_CARD = {
-    .count = 8,
-    .speed = 60.0f,
-    .lifetime = 1.0f,
-    .scale = 0.4f,
-    .textureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),
-    .textureId = "stop",
-    .fadeOut = true,
-    .scaleDown = false,
-    .gravity = 98.0f,
-    .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::DIRECTIONAL
-  };
-}
+// Diamond collection burst (current default)
+constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
+    6,                                                          // count
+    120.0f,                                                     // speed
+    1.2f,                                                       // lifetime
+    0.5f,                                                       // scale
+    sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44)), // textureRect
+    "diamond",                                                  // textureId
+    nullptr,                                                    // customTexture
+    true,                                                       // fadeOut
+    false,                                                      // scaleDown
+    0.0f,                                                       // gravity
+    GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE   // pattern
+};
+
+// Card collection effect (smaller, quicker) - consistent circle pattern
+constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
+    4,                                                        // count
+    80.0f,                                                    // speed
+    0.8f,                                                     // lifetime
+    0.3f,                                                     // scale
+    sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),    // textureRect
+    "card",                                                   // textureId
+    nullptr,                                                  // customTexture
+    true,                                                     // fadeOut
+    true,                                                     // scaleDown
+    0.0f,                                                     // gravity
+    GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE // pattern
+};
+
+// Card collection effect (random explosion pattern) - for variety
+constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
+    4,                                                           // count
+    80.0f,                                                       // speed
+    0.8f,                                                        // lifetime
+    0.3f,                                                        // scale
+    sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),       // textureRect
+    "card",                                                      // textureId
+    nullptr,                                                     // customTexture
+    true,                                                        // fadeOut
+    true,                                                        // scaleDown
+    0.0f,                                                        // gravity
+    GameAnimationSystem::ParticleConfig::BurstPattern::EXPLOSION // pattern
+};
+
+// Stop card effect (falling particles)
+constexpr GameAnimationSystem::ParticleConfig STOP_CARD = {
+    8,                                                             // count
+    60.0f,                                                         // speed
+    1.0f,                                                          // lifetime
+    0.4f,                                                          // scale
+    sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),         // textureRect
+    "stop",                                                        // textureId
+    nullptr,                                                       // customTexture
+    true,                                                          // fadeOut
+    false,                                                         // scaleDown
+    98.0f,                                                         // gravity
+    GameAnimationSystem::ParticleConfig::BurstPattern::DIRECTIONAL // pattern
+};
+} // namespace ParticlePresets
 
 } // namespace DP
 
