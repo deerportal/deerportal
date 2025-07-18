@@ -169,48 +169,71 @@ void GameAnimationSystem::drawTemporarySprites(sf::RenderTarget& target) const {
     }
 }
 
-// Your preferred approach: Simple circle burst effect
-void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
-    const int particleCount = 6;
+// Generic particle burst system - supports different particle types
+void GameAnimationSystem::createCollectionBurst(sf::Vector2f position, const ParticleConfig& config) {
+    const int particleCount = config.count;
     const float radius = 30.0f;
-    const float speed = 120.0f; // Increased speed for better visibility
+    const float speed = config.speed;
     
 #ifndef NDEBUG
-    std::cout << "DEBUG: Creating diamond collection burst at position: " << position.x << ", " << position.y << std::endl;
+    std::cout << "DEBUG: Creating " << config.textureId << " collection burst at position: " << position.x << ", " << position.y << std::endl;
+    std::cout << "DEBUG: Config - count: " << config.count << ", speed: " << config.speed << ", lifetime: " << config.lifetime << std::endl;
 #endif
     
-    // Create particle sprite if not exists
+    // Create particle sprite if not exists (currently uses diamond texture for all types)
     if (!m_particleSprite) {
         m_particleSprite = std::make_unique<sf::Sprite>(game->textures.textureBoardDiamond);
-        m_particleSprite->setTextureRect(sf::IntRect({4 * 44, 0}, {44, 44})); // Diamond texture
-        m_particleSprite->setScale({0.5f, 0.5f}); // Larger for better visibility
+        m_particleSprite->setTextureRect(config.textureRect);
+        m_particleSprite->setScale({config.scale, config.scale});
 #ifndef NDEBUG
-        std::cout << "DEBUG: Created particle sprite" << std::endl;
+        std::cout << "DEBUG: Created particle sprite with scale: " << config.scale << std::endl;
 #endif
     }
     
-    // Set texture reference for VertexArray batching
+    // Set texture reference for VertexArray batching (TODO: support different textures)
     m_particleTexture = &game->textures.textureBoardDiamond;
     
-    // Create particles in a circle
+    // Create particles based on burst pattern
     for (int i = 0; i < particleCount; ++i) {
         CircleParticle particle;
-        
-        // Calculate angle for even distribution
-        float angle = (i * 2.0f * M_PI) / particleCount;
         
         // Start position (center)
         particle.position = position;
         
-        // Velocity in circle pattern
-        particle.velocity = sf::Vector2f(
-            std::cos(angle) * speed,
-            std::sin(angle) * speed
-        );
+        // Set particle properties from config
+        particle.scale = config.scale;
+        particle.textureRect = config.textureRect;
+        particle.fadeOut = config.fadeOut;
+        particle.gravity = config.gravity;
         
-        // Lifetime - longer for better visibility
-        particle.lifetime = sf::seconds(1.2f);
-        particle.totalLifetime = sf::seconds(1.2f);
+        // Calculate velocity based on pattern
+        if (config.pattern == ParticleConfig::BurstPattern::CIRCLE) {
+            // Even distribution in circle
+            float angle = (i * 2.0f * M_PI) / particleCount;
+            particle.velocity = sf::Vector2f(
+                std::cos(angle) * speed,
+                std::sin(angle) * speed
+            );
+        } else if (config.pattern == ParticleConfig::BurstPattern::EXPLOSION) {
+            // Random explosion pattern
+            float angle = (static_cast<float>(rand()) / RAND_MAX) * 2.0f * M_PI;
+            float speedVariation = 0.5f + (static_cast<float>(rand()) / RAND_MAX) * 0.5f;
+            particle.velocity = sf::Vector2f(
+                std::cos(angle) * speed * speedVariation,
+                std::sin(angle) * speed * speedVariation
+            );
+        } else if (config.pattern == ParticleConfig::BurstPattern::DIRECTIONAL) {
+            // Directional pattern (upward with spread)
+            float angle = -M_PI/2 + (i - particleCount/2) * (M_PI/6) / particleCount;
+            particle.velocity = sf::Vector2f(
+                std::cos(angle) * speed * 0.3f,
+                std::sin(angle) * speed
+            );
+        }
+        
+        // Lifetime from config
+        particle.lifetime = sf::seconds(config.lifetime);
+        particle.totalLifetime = sf::seconds(config.lifetime);
         particle.active = true;
         
         m_circleParticles.push_back(particle);
@@ -219,6 +242,11 @@ void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
 #ifndef NDEBUG
     std::cout << "DEBUG: Created " << particleCount << " particles. Total particles: " << m_circleParticles.size() << std::endl;
 #endif
+}
+
+// Legacy method for backward compatibility
+void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
+    createCollectionBurst(position, ParticlePresets::DIAMOND_BURST);
 }
 
 // Draw circle particles (called from event loop) - OPTIMIZED with VertexArray batching
@@ -282,6 +310,12 @@ void GameAnimationSystem::updateCircleParticles(sf::Time frameTime) {
     for (auto& particle : m_circleParticles) {
         if (particle.active) {
             activeCount++;
+            
+            // Apply gravity if configured
+            if (particle.gravity > 0.0f) {
+                particle.velocity.y += particle.gravity * frameTime.asSeconds();
+            }
+            
             // Update position
             particle.position += particle.velocity * frameTime.asSeconds();
             
@@ -552,8 +586,8 @@ float GameAnimationSystem::calculateOscillatorModifier() const {
 void GameAnimationSystem::addParticleToVertexArray(const CircleParticle& particle) {
   if (!m_particleTexture) return;
   
-  // Calculate particle sprite size (diamond texture rect: 44x44)
-  const float particleSize = 44.0f * 0.5f; // Scale factor from sprite
+  // Calculate particle sprite size using particle's texture rect and scale
+  const float particleSize = particle.textureRect.size.x * particle.scale;
   const float halfSize = particleSize * 0.5f;
   
   // Particle position (center-based)
@@ -561,13 +595,13 @@ void GameAnimationSystem::addParticleToVertexArray(const CircleParticle& particl
   
   // Calculate alpha based on lifetime for fade effect
   float alpha = 255.0f;
-  if (particle.totalLifetime > sf::Time::Zero) {
+  if (particle.fadeOut && particle.totalLifetime > sf::Time::Zero) {
     float lifeRatio = particle.lifetime.asSeconds() / particle.totalLifetime.asSeconds();
     alpha = 255.0f * lifeRatio; // Fade out as lifetime decreases
   }
   
-  // Texture coordinates for diamond sprite (from createDiamondCollectionBurst)
-  sf::IntRect textureRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44));
+  // Use particle's texture coordinates
+  sf::IntRect textureRect = particle.textureRect;
   
   // Create two triangles for this particle (since we use PrimitiveType::Triangles)
   sf::Vertex vertices[6];

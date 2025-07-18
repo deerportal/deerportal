@@ -22,6 +22,27 @@ class Game;
  */
 class GameAnimationSystem {
 public:
+  // Generic particle configuration for different collectible types
+  struct ParticleConfig {
+    // Basic properties
+    int count = 6;
+    float speed = 120.0f;
+    float lifetime = 1.2f;
+    float scale = 0.5f;
+    
+    // Texture configuration
+    sf::IntRect textureRect = sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44));
+    const char* textureId = "diamond";  // Use const char* for constexpr compatibility
+    
+    // Visual effects
+    bool fadeOut = true;
+    bool scaleDown = false;
+    float gravity = 0.0f;
+    
+    // Pattern configuration
+    enum class BurstPattern { CIRCLE, EXPLOSION, DIRECTIONAL };
+    BurstPattern pattern = BurstPattern::CIRCLE;
+  };
   struct AnimationEffect {
     // Core properties
     sf::Time lifetime = sf::seconds(1.0f);
@@ -74,7 +95,10 @@ public:
   void createDiamondCollectionEffect(sf::Sprite* diamondSprite, sf::Vector2f playerHudPos);
   void createDiamondCollectionEffect(int boardPosition, sf::Vector2f playerHudPos);
   
-  // Your preferred approach: Simple circle burst effect
+  // Generic particle burst system (replaces createDiamondCollectionBurst)
+  void createCollectionBurst(sf::Vector2f position, const ParticleConfig& config);
+  
+  // Legacy method for backward compatibility
   void createDiamondCollectionBurst(sf::Vector2f position);
 
   // Animation control
@@ -116,7 +140,7 @@ private:
 
   std::vector<AnimationEffect> m_effects;
   std::vector<std::unique_ptr<sf::Sprite>> m_temporarySprites; // For diamond collection animations
-  
+
   // Simple circle burst particles (your preferred approach)
   struct CircleParticle {
     sf::Vector2f position;
@@ -124,6 +148,12 @@ private:
     sf::Time lifetime;
     sf::Time totalLifetime;
     bool active = true;
+    
+    // Enhanced properties for generic system
+    float scale = 0.5f;
+    sf::IntRect textureRect = sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44));
+    bool fadeOut = true;
+    float gravity = 0.0f;
   };
   std::vector<CircleParticle> m_circleParticles;
   std::unique_ptr<sf::Sprite> m_particleSprite; // Reused for all particles
@@ -168,6 +198,51 @@ private:
   void updateCircleParticles(sf::Time frameTime);
   void addParticleToVertexArray(const CircleParticle& particle);
 };
+
+// Predefined particle configurations for different collectible types
+namespace ParticlePresets {
+  // Diamond collection burst (current default)
+  constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
+    .count = 6,
+    .speed = 120.0f,
+    .lifetime = 1.2f,
+    .scale = 0.5f,
+    .textureRect = sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44)),
+    .textureId = "diamond",
+    .fadeOut = true,
+    .scaleDown = false,
+    .gravity = 0.0f,
+    .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE
+  };
+  
+  // Card collection effect (smaller, quicker)
+  constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
+    .count = 4,
+    .speed = 80.0f,
+    .lifetime = 0.8f,
+    .scale = 0.3f,
+    .textureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),
+    .textureId = "card",
+    .fadeOut = true,
+    .scaleDown = true,
+    .gravity = 0.0f,
+    .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::EXPLOSION
+  };
+  
+  // Stop card effect (falling particles)
+  constexpr GameAnimationSystem::ParticleConfig STOP_CARD = {
+    .count = 8,
+    .speed = 60.0f,
+    .lifetime = 1.0f,
+    .scale = 0.4f,
+    .textureRect = sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),
+    .textureId = "stop",
+    .fadeOut = true,
+    .scaleDown = false,
+    .gravity = 98.0f,
+    .pattern = GameAnimationSystem::ParticleConfig::BurstPattern::DIRECTIONAL
+  };
+}
 
 } // namespace DP
 

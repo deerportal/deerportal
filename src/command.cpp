@@ -159,10 +159,24 @@ void Command::processField(int pos) {
 void Command::processCard(int pos) {
   int tokenNumber = game.boardDiamonds.getNumberForField(pos);
   std::string cardType = game.cardsDeck.getTitle(tokenNumber);
+  
+  // Calculate character center position for particle effects
+  sf::Vector2f characterPos = game.players[game.turn].characters[0].getPosition();
+  const float charWidth = 32.0f;
+  const float charHeight = 58.0f;
+  sf::Vector2f centerPos(
+    characterPos.x + charWidth / 2.0f,
+    characterPos.y + charHeight / 2.0f
+  );
+  
   if (tokenNumber != game.turn) {
     if (cardType == "diamond") {
       removeDiamond(game.boardDiamonds.getNumberForField(pos));
       game.players[game.turn].cash += 1;
+      
+      // Add particle effect for diamond card collection
+      game.getAnimationSystem()->createCollectionBurst(centerPos, DP::ParticlePresets::CARD_COLLECT);
+      
       // Show notification for diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time
@@ -170,12 +184,20 @@ void Command::processCard(int pos) {
 
     } else if (cardType == "stop") {
       freezePlayer(tokenNumber);
+      
+      // Add particle effect for stop card (falling particles)
+      game.getAnimationSystem()->createCollectionBurst(centerPos, DP::ParticlePresets::STOP_CARD);
+      
       // Show notification for stop card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time
       game.cardNotificationDelay = game.CARD_NOTIFICATION_DELAY_TIME;
     } else if (cardType == "card") {
       removeCard(game.boardDiamonds.getNumberForField(pos));
+      
+      // Add particle effect for card collection
+      game.getAnimationSystem()->createCollectionBurst(centerPos, DP::ParticlePresets::CARD_COLLECT);
+      
       // Show notification for remove card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time
@@ -186,6 +208,13 @@ void Command::processCard(int pos) {
         game.players[game.turn].cash += 1;
       if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
         game.players[game.turn].cash += 1;
+      
+      // Add enhanced particle effect for double diamond card (more particles)
+      DP::GameAnimationSystem::ParticleConfig doubleConfig = DP::ParticlePresets::DIAMOND_BURST;
+      doubleConfig.count = 10;  // More particles for double effect
+      doubleConfig.speed = 140.0f;  // Slightly faster
+      game.getAnimationSystem()->createCollectionBurst(centerPos, doubleConfig);
+      
       // Show notification for double diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time
