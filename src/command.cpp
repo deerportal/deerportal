@@ -122,8 +122,8 @@ void Command::processField(int pos) {
     if (game.boardDiamonds.getNumberForField(pos) == 4) {
       game.players[game.turn].cash += 1;
       
-      // YOUR PREFERRED APPROACH: Simple circle burst effect - ONLY for diamonds!
-      // Use character CENTER position for perfect particle placement
+      // Create circle burst particle effect for diamond collection
+      // Use character center position for particle placement
       sf::Vector2f characterPos = game.players[game.turn].characters[0].getPosition();
       
       // Character dimensions from character.cpp: 32x58 pixels
@@ -170,16 +170,36 @@ void Command::processCard(int pos) {
     characterPos.y + charHeight / 2.0f
   );
   
+  // Always show particle animation for visual feedback
+  if (cardType == "diamond") {
+    DP::GameAnimationSystem::ParticleConfig cardConfig = DP::ParticlePresets::CARD_COLLECT;
+    cardConfig.customTexture = &game.getTextures().textureBoardDiamond;
+    cardConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44));
+    game.getAnimationSystem()->createCollectionBurst(centerPos, cardConfig);
+  } else if (cardType == "stop") {
+    DP::GameAnimationSystem::ParticleConfig stopConfig = DP::ParticlePresets::STOP_CARD;
+    stopConfig.customTexture = &game.getTextures().textureBoardDiamond;
+    stopConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44));
+    game.getAnimationSystem()->createCollectionBurst(centerPos, stopConfig);
+  } else if (cardType == "card") {
+    DP::GameAnimationSystem::ParticleConfig cardConfig = DP::ParticlePresets::CARD_COLLECT;
+    cardConfig.customTexture = &game.getTextures().textureBoardDiamond;
+    cardConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44));
+    game.getAnimationSystem()->createCollectionBurst(centerPos, cardConfig);
+  } else if (cardType == "diamond x 2") {
+    DP::GameAnimationSystem::ParticleConfig doubleConfig = DP::ParticlePresets::DIAMOND_BURST;
+    doubleConfig.count = 10;
+    doubleConfig.speed = 140.0f;
+    doubleConfig.customTexture = &game.getTextures().textureBoardDiamond;
+    doubleConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44));
+    game.getAnimationSystem()->createCollectionBurst(centerPos, doubleConfig);
+  }
+  
+  // Execute card effects only against other elements
   if (tokenNumber != game.turn) {
     if (cardType == "diamond") {
       removeDiamond(game.boardDiamonds.getNumberForField(pos));
       game.players[game.turn].cash += 1;
-      
-      // Create particle config with correct board sprite texture (element-colored diamond)
-      DP::GameAnimationSystem::ParticleConfig cardConfig = DP::ParticlePresets::CARD_COLLECT;
-      cardConfig.customTexture = &game.getTextures().textureBoardDiamond; // Use board diamond texture
-      cardConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44)); // Element sprite
-      game.getAnimationSystem()->createCollectionBurst(centerPos, cardConfig);
       
       // Show notification for diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
@@ -189,24 +209,12 @@ void Command::processCard(int pos) {
     } else if (cardType == "stop") {
       freezePlayer(tokenNumber);
       
-      // Create particle config with correct board sprite texture for stop card
-      DP::GameAnimationSystem::ParticleConfig stopConfig = DP::ParticlePresets::STOP_CARD;
-      stopConfig.customTexture = &game.getTextures().textureBoardDiamond; // Use board diamond texture
-      stopConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44)); // Element sprite
-      game.getAnimationSystem()->createCollectionBurst(centerPos, stopConfig);
-      
       // Show notification for stop card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
       // Set delay for all players to ensure proper notification viewing time
       game.cardNotificationDelay = game.CARD_NOTIFICATION_DELAY_TIME;
     } else if (cardType == "card") {
       removeCard(game.boardDiamonds.getNumberForField(pos));
-      
-      // Create particle config with correct board sprite texture
-      DP::GameAnimationSystem::ParticleConfig cardConfig = DP::ParticlePresets::CARD_COLLECT;
-      cardConfig.customTexture = &game.getTextures().textureBoardDiamond; // Use board diamond texture
-      cardConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44)); // Element sprite
-      game.getAnimationSystem()->createCollectionBurst(centerPos, cardConfig);
       
       // Show notification for remove card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);
@@ -218,14 +226,6 @@ void Command::processCard(int pos) {
         game.players[game.turn].cash += 1;
       if (removeDiamond(game.boardDiamonds.getNumberForField(pos)))
         game.players[game.turn].cash += 1;
-      
-      // Create enhanced particle config with correct board sprite texture (more particles)
-      DP::GameAnimationSystem::ParticleConfig doubleConfig = DP::ParticlePresets::DIAMOND_BURST;
-      doubleConfig.count = 10;  // More particles for double effect
-      doubleConfig.speed = 140.0f;  // Slightly faster
-      doubleConfig.customTexture = &game.getTextures().textureBoardDiamond; // Use board diamond texture
-      doubleConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44)); // Element sprite
-      game.getAnimationSystem()->createCollectionBurst(centerPos, doubleConfig);
       
       // Show notification for double diamond card
       game.cardNotification.showCardNotification(cardType, game.turn, tokenNumber, tokenNumber);

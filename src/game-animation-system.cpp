@@ -41,10 +41,8 @@ void GameAnimationSystem::update(sf::Time frameTime) {
   // Update visual effects
   updateVisualEffects(frameTime);
   
-  // Update circle particles (your preferred approach)
+  // Update circle particles
   updateCircleParticles(frameTime);
-
-  // Note: Particle system intentionally skipped as per user request
 }
 
 void GameAnimationSystem::addEffect(AnimationEffect effect) {
@@ -252,7 +250,7 @@ void GameAnimationSystem::createDiamondCollectionBurst(sf::Vector2f position) {
     createCollectionBurst(position, ParticlePresets::DIAMOND_BURST);
 }
 
-// Draw circle particles (called from event loop) - OPTIMIZED with VertexArray batching
+// Draw circle particles using VertexArray batching for performance
 void GameAnimationSystem::drawCircleParticles(sf::RenderTarget& target) const {
 #ifndef NDEBUG
     // Debug output every time when particles exist
@@ -306,7 +304,7 @@ void GameAnimationSystem::drawCircleParticles(sf::RenderTarget& target) const {
 #endif
 }
 
-// Update circle particles in the event loop (your preferred approach)
+// Update circle particles position and lifetime
 void GameAnimationSystem::updateCircleParticles(sf::Time frameTime) {
     // Update all particles
     int activeCount = 0;
