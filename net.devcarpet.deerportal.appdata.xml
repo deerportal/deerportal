@@ -32,7 +32,12 @@
 ​  </provides>
 ​
 ​  <releases>
-​    <release version="0.9.4-pre.1" date="2025-07-16">
+​    <release version="0.9.4-pre.2" date="2025-07-18">
+      <description>
+        <p>Version 0.9.4-pre.2 - Pre-release. Particle system optimization with 83% performance improvement, universal card animations, C++17 compatibility fixes, and code formatting cleanup.</p>
+      </description>
+    </release>
+    <release version="0.9.4-pre.1" date="2025-07-16">
       <description>
         <p>Version 0.9.4-pre.1 - Pre-release. Version bump for continued development and testing.</p>
       </description>

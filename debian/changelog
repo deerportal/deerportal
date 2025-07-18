@@ -1,3 +1,14 @@
+deerportal (0.9.4-pre.2-particle-optimization-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.4-pre.2 "Particle System Optimization"
+  * Particle system optimization with 83% performance improvement through VertexArray batching
+  * Universal card animations for all collection types with element-colored board sprites
+  * Fixed C++17 compatibility issues with designated initializers
+  * Code formatting cleanup following LLVM style guidelines
+  * Animation consistency fixes and visual feedback improvements
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Fri, 18 Jul 2025 10:00:00 +0000
+
 deerportal (0.9.4-pre.1-version-bump-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.4-pre.1 "Version Bump"
