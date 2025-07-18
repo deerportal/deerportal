@@ -32,7 +32,12 @@
 ​  </provides>
 ​
 ​  <releases>
-​    <release version="0.9.4-pre.2" date="2025-07-18">
+​    <release version="0.9.4" date="2025-07-18">
+      <description>
+        <p>Version 0.9.4 - Stable Release. Major particle system optimization with 83% performance improvement through VertexArray batching, universal card animations for all collection types, element-colored board sprites for visual consistency, C++17 compatibility fixes, LLVM code formatting, and enhanced visual feedback system.</p>
+      </description>
+    </release>
+    <release version="0.9.4-pre.2" date="2025-07-18">
       <description>
         <p>Version 0.9.4-pre.2 - Pre-release. Particle system optimization with 83% performance improvement, universal card animations, C++17 compatibility fixes, and code formatting cleanup.</p>
       </description>
