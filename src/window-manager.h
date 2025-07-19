@@ -112,6 +112,13 @@ private:
   void initializeVideoModes();
 
   /*!
+   * \brief Detect which monitor the window is primarily on
+   * \param window Reference to the game's render window
+   * \return VideoMode for the monitor containing most of the window
+   */
+  sf::VideoMode detectCurrentMonitorMode(sf::RenderWindow& window);
+
+  /*!
    * \brief Create window with specified parameters
    * \param window Reference to the game's render window
    * \param videoMode Video mode to use

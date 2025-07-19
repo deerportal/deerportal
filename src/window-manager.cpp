@@ -1,5 +1,6 @@
 #include "window-manager.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <iostream>
 
@@ -39,14 +40,15 @@ void WindowManager::initializeVideoModes() {
   // Set up windowed mode using game's initial screen dimensions
   m_windowedMode = sf::VideoMode(sf::Vector2u(initScreenX, initScreenY));
 
-  // Set up fullscreen mode using desktop resolution
+  // Set up initial fullscreen mode using desktop resolution
+  // This will be updated dynamically during fullscreen toggle
   m_fullscreenMode = sf::VideoMode::getDesktopMode();
 
 #ifndef NDEBUG
   std::cout << "Window modes initialized:" << std::endl;
   std::cout << "  Windowed: " << m_windowedMode.size.x << "x"
             << m_windowedMode.size.y << std::endl;
-  std::cout << "  Fullscreen: " << m_fullscreenMode.size.x << "x"
+  std::cout << "  Initial Fullscreen: " << m_fullscreenMode.size.x << "x"
             << m_fullscreenMode.size.y << std::endl;
 #endif
 }
@@ -88,11 +90,19 @@ bool WindowManager::toggleFullscreen(sf::RenderWindow& window, sf::RenderTexture
       // Save current window position
       saveWindowPosition(window);
 
+      // Dynamically detect which monitor the window is on
+      sf::VideoMode targetFullscreenMode = detectCurrentMonitorMode(window);
+      
+#ifndef NDEBUG
+      std::cout << "Detected target monitor: " << targetFullscreenMode.size.x 
+                << "x" << targetFullscreenMode.size.y << std::endl;
+#endif
+
       // Close current window
       window.close();
 
       // Create new fullscreen window using SFML 3.0.1 true fullscreen API
-      createWindow(window, m_fullscreenMode, sf::Style::Default, sf::State::Fullscreen);
+      createWindow(window, targetFullscreenMode, sf::Style::Default, sf::State::Fullscreen);
 
       m_isFullscreen = true;
       
@@ -267,48 +277,84 @@ void WindowManager::updateRenderTextureSize(sf::RenderTexture& renderTexture, sf
 }
 
 void WindowManager::updateSpriteScaling(sf::Sprite& sprite, sf::RenderWindow& window) {
-  // Implementation based on the best practice pattern from the document
-  sf::Vector2u windowSize = window.getSize();
-  sf::Vector2u gameResolution(initScreenX, initScreenY);
+  // Fix for double-scaling issue: Let SFML view system handle all scaling
+  // Remove sprite-level scaling to prevent compound scaling effects
   
-  // Calculate aspect ratios
-  float windowAspect = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
-  float gameAspect = static_cast<float>(gameResolution.x) / static_cast<float>(gameResolution.y);
+  // Always use 1:1 sprite scaling - the view system handles fullscreen scaling
+  sprite.setScale(sf::Vector2f(1.0f, 1.0f));
+  sprite.setPosition(sf::Vector2f(0.0f, 0.0f));
   
-  // Calculate viewport for letterboxing/pillarboxing
-  int viewportWidth, viewportHeight, viewportLeft, viewportTop;
-  
-  if (windowAspect > gameAspect) {
-    // Window is wider - pillarboxing (black bars on sides)
-    viewportHeight = static_cast<int>(windowSize.y);
-    viewportWidth = static_cast<int>(windowSize.y * gameAspect);
-    viewportLeft = (static_cast<int>(windowSize.x) - viewportWidth) / 2;
-    viewportTop = 0;
+#ifndef NDEBUG
+  if (m_isFullscreen) {
+    std::cout << "Fullscreen mode: Using view-only scaling (sprite at 1:1)" << std::endl;
   } else {
-    // Window is taller - letterboxing (black bars on top/bottom)
-    viewportWidth = static_cast<int>(windowSize.x);
-    viewportHeight = static_cast<int>(windowSize.x / gameAspect);
-    viewportLeft = 0;
-    viewportTop = (static_cast<int>(windowSize.y) - viewportHeight) / 2;
+    std::cout << "Windowed mode: Using 1:1 scaling" << std::endl;
+  }
+#endif
+}
+
+sf::VideoMode WindowManager::detectCurrentMonitorMode(sf::RenderWindow& window) {
+  if (!window.isOpen()) {
+    // Fallback to desktop mode if window is not open
+    return sf::VideoMode::getDesktopMode();
   }
   
-  // Calculate scaling factor
-  float scale = static_cast<float>(viewportWidth) / static_cast<float>(gameResolution.x);
+  // Get current window position and size
+  sf::Vector2i windowPos = window.getPosition();
+  sf::Vector2u windowSize = window.getSize();
   
-  // Apply scaling and positioning to sprite using SFML 3.0.1 API
-  sprite.setScale(sf::Vector2f(scale, scale));
-  sprite.setPosition(sf::Vector2f(static_cast<float>(viewportLeft), static_cast<float>(viewportTop)));
-
-#ifndef NDEBUG
-  std::cout << "Sprite scaling updated:" << std::endl;
-  std::cout << "  Window: " << windowSize.x << "x" << windowSize.y 
-            << " (aspect: " << windowAspect << ")" << std::endl;
-  std::cout << "  Game: " << gameResolution.x << "x" << gameResolution.y 
-            << " (aspect: " << gameAspect << ")" << std::endl;
-  std::cout << "  Viewport: " << viewportLeft << ", " << viewportTop 
-            << ", " << viewportWidth << ", " << viewportHeight << std::endl;
-  std::cout << "  Scale: " << scale << std::endl;
-#endif
+  // Calculate window center point
+  sf::Vector2i windowCenter(
+    windowPos.x + static_cast<int>(windowSize.x) / 2,
+    windowPos.y + static_cast<int>(windowSize.y) / 2
+  );
+  
+  // Get all available fullscreen modes (represents different monitors/resolutions)
+  std::vector<sf::VideoMode> availableModes = sf::VideoMode::getFullscreenModes();
+  
+  if (availableModes.empty()) {
+    // Fallback to desktop mode if no fullscreen modes available
+    return sf::VideoMode::getDesktopMode();
+  }
+  
+  // For cross-platform compatibility, we use a heuristic approach:
+  // - On single monitor systems, use the highest resolution mode
+  // - On multi-monitor systems, try to detect based on window position
+  
+  // Sort modes by resolution (highest first)
+  std::sort(availableModes.begin(), availableModes.end(),
+    [](const sf::VideoMode& a, const sf::VideoMode& b) {
+      if (a.size.x != b.size.x) return a.size.x > b.size.x;
+      return a.size.y > b.size.y;
+    });
+  
+  // Simple heuristic: if window center is beyond primary monitor bounds,
+  // assume we're on a secondary monitor and use a different resolution
+  sf::VideoMode primaryMode = sf::VideoMode::getDesktopMode();
+  
+  if (windowCenter.x >= static_cast<int>(primaryMode.size.x) || 
+      windowCenter.y >= static_cast<int>(primaryMode.size.y) ||
+      windowCenter.x < 0 || windowCenter.y < 0) {
+    
+    // Window appears to be on a secondary monitor
+    // Look for a different resolution in available modes
+    for (const auto& mode : availableModes) {
+      if (mode.size != primaryMode.size) {
+        #ifndef NDEBUG
+        std::cout << "Window detected on secondary monitor, using mode: " 
+                  << mode.size.x << "x" << mode.size.y << std::endl;
+        #endif
+        return mode;
+      }
+    }
+  }
+  
+  // Default: use the primary monitor mode (desktop mode)
+  #ifndef NDEBUG
+  std::cout << "Using primary monitor mode: " 
+            << primaryMode.size.x << "x" << primaryMode.size.y << std::endl;
+  #endif
+  return primaryMode;
 }
 
 void WindowManager::updateViewForWindow(sf::RenderWindow& window) {
