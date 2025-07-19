@@ -615,11 +615,12 @@ Game::Game(bool newTestMode)
   // Initialize window manager
   windowManager.initialize(window, "Deerportal - game about how human can be upgraded to the Deer");
   windowManager.updateView(renderTexture);
+  windowManager.updateSpriteScaling(*renderSprite, window);
 }
 
 bool Game::toggleFullscreen() {
-  // Use window manager to toggle fullscreen
-  return windowManager.toggleFullscreen(window);
+  // Use window manager to toggle fullscreen with render texture and sprite support
+  return windowManager.toggleFullscreen(window, renderTexture, *renderSprite);
 }
 
 
@@ -1191,8 +1192,13 @@ void Game::render(float deltaTime) {
   v1 = sin(deltaTime) * 0.015f;
   shaderBlur.setUniform("blur_radius", v1);
   shaderBlur.setUniform("blur_radius", 0.0003f);
+  
+  // Clear window with black (letterbox/pillarbox color)
+  window.clear(sf::Color::Black);
+  
+  // Sprite scaling and positioning is handled by WindowManager
+  // No view management needed - sprite handles the scaling
   window.draw(*renderSprite, &shaderBlur);
-
   window.display();
 }
 

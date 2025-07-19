@@ -51,7 +51,7 @@ void WindowManager::initializeVideoModes() {
 #endif
 }
 
-bool WindowManager::toggleFullscreen(sf::RenderWindow& window) {
+bool WindowManager::toggleFullscreen(sf::RenderWindow& window, sf::RenderTexture& renderTexture, sf::Sprite& renderSprite) {
   try {
     if (m_isFullscreen) {
       // Switch to windowed mode
@@ -63,12 +63,18 @@ bool WindowManager::toggleFullscreen(sf::RenderWindow& window) {
       window.close();
 
       // Create new windowed window
-      createWindow(window, m_windowedMode, 1 | 4); // Titlebar | Close
+      createWindow(window, m_windowedMode, sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed);
 
       // Restore window position
       restoreWindowPosition(window);
 
       m_isFullscreen = false;
+      
+      // Update view, render texture, and sprite scaling for windowed mode
+      updateViewForWindow(window);
+      updateRenderTextureSize(renderTexture, window);
+      updateSpriteScaling(renderSprite, window);
+      
 #ifndef NDEBUG
       std::cout << "Switched to windowed mode successfully" << std::endl;
 #endif
@@ -85,10 +91,16 @@ bool WindowManager::toggleFullscreen(sf::RenderWindow& window) {
       // Close current window
       window.close();
 
-      // Create new fullscreen window
-      createWindow(window, m_fullscreenMode, 8); // Fullscreen
+      // Create new fullscreen window using SFML 3.0.1 true fullscreen API
+      createWindow(window, m_fullscreenMode, sf::Style::Default, sf::State::Fullscreen);
 
       m_isFullscreen = true;
+      
+      // Update view, render texture, and sprite scaling for fullscreen mode
+      updateViewForWindow(window);
+      updateRenderTextureSize(renderTexture, window);
+      updateSpriteScaling(renderSprite, window);
+      
 #ifndef NDEBUG
       std::cout << "Switched to fullscreen mode successfully" << std::endl;
 #endif
@@ -117,7 +129,7 @@ void WindowManager::forceWindowedMode(sf::RenderWindow& window) {
 
   try {
     window.close();
-    createWindow(window, m_windowedMode, 1 | 4); // Titlebar | Close
+    createWindow(window, m_windowedMode, sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed);
     restoreWindowPosition(window);
     m_isFullscreen = false;
 #ifndef NDEBUG
@@ -156,9 +168,9 @@ void WindowManager::restoreWindowPosition(sf::RenderWindow& window) {
 
 void WindowManager::createWindow(sf::RenderWindow& window,
                                  const sf::VideoMode& videoMode,
-                                 std::uint32_t style) {
-  // Create the window
-  window.create(videoMode, m_windowTitle, style);
+                                 std::uint32_t style, sf::State state) {
+  // Create the window using SFML 3.0.1 API
+  window.create(videoMode, m_windowTitle, style, state);
 
   if (!window.isOpen()) {
     throw std::runtime_error("Failed to create window");
@@ -175,26 +187,179 @@ void WindowManager::createWindow(sf::RenderWindow& window,
 }
 
 void WindowManager::updateView(sf::RenderTexture& renderTexture) {
-  sf::Vector2u textureSize = renderTexture.getSize();
-  float textureRatio =
-      static_cast<float>(textureSize.x) / static_cast<float>(textureSize.y);
-  float viewRatio = static_cast<float>(initScreenX) / static_cast<float>(initScreenY);
-
-  float viewportX = 1.f;
-  float viewportY = 1.f;
-  float viewportWidth = 1.f;
-  float viewportHeight = 1.f;
-
-  if (textureRatio > viewRatio) {
-    viewportWidth = viewRatio / textureRatio;
-    viewportX = (1.f - viewportWidth) / 2.f;
-  } else {
-    viewportHeight = textureRatio / viewRatio;
-    viewportY = (1.f - viewportHeight) / 2.f;
+  // Get the current window size (actual screen resolution in fullscreen)
+  sf::Vector2u windowSize = renderTexture.getSize();
+  
+  // Game's native resolution
+  float gameWidth = static_cast<float>(initScreenX);   // 1360
+  float gameHeight = static_cast<float>(initScreenY);  // 768
+  float gameAspectRatio = gameWidth / gameHeight;
+  
+  // Current window aspect ratio
+  float windowWidth = static_cast<float>(windowSize.x);
+  float windowHeight = static_cast<float>(windowSize.y);
+  float windowAspectRatio = windowWidth / windowHeight;
+  
+  // Calculate viewport for letterboxing/pillarboxing
+  float viewportX = 0.0f;
+  float viewportY = 0.0f;
+  float viewportWidth = 1.0f;
+  float viewportHeight = 1.0f;
+  
+  if (windowAspectRatio > gameAspectRatio) {
+    // Window is wider than game - add pillarboxing (black bars on left/right)
+    viewportWidth = gameAspectRatio / windowAspectRatio;
+    viewportX = (1.0f - viewportWidth) / 2.0f;
+    // viewportY and viewportHeight remain default (0.0, 1.0)
+  } else if (windowAspectRatio < gameAspectRatio) {
+    // Window is taller than game - add letterboxing (black bars on top/bottom)
+    viewportHeight = windowAspectRatio / gameAspectRatio;
+    viewportY = (1.0f - viewportHeight) / 2.0f;
+    // viewportX and viewportWidth remain default (0.0, 1.0)
   }
-
+  // If aspect ratios match exactly, use full viewport (1.0, 1.0)
+  
+  // Set the view to use the entire game area
+  m_view.setSize(sf::Vector2f(gameWidth, gameHeight));
+  m_view.setCenter(sf::Vector2f(gameWidth / 2.0f, gameHeight / 2.0f));
+  
+  // Apply calculated viewport with letterboxing/pillarboxing
   m_view.setViewport(sf::FloatRect(sf::Vector2f(viewportX, viewportY), sf::Vector2f(viewportWidth, viewportHeight)));
+  
+  // Apply the view to the render texture
   renderTexture.setView(m_view);
+
+#ifndef NDEBUG
+  std::cout << "Fullscreen scaling updated:" << std::endl;
+  std::cout << "  Window: " << windowWidth << "x" << windowHeight 
+            << " (aspect: " << windowAspectRatio << ")" << std::endl;
+  std::cout << "  Game: " << gameWidth << "x" << gameHeight 
+            << " (aspect: " << gameAspectRatio << ")" << std::endl;
+  std::cout << "  Viewport: " << viewportX << ", " << viewportY 
+            << ", " << viewportWidth << ", " << viewportHeight << std::endl;
+#endif
+}
+
+sf::View WindowManager::getView() const {
+    return m_view;
+}
+
+void WindowManager::updateRenderTextureSize(sf::RenderTexture& renderTexture, sf::RenderWindow& window) {
+  // Always keep render texture at native game resolution (1360x768)
+  // This follows the best practice pattern from the document
+  sf::Vector2u gameResolution(initScreenX, initScreenY);
+  
+  if (!renderTexture.resize(gameResolution)) {
+    std::cerr << "Failed to resize render texture to game resolution" << std::endl;
+    return;
+  }
+  
+  // Enable bilinear filtering for better scaling quality
+  renderTexture.setSmooth(true);
+  
+  // Reset to default view - scaling will be handled when drawing to window
+  renderTexture.setView(renderTexture.getDefaultView());
+
+#ifndef NDEBUG
+  std::cout << "Render texture maintained at native resolution: " 
+            << gameResolution.x << "x" << gameResolution.y << std::endl;
+#endif
+}
+
+void WindowManager::updateSpriteScaling(sf::Sprite& sprite, sf::RenderWindow& window) {
+  // Implementation based on the best practice pattern from the document
+  sf::Vector2u windowSize = window.getSize();
+  sf::Vector2u gameResolution(initScreenX, initScreenY);
+  
+  // Calculate aspect ratios
+  float windowAspect = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
+  float gameAspect = static_cast<float>(gameResolution.x) / static_cast<float>(gameResolution.y);
+  
+  // Calculate viewport for letterboxing/pillarboxing
+  int viewportWidth, viewportHeight, viewportLeft, viewportTop;
+  
+  if (windowAspect > gameAspect) {
+    // Window is wider - pillarboxing (black bars on sides)
+    viewportHeight = static_cast<int>(windowSize.y);
+    viewportWidth = static_cast<int>(windowSize.y * gameAspect);
+    viewportLeft = (static_cast<int>(windowSize.x) - viewportWidth) / 2;
+    viewportTop = 0;
+  } else {
+    // Window is taller - letterboxing (black bars on top/bottom)
+    viewportWidth = static_cast<int>(windowSize.x);
+    viewportHeight = static_cast<int>(windowSize.x / gameAspect);
+    viewportLeft = 0;
+    viewportTop = (static_cast<int>(windowSize.y) - viewportHeight) / 2;
+  }
+  
+  // Calculate scaling factor
+  float scale = static_cast<float>(viewportWidth) / static_cast<float>(gameResolution.x);
+  
+  // Apply scaling and positioning to sprite using SFML 3.0.1 API
+  sprite.setScale(sf::Vector2f(scale, scale));
+  sprite.setPosition(sf::Vector2f(static_cast<float>(viewportLeft), static_cast<float>(viewportTop)));
+
+#ifndef NDEBUG
+  std::cout << "Sprite scaling updated:" << std::endl;
+  std::cout << "  Window: " << windowSize.x << "x" << windowSize.y 
+            << " (aspect: " << windowAspect << ")" << std::endl;
+  std::cout << "  Game: " << gameResolution.x << "x" << gameResolution.y 
+            << " (aspect: " << gameAspect << ")" << std::endl;
+  std::cout << "  Viewport: " << viewportLeft << ", " << viewportTop 
+            << ", " << viewportWidth << ", " << viewportHeight << std::endl;
+  std::cout << "  Scale: " << scale << std::endl;
+#endif
+}
+
+void WindowManager::updateViewForWindow(sf::RenderWindow& window) {
+  // Get the current window size (actual screen resolution in fullscreen)
+  sf::Vector2u windowSize = window.getSize();
+  
+  // Game's native resolution
+  float gameWidth = static_cast<float>(initScreenX);   // 1360
+  float gameHeight = static_cast<float>(initScreenY);  // 768
+  float gameAspectRatio = gameWidth / gameHeight;
+  
+  // Current window aspect ratio
+  float windowWidth = static_cast<float>(windowSize.x);
+  float windowHeight = static_cast<float>(windowSize.y);
+  float windowAspectRatio = windowWidth / windowHeight;
+  
+  // Calculate viewport for letterboxing/pillarboxing
+  float viewportX = 0.0f;
+  float viewportY = 0.0f;
+  float viewportWidth = 1.0f;
+  float viewportHeight = 1.0f;
+  
+  if (windowAspectRatio > gameAspectRatio) {
+    // Window is wider than game - add pillarboxing (black bars on left/right)
+    viewportWidth = gameAspectRatio / windowAspectRatio;
+    viewportX = (1.0f - viewportWidth) / 2.0f;
+  } else if (windowAspectRatio < gameAspectRatio) {
+    // Window is taller than game - add letterboxing (black bars on top/bottom)
+    viewportHeight = windowAspectRatio / gameAspectRatio;
+    viewportY = (1.0f - viewportHeight) / 2.0f;
+  }
+  
+  // Set the view to use the entire game area
+  m_view.setSize(sf::Vector2f(gameWidth, gameHeight));
+  m_view.setCenter(sf::Vector2f(gameWidth / 2.0f, gameHeight / 2.0f));
+  
+  // Apply calculated viewport with letterboxing/pillarboxing
+  m_view.setViewport(sf::FloatRect(sf::Vector2f(viewportX, viewportY), sf::Vector2f(viewportWidth, viewportHeight)));
+  
+  // Apply the view to the window
+  window.setView(m_view);
+
+#ifndef NDEBUG
+  std::cout << "Window view scaling updated:" << std::endl;
+  std::cout << "  Window: " << windowWidth << "x" << windowHeight 
+            << " (aspect: " << windowAspectRatio << ")" << std::endl;
+  std::cout << "  Game: " << gameWidth << "x" << gameHeight 
+            << " (aspect: " << gameAspectRatio << ")" << std::endl;
+  std::cout << "  Viewport: " << viewportX << ", " << viewportY 
+            << ", " << viewportWidth << ", " << viewportHeight << std::endl;
+#endif
 }
 
 } // namespace DP

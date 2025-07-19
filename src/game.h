@@ -47,6 +47,8 @@
 
 namespace DP {
 
+class WindowManager;
+
 extern int initScreenX;
 extern int initScreenY;
 
