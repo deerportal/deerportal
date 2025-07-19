@@ -105,6 +105,9 @@ void GameStateManager::showGameBoard() {
   stopMenuMusic();
   startGameMusic();
 
+  // Reset game state when returning from menu
+  game->restartGame();
+
   game->currentState = Game::state_setup_players;
   game->sfx.playLetsBegin();
 }

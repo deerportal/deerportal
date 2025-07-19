@@ -1,34 +1,32 @@
-# DeerPortal Version 0.9.2-pre.2 - Windows Build Refinements (PRE-RELEASE)
+# DeerPortal Version 0.9.5 - Code Formatting and Quality (STABLE RELEASE)
 
-**Development Date**: January 2025  
-**Platforms**: Windows (Primary), macOS, Linux
+**Release Date**: July 19, 2025  
+**Platforms**: Windows, macOS, Linux
 
-## Version 0.9.2-pre.2 Progress
+## Version 0.9.5 Final Release
 
-**Windows Build Improvements**
-- Enhanced Windows executable generation and testing
-- Resolved PowerShell execution policy compatibility issues
-- Improved Windows build scripts for SFML 3.0.1 integration
-- Version management updated for new pre-release cycle
-- ✅ Grid reveal intro shader loading successfully verified and fixed
+**Code Quality and Formatting**
+- LLVM code formatting applied to entire codebase for consistency
+- Comprehensive version management across all packaging files
+- Code quality improvements and standardization
+- Enhanced development workflow with unified formatting standards
 
-**Fullscreen Implementation Planning**
-- Created comprehensive plan for cross-platform fullscreen toggle
-- F key chosen as toggle (F11 problematic on macOS)
-- Detailed architecture for SFML 3.0.1 window recreation approach
-- Platform-specific considerations documented
-- Resource management and error handling strategies defined
+**Critical Bug Fix: Game State Reset**
+- Fixed game state persistence bug when returning from menu via Escape key
+- Players pressing Escape→Menu→Play now get properly reset game state
+- Previously: players/resources/positions persisted inappropriately
+- Solution: Added `game->restartGame()` call in `GameStateManager::showGameBoard()`
+- Simple one-line fix ensures clean game restart experience
 
-**Known Issues**
-- PowerShell execution policy may show error messages when running .exe files directly
-- Application runs correctly despite PowerShell warnings
-- Solutions documented in ai-docs/errors.md
+**Version Management**
+- Updated from 0.9.5-pre.1 to stable 0.9.5 across all files
+- Unified version handling in debian/changelog, snapcraft.yaml, appdata.xml
+- Single source of truth maintained in version.txt
 
-**Development Notes**
-- Systematic approach to Windows platform compatibility
-- Grid reveal intro shader loading successfully verified
-- Continuous integration improvements for Windows builds
-- Fullscreen feature planned for future implementation
+**Technical Improvements**
+- Enhanced game state management and transition reliability
+- Improved user experience with consistent game restart behavior
+- Maintained all features from previous versions while fixing critical state issue
 
 # DeerPortal Version 0.9.1 - Stability Improvements (FINAL RELEASE)
 
