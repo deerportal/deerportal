@@ -1062,8 +1062,14 @@ void Game::drawCharacters() {
  * \param deltaTime
  */
 void Game::render(float deltaTime) {
-  window.clear();
+  // All drawing is done to the renderTexture at a fixed 1360x768 resolution.
+  // The final result is then scaled to the window by the WindowManager's view.
+
+  window.clear(sf::Color::Black); // Clear window with black for letterboxing
   renderTexture.clear();
+
+  // --- Begin Drawing to RenderTexture ---
+
   if ((currentState == state_game) || (currentState == state_roll_dice)) {
     renderTexture.setView(viewFull);
     renderTexture.draw(*spriteBackgroundDark);
@@ -1072,29 +1078,20 @@ void Game::render(float deltaTime) {
     renderTexture.setView(viewFull);
     renderTexture.draw(groupHud);
     renderTexture.setView(viewTiles);
-    // FIXED: Draw diamonds first, then characters on top
     renderTexture.draw(boardDiamonds);
     drawCharacters();
     renderTexture.draw(bubble);
-
-    // Draw particles LAST so they appear on top of everything
-#ifndef NDEBUG
-    std::cout << "DEBUG: About to draw particles in Game::render() path" << std::endl;
-#endif
     getAnimationSystem()->drawCircleParticles(renderTexture);
     renderTexture.setView(viewFull);
     drawPlayersGui();
     renderTexture.setView(viewFull);
-
-    // Draw Big Diamond ONLY when game board is active
     if (bigDiamondActive) renderTexture.draw(*spriteBigDiamond);
 
   } else if (currentState == state_intro_shader) {
-    // Render intro shader animation directly to window (bypass render texture for performance)
-    window.clear(sf::Color::Black);
+    // The intro shader has its own direct-to-window rendering path
     introShader.render(window);
     window.display();
-    return; // Skip the rest of the rendering pipeline for intro shader
+    return;
 
   } else if (currentState == state_setup_players) {
     renderTexture.setView(viewFull);
@@ -1112,26 +1109,16 @@ void Game::render(float deltaTime) {
     renderTexture.draw(groupHud);
 
   } else if (currentState == state_menu) {
-
-    //        shaderBlur.setParameter("blur_radius", 15);
     renderTexture.draw(*menuBackground);
-    //        //        renderTexture.draw(menuTxt, &shaderBlur);
-    //        renderTexture.draw(menuTxt);
     renderTexture.draw(*paganHolidayTxt);
-
-    // FPS Counter and Version info will be moved to a general drawing location
-    // #if defined(DEERPORTAL_SHOW_FPS_COUNTER) || !defined(NDEBUG)
-    //         renderTexture.draw(*textFPS);
-    //         renderTexture.draw(*gameVersion);
-    // #endif
     renderTexture.draw(credits);
+
   } else if (currentState == state_lets_begin) {
     renderTexture.setView(viewFull);
     shaderBlur.setUniform("blur_radius", 4.0f);
     renderTexture.draw(*spriteBackgroundDark, &shaderBlur);
     renderTexture.setView(viewTiles);
     drawBaseGame();
-    // FIXED: Draw diamonds first, then characters on top
     renderTexture.draw(boardDiamonds, &shaderBlur);
     drawCharacters();
     renderTexture.setView(viewFull);
@@ -1146,17 +1133,12 @@ void Game::render(float deltaTime) {
     renderTexture.draw(guiRoundDice, &shaderBlur);
     renderTexture.setView(viewFull);
     renderTexture.draw(groupHud);
+
   } else if (currentState == state_end_game) {
     renderTexture.setView(viewFull);
     renderTexture.draw(*spriteBackgroundDark);
     renderTexture.draw(*spriteLestBegin, &shaderBlur);
     renderTexture.draw(*endGameTxt);
-
-    //        for (int i=0;i<4;i++){
-    //            if (players[i].reachedPortal)
-    //                renderTexture.draw(endGameTxtAmount[i]);
-    //        }
-
     renderTexture.draw(*txtWinner);
     renderTexture.draw(*txtSurvivorsLabel);
     for (unsigned int i = 0; i < txtSurvivors.size(); i++) {
@@ -1167,36 +1149,33 @@ void Game::render(float deltaTime) {
       renderTexture.draw(*txtLoosers[i]);
     }
   }
-  if (banner.active) renderTexture.draw(banner);
 
-  // Draw card notification overlay
+  if (banner.active) renderTexture.draw(banner);
   if (cardNotification.isActive()) renderTexture.draw(cardNotification);
 
-  renderTexture.setView(viewFull); // Ensure GUI view for correct positioning
+  renderTexture.setView(viewFull);
 
-  // Show FPS counter if DEERPORTAL_SHOW_FPS_COUNTER is defined (via CMake option)
-  // OR if it's a Debug build (NDEBUG is not defined)
 #if defined(DEERPORTAL_SHOW_FPS_COUNTER) || !defined(NDEBUG)
   renderTexture.draw(*textFPS);
 #endif
-
-  // Show version info ONLY in Debug builds (NDEBUG is not defined)
 #ifndef NDEBUG
   renderTexture.draw(*gameVersion);
 #endif
 
+  // --- End Drawing to RenderTexture ---
+
+  // Finalize the texture
   renderTexture.display();
+
+  // Set the final texture to the main render sprite
   renderSprite->setTexture(renderTexture.getTexture());
 
+  // Apply blur shader to final render for performance
   v1 = sin(deltaTime) * 0.015f;
-  shaderBlur.setUniform("blur_radius", v1);
   shaderBlur.setUniform("blur_radius", 0.0003f);
 
-  // Clear window with black (letterbox/pillarbox color)
-  window.clear(sf::Color::Black);
-
-  // Sprite scaling and positioning is handled by WindowManager
-  // No view management needed - sprite handles the scaling
+  // The WindowManager handles scaling and letterboxing via sprite positioning
+  // Apply shader to final scaled render for best performance
   window.draw(*renderSprite, &shaderBlur);
   window.display();
 }
