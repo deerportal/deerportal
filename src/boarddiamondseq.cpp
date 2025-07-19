@@ -58,14 +58,10 @@ void BoardDiamondSeq::updateSingleDiamond(int index) const {
   sf::Vector2i cords = DP::transPosition(diamond.boardPosition);
   sf::Vector2f tilePos = DP::getScreenPos(cords);
 
-  // Dynamic diamond size: 80% in windowed mode, full size in fullscreen
+  // Always use 80% size for better proportions
+  // Since fullscreen uses view scaling, diamonds should be consistently smaller
   const float baseDiamondSize = 44.0f;
-  float diamondSize = baseDiamondSize;
-  
-  // Scale to 80% if not in fullscreen mode (and windowManager is available)
-  if (windowManager && !windowManager->isFullscreen()) {
-    diamondSize = baseDiamondSize * 0.8f; // 80% size for windowed mode
-  }
+  float diamondSize = baseDiamondSize * 0.8f; // 80% size for all modes
 
   // Center the diamond on the tile (40x40) with dynamic size
   float offsetX = (DP::TILE_SIZE - diamondSize) / 2.0f; // Center horizontally

@@ -621,14 +621,7 @@ Game::Game(bool newTestMode)
 
 bool Game::toggleFullscreen() {
   // Use window manager to toggle fullscreen with render texture and sprite support
-  bool success = windowManager.toggleFullscreen(window, renderTexture, *renderSprite);
-  
-  // Update board diamonds scaling after fullscreen toggle
-  if (success) {
-    boardDiamonds.markForUpdate();
-  }
-  
-  return success;
+  return windowManager.toggleFullscreen(window, renderTexture, *renderSprite);
 }
 
 int Game::run() {
