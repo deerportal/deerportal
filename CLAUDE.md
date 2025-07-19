@@ -64,7 +64,17 @@ The game uses a modular architecture with clear separation of concerns:
 
 ### File Structure
 ```
-src/                 # Main C++ source code (~60 files, ~6,807 lines)
+src/                 # Main C++ source code (~70 files, ~7,200+ lines)
+├── Animation System # game-animation-system.h/cpp - VertexArray particle effects
+├── Asset Management # game-assets.h/cpp - Multi-platform resource loading
+├── Input Processing # game-input.h/cpp - Unified event handling
+├── Rendering Engine # game-renderer.h/cpp - V-Sync optimized graphics
+├── Game Logic      # game-core.h/cpp - Rules and state management
+├── State Management # game-state-manager.h/cpp - Music coordination
+├── Error Handling  # error-handler.h/cpp, exceptions.h - Safe execution
+├── Utility Systems # safe-asset-loader.h/cpp, window-manager.h/cpp
+└── Card System     # card*.h/cpp - Card mechanics and notifications
+
 assets/             # Game assets (images, audio, fonts, shaders)
 packaging/          # Platform-specific packaging resources
 ai-docs/           # AI assistant documentation and context

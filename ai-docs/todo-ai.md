@@ -1,5 +1,13 @@
 # TODO List - Post Version 0.9.5 Development
 
+## Current Version: 0.9.6-pre.2
+
+### Documentation Update Status - July 2025
+- **Code Analysis**: Complete - Source structure analyzed
+- **Architecture Changes**: Documented - Particle system removal, new utility systems
+- **File Structure**: Updated - Reflects current ~70 files with modular organization
+- **Version Sync**: Verified - Documentation aligned with 0.9.6-pre.2
+
 ## Completed in 0.9.5
 - [x] Fixed game state reset bug when returning from menu (Escape→Menu→Play)
 - [x] Applied LLVM code formatting to entire codebase
