@@ -1,3 +1,25 @@
+## July 19, 2025 - Linux Distribution Asset Loading (v0.9.6)
+
+**Problem**: AppImage and tar.gz Linux distributions failed to start due to asset path issues:
+- AppImage: `execv error: No such file or directory` 
+- Tar.gz: `Failed to open sound file - assets/audio/dice.ogg`
+
+**Root Cause**: 
+- AppImage CI installed assets to `/usr/share/deerportal/` but code expected `/usr/share/games/deerportal/`
+- Tar.gz packages had assets in correct location but binary couldn't resolve relative paths
+
+**Solution**:
+1. Updated `filetools.h` APPDIR path resolution to use `/usr/share/games/deerportal/`
+2. Added Linux-specific binary detection using `/proc/self/exe` and `readlink`
+3. Fixed CI workflows (cmake.yml, test-release.yml, release.yml) to install assets in `/usr/share/games/deerportal/`
+4. Added stat() verification to ensure assets directory exists before using path
+
+**Files Modified**: 
+- `src/filetools.h` - Asset path resolution logic
+- `.github/workflows/*.yml` - CI/CD asset installation paths
+
+**Testing**: Requires building new Linux packages to verify fixes work in actual distribution environment.
+
 ## Issue: Game state persistence bug when returning from menu (FIXED in 0.9.5)
 - Symptom: When pressing Escape to menu then clicking to play, game continued from previous state
 - Cause: GameStateManager::showGameBoard() didn't call restartGame() when transitioning from menu

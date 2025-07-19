@@ -7,8 +7,12 @@
 #ifdef __APPLE__
 #include <libgen.h>
 #include <unistd.h>
-
 #include <mach-o/dyld.h>
+#endif
+
+#ifdef __linux__
+#include <unistd.h>
+#include <sys/stat.h>
 #endif
 
 static std::string get_full_path(std::string path) {
@@ -21,16 +25,38 @@ static std::string get_full_path(std::string path) {
   // Check for AppImage APPDIR environment variable
   if (getenv("APPDIR") != NULL) {
     std::string appdir = std::string(getenv("APPDIR"));
-    // Try standard Linux application data location first
-    new_path = appdir + "/usr/share/deerportal/" + path;
-    // Check if file exists at this location (basic check for directory)
-    if (new_path.find("assets/") == 0 || new_path.find("assets") != std::string::npos) {
-      return new_path;
-    }
-    // Fallback to usr/bin location (current CI setup)
-    new_path = appdir + "/usr/bin/" + path;
+    // For AppImage, assets should be in usr/share/games/deerportal/
+    new_path = appdir + "/usr/share/games/deerportal/" + path;
     return new_path;
   }
+
+  // Check if we're running from a Linux installation (tar.gz package)
+  // Look for assets in standard Linux location relative to binary
+#ifdef __linux__
+  // Get executable directory
+  char exec_path[1024];
+  ssize_t count = readlink("/proc/self/exe", exec_path, sizeof(exec_path) - 1);
+  if (count != -1) {
+    exec_path[count] = '\0';
+    std::string exec_dir = std::string(exec_path);
+    
+    // Remove executable name to get directory
+    size_t pos = exec_dir.find_last_of('/');
+    if (pos != std::string::npos) {
+      exec_dir = exec_dir.substr(0, pos);
+      
+      // Check if we're in /usr/bin or similar - look for ../share/games/deerportal/
+      std::string assets_path = exec_dir + "/../share/games/deerportal/" + path;
+      
+      // Verify the assets directory exists
+      struct stat st;
+      std::string assets_dir = exec_dir + "/../share/games/deerportal/assets";
+      if (stat(assets_dir.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
+        return assets_path;
+      }
+    }
+  }
+#endif
 
 #ifdef __APPLE__
   // On macOS, detect if we're running from an app bundle

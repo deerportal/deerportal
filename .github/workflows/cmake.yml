@@ -571,8 +571,8 @@ jobs:
         # Copy executable and assets
         echo "Copying executable and assets..."
         cp DeerPortal DeerPortal.AppDir/usr/bin/
-        mkdir -p DeerPortal.AppDir/usr/share/deerportal/
-        cp -r ../assets DeerPortal.AppDir/usr/share/deerportal/
+        mkdir -p DeerPortal.AppDir/usr/share/games/deerportal/
+        cp -r ../assets DeerPortal.AppDir/usr/share/games/deerportal/
         
         # Create desktop file
         echo "Creating desktop file..."
