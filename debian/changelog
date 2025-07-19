@@ -1,3 +1,13 @@
+deerportal (0.9.6-stable-release-ubuntu1) trusty; urgency=medium
+
+  * STABLE RELEASE 0.9.6 "Performance and Architecture"
+  * Version update from 0.9.6-pre.2 to stable 0.9.6
+  * Documentation synchronization and architecture improvements
+  * Modular system architecture with enhanced utility systems
+  * Performance optimizations and code quality maintenance
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Fri, 19 Jul 2025 16:00:00 +0000
+
 deerportal (0.9.6-pre.2-development-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.6-pre.2 "Development Phase"

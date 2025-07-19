@@ -287,11 +287,11 @@ void WindowManager::updateSpriteScaling(sf::Sprite& sprite, sf::RenderWindow& wi
     sf::Vector2u windowSize = window.getSize();
     float scaleX = static_cast<float>(windowSize.x) / static_cast<float>(initScreenX);
     float scaleY = static_cast<float>(windowSize.y) / static_cast<float>(initScreenY);
-    
+
     // Use uniform scaling (maintain aspect ratio)
     float scale = std::min(scaleX, scaleY);
     sprite.setScale(sf::Vector2f(scale, scale));
-    
+
     // Center the sprite
     float offsetX = (windowSize.x - initScreenX * scale) / 2.0f;
     float offsetY = (windowSize.y - initScreenY * scale) / 2.0f;

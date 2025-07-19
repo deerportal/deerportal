@@ -10,7 +10,6 @@
 #include "boarddiamond.h"
 #include "textureholder.h"
 
-
 /*!
  * \brief The BoardDiamondSeq class
  * We are going to have 2 cards / diamonds of each element per each area,

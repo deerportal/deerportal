@@ -58,8 +58,8 @@ void BoardDiamondSeq::updateSingleDiamond(int index) const {
 
   // Pre-calculated constants for optimal performance (no runtime calculations)
   const float diamondSize = 35.2f; // 44.0f * 0.8f = 35.2f (80% scaled)
-  const float offsetX = 2.4f; // (40 - 35.2) / 2 = 2.4f (centering offset)
-  const float offsetY = 2.4f; // (40 - 35.2) / 2 = 2.4f (centering offset)
+  const float offsetX = 2.4f;      // (40 - 35.2) / 2 = 2.4f (centering offset)
+  const float offsetY = 2.4f;      // (40 - 35.2) / 2 = 2.4f (centering offset)
 
   sf::Vector2f position(tilePos.x + offsetX, tilePos.y + offsetY);
 
@@ -202,4 +202,3 @@ int BoardDiamondSeq::getNumberForField(int pos) {
   }
   return -1;
 }
-
