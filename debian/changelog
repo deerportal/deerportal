@@ -1,3 +1,12 @@
+deerportal (0.9.6-pre.2-development-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.6-pre.2 "Development Phase"
+  * Version bump to 0.9.6-pre.2 for continued development and testing
+  * Building upon 0.9.5 stable foundation with continued improvements
+  * Preparatory release for upcoming features and improvements
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Fri, 19 Jul 2025 15:00:00 +0000
+
 deerportal (0.9.6-pre.1-development-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.6-pre.1 "Development Phase"

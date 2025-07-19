@@ -1,7 +1,7 @@
 # Diamond Scaling and Fullscreen Performance Optimization
 
 **Date**: July 19, 2025  
-**Version**: 0.9.6-pre.1  
+**Version**: 0.9.6-pre.2  
 **Issue**: Large diamonds on board, poor fullscreen performance  
 
 ## Problem Analysis

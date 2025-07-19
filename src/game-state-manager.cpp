@@ -79,6 +79,8 @@ bool GameStateManager::validateStateTransition(int newState) const {
 void GameStateManager::showMenu() {
   startMenuMusic();
   game->currentState = Game::state_menu;
+  // Clear any active card notifications when returning to menu
+  game->cardNotification.dismiss();
 }
 
 void GameStateManager::hideMenu() {

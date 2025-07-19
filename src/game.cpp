@@ -219,6 +219,7 @@ void Game::restartGame() {
   deerModeActive = false;
   deerModeCounter = 16;
   bigDiamondActive = true; // Ensure big diamond is visible on game restart
+  cardNotification.dismiss();
 }
 
 void Game::setCurrentNeighbours() {
