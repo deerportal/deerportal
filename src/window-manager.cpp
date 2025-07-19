@@ -104,10 +104,11 @@ bool WindowManager::toggleFullscreen(sf::RenderWindow& window, sf::RenderTexture
 
       m_isFullscreen = true;
 
-      // Update view, render texture, and sprite scaling for fullscreen mode
-      updateViewForWindow(window);
+      // Optimized fullscreen setup with proper scaling
       updateRenderTextureSize(renderTexture, window);
       updateSpriteScaling(renderSprite, window);
+      // Skip complex view calculations - use sprite scaling only for better performance
+      renderTexture.setView(renderTexture.getDefaultView());
 
 #ifndef NDEBUG
       std::cout << "Switched to fullscreen mode successfully" << std::endl;
@@ -188,9 +189,9 @@ void WindowManager::createWindow(sf::RenderWindow& window, const sf::VideoMode& 
     throw std::runtime_error("Failed to create window");
   }
 
-  // Set window properties - use V-Sync for optimal performance
-  window.setVerticalSyncEnabled(true); // Sync to monitor refresh rate
-  // Remove framerate limit when using V-Sync to avoid conflicts
+  // Set window properties - disable V-Sync for maximum performance
+  window.setVerticalSyncEnabled(false); // Disable V-Sync for unlimited FPS
+  // Remove framerate limit to allow maximum performance
 
 #ifndef NDEBUG
   std::cout << "Window created: " << videoMode.size.x << "x" << videoMode.size.y
@@ -268,8 +269,8 @@ void WindowManager::updateRenderTextureSize(sf::RenderTexture& renderTexture,
     return;
   }
 
-  // Enable bilinear filtering for better scaling quality
-  renderTexture.setSmooth(true);
+  // Keep pixel-perfect rendering for better performance (no smoothing)
+  renderTexture.setSmooth(false);
 
   // Reset to default view - scaling will be handled when drawing to window
   renderTexture.setView(renderTexture.getDefaultView());
@@ -281,20 +282,25 @@ void WindowManager::updateRenderTextureSize(sf::RenderTexture& renderTexture,
 }
 
 void WindowManager::updateSpriteScaling(sf::Sprite& sprite, sf::RenderWindow& window) {
-  // Fix for double-scaling issue: Let SFML view system handle all scaling
-  // Remove sprite-level scaling to prevent compound scaling effects
-
-  // Always use 1:1 sprite scaling - the view system handles fullscreen scaling
-  sprite.setScale(sf::Vector2f(1.0f, 1.0f));
-  sprite.setPosition(sf::Vector2f(0.0f, 0.0f));
-
-#ifndef NDEBUG
   if (m_isFullscreen) {
-    std::cout << "Fullscreen mode: Using view-only scaling (sprite at 1:1)" << std::endl;
+    // Calculate simple scaling for fullscreen (avoid complex view calculations)
+    sf::Vector2u windowSize = window.getSize();
+    float scaleX = static_cast<float>(windowSize.x) / static_cast<float>(initScreenX);
+    float scaleY = static_cast<float>(windowSize.y) / static_cast<float>(initScreenY);
+    
+    // Use uniform scaling (maintain aspect ratio)
+    float scale = std::min(scaleX, scaleY);
+    sprite.setScale(sf::Vector2f(scale, scale));
+    
+    // Center the sprite
+    float offsetX = (windowSize.x - initScreenX * scale) / 2.0f;
+    float offsetY = (windowSize.y - initScreenY * scale) / 2.0f;
+    sprite.setPosition(sf::Vector2f(offsetX, offsetY));
   } else {
-    std::cout << "Windowed mode: Using 1:1 scaling" << std::endl;
+    // Windowed mode: 1:1 scaling
+    sprite.setScale(sf::Vector2f(1.0f, 1.0f));
+    sprite.setPosition(sf::Vector2f(0.0f, 0.0f));
   }
-#endif
 }
 
 sf::VideoMode WindowManager::detectCurrentMonitorMode(sf::RenderWindow& window) {
