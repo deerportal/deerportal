@@ -515,7 +515,7 @@ Game::Game(bool newTestMode)
       viewGui(sf::FloatRect({0, 0}, {(float)screenSize.x, (float)screenSize.y})),
       viewTiles(sf::FloatRect({0, 0}, {1360, 768})), currentSeason(1), month(0),
       selector(DP::TILE_SIZE), character(&textures, 3), gameTitle("deerportal"), roundDice(players),
-      roundNumber(1), guiRoundDice(&textures), boardDiamonds(&textures),
+      roundNumber(1), guiRoundDice(&textures), boardDiamonds(&textures, &windowManager),
       window(sf::VideoMode(sf::Vector2u(DP::initScreenX, DP::initScreenY)),
              "Deerportal - game about how human can be upgraded to the Deer"),
       turn(0), commandManager(*this), cardsDeck(&textures, &menuFont, &commandManager),
@@ -621,7 +621,14 @@ Game::Game(bool newTestMode)
 
 bool Game::toggleFullscreen() {
   // Use window manager to toggle fullscreen with render texture and sprite support
-  return windowManager.toggleFullscreen(window, renderTexture, *renderSprite);
+  bool success = windowManager.toggleFullscreen(window, renderTexture, *renderSprite);
+  
+  // Update board diamonds scaling after fullscreen toggle
+  if (success) {
+    boardDiamonds.markForUpdate();
+  }
+  
+  return success;
 }
 
 int Game::run() {

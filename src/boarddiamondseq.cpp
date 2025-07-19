@@ -1,8 +1,10 @@
 #include "boarddiamondseq.h"
+#include "window-manager.h"
 
-BoardDiamondSeq::BoardDiamondSeq(TextureHolder* textures)
+BoardDiamondSeq::BoardDiamondSeq(TextureHolder* textures, DP::WindowManager* windowManager)
     : m_vertices(sf::PrimitiveType::Triangles, DP::diamondsNumber * 6), m_needsUpdate(true) {
   this->textures = textures;
+  this->windowManager = windowManager;
   for (int i = 0; i < DP::diamondsNumber; i++) {
     diamonds[i] = BoardDiamond(this->textures, DP::DIAMONDS_SETUP[i][0], DP::DIAMONDS_SETUP[i][1],
                                DP::DIAMONDS_SETUP[i][2]);
@@ -56,20 +58,27 @@ void BoardDiamondSeq::updateSingleDiamond(int index) const {
   sf::Vector2i cords = DP::transPosition(diamond.boardPosition);
   sf::Vector2f tilePos = DP::getScreenPos(cords);
 
-  // Center the diamond (44x44) on the tile (40x40)
-  float offsetX = (DP::TILE_SIZE - 44.0f) / 2.0f; // Center horizontally
-  float offsetY = (DP::TILE_SIZE - 44.0f) / 2.0f; // Center vertically
+  // Dynamic diamond size: 80% in windowed mode, full size in fullscreen
+  const float baseDiamondSize = 44.0f;
+  float diamondSize = baseDiamondSize;
+  
+  // Scale to 80% if not in fullscreen mode (and windowManager is available)
+  if (windowManager && !windowManager->isFullscreen()) {
+    diamondSize = baseDiamondSize * 0.8f; // 80% size for windowed mode
+  }
+
+  // Center the diamond on the tile (40x40) with dynamic size
+  float offsetX = (DP::TILE_SIZE - diamondSize) / 2.0f; // Center horizontally
+  float offsetY = (DP::TILE_SIZE - diamondSize) / 2.0f; // Center vertically
 
   sf::Vector2f position(tilePos.x + offsetX, tilePos.y + offsetY);
 
-  const float diamondSize = 44.0f; // Size from BoardDiamond texture rect
-
-  // Calculate texture coordinates based on diamond ID
+  // Calculate texture coordinates based on diamond ID (always use base size for texture)
   int idNumber = diamond.idNumber;
-  float texLeft = idNumber * 44.0f;
+  float texLeft = idNumber * baseDiamondSize;
   float texTop = 0.0f;
-  float texRight = texLeft + 44.0f;
-  float texBottom = texTop + 44.0f;
+  float texRight = texLeft + baseDiamondSize;
+  float texBottom = texTop + baseDiamondSize;
 
   // SFML 3: Use triangles instead of quads (2 triangles = 6 vertices)
   // Triangle 1: top-left, top-right, bottom-left
@@ -201,4 +210,8 @@ int BoardDiamondSeq::getNumberForField(int pos) {
     }
   }
   return -1;
+}
+
+void BoardDiamondSeq::markForUpdate() {
+  m_needsUpdate = true;
 }
