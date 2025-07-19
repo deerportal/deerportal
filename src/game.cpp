@@ -142,6 +142,10 @@ void Game::initBoard() {
   viewTiles.setViewport(sf::FloatRect({0.15f, 0.1f}, {1.0f, 1.0f}));
   viewGui.setViewport(sf::FloatRect({0.806f, 0.066f}, {1, 1}));
 
+  // FULLSCREEN FIX: Position BoardDiamondSeq with same offset as other board elements
+  // This ensures diamonds use the same coordinate system as characters and board elements
+  boardDiamonds.setPosition(sf::Vector2f(202, 76));
+
   groupHud.setFont(&gameFont);
   groupHud.setSeason(currentSeason);
   groupHud.setRoundName(roundNumber);
@@ -610,54 +614,15 @@ Game::Game(bool newTestMode)
 
   // Initialize window manager
   windowManager.initialize(window, "Deerportal - game about how human can be upgraded to the Deer");
+  windowManager.updateView(renderTexture);
 }
 
 bool Game::toggleFullscreen() {
   // Use window manager to toggle fullscreen
-  bool success = windowManager.toggleFullscreen(window);
-
-  if (success) {
-    // Restore window properties after successful toggle
-    restoreWindowProperties();
-  }
-
-  return success;
+  return windowManager.toggleFullscreen(window);
 }
 
-void Game::restoreWindowProperties() {
-  // Adjust views to new window size
-  sf::Vector2u size = window.getSize();
 
-  // Update screen size
-  screenSize.x = static_cast<int>(size.x);
-  screenSize.y = static_cast<int>(size.y);
-
-  // Update views
-  viewFull = sf::View(sf::FloatRect(
-      sf::Vector2f(0, 0), sf::Vector2f(static_cast<float>(size.x), static_cast<float>(size.y))));
-  viewGui = sf::View(sf::FloatRect(
-      sf::Vector2f(0, 0), sf::Vector2f(static_cast<float>(size.x), static_cast<float>(size.y))));
-
-  // Keep viewTiles at original resolution for game consistency
-  viewTiles = sf::View(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(1360, 768)));
-
-  // Set window properties - use V-Sync for optimal performance
-  window.setVerticalSyncEnabled(true);  // Sync to monitor refresh rate
-  // Remove framerate limit when using V-Sync to avoid conflicts
-
-  // Update render texture if needed
-  if (windowManager.isFullscreen()) {
-    // In fullscreen, we might need to adjust scaling
-    // For now, keep the original render texture size
-#ifndef NDEBUG
-    std::cout << "Fullscreen mode active, render texture maintained at original size" << std::endl;
-#endif
-  } else {
-#ifndef NDEBUG
-    std::cout << "Windowed mode active, views restored" << std::endl;
-#endif
-  }
-}
 
 int Game::run() {
   // Handle test mode

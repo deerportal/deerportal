@@ -93,10 +93,7 @@ public:
    */
   bool toggleFullscreen();
 
-  /*!
-   * \brief Restore window properties after fullscreen toggle
-   */
-  void restoreWindowProperties();
+  
 
   BoardDiamondSeq boardDiamonds;
   sf::RenderWindow window;

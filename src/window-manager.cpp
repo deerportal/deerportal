@@ -9,15 +9,19 @@ namespace DP {
 extern int initScreenX;
 extern int initScreenY;
 
-WindowManager::WindowManager() : m_isFullscreen(false), m_windowedPosition(0, 0) {
+WindowManager::WindowManager()
+    : m_isFullscreen(false), m_windowedPosition(0, 0) {
   initializeVideoModes();
+  m_view.setSize(sf::Vector2f(initScreenX, initScreenY));
+  m_view.setCenter(sf::Vector2f(initScreenX / 2.f, initScreenY / 2.f));
 }
 
 WindowManager::~WindowManager() {
   // Nothing to clean up
 }
 
-void WindowManager::initialize(sf::RenderWindow& window, const std::string& windowTitle) {
+void WindowManager::initialize(sf::RenderWindow& window,
+                               const std::string& windowTitle) {
   m_windowTitle = windowTitle;
 
   // Store current window position if window is already created
@@ -26,7 +30,8 @@ void WindowManager::initialize(sf::RenderWindow& window, const std::string& wind
   }
 
 #ifndef NDEBUG
-  std::cout << "WindowManager initialized with title: " << windowTitle << std::endl;
+  std::cout << "WindowManager initialized with title: " << windowTitle
+            << std::endl;
 #endif
 }
 
@@ -39,9 +44,10 @@ void WindowManager::initializeVideoModes() {
 
 #ifndef NDEBUG
   std::cout << "Window modes initialized:" << std::endl;
-  std::cout << "  Windowed: " << m_windowedMode.size.x << "x" << m_windowedMode.size.y << std::endl;
-  std::cout << "  Fullscreen: " << m_fullscreenMode.size.x << "x" << m_fullscreenMode.size.y
-            << std::endl;
+  std::cout << "  Windowed: " << m_windowedMode.size.x << "x"
+            << m_windowedMode.size.y << std::endl;
+  std::cout << "  Fullscreen: " << m_fullscreenMode.size.x << "x"
+            << m_fullscreenMode.size.y << std::endl;
 #endif
 }
 
@@ -102,9 +108,7 @@ bool WindowManager::toggleFullscreen(sf::RenderWindow& window) {
   }
 }
 
-bool WindowManager::isFullscreen() const {
-  return m_isFullscreen;
-}
+bool WindowManager::isFullscreen() const { return m_isFullscreen; }
 
 void WindowManager::forceWindowedMode(sf::RenderWindow& window) {
 #ifndef NDEBUG
@@ -124,9 +128,7 @@ void WindowManager::forceWindowedMode(sf::RenderWindow& window) {
   }
 }
 
-sf::VideoMode WindowManager::getWindowedMode() const {
-  return m_windowedMode;
-}
+sf::VideoMode WindowManager::getWindowedMode() const { return m_windowedMode; }
 
 sf::VideoMode WindowManager::getFullscreenMode() const {
   return m_fullscreenMode;
@@ -136,8 +138,8 @@ void WindowManager::saveWindowPosition(sf::RenderWindow& window) {
   if (window.isOpen()) {
     m_windowedPosition = window.getPosition();
 #ifndef NDEBUG
-    std::cout << "Saved window position: " << m_windowedPosition.x << ", " << m_windowedPosition.y
-              << std::endl;
+    std::cout << "Saved window position: " << m_windowedPosition.x << ", "
+              << m_windowedPosition.y << std::endl;
 #endif
   }
 }
@@ -152,7 +154,8 @@ void WindowManager::restoreWindowPosition(sf::RenderWindow& window) {
   }
 }
 
-void WindowManager::createWindow(sf::RenderWindow& window, const sf::VideoMode& videoMode,
+void WindowManager::createWindow(sf::RenderWindow& window,
+                                 const sf::VideoMode& videoMode,
                                  std::uint32_t style) {
   // Create the window
   window.create(videoMode, m_windowTitle, style);
@@ -162,13 +165,36 @@ void WindowManager::createWindow(sf::RenderWindow& window, const sf::VideoMode& 
   }
 
   // Set window properties - use V-Sync for optimal performance
-  window.setVerticalSyncEnabled(true);  // Sync to monitor refresh rate
+  window.setVerticalSyncEnabled(true); // Sync to monitor refresh rate
   // Remove framerate limit when using V-Sync to avoid conflicts
 
 #ifndef NDEBUG
-  std::cout << "Window created: " << videoMode.size.x << "x" << videoMode.size.y
-            << " (Style: " << style << ")" << std::endl;
+  std::cout << "Window created: " << videoMode.size.x << "x"
+            << videoMode.size.y << " (Style: " << style << ")" << std::endl;
 #endif
+}
+
+void WindowManager::updateView(sf::RenderTexture& renderTexture) {
+  sf::Vector2u textureSize = renderTexture.getSize();
+  float textureRatio =
+      static_cast<float>(textureSize.x) / static_cast<float>(textureSize.y);
+  float viewRatio = static_cast<float>(initScreenX) / static_cast<float>(initScreenY);
+
+  float viewportX = 1.f;
+  float viewportY = 1.f;
+  float viewportWidth = 1.f;
+  float viewportHeight = 1.f;
+
+  if (textureRatio > viewRatio) {
+    viewportWidth = viewRatio / textureRatio;
+    viewportX = (1.f - viewportWidth) / 2.f;
+  } else {
+    viewportHeight = textureRatio / viewRatio;
+    viewportY = (1.f - viewportHeight) / 2.f;
+  }
+
+  m_view.setViewport(sf::FloatRect(sf::Vector2f(viewportX, viewportY), sf::Vector2f(viewportWidth, viewportHeight)));
+  renderTexture.setView(m_view);
 }
 
 } // namespace DP

@@ -67,12 +67,19 @@ public:
    */
   void restoreWindowPosition(sf::RenderWindow& window);
 
+  /*!
+   * \brief Update the view to scale and center the content
+   * \param window Reference to the game's render window
+   */
+  void updateView(sf::RenderTexture& renderTexture);
+
 private:
   bool m_isFullscreen;
   sf::VideoMode m_windowedMode;
   sf::VideoMode m_fullscreenMode;
   sf::Vector2i m_windowedPosition;
   std::string m_windowTitle;
+  sf::View m_view;
 
   /*!
    * \brief Initialize video modes for windowed and fullscreen
@@ -85,7 +92,9 @@ private:
    * \param videoMode Video mode to use
    * \param style Window style flags
    */
-  void createWindow(sf::RenderWindow& window, const sf::VideoMode& videoMode, std::uint32_t style);
+  void createWindow(sf::RenderWindow& window, const sf::VideoMode& videoMode,
+                    std::uint32_t style);
+  
 };
 
 } // namespace DP
