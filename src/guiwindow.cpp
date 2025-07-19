@@ -1,9 +1,9 @@
 #include "guiwindow.h"
-#include "exceptions.h"
 
 #include <iostream> // For std::cerr
 
-#include "data.h"      // For ASSETS_PATH
+#include "data.h" // For ASSETS_PATH
+#include "exceptions.h"
 #include "filetools.h" // For get_full_path
 
 void GuiWindow::setTitle(const std::string& newTitle) {
@@ -16,9 +16,9 @@ void GuiWindow::setTitle(const std::string& newTitle) {
 GuiWindow::GuiWindow(TextureHolder* textures) {
   if (!guiElemFont.openFromFile(
           get_full_path(std::string(ASSETS_PATH) + "fnt/metal-macabre.regular.ttf"))) {
-    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::FONT, 
-                                       "fnt/metal-macabre.regular.ttf", 
-                                       "Failed to load GUI font metal-macabre.regular.ttf");
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::FONT,
+                                         "fnt/metal-macabre.regular.ttf",
+                                         "Failed to load GUI font metal-macabre.regular.ttf");
   }
 
   // Initialize text and sprites that depend on loaded resources
@@ -47,9 +47,9 @@ GuiWindow::GuiWindow(TextureHolder* textures) {
 GuiWindow::GuiWindow() {
   if (!guiElemFont.openFromFile(
           get_full_path(std::string(ASSETS_PATH) + "fnt/metal-macabre.regular.ttf"))) {
-    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::FONT, 
-                                       "fnt/metal-macabre.regular.ttf", 
-                                       "Failed to load GUI font metal-macabre.regular.ttf");
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::FONT,
+                                         "fnt/metal-macabre.regular.ttf",
+                                         "Failed to load GUI font metal-macabre.regular.ttf");
   }
   guiTitleTxt = std::make_unique<sf::Text>(guiElemFont); // Pass font here
 

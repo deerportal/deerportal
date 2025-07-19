@@ -31,7 +31,8 @@ public:
    * \param renderSprite Reference to the render sprite (for scaling)
    * \return true if toggle was successful, false otherwise
    */
-  bool toggleFullscreen(sf::RenderWindow& window, sf::RenderTexture& renderTexture, sf::Sprite& renderSprite);
+  bool toggleFullscreen(sf::RenderWindow& window, sf::RenderTexture& renderTexture,
+                        sf::Sprite& renderSprite);
 
   /*!
    * \brief Check if currently in fullscreen mode
@@ -103,8 +104,7 @@ private:
   sf::VideoMode m_fullscreenMode;
   sf::Vector2i m_windowedPosition;
   std::string m_windowTitle;
-  sf::View m_view;  // View for proper fullscreen scaling
-  
+  sf::View m_view; // View for proper fullscreen scaling
 
   /*!
    * \brief Initialize video modes for windowed and fullscreen
@@ -125,9 +125,8 @@ private:
    * \param style Window style flags
    * \param state Window state (floating or fullscreen)
    */
-  void createWindow(sf::RenderWindow& window, const sf::VideoMode& videoMode,
-                    std::uint32_t style, sf::State state = sf::State::Windowed);
-  
+  void createWindow(sf::RenderWindow& window, const sf::VideoMode& videoMode, std::uint32_t style,
+                    sf::State state = sf::State::Windowed);
 };
 
 } // namespace DP

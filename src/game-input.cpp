@@ -22,7 +22,7 @@ void GameInput::processEvents(sf::RenderWindow& window) {
     handleKeyboardInput(event);
     handleMouseInput(event);
   }
-  
+
   // Update mouse position and selector continuously (not just on events)
   sf::Vector2i localPositionTmp = sf::Mouse::getPosition(window);
   sf::Vector2f localPosition = window.mapPixelToCoords(localPositionTmp, game->viewTiles);

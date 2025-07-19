@@ -45,7 +45,8 @@ GameRenderer::~GameRenderer() {}
 
 void GameRenderer::render(float deltaTime) {
 #ifndef NDEBUG
-  std::cout << "DEBUG: GameRenderer::render called, state=" << game->currentState << ", useDirectRendering=" << useDirectRendering << std::endl;
+  std::cout << "DEBUG: GameRenderer::render called, state=" << game->currentState
+            << ", useDirectRendering=" << useDirectRendering << std::endl;
 #endif
   clearBuffers();
 
@@ -58,7 +59,7 @@ void GameRenderer::render(float deltaTime) {
     renderDirectToWindow(deltaTime);
     return;
   }
-  
+
 #ifndef NDEBUG
   std::cout << "DEBUG: Using render-to-texture path, state: " << game->currentState << std::endl;
 #endif
@@ -124,7 +125,7 @@ void GameRenderer::renderStateGame() {
   game->renderTexture.draw(game->boardDiamonds);
   drawCharacters();
   game->renderTexture.draw(game->bubble);
-  
+
   // Draw particles LAST so they appear on top
 #ifndef NDEBUG
   std::cout << "DEBUG: About to draw particles in render-to-texture path" << std::endl;
@@ -457,8 +458,6 @@ void GameRenderer::renderDirectToWindow(float deltaTime) {
   drawCharactersDirect();
   game->window.draw(game->boardDiamonds);
   game->window.draw(game->bubble);
-  
-
 
   game->window.setView(game->viewFull);
   drawPlayersGuiDirect();

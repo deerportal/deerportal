@@ -522,7 +522,8 @@ Game::Game(bool newTestMode)
       banner(&gameFont), cardNotification(&gameFont, &textures), bigDiamondActive(false),
       credits(&gameFont), sfxClick(sfxClickBuffer), sfxDone(sfxDoneBuffer),
       nextRotateElem(&textures), prevRotateElem(&textures), cpuTimeThinkingInterval(1.0f),
-      cardNotificationDelay(0.0f), deerModeCounter(4), deerModeActive(false), v1(0.0f), fpsDisplayUpdateTimer(0.0f) {
+      cardNotificationDelay(0.0f), deerModeCounter(4), deerModeActive(false), v1(0.0f),
+      fpsDisplayUpdateTimer(0.0f) {
   testMode = newTestMode;
   // Initialize unique_ptr text members (these have font constructors)
   txtWinner = std::make_unique<sf::Text>(gameFont);
@@ -622,8 +623,6 @@ bool Game::toggleFullscreen() {
   // Use window manager to toggle fullscreen with render texture and sprite support
   return windowManager.toggleFullscreen(window, renderTexture, *renderSprite);
 }
-
-
 
 int Game::run() {
   // Handle test mode
@@ -1077,7 +1076,7 @@ void Game::render(float deltaTime) {
     renderTexture.draw(boardDiamonds);
     drawCharacters();
     renderTexture.draw(bubble);
-    
+
     // Draw particles LAST so they appear on top of everything
 #ifndef NDEBUG
     std::cout << "DEBUG: About to draw particles in Game::render() path" << std::endl;
@@ -1192,10 +1191,10 @@ void Game::render(float deltaTime) {
   v1 = sin(deltaTime) * 0.015f;
   shaderBlur.setUniform("blur_radius", v1);
   shaderBlur.setUniform("blur_radius", 0.0003f);
-  
+
   // Clear window with black (letterbox/pillarbox color)
   window.clear(sf::Color::Black);
-  
+
   // Sprite scaling and positioning is handled by WindowManager
   // No view management needed - sprite handles the scaling
   window.draw(*renderSprite, &shaderBlur);

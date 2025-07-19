@@ -1,3 +1,11 @@
+deerportal (0.9.5-pre.1-version-bump-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.5-pre.1 "Version Bump"
+  * Version bump to 0.9.5-pre.1 for continued development and testing
+  * Preparatory release for upcoming features and improvements
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Fri, 19 Jul 2025 12:00:00 +0000
+
 deerportal (0.9.4-stable-release-ubuntu1) trusty; urgency=medium
 
   * STABLE RELEASE 0.9.4 "Particle System Optimization"

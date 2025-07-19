@@ -95,8 +95,6 @@ public:
    */
   bool toggleFullscreen();
 
-  
-
   BoardDiamondSeq boardDiamonds;
   sf::RenderWindow window;
   WindowManager windowManager; // NEW: Window manager for fullscreen handling
@@ -241,7 +239,7 @@ public:
   Credits credits;
 
   float cpuTimeThinkingInterval;
-  
+
   // Card notification delay for computer players
   float cardNotificationDelay;
   static constexpr float CARD_NOTIFICATION_DELAY_TIME = 4.0f;
@@ -261,7 +259,7 @@ public:
   std::unique_ptr<GameCore> core;
   std::unique_ptr<GameStateManager> stateManager;
   std::unique_ptr<GameAnimationSystem> animationSystem;
-  
+
   // Module accessors
   GameAnimationSystem* getAnimationSystem() const { return animationSystem.get(); }
   TextureHolder& getTextures() { return textures; }

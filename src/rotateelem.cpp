@@ -1,16 +1,15 @@
 #include "rotateelem.h"
-#include "exceptions.h"
 
 #include <string> // For std::string
 
 #include "data.h" // For ASSETS_PATH
+#include "exceptions.h"
 #include "textureholder.h"
 
 RotateElem::RotateElem(TextureHolder* textures) : timeCounter(0), active(true) {
   if (!textureRotate.loadFromFile(get_full_path(std::string(ASSETS_PATH) + "img/rotate.png"))) {
-    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
-                                       "img/rotate.png", 
-                                       "Failed to load rotate element texture");
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, "img/rotate.png",
+                                         "Failed to load rotate element texture");
   }
 
   spriteRotate = std::make_unique<sf::Sprite>(textureRotate);

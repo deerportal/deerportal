@@ -1,20 +1,21 @@
 #include "bubble.h"
-#include "exceptions.h"
 
 #include <array>
 #include <cmath>
 
+#include "exceptions.h"
+
 Bubble::Bubble() : state(BubbleState::DICE), timeCounter(0), posY(0) {
   if (!textureDice.loadFromFile(get_full_path(ASSETS_PATH "img/bubble_dice.png"))) {
-    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
-                                       "img/bubble_dice.png", 
-                                       "Failed to load bubble dice texture");
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE,
+                                         "img/bubble_dice.png",
+                                         "Failed to load bubble dice texture");
   }
 
   if (!textureFootSteps.loadFromFile(get_full_path(ASSETS_PATH "img/bubble_footsteps.png"))) {
-    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE, 
-                                       "img/bubble_footsteps.png", 
-                                       "Failed to load bubble footsteps texture");
+    throw DeerPortal::AssetLoadException(DeerPortal::AssetLoadException::TEXTURE,
+                                         "img/bubble_footsteps.png",
+                                         "Failed to load bubble footsteps texture");
   }
 
   spriteDice = std::make_unique<sf::Sprite>(textureDice);
