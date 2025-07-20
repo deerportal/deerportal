@@ -2,8 +2,10 @@
 #define GAME_ANIMATION_SYSTEM_H
 
 #include <algorithm>
+#include <array>
 #include <functional>
 #include <memory>
+#include <queue>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -160,9 +162,42 @@ private:
   std::vector<CircleParticle> m_circleParticles;
   std::unique_ptr<sf::Sprite> m_particleSprite; // Reused for all particles
 
-  // VertexArray optimization for batched particle rendering
-  sf::VertexArray m_particleVertices;
+  // Advanced Optimization Patterns (Web/SFML 3.0.1/OpenGL inspired)
+  
+  // 1. Object Pooling Pattern (inspired by web browser memory management)
+  static constexpr size_t PARTICLE_POOL_SIZE = 512; // Pre-allocated pool
+  std::array<CircleParticle, PARTICLE_POOL_SIZE> m_particlePool;
+  std::queue<size_t> m_availableParticleIndices; // Free list for O(1) allocation
+  std::vector<size_t> m_activeParticleIndices;   // Active particles for iteration
+  
+  // 2. Dirty Flag Optimization (inspired by web browser dirty rectangles)
+  bool m_particlesDirty = false;         // Track if VertexArray needs rebuilding
+  sf::Time m_lastVertexRebuild = sf::Time::Zero; // Prevent excessive rebuilds
+  static constexpr float VERTEX_REBUILD_THROTTLE = 1.0f / 120.0f; // Max 120 rebuilds/sec
+  
+  // 3. VertexArray Double Buffering (inspired by OpenGL front/back buffer)
+  sf::VertexArray m_particleVertices;    // Current frame vertices
+  sf::VertexArray m_particleVerticesBack; // Next frame vertices (for smooth updates)
   sf::Texture* m_particleTexture;
+  
+  // 4. Spatial Partitioning for Culling (inspired by game engines)
+  struct SpatialCell {
+    std::vector<size_t> particleIndices;
+    sf::FloatRect bounds;
+    bool visible = true; // Frustum culling flag
+  };
+  static constexpr int SPATIAL_GRID_SIZE = 8; // 8x8 grid
+  std::array<std::array<SpatialCell, SPATIAL_GRID_SIZE>, SPATIAL_GRID_SIZE> m_spatialGrid;
+  sf::FloatRect m_viewBounds; // Current camera view for culling
+  
+  // 5. Instanced Rendering Optimization (inspired by OpenGL instancing)
+  struct ParticleInstanceData {
+    sf::Vector2f position;
+    sf::Vector2f scale;
+    float rotation;
+    sf::Color color;
+  };
+  std::vector<ParticleInstanceData> m_instanceData; // GPU-friendly data layout
 
   // Oscillator state
   float oscillator;
@@ -197,6 +232,31 @@ private:
   void cleanupFinishedEffects();
   float calculateOscillatorModifier() const;
   void updateCircleParticles(sf::Time frameTime);
+  
+  // Advanced Optimization Methods (inspired by modern web/game engines)
+  
+  // Object Pooling Pattern
+  void initializeParticlePool();
+  size_t acquireParticle(); // O(1) allocation from pool
+  void releaseParticle(size_t index); // O(1) deallocation to pool
+  
+  // Dirty Flag & RequestAnimationFrame-style throttling
+  void markParticlesDirty() { m_particlesDirty = true; }
+  bool shouldRebuildVertices(sf::Time currentTime) const;
+  void throttledVertexRebuild(sf::Time currentTime);
+  
+  // Spatial Partitioning & Frustum Culling
+  void initializeSpatialGrid();
+  void updateSpatialPartitioning();
+  void cullInvisibleParticles(const sf::FloatRect& viewBounds);
+  std::pair<int, int> getGridCell(const sf::Vector2f& position) const;
+  
+  // Instanced Rendering Data Preparation
+  void prepareInstanceData();
+  void addParticleToVertexArrayOptimized(const CircleParticle& particle, size_t index);
+  
+  // Simple particle metrics (no redundant FPS counter)
+  void logPerformanceMetrics() const;
   void addParticleToVertexArray(const CircleParticle& particle);
 };
 
@@ -204,10 +264,10 @@ private:
 namespace ParticlePresets {
 // Diamond collection burst (current default) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
-    12,                                                         // count (doubled from 6)
-    180.0f,                                                     // speed (increased from 120.0f)
-    1.8f,                                                       // lifetime (increased from 1.2f)
-    0.8f,                                                       // scale (increased from 0.5f)
+    12,                                                         // count (doubled back for spectacular effects)
+    180.0f,                                                     // speed (enhanced for visibility)
+    1.8f,                                                       // lifetime (enhanced for visibility)
+    0.8f,                                                       // scale (enhanced for visibility)
     sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44)), // textureRect
     "diamond",                                                  // textureId
     nullptr,                                                    // customTexture
@@ -219,10 +279,10 @@ constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
 
 // Card collection effect - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
-    8,                                                        // count (doubled from 4)
-    140.0f,                                                   // speed (increased from 80.0f)
-    1.4f,                                                     // lifetime (increased from 0.8f)
-    0.6f,                                                     // scale (increased from 0.3f)
+    8,                                                        // count (doubled back for spectacular effects)
+    140.0f,                                                   // speed (enhanced for visibility)
+    1.4f,                                                     // lifetime (enhanced for visibility)
+    0.6f,                                                     // scale (enhanced for visibility)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),    // textureRect
     "card",                                                   // textureId
     nullptr,                                                  // customTexture
@@ -234,10 +294,10 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
 
 // Card collection effect (random explosion pattern) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
-    8,                                                           // count (doubled from 4)
-    140.0f,                                                      // speed (increased from 80.0f)
-    1.4f,                                                        // lifetime (increased from 0.8f)
-    0.6f,                                                        // scale (increased from 0.3f)
+    8,                                                           // count (doubled back for spectacular effects)
+    140.0f,                                                      // speed (enhanced for visibility)
+    1.4f,                                                        // lifetime (enhanced for visibility)
+    0.6f,                                                        // scale (enhanced for visibility)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),       // textureRect
     "card",                                                      // textureId
     nullptr,                                                     // customTexture
@@ -249,10 +309,10 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
 
 // Stop card effect (falling particles) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig STOP_CARD = {
-    16,                                                            // count (doubled from 8)
-    100.0f,                                                        // speed (increased from 60.0f)
-    1.6f,                                                          // lifetime (increased from 1.0f)
-    0.7f,                                                          // scale (increased from 0.4f)
+    16,                                                            // count (doubled back for spectacular effects)
+    100.0f,                                                        // speed (enhanced for visibility)
+    1.6f,                                                          // lifetime (enhanced for visibility)
+    0.7f,                                                          // scale (enhanced for visibility)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),         // textureRect
     "stop",                                                        // textureId
     nullptr,                                                       // customTexture
