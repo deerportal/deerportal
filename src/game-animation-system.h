@@ -202,12 +202,12 @@ private:
 
 // Predefined particle configurations for different collectible types
 namespace ParticlePresets {
-// Diamond collection burst (current default) - doubled for better visibility
+// Diamond collection burst (current default) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
     12,                                                         // count (doubled from 6)
-    120.0f,                                                     // speed
-    1.2f,                                                       // lifetime
-    0.5f,                                                       // scale
+    180.0f,                                                     // speed (increased from 120.0f)
+    1.8f,                                                       // lifetime (increased from 1.2f)
+    0.8f,                                                       // scale (increased from 0.5f)
     sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44)), // textureRect
     "diamond",                                                  // textureId
     nullptr,                                                    // customTexture
@@ -217,12 +217,12 @@ constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
     GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE   // pattern
 };
 
-// Card collection effect (smaller, quicker) - consistent circle pattern, doubled for visibility
+// Card collection effect - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
     8,                                                        // count (doubled from 4)
-    80.0f,                                                    // speed
-    0.8f,                                                     // lifetime
-    0.3f,                                                     // scale
+    140.0f,                                                   // speed (increased from 80.0f)
+    1.4f,                                                     // lifetime (increased from 0.8f)
+    0.6f,                                                     // scale (increased from 0.3f)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),    // textureRect
     "card",                                                   // textureId
     nullptr,                                                  // customTexture
@@ -232,12 +232,12 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
     GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE // pattern
 };
 
-// Card collection effect (random explosion pattern) - for variety, doubled for visibility
+// Card collection effect (random explosion pattern) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
     8,                                                           // count (doubled from 4)
-    80.0f,                                                       // speed
-    0.8f,                                                        // lifetime
-    0.3f,                                                        // scale
+    140.0f,                                                      // speed (increased from 80.0f)
+    1.4f,                                                        // lifetime (increased from 0.8f)
+    0.6f,                                                        // scale (increased from 0.3f)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),       // textureRect
     "card",                                                      // textureId
     nullptr,                                                     // customTexture
@@ -247,12 +247,12 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
     GameAnimationSystem::ParticleConfig::BurstPattern::EXPLOSION // pattern
 };
 
-// Stop card effect (falling particles) - doubled for better visibility
+// Stop card effect (falling particles) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig STOP_CARD = {
     16,                                                            // count (doubled from 8)
-    60.0f,                                                         // speed
-    1.0f,                                                          // lifetime
-    0.4f,                                                          // scale
+    100.0f,                                                        // speed (increased from 60.0f)
+    1.6f,                                                          // lifetime (increased from 1.0f)
+    0.7f,                                                          // scale (increased from 0.4f)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),         // textureRect
     "stop",                                                        // textureId
     nullptr,                                                       // customTexture

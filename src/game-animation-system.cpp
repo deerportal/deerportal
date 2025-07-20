@@ -169,7 +169,6 @@ void GameAnimationSystem::drawTemporarySprites(sf::RenderTarget& target) const {
 void GameAnimationSystem::createCollectionBurst(sf::Vector2f position,
                                                 const ParticleConfig& config) {
   const int particleCount = config.count;
-  const float radius = 30.0f;
   const float speed = config.speed;
 
 #ifndef NDEBUG

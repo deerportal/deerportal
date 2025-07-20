@@ -1,8 +1,18 @@
 # DeerPortal Development Blog
 
-## July 19, 2025 - Enhanced Visual Effects (v0.9.7-pre.2)
+## July 19, 2025 - Spectacular Particle Effects (v0.9.7-pre.2)
 
-Doubled particle counts for all card and diamond collection effects to improve visibility. Updated particle presets: DIAMOND_BURST (6→12), CARD_COLLECT (4→8), CARD_COLLECT_RANDOM (4→8), STOP_CARD (8→16), and diamond x2 effect (10→20). Enhanced visual feedback system for better user experience during gameplay.
+Made all particle effects dramatically more visible and spectacular. Enhanced all parameters for maximum visual impact:
+
+**Particle Count Doubles:** DIAMOND_BURST (6→12), CARD_COLLECT (4→8), STOP_CARD (8→16), diamond x2 (10→20)
+
+**Speed Increases:** DIAMOND_BURST (120→180), CARD_COLLECT (80→140), STOP_CARD (60→100), diamond x2 (140→220)
+
+**Scale Increases:** DIAMOND_BURST (0.5→0.8), CARD_COLLECT (0.3→0.6), STOP_CARD (0.4→0.7), diamond x2 (0.8→1.0)
+
+**Lifetime Extensions:** DIAMOND_BURST (1.2→1.8s), CARD_COLLECT (0.8→1.4s), STOP_CARD (1.0→1.6s), diamond x2 (1.8→2.2s)
+
+Removed unused hardcoded radius limitation. All collection effects now provide highly visible, long-lasting spectacular visual feedback.
 
 ## July 19, 2025 - Linux Distribution Fixes (v0.9.6)
 
