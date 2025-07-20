@@ -202,9 +202,9 @@ private:
 
 // Predefined particle configurations for different collectible types
 namespace ParticlePresets {
-// Diamond collection burst (current default)
+// Diamond collection burst (current default) - doubled for better visibility
 constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
-    6,                                                          // count
+    12,                                                         // count (doubled from 6)
     120.0f,                                                     // speed
     1.2f,                                                       // lifetime
     0.5f,                                                       // scale
@@ -217,9 +217,9 @@ constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
     GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE   // pattern
 };
 
-// Card collection effect (smaller, quicker) - consistent circle pattern
+// Card collection effect (smaller, quicker) - consistent circle pattern, doubled for visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
-    4,                                                        // count
+    8,                                                        // count (doubled from 4)
     80.0f,                                                    // speed
     0.8f,                                                     // lifetime
     0.3f,                                                     // scale
@@ -232,9 +232,9 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
     GameAnimationSystem::ParticleConfig::BurstPattern::CIRCLE // pattern
 };
 
-// Card collection effect (random explosion pattern) - for variety
+// Card collection effect (random explosion pattern) - for variety, doubled for visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
-    4,                                                           // count
+    8,                                                           // count (doubled from 4)
     80.0f,                                                       // speed
     0.8f,                                                        // lifetime
     0.3f,                                                        // scale
@@ -247,9 +247,9 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
     GameAnimationSystem::ParticleConfig::BurstPattern::EXPLOSION // pattern
 };
 
-// Stop card effect (falling particles)
+// Stop card effect (falling particles) - doubled for better visibility
 constexpr GameAnimationSystem::ParticleConfig STOP_CARD = {
-    8,                                                             // count
+    16,                                                            // count (doubled from 8)
     60.0f,                                                         // speed
     1.0f,                                                          // lifetime
     0.4f,                                                          // scale

@@ -1,3 +1,13 @@
+deerportal (0.9.7-pre.2-development-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.7-pre.2 "Enhanced Visual Effects"
+  * Enhanced particle effects with doubled particle count for better visibility
+  * Linux distribution fixes for AppImage and tar.gz asset loading
+  * Improved asset path resolution for Linux installations
+  * Building upon 0.9.6 stable foundation with visual enhancements
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Fri, 19 Jul 2025 17:00:00 +0000
+
 deerportal (0.9.6-stable-release-ubuntu1) trusty; urgency=medium
 
   * STABLE RELEASE 0.9.6 "Performance and Architecture"

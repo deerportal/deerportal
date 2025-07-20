@@ -1,6 +1,6 @@
 # TODO List - Post Version 0.9.5 Development
 
-## Current Version: 0.9.6
+## Current Version: 0.9.7-pre.2
 
 ### Documentation Update Status - July 2025
 - **Code Analysis**: Complete - Source structure analyzed

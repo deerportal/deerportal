@@ -1,5 +1,9 @@
 # DeerPortal Development Blog
 
+## July 19, 2025 - Enhanced Visual Effects (v0.9.7-pre.2)
+
+Doubled particle counts for all card and diamond collection effects to improve visibility. Updated particle presets: DIAMOND_BURST (6→12), CARD_COLLECT (4→8), CARD_COLLECT_RANDOM (4→8), STOP_CARD (8→16), and diamond x2 effect (10→20). Enhanced visual feedback system for better user experience during gameplay.
+
 ## July 19, 2025 - Linux Distribution Fixes (v0.9.6)
 
 Fixed critical Linux distribution issues affecting AppImage and tar.gz packages. Updated asset path resolution in filetools.h to properly locate assets in `/usr/share/games/deerportal/` for both AppImage and standard Linux installations. Modified CI/CD workflows (cmake.yml, test-release.yml, release.yml) to install assets in correct location. Added Linux-specific binary detection logic to resolve assets relative to executable location.
