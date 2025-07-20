@@ -61,6 +61,8 @@ The game uses a modular architecture with clear separation of concerns:
 - **Performance**: V-Sync optimization (CPU: 75% → 15-25%), VertexArray diamond rendering
 - **Shaders**: Custom GLSL shaders for blur, pixelation, and intro animations
 - **Card System**: 128 cards with unified 4-second notification delay for all player types
+- **Particle Effects**: Enhanced visual feedback with doubled particle counts and improved visibility parameters
+- **Cross-Platform Assets**: Multi-platform asset loading with Linux AppImage and tar.gz support
 
 ### File Structure
 ```
@@ -114,6 +116,7 @@ cmake_modules/     # CMake helper modules
 - **DEVELOPMENT.md**: Complete development guide with version management, build system, and release procedures
 - **ai-docs/coding-standards.md**: Comprehensive C++ coding standards and LLVM style guidelines
 - **ai-docs/memory-management-improvement-plan.md**: Detailed plan for eliminating memory management issues
+- **ai-docs/linux-asset-path-resolution.md**: Cross-platform asset loading implementation for Linux distributions
 - **.clang-format**: LLVM-style code formatting configuration for consistent C++ style
 - **ai-docs/github-actions.md**: Complete CI/CD pipeline analysis and documentation
 - **ai-docs/code-quality-analysis.md**: Complete code quality analysis with improvement tracking

@@ -1,5 +1,13 @@
 # Particle Animation System Optimization Plan
 
+## Current Implementation Status - 0.9.7-pre.2 Release ✅
+
+### Enhanced Visual Effects Update (July 2025)
+- **Spectacular particle effects**: All particle counts doubled and parameters enhanced for maximum visibility
+- **Performance maintained**: VertexArray batching continues to provide 83% performance improvement
+- **Enhanced parameters**: Speed, scale, and lifetime significantly increased across all effect types
+- **Linux compatibility**: Asset path resolution fixes for AppImage and tar.gz distributions
+
 ## Final Implementation Status - 0.9.4-pre.1 Release ✅
 
 ### Complete Implementation
@@ -315,8 +323,15 @@
 ### Performance Impact 📊
 - **Before optimization**: 6 draw calls per burst (individual sprite draws)
 - **After VertexArray optimization**: 1 draw call per burst (83% reduction)
-- **Implementation**: ✅ **COMPLETED** - VertexArray batching implemented
-- **Technical details**: 6 triangles per particle burst, single texture bind, fade effect included
+- **Current enhanced effects**: 1 draw call per burst with doubled particle counts
+- **Implementation**: ✅ **COMPLETED** - VertexArray batching maintained with enhanced visibility
+- **Technical details**: Up to 20 particles per burst (diamond x2), single texture bind, enhanced visual parameters
+
+**Enhanced Particle Parameters (v0.9.7-pre.2):**
+- **DIAMOND_BURST**: 12 particles, 180px/s speed, 1.8s lifetime, 0.8x scale
+- **CARD_COLLECT**: 8 particles, 140px/s speed, 1.4s lifetime, 0.6x scale  
+- **STOP_CARD**: 16 particles, 100px/s speed, 1.6s lifetime, 0.7x scale
+- **Diamond x2**: 20 particles, 220px/s speed, 2.2s lifetime, 1.0x scale
 
 ### Development Priority 🎯
 1. **Fix rendering architecture first** (prevents double work)

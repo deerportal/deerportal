@@ -14,6 +14,11 @@ Made all particle effects dramatically more visible and spectacular. Enhanced al
 
 Removed unused hardcoded radius limitation. All collection effects now provide highly visible, long-lasting spectacular visual feedback.
 
+**Technical Documentation Updates:**
+- Enhanced particle-system-optimization-plan.md with current implementation details
+- Created linux-asset-path-resolution.md documenting cross-platform asset loading
+- Updated CLAUDE.md with latest architectural features and technical improvements
+
 ## July 19, 2025 - Linux Distribution Fixes (v0.9.6)
 
 Fixed critical Linux distribution issues affecting AppImage and tar.gz packages. Updated asset path resolution in filetools.h to properly locate assets in `/usr/share/games/deerportal/` for both AppImage and standard Linux installations. Modified CI/CD workflows (cmake.yml, test-release.yml, release.yml) to install assets in correct location. Added Linux-specific binary detection logic to resolve assets relative to executable location.

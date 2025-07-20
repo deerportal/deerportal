@@ -6,7 +6,9 @@
 - **Code Analysis**: Complete - Source structure analyzed
 - **Architecture Changes**: Documented - Particle system removal, new utility systems
 - **File Structure**: Updated - Reflects current ~70 files with modular organization
-- **Version Sync**: Verified - Documentation aligned with 0.9.6
+- **Version Sync**: Updated - Documentation aligned with 0.9.7-pre.2
+- **Particle System**: Documented - Enhanced visual effects with doubled particle counts
+- **Linux Compatibility**: Documented - Asset path resolution for AppImage and tar.gz distributions
 
 ## Completed in 0.9.5
 - [x] Fixed game state reset bug when returning from menu (Escape→Menu→Play)
