@@ -7,11 +7,13 @@
 #ifdef __APPLE__
 #include <libgen.h>
 #include <unistd.h>
+
 #include <mach-o/dyld.h>
 #endif
 
 #ifdef __linux__
 #include <unistd.h>
+
 #include <sys/stat.h>
 #endif
 
@@ -39,15 +41,15 @@ static std::string get_full_path(std::string path) {
   if (count != -1) {
     exec_path[count] = '\0';
     std::string exec_dir = std::string(exec_path);
-    
+
     // Remove executable name to get directory
     size_t pos = exec_dir.find_last_of('/');
     if (pos != std::string::npos) {
       exec_dir = exec_dir.substr(0, pos);
-      
+
       // Check if we're in /usr/bin or similar - look for ../share/games/deerportal/
       std::string assets_path = exec_dir + "/../share/games/deerportal/" + path;
-      
+
       // Verify the assets directory exists
       struct stat st;
       std::string assets_dir = exec_dir + "/../share/games/deerportal/assets";

@@ -183,10 +183,10 @@ void Command::processCard(int pos) {
     game.getAnimationSystem()->createCollectionBurst(centerPos, cardConfig);
   } else if (cardType == "diamond x 2") {
     DP::GameAnimationSystem::ParticleConfig doubleConfig = DP::ParticlePresets::DIAMOND_BURST;
-    doubleConfig.count = 20; // Doubled from 10 for better visibility 
-    doubleConfig.speed = 220.0f; // Enhanced from 140.0f for spectacular effect
+    doubleConfig.count = 20;      // Doubled from 10 for better visibility
+    doubleConfig.speed = 220.0f;  // Enhanced from 140.0f for spectacular effect
     doubleConfig.lifetime = 2.2f; // Enhanced from 1.8f (preset) for longer visibility
-    doubleConfig.scale = 1.0f; // Enhanced from 0.8f (preset) for maximum visibility
+    doubleConfig.scale = 1.0f;    // Enhanced from 0.8f (preset) for maximum visibility
     doubleConfig.customTexture = &game.getTextures().textureBoardDiamond;
     doubleConfig.textureRect = sf::IntRect(sf::Vector2i(tokenNumber * 44, 0), sf::Vector2i(44, 44));
     game.getAnimationSystem()->createCollectionBurst(centerPos, doubleConfig);
