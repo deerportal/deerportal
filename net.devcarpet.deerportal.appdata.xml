@@ -32,9 +32,9 @@
 ​  </provides>
 ​
 ​  <releases>
-    <release version="0.9.7-pre.2" date="2025-07-19">
+    <release version="0.9.7" date="2025-07-20">
       <description>
-        <p>Version 0.9.7-pre.2 - Pre-release. Enhanced Visual Effects with doubled particle count for better visibility, Linux distribution fixes for AppImage and tar.gz asset loading, and improved asset path resolution.</p>
+        <p>Version 0.9.7 - Stable Release. Enhanced Visual Effects with spectacular particle system improvements for maximum visibility, Linux distribution compatibility for AppImage and tar.gz packages, professional code quality improvements, and comprehensive cross-platform optimizations.</p>
       </description>
     </release>
     <release version="0.9.6" date="2025-07-19">
