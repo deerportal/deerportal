@@ -13,6 +13,12 @@
 
 namespace DP {
 
+// Static lookup tables for web-inspired performance optimization
+std::array<float, GameAnimationSystem::TRIG_TABLE_SIZE> GameAnimationSystem::s_sinTable;
+std::array<float, GameAnimationSystem::TRIG_TABLE_SIZE> GameAnimationSystem::s_cosTable;
+bool GameAnimationSystem::s_trigTablesInitialized = false;
+std::array<uint8_t, GameAnimationSystem::FADE_TABLE_SIZE> GameAnimationSystem::s_fadeTable;
+
 GameAnimationSystem::GameAnimationSystem(Game* gameInstance)
     : game(gameInstance), oscillator(-1.0f), oscillatorInc(true), oscillatorSpeed(1.0f),
       bigDiamondAnimationActive(false), bigDiamondBasePosition(474.0f, 342.0f),
@@ -24,6 +30,12 @@ GameAnimationSystem::GameAnimationSystem(Game* gameInstance)
   
   // Initialize advanced optimization systems
   initializeParticlePool();
+  
+  // Web Performance Patterns: Initialize lookup tables
+  if (!s_trigTablesInitialized) {
+    initializeTrigTables();
+  }
+  initializeFadeTable();
 }
 
 GameAnimationSystem::~GameAnimationSystem() {}
@@ -726,11 +738,11 @@ void GameAnimationSystem::throttledVertexRebuild(sf::Time currentTime) {
   // Double-buffered VertexArray swap (OpenGL front/back buffer pattern)
   m_particleVerticesBack.clear();
   
-  // Efficiently rebuild only active particles with spatial culling
+  // Efficiently rebuild only active particles with web-optimized precalculation
   for (size_t index : m_activeParticleIndices) {
     const auto& particle = m_particlePool[index];
     if (particle.active) {
-      addParticleToVertexArrayOptimized(particle, index);
+      addParticleToVertexArrayPrecalc(particle, index); // Use precalculated version
     }
   }
   
@@ -882,6 +894,180 @@ void GameAnimationSystem::logPerformanceMetrics() const {
     }
   }
 #endif
+}
+
+// ================================================================================
+// WEB PERFORMANCE PATTERNS: Precalculation & Memoization
+// ================================================================================
+
+void GameAnimationSystem::initializeTrigTables() {
+  // Canvas/WebGL pattern: Precalculate trigonometry for O(1) lookup
+  for (size_t i = 0; i < TRIG_TABLE_SIZE; ++i) {
+    float radians = (static_cast<float>(i) * 2.0f * M_PI) / TRIG_TABLE_SIZE;
+    s_sinTable[i] = std::sin(radians);
+    s_cosTable[i] = std::cos(radians);
+  }
+  s_trigTablesInitialized = true;
+  
+#ifndef NDEBUG
+  std::cout << "DEBUG: Trigonometry lookup tables initialized (" << TRIG_TABLE_SIZE << " entries)" << std::endl;
+#endif
+}
+
+float GameAnimationSystem::fastSin(int degrees) {
+  // O(1) trigonometry lookup with bounds checking
+  int index = ((degrees % 360) + 360) % 360; // Handle negative degrees
+  return s_sinTable[index];
+}
+
+float GameAnimationSystem::fastCos(int degrees) {
+  // O(1) trigonometry lookup with bounds checking
+  int index = ((degrees % 360) + 360) % 360; // Handle negative degrees
+  return s_cosTable[index];
+}
+
+void GameAnimationSystem::initializeFadeTable() {
+  // Smooth alpha transition lookup table (similar to CSS transitions)
+  for (size_t i = 0; i < FADE_TABLE_SIZE; ++i) {
+    float ratio = static_cast<float>(i) / (FADE_TABLE_SIZE - 1);
+    // Smooth fade curve (could use easing functions)
+    s_fadeTable[i] = static_cast<uint8_t>(255.0f * ratio);
+  }
+}
+
+uint8_t GameAnimationSystem::getFadeAlpha(float ratio) const {
+  // O(1) alpha calculation using lookup table
+  if (ratio <= 0.0f) return 0;
+  if (ratio >= 1.0f) return 255;
+  
+  size_t index = static_cast<size_t>(ratio * (FADE_TABLE_SIZE - 1));
+  return s_fadeTable[index];
+}
+
+std::pair<int, int> GameAnimationSystem::getGridCellFast(const sf::Vector2f& position) const {
+  // Fast division using bit shifting (web optimization pattern)
+  // Only works if cell size is power of 2 (256 pixels = 2^8)
+  int x = static_cast<int>(position.x) >> CELL_SHIFT_BITS; // Fast divide by 256
+  int y = static_cast<int>(position.y) >> CELL_SHIFT_BITS; // Fast divide by 256
+  return {x, y};
+}
+
+uint32_t GameAnimationSystem::hashScale(float scale) const {
+  // Simple hash function for memoization (JavaScript-style)
+  union { float f; uint32_t i; } converter;
+  converter.f = scale;
+  return converter.i;
+}
+
+uint64_t GameAnimationSystem::hashTypeScale(const sf::IntRect& rect, float scale) const {
+  // Combined hash for vertex template caching
+  uint32_t rectHash = static_cast<uint32_t>(rect.position.x) ^ 
+                      (static_cast<uint32_t>(rect.position.y) << 8) ^
+                      (static_cast<uint32_t>(rect.size.x) << 16) ^
+                      (static_cast<uint32_t>(rect.size.y) << 24);
+  uint32_t scaleHash = hashScale(scale);
+  return (static_cast<uint64_t>(rectHash) << 32) | scaleHash;
+}
+
+const GameAnimationSystem::VertexOffsets& GameAnimationSystem::getVertexOffsets(float scale) {
+  // Memoization pattern: Cache expensive vertex offset calculations
+  uint32_t key = hashScale(scale);
+  
+  auto it = m_vertexOffsetCache.find(key);
+  if (it != m_vertexOffsetCache.end()) {
+    return it->second; // Cache hit - O(1) return
+  }
+  
+  // Cache miss - calculate and store
+  float halfSize = 22.0f * scale; // Base size 44px / 2
+  VertexOffsets offsets;
+  offsets.topLeft = sf::Vector2f(-halfSize, -halfSize);
+  offsets.topRight = sf::Vector2f(halfSize, -halfSize);
+  offsets.bottomLeft = sf::Vector2f(-halfSize, halfSize);
+  offsets.bottomRight = sf::Vector2f(halfSize, halfSize);
+  
+  m_vertexOffsetCache[key] = offsets;
+  return m_vertexOffsetCache[key];
+}
+
+const GameAnimationSystem::VertexTemplate& GameAnimationSystem::getVertexTemplate(uint64_t typeScaleHash) {
+  // Canvas-style vertex template caching (typed array pattern)
+  auto it = m_vertexTemplateCache.find(typeScaleHash);
+  if (it != m_vertexTemplateCache.end() && it->second.initialized) {
+    return it->second; // Template cache hit
+  }
+  
+  // This is a placeholder - would be populated when creating particle templates
+  // For now, return a default template
+  static VertexTemplate defaultTemplate;
+  if (!defaultTemplate.initialized) {
+    // Initialize default template with unit positions
+    defaultTemplate.positions[0] = sf::Vector2f(-1.0f, -1.0f); // Top-left
+    defaultTemplate.positions[1] = sf::Vector2f(1.0f, -1.0f);  // Top-right
+    defaultTemplate.positions[2] = sf::Vector2f(-1.0f, 1.0f);  // Bottom-left
+    defaultTemplate.positions[3] = sf::Vector2f(1.0f, -1.0f);  // Top-right (repeat)
+    defaultTemplate.positions[4] = sf::Vector2f(1.0f, 1.0f);   // Bottom-right
+    defaultTemplate.positions[5] = sf::Vector2f(-1.0f, 1.0f);  // Bottom-left (repeat)
+    defaultTemplate.initialized = true;
+  }
+  
+  return defaultTemplate;
+}
+
+void GameAnimationSystem::addParticleToVertexArrayPrecalc(const CircleParticle& particle, size_t index) {
+  // Web-optimized vertex generation using precalculated offsets and memoization
+  
+  // Fast spatial culling with bit shifting
+  auto [gridX, gridY] = getGridCellFast(particle.position);
+  if (gridX >= 0 && gridX < SPATIAL_GRID_SIZE && gridY >= 0 && gridY < SPATIAL_GRID_SIZE) {
+    if (!m_spatialGrid[gridX][gridY].visible) {
+      return; // Particle culled - no expensive calculations needed
+    }
+  }
+  
+  // Use memoized vertex offsets (Canvas optimization pattern)
+  const VertexOffsets& offsets = getVertexOffsets(particle.scale);
+  
+  // Fast alpha calculation using lookup table
+  uint8_t alpha = 255;
+  if (particle.fadeOut && particle.totalLifetime > sf::Time::Zero) {
+    float lifeRatio = particle.lifetime.asSeconds() / particle.totalLifetime.asSeconds();
+    alpha = getFadeAlpha(lifeRatio);
+  }
+  
+  const sf::Vector2f& pos = particle.position;
+  const sf::IntRect& textureRect = particle.textureRect;
+  sf::Color color(255, 255, 255, alpha);
+  
+  // Optimized vertex creation using precalculated offsets
+  sf::Vertex vertices[6];
+  
+  // First triangle (top-left, top-right, bottom-left)
+  vertices[0].position = pos + offsets.topLeft;
+  vertices[0].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y);
+  vertices[0].color = color;
+  
+  vertices[1].position = pos + offsets.topRight;
+  vertices[1].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y);
+  vertices[1].color = color;
+  
+  vertices[2].position = pos + offsets.bottomLeft;
+  vertices[2].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y + textureRect.size.y);
+  vertices[2].color = color;
+  
+  // Second triangle (reuse vertices for cache efficiency)
+  vertices[3] = vertices[1]; // Top-right
+  
+  vertices[4].position = pos + offsets.bottomRight;
+  vertices[4].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y + textureRect.size.y);
+  vertices[4].color = color;
+  
+  vertices[5] = vertices[2]; // Bottom-left
+  
+  // Add to back buffer VertexArray
+  for (int i = 0; i < 6; ++i) {
+    m_particleVerticesBack.append(vertices[i]);
+  }
 }
 
 } // namespace DP

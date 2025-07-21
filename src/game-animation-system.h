@@ -6,6 +6,7 @@
 #include <functional>
 #include <memory>
 #include <queue>
+#include <unordered_map>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -170,6 +171,37 @@ private:
   std::queue<size_t> m_availableParticleIndices; // Free list for O(1) allocation
   std::vector<size_t> m_activeParticleIndices;   // Active particles for iteration
   
+  // Web Performance Patterns: Precalculation & Memoization
+  
+  // Trigonometry Lookup Tables (Canvas/WebGL pattern)
+  static constexpr size_t TRIG_TABLE_SIZE = 360; // 1-degree precision
+  static std::array<float, TRIG_TABLE_SIZE> s_sinTable;
+  static std::array<float, TRIG_TABLE_SIZE> s_cosTable;
+  static bool s_trigTablesInitialized;
+  
+  // Vertex Offset Memoization (fast canvas vertex calculations)
+  struct VertexOffsets {
+    sf::Vector2f topLeft, topRight, bottomLeft, bottomRight;
+  };
+  std::unordered_map<uint32_t, VertexOffsets> m_vertexOffsetCache; // Memoized by scale hash
+  
+  // Alpha Fade Lookup Table (smooth transitions)
+  static constexpr size_t FADE_TABLE_SIZE = 256;
+  static std::array<uint8_t, FADE_TABLE_SIZE> s_fadeTable;
+  
+  // Fast Division with Bit Shifting (power-of-2 optimizations)
+  static constexpr float CELL_WIDTH_SHIFT = 8.0f;  // 256 pixels per cell (2^8)
+  static constexpr float CELL_HEIGHT_SHIFT = 8.0f; // Fast bit-shift division
+  static constexpr int CELL_SHIFT_BITS = 8;         // For >> 8 operations
+  
+  // Vertex Template Caching (typed array pattern from Canvas API)
+  struct VertexTemplate {
+    std::array<sf::Vector2f, 6> positions;     // Relative positions
+    std::array<sf::Vector2f, 6> texCoords;     // Texture coordinates
+    bool initialized = false;
+  };
+  std::unordered_map<uint64_t, VertexTemplate> m_vertexTemplateCache; // By type+scale hash
+  
   // 2. Dirty Flag Optimization (inspired by web browser dirty rectangles)
   bool m_particlesDirty = false;         // Track if VertexArray needs rebuilding
   sf::Time m_lastVertexRebuild = sf::Time::Zero; // Prevent excessive rebuilds
@@ -250,10 +282,25 @@ private:
   void updateSpatialPartitioning();
   void cullInvisibleParticles(const sf::FloatRect& viewBounds);
   std::pair<int, int> getGridCell(const sf::Vector2f& position) const;
+  std::pair<int, int> getGridCellFast(const sf::Vector2f& position) const; // Bit-shift version
+  
+  // Web Performance Patterns: Precalculation & Memoization
+  static void initializeTrigTables();    // Lookup tables for sin/cos
+  static float fastSin(int degrees);     // O(1) trigonometry
+  static float fastCos(int degrees);     // O(1) trigonometry
+  void initializeFadeTable();            // Alpha transition lookup
+  uint8_t getFadeAlpha(float ratio) const; // O(1) fade calculation
+  
+  // Canvas-style Vertex Memoization
+  const VertexOffsets& getVertexOffsets(float scale); // Memoized vertex calculations
+  const VertexTemplate& getVertexTemplate(uint64_t typeScaleHash); // Cached templates
+  uint32_t hashScale(float scale) const;  // Hash function for memoization
+  uint64_t hashTypeScale(const sf::IntRect& rect, float scale) const; // Template hash
   
   // Instanced Rendering Data Preparation
   void prepareInstanceData();
   void addParticleToVertexArrayOptimized(const CircleParticle& particle, size_t index);
+  void addParticleToVertexArrayPrecalc(const CircleParticle& particle, size_t index); // Precalc version
   
   // Simple particle metrics (no redundant FPS counter)
   void logPerformanceMetrics() const;
