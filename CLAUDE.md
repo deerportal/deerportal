@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DeerPortal is a hybrid board/card game built with SFML 3.0 and C++17. It's a cross-platform game supporting 0-4 players with AI opponents, featuring elemental mechanics and card-based gameplay.
 
-**Current Version: 0.9.7 "Spectacular Visual Effects"**  
+**Current Version: 0.9.8-pre.3 "Advanced Particle System Optimizations"**  
 **Technology Stack: SFML 3.0.1, CMake, C++17**  
 **Code Quality: A+ Grade (97/100) - Professional implementation with latest state management fixes**
 

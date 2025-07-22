@@ -1,3 +1,15 @@
+deerportal (0.9.8-pre.3-particle-optimization-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.8-pre.3 "Advanced Particle System Optimizations"
+  * Advanced particle system optimizations with object pooling for maximum performance
+  * 4x wider directional effects with enhanced visibility and organic spread
+  * SFML 3.0.1 API compatibility improvements and modern C++ patterns
+  * Comprehensive particle effects documentation (PARTICLE_EFFECTS.md)
+  * Spectacular visual enhancements building upon 0.9.7 foundation
+  * Enhanced velocity variation patterns for natural particle distribution
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 22 Jul 2025 14:00:00 +0000
+
 deerportal (0.9.7-stable-ubuntu1) trusty; urgency=medium
 
   * STABLE RELEASE 0.9.7 "Spectacular Visual Effects"

@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+    <release version="0.9.8-pre.3" date="2025-07-22">
+      <description>
+        <p>Version 0.9.8-pre.3 - Pre-release. Advanced particle system optimizations with object pooling for maximum performance, 4x wider directional effects with enhanced visibility, SFML 3.0.1 API compatibility improvements, comprehensive particle effects documentation, and spectacular visual enhancements building upon 0.9.7 foundation.</p>
+      </description>
+    </release>
     <release version="0.9.7" date="2025-07-20">
       <description>
         <p>Version 0.9.7 - Stable Release. Enhanced Visual Effects with spectacular particle system improvements for maximum visibility, Linux distribution compatibility for AppImage and tar.gz packages, professional code quality improvements, and comprehensive cross-platform optimizations.</p>
