@@ -236,9 +236,9 @@ void GameAnimationSystem::createCollectionBurst(sf::Vector2f position,
       particle.velocity = sf::Vector2f(std::cos(angle) * speed * speedVariation,
                                        std::sin(angle) * speed * speedVariation);
     } else if (config.pattern == ParticleConfig::BurstPattern::DIRECTIONAL) {
-      // Directional pattern (upward with spread)
-      float angle = -M_PI / 2 + (i - particleCount / 2) * (M_PI / 6) / particleCount;
-      particle.velocity = sf::Vector2f(std::cos(angle) * speed * 0.3f, std::sin(angle) * speed);
+      // Directional pattern (upward with spread) - 4x wider distribution
+      float angle = -M_PI / 2 + (i - particleCount / 2) * (M_PI / 1.5) / particleCount; // 4x wider: PI/6 -> PI/1.5
+      particle.velocity = sf::Vector2f(std::cos(angle) * speed * 1.2f, std::sin(angle) * speed); // Enhanced horizontal spread
     }
 
     // Lifetime from config
