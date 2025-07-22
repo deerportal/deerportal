@@ -166,7 +166,7 @@ private:
   // Advanced Optimization Patterns (Web/SFML 3.0.1/OpenGL inspired)
   
   // 1. Object Pooling Pattern (inspired by web browser memory management)
-  static constexpr size_t PARTICLE_POOL_SIZE = 512; // Pre-allocated pool
+  static constexpr size_t PARTICLE_POOL_SIZE = 2048; // Increased pool for 10x particle counts
   std::array<CircleParticle, PARTICLE_POOL_SIZE> m_particlePool;
   std::queue<size_t> m_availableParticleIndices; // Free list for O(1) allocation
   std::vector<size_t> m_activeParticleIndices;   // Active particles for iteration
@@ -311,7 +311,7 @@ private:
 namespace ParticlePresets {
 // Diamond collection burst (current default) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
-    12,                                                         // count (doubled back for spectacular effects)
+    120,                                                        // count (10x increase for massive visual impact)
     180.0f,                                                     // speed (enhanced for visibility)
     1.8f,                                                       // lifetime (enhanced for visibility)
     0.8f,                                                       // scale (enhanced for visibility)
@@ -326,7 +326,7 @@ constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
 
 // Card collection effect - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
-    8,                                                        // count (doubled back for spectacular effects)
+    80,                                                       // count (10x increase for massive visual impact)
     140.0f,                                                   // speed (enhanced for visibility)
     1.4f,                                                     // lifetime (enhanced for visibility)
     0.6f,                                                     // scale (enhanced for visibility)
@@ -341,7 +341,7 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
 
 // Card collection effect (random explosion pattern) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
-    8,                                                           // count (doubled back for spectacular effects)
+    80,                                                          // count (10x increase for massive visual impact)
     140.0f,                                                      // speed (enhanced for visibility)
     1.4f,                                                        // lifetime (enhanced for visibility)
     0.6f,                                                        // scale (enhanced for visibility)
@@ -356,7 +356,7 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
 
 // Stop card effect (falling particles) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig STOP_CARD = {
-    16,                                                            // count (doubled back for spectacular effects)
+    160,                                                           // count (10x increase for massive visual impact)
     100.0f,                                                        // speed (enhanced for visibility)
     1.6f,                                                          // lifetime (enhanced for visibility)
     0.7f,                                                          // scale (enhanced for visibility)

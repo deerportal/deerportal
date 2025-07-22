@@ -674,7 +674,7 @@ void GameAnimationSystem::initializeParticlePool() {
   m_particleVertices.setPrimitiveType(sf::PrimitiveType::Triangles);
   m_particleVerticesBack.setPrimitiveType(sf::PrimitiveType::Triangles);
   
-  // Pre-allocate VertexArray capacity (20 particles × 6 vertices = 120 vertices max per burst)
+  // Pre-allocate VertexArray capacity (200 particles × 6 vertices = 1200 vertices max per burst)
   m_particleVertices.resize(PARTICLE_POOL_SIZE * 6);
   m_particleVerticesBack.resize(PARTICLE_POOL_SIZE * 6);
   

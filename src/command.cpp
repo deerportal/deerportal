@@ -183,7 +183,7 @@ void Command::processCard(int pos) {
     game.getAnimationSystem()->createCollectionBurst(centerPos, cardConfig);
   } else if (cardType == "diamond x 2") {
     DP::GameAnimationSystem::ParticleConfig doubleConfig = DP::ParticlePresets::DIAMOND_BURST;
-    doubleConfig.count = 20;      // Doubled back for spectacular diamond x2 effect
+    doubleConfig.count = 200;     // 10x increase for explosive diamond x2 effect
     doubleConfig.speed = 220.0f;  // Enhanced for spectacular effect
     doubleConfig.lifetime = 2.2f; // Enhanced for longer visibility
     doubleConfig.scale = 1.0f;    // Enhanced for maximum visibility
