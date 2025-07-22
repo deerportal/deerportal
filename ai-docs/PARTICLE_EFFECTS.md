@@ -82,7 +82,7 @@ DeerPortal features spectacular particle effects that provide visual feedback wh
 - **Offset Calculation:** `centerPos = characterPos + (width/2, height/2)`
 
 ### Visual Enhancement Features
-- **10x Particle Counts:** All effects scaled up for version 0.9.7
+- **10x Particle Counts:** All effects scaled up for version 0.9.8-pre.4
 - **Element Matching:** Particle textures match collected item sprites  
 - **Enhanced Visibility:** Improved speed, scale, and lifetime parameters
 - **Pattern Variety:** Circle, directional, and explosion patterns available
@@ -119,4 +119,4 @@ All particle effects are designed to provide immediate visual feedback while mai
 
 ---
 
-*This document covers the particle effects system in DeerPortal 0.9.7 "Spectacular Visual Effects" release.*
+*This document covers the particle effects system in DeerPortal 0.9.8-pre.4 "Finalized Particle System Optimizations" release.*

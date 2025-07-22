@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+    <release version="0.9.8-pre.4" date="2025-07-22">
+      <description>
+        <p>Version 0.9.8-pre.4 - Pre-release. Finalized particle system optimizations with complete object pooling implementation, enhanced debug mode for version visibility, refined particle velocity patterns for improved visual effects, and comprehensive performance improvements building upon 0.9.7 foundation.</p>
+      </description>
+    </release>
     <release version="0.9.7" date="2025-07-20">
       <description>
         <p>Version 0.9.7 - Stable Release. Enhanced Visual Effects with spectacular particle system improvements for maximum visibility, Linux distribution compatibility for AppImage and tar.gz packages, professional code quality improvements, and comprehensive cross-platform optimizations.</p>
