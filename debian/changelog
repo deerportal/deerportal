@@ -1,3 +1,18 @@
+deerportal (0.9.8-spectacular-visual-effects-ubuntu1) trusty; urgency=medium
+
+  * STABLE RELEASE 0.9.8 "Spectacular Visual Effects"
+  * Massive particle system enhancements with 10x particle counts for explosive visual impact
+  * Wider particle spread patterns creating spectacular effects while maintaining visual style
+  * Advanced optimization techniques including object pooling (2048 particles) and VertexArray batching
+  * Web-inspired optimization patterns: lookup tables, memoization, dirty flag systems
+  * Enhanced particle speeds (250-550px/s) and velocity variation for organic spread patterns
+  * SFML 3.0.1 compatibility improvements and modern C++ patterns
+  * Comprehensive performance optimizations maintaining smooth gameplay despite 10x particle increases
+  * Professional code quality with A+ grade and advanced spatial partitioning systems
+  * Complete AppImage build system reliability with updated toolchain and robust fallback mechanisms
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Thu, 24 Jul 2025 12:00:00 +0000
+
 deerportal (0.9.8-pre.6-appimage-build-fixes-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.8-pre.6 "AppImage Build System Fixes"

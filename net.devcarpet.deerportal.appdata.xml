@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+    <release version="0.9.8" date="2025-07-24">
+      <description>
+        <p>Version 0.9.8 - Stable Release. "Spectacular Visual Effects" - Massive particle system enhancements with 10x particle counts for explosive visual impact, wider particle spread patterns for spectacular effects, advanced optimization techniques including object pooling and VertexArray batching, SFML 3.0.1 compatibility improvements, and comprehensive performance optimizations maintaining smooth gameplay despite 10x particle increases.</p>
+      </description>
+    </release>
     <release version="0.9.8-pre.6" date="2025-07-22">
       <description>
         <p>Version 0.9.8-pre.6 - Pre-release. AppImage build system fixes with updated AppImageTool URL and robust fallback mechanisms, enhanced CI/CD pipeline reliability for Linux distributions, improved error handling with comprehensive download verification, and continued particle system optimizations building upon 0.9.8-pre.5 foundation.</p>
