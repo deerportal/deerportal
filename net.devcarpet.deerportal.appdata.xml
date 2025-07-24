@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+    <release version="0.9.8-pre.5" date="2025-07-22">
+      <description>
+        <p>Version 0.9.8-pre.5 - Pre-release. Final optimizations and refinements to particle system implementation with enhanced object pooling performance, improved debug mode functionality, refined particle velocity patterns for spectacular visual effects, and comprehensive SFML 3.0.1 compatibility improvements building upon stable 0.9.7 foundation.</p>
+      </description>
+    </release>
     <release version="0.9.8-pre.4" date="2025-07-22">
       <description>
         <p>Version 0.9.8-pre.4 - Pre-release. Finalized particle system optimizations with complete object pooling implementation, enhanced debug mode for version visibility, refined particle velocity patterns for improved visual effects, and comprehensive performance improvements building upon 0.9.7 foundation.</p>

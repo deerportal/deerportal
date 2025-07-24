@@ -1,3 +1,15 @@
+deerportal (0.9.8-pre.5-final-optimization-refinements-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.8-pre.5 "Final Optimization Refinements"
+  * Final optimizations and refinements to particle system implementation
+  * Enhanced object pooling performance with improved memory management
+  * Improved debug mode functionality for development workflow
+  * Refined particle velocity patterns for spectacular visual effects
+  * Comprehensive SFML 3.0.1 compatibility improvements and modern C++ patterns
+  * Building upon stable 0.9.7 foundation with performance enhancements
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 22 Jul 2025 16:00:00 +0000
+
 deerportal (0.9.8-pre.4-finalized-particle-optimization-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.8-pre.4 "Finalized Particle System Optimizations"
