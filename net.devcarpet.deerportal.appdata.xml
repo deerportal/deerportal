@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+    <release version="0.9.8-pre.6" date="2025-07-22">
+      <description>
+        <p>Version 0.9.8-pre.6 - Pre-release. AppImage build system fixes with updated AppImageTool URL and robust fallback mechanisms, enhanced CI/CD pipeline reliability for Linux distributions, improved error handling with comprehensive download verification, and continued particle system optimizations building upon 0.9.8-pre.5 foundation.</p>
+      </description>
+    </release>
     <release version="0.9.8-pre.5" date="2025-07-22">
       <description>
         <p>Version 0.9.8-pre.5 - Pre-release. Final optimizations and refinements to particle system implementation with enhanced object pooling performance, improved debug mode functionality, refined particle velocity patterns for spectacular visual effects, and comprehensive SFML 3.0.1 compatibility improvements building upon stable 0.9.7 foundation.</p>

@@ -1,3 +1,15 @@
+deerportal (0.9.8-pre.6-appimage-build-fixes-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.8-pre.6 "AppImage Build System Fixes"
+  * AppImage build system fixes with updated AppImageTool URL from deprecated AppImageKit
+  * Enhanced CI/CD pipeline reliability for Linux distributions with robust fallback mechanisms
+  * Improved error handling with comprehensive download verification and graceful fallbacks
+  * Fixed GitHub Actions workflow failures for AppImage creation across all platforms
+  * Continued particle system optimizations building upon 0.9.8-pre.5 foundation
+  * Enhanced cross-platform build consistency and reliability
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Mon, 22 Jul 2025 17:00:00 +0000
+
 deerportal (0.9.8-pre.5-final-optimization-refinements-ubuntu1) trusty; urgency=medium
 
   * PRE-RELEASE 0.9.8-pre.5 "Final Optimization Refinements"

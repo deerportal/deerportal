@@ -625,10 +625,24 @@ jobs:
         fi
         echo "DeerPortal executable found: $(ls -la DeerPortal)"
         
-        # Download AppImageTool
+        # Download AppImageTool (updated URL for 2025)
         echo "Downloading AppImageTool..."
-        wget -q -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+        if ! wget -q -O appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage; then
+          echo "❌ Failed to download AppImageTool from new URL, trying fallback..."
+          if ! wget -q -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage; then
+            echo "❌ Failed to download AppImageTool from both URLs"
+            exit 1
+          fi
+        fi
         chmod +x appimagetool
+        
+        # Verify AppImageTool was downloaded correctly
+        if [ ! -f "appimagetool" ] || [ ! -x "appimagetool" ]; then
+          echo "❌ AppImageTool download failed or is not executable"
+          ls -la appimagetool 2>/dev/null || echo "AppImageTool file not found"
+          exit 1
+        fi
+        echo "✅ AppImageTool downloaded successfully"
         
         # Verify FUSE is working before proceeding
         echo "Verifying FUSE is ready for AppImageTool..."
