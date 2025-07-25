@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+    <release version="0.9.9-pre.1" date="2025-07-25">
+      <description>
+        <p>Version 0.9.9-pre.1 - Development Phase. "Animated Board Initialization Development" - Initial development phase for enhanced board initialization system with animated diamond and rune placement from quadrant corners, bezier curve movement paths, rotation and scaling effects, performance optimizations, and preparation for spectacular board awakening animations.</p>
+      </description>
+    </release>
     <release version="0.9.8" date="2025-07-24">
       <description>
         <p>Version 0.9.8 - Stable Release. "Spectacular Visual Effects" - Massive particle system enhancements with 10x particle counts for explosive visual impact, wider particle spread patterns for spectacular effects, advanced optimization techniques including object pooling and VertexArray batching, SFML 3.0.1 compatibility improvements, and comprehensive performance optimizations maintaining smooth gameplay despite 10x particle increases.</p>

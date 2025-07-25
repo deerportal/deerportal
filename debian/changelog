@@ -1,3 +1,15 @@
+deerportal (0.9.9-pre.1-animated-board-initialization-development-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.9.9-pre.1 "Animated Board Initialization Development"
+  * Initial development phase for enhanced board initialization system
+  * Animated diamond and rune placement from quadrant corners with bezier curve movement paths
+  * Rotation and scaling effects during board item placement animations
+  * Performance optimizations with object pooling and VertexArray batching
+  * Preparation for spectacular board awakening animations in upcoming releases
+  * Building upon stable 0.9.8 foundation with advanced animation system development
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Thu, 25 Jul 2025 12:00:00 +0000
+
 deerportal (0.9.8-spectacular-visual-effects-ubuntu1) trusty; urgency=medium
 
   * STABLE RELEASE 0.9.8 "Spectacular Visual Effects"
