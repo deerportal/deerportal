@@ -86,11 +86,17 @@ void AnimatedBoardItem::update(sf::Time deltaTime, const BoardAnimationConfig& c
   // Update scale with easing
   currentScale = config.startScale + (config.endScale - config.startScale) * easedProgress;
   
-  // Update rotation if enabled
+  // Update rotation if enabled - smoothly transition to 0.0 degrees at end
   if (config.enableRotation) {
-    rotationAngle += config.rotationSpeed * deltaTime.asSeconds();
-    if (rotationAngle > 360.0f) {
-      rotationAngle -= 360.0f;
+    if (progress < 1.0f) {
+      // During animation: rotate normally
+      rotationAngle += config.rotationSpeed * deltaTime.asSeconds();
+      if (rotationAngle > 360.0f) {
+        rotationAngle -= 360.0f;
+      }
+    } else {
+      // Animation finished: ensure rotation is exactly 0.0 to match static diamonds
+      rotationAngle = 0.0f;
     }
   }
 }
