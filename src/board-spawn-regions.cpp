@@ -30,7 +30,9 @@ int BoardSpawnRegions::getQuadrantForDiamond(int diamondIndex) {
 }
 
 sf::Vector2f BoardSpawnRegions::getQuadrantCenter(int quadrant, const sf::RenderWindow& window) {
-  sf::Vector2u windowSize = window.getSize();
+  // Use viewTiles coordinate system (1360x768) instead of window coordinates
+  const float viewWidth = 1360.0f;
+  const float viewHeight = 768.0f;
   
   sf::Vector2f center;
   switch (quadrant) {
@@ -38,16 +40,16 @@ sf::Vector2f BoardSpawnRegions::getQuadrantCenter(int quadrant, const sf::Render
       center = sf::Vector2f(0, 0);
       break;
     case 1: // Q1 - top-right corner
-      center = sf::Vector2f(windowSize.x, 0);
+      center = sf::Vector2f(viewWidth, 0);
       break;
     case 2: // Q2 - bottom-left corner
-      center = sf::Vector2f(0, windowSize.y);
+      center = sf::Vector2f(0, viewHeight);
       break;
     case 3: // Q3 - bottom-right corner
-      center = sf::Vector2f(windowSize.x, windowSize.y);
+      center = sf::Vector2f(viewWidth, viewHeight);
       break;
     default:
-      center = sf::Vector2f(windowSize.x / 2.0f, windowSize.y / 2.0f);
+      center = sf::Vector2f(viewWidth / 2.0f, viewHeight / 2.0f);
       break;
   }
   

@@ -29,10 +29,16 @@ void BoardInitializationAnimator::initializeAnimation(const BoardDiamondSeq& dia
     sf::Vector2i gridPos = DP::transPosition(diamond.boardPosition);
     sf::Vector2f targetPos = DP::getScreenPos(gridPos);
     
-    // Apply offset to match BoardDiamondSeq positioning (boarddiamondseq.cpp:64)
-    // This matches the VertexArray system positioning, not individual diamond positioning
-    targetPos.x += 2.4f;
-    targetPos.y += 2.4f;
+    // Correctly calculate the final target center position.
+    // As per boarddiamondseq.cpp, the final top-left position has a 2.4f offset.
+    const float offsetX = 2.4f;
+    const float offsetY = 2.4f;
+
+    // The animated item is drawn from its center. To find the center, we take the
+    // final top-left position (tilePos + offset) and add half the diamond's size.
+    const float diamondSize = 35.2f; // Must match BoardDiamondSeq size
+    targetPos.x = targetPos.x + offsetX + (diamondSize * 0.5f);
+    targetPos.y = targetPos.y + offsetY + (diamondSize * 0.5f);
     
     // Initialize animated item with diamond's idNumber for correct sprite
     AnimatedBoardItem item;

@@ -169,8 +169,7 @@ void GameRenderer::renderStateBoardAnimation() {
   game->renderTexture.setView(game->viewFull);
   game->renderTexture.draw(game->groupHud);
 
-  // Render animated diamonds with viewFull to avoid viewport clipping
-  game->renderTexture.setView(game->viewFull);
+  game->renderTexture.setView(game->viewTiles);
   // NOTE: We do NOT draw static boardDiamonds here - only animated ones
   
   // The moving diamonds are rendered LAST to ensure they appear on top
