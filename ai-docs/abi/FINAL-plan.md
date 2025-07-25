@@ -150,4 +150,4 @@ The implemented system will provide smooth animated board initialization where d
 
 ---
 
-*Final implementation plan for DeerPortal 0.9.9-pre.2 animated board initialization system.*
+*Final implementation plan for DeerPortal 0.9.9 animated board initialization system.*

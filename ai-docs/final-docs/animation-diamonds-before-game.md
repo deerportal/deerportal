@@ -1,6 +1,6 @@
 # Board Diamond Animation Documentation
 
-**Source Knowledge**: Commit f172dfbb606f81674834d0862092697acdeb19fa
+**Source Knowledge**: Commit 60a939ef8d8de62a00d82cdf3da244d8a17463ea
 
 ## Overview
 

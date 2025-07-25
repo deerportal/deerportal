@@ -1,5 +1,50 @@
 # DeerPortal Release Notes
 
+## Version 0.9.9 "Animated Board Initialization" - July 25, 2025
+
+🎯 **STABLE RELEASE - Major Visual Enhancement**
+
+This stable release introduces a spectacular animated board initialization system that transforms the game startup experience with professional-quality visual effects.
+
+### 🚀 Major Features
+
+**Animated Board System**
+- 112 diamonds spawn from four screen corners with smooth animation to final positions
+- Bézier curve movement paths for natural, visually appealing motion
+- Rotation and scaling effects during animation for dynamic visual impact
+- Quadrant-based spawning with player-specific corner assignments
+- Pixel-perfect positioning with seamless transition to static diamonds
+
+**Performance & Quality**
+- Single VertexArray draw call optimization for all 112 animated diamonds
+- Cross-platform compatibility with Linux build fixes
+- LLVM code formatting applied to entire codebase
+- Debug system optimization with unified macro standards
+- Professional A+ grade code quality implementation
+
+**User Experience**
+- Skip functionality via Space, Enter, or mouse click
+- Staggered timing (0.05s delays) creates wave-like visual effect
+- Multiple input methods for accessibility
+- Graceful degradation with fallback to instant placement
+
+### 🛠 Technical Improvements
+
+- New `state_board_animation` integrated with existing game state management
+- Proper math headers and M_PI definition for Linux compatibility
+- Memory management improvements with RAII patterns
+- Comprehensive error handling and debug system
+- Extensive technical documentation in ai-docs/
+
+### 📋 System Requirements
+
+- SFML 3.0.1+
+- CMake 3.16+
+- C++17 compatible compiler
+- Cross-platform: Linux, macOS, Windows
+
+---
+
 ## Version 0.9.2 "Computer Player Card Notification Delay" - July 2025
 
 🎮 **Final Release with Enhanced User Experience**

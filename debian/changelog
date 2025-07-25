@@ -1,11 +1,13 @@
-deerportal (0.9.9-pre.2-animated-board-initialization-development-ubuntu1) trusty; urgency=medium
+deerportal (0.9.9-animated-board-initialization-ubuntu1) trusty; urgency=medium
 
-  * PRE-RELEASE 0.9.9-pre.2 "Animated Board Initialization Development"
-  * Enhanced development phase with code formatting fixes using LLVM style
-  * Debug system optimization and consistency improvements
-  * Linux build compatibility fixes for math headers and M_PI definition
-  * Animation system refinements and performance optimizations
-  * Building upon 0.9.9-pre.1 foundation with stability and cross-platform improvements
+  * STABLE RELEASE 0.9.9 "Animated Board Initialization"
+  * Professional animated board initialization system with spectacular visual effects
+  * 112 diamonds spawn from four screen corners with smooth Bézier curve movement
+  * Rotation and scaling effects during animation with pixel-perfect final positioning
+  * Cross-platform compatibility with Linux, macOS, and Windows support
+  * Performance optimization through VertexArray batching and efficient rendering
+  * LLVM code formatting, debug system optimization, and comprehensive testing
+  * Complete animation system integration with existing game state management
 
  -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Thu, 25 Jul 2025 12:00:00 +0000
 

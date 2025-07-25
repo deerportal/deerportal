@@ -31,8 +31,37 @@ Version 0.9.6 stable release completed with comprehensive documentation updates 
 
 Updated project documentation to reflect current codebase state. Key changes include removal of legacy particle system files, addition of new utility systems (window-manager, safe-asset-loader, error-handler), and updated file structure documentation. The modular architecture improvements have been properly documented with current file counts and system organization.
 
-## July 2025 - Animated Board Initialization (v0.9.9-pre.2)
-Implemented board animation system with quadrant spawning, Bezier paths, rotation, scaling. Integrated new state and modules.
+## July 25, 2025 - Animated Board Initialization (v0.9.9) - STABLE RELEASE
+
+**Major Feature Release**: Professional animated board initialization system that transforms game startup experience.
+
+**Core Animation Features**:
+- **112 Diamond Animation**: All diamonds spawn from four screen corners and smoothly animate to final board positions
+- **Bézier Curve Movement**: Natural curved animation paths for visually appealing motion
+- **Rotation & Scaling Effects**: Diamonds rotate and scale during animation for dynamic visual impact
+- **Quadrant-Based Spawning**: Player-specific corner spawning (Player 0: top-left, Player 1: top-right, etc.)
+- **Pixel-Perfect Positioning**: Seamless transition to static diamonds with exact position alignment
+
+**Technical Achievements**:
+- **Performance Optimization**: Single VertexArray draw call for all 112 animated diamonds
+- **Cross-Platform Compatibility**: Linux build fixes with proper math headers and M_PI definition
+- **LLVM Code Formatting**: Complete codebase formatted with consistent LLVM style standards
+- **Debug System Optimization**: Unified debug macros using `#ifndef NDEBUG` standard
+- **State Management Integration**: New `state_board_animation` seamlessly integrated with existing game flow
+
+**User Experience Enhancements**:
+- **Skip Functionality**: Space, Enter, or mouse click to skip animation
+- **Staggered Timing**: 0.05s delays create wave-like visual effect
+- **Visual Feedback**: Rotation ends at 0° to match static diamonds perfectly
+- **Multiple Input Methods**: Keyboard and mouse support for accessibility
+
+**Quality Improvements**:
+- **Memory Management**: Proper RAII with unique_ptr for SFML objects
+- **Error Handling**: Graceful degradation with fallback to instant placement
+- **Code Documentation**: Comprehensive technical documentation in ai-docs/
+- **Professional Implementation**: A+ grade code quality with latest architectural improvements
+
+This release represents a significant milestone in DeerPortal's visual evolution, providing spectacular board awakening animations while maintaining the game's performance and stability standards.
 
 # DeerPortal Version 0.9.5 - Code Formatting and Quality (STABLE RELEASE)
 

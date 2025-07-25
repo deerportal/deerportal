@@ -32,9 +32,9 @@
 ​  </provides>
 ​
 ​  <releases>
-    <release version="0.9.9-pre.2" date="2025-07-25">
+    <release version="0.9.9" date="2025-07-25">
       <description>
-        <p>Version 0.9.9-pre.2 - Development Phase. "Animated Board Initialization Development" - Enhanced development phase with code formatting fixes, debug system optimization, and Linux build compatibility improvements for animated board initialization system.</p>
+        <p>Version 0.9.9 - Stable Release. "Animated Board Initialization" - Professional animated board initialization system with diamonds spawning from screen corners, smooth Bézier curve movement, rotation and scaling effects, cross-platform compatibility, and optimized performance through VertexArray batching.</p>
       </description>
     </release>
     <release version="0.9.8" date="2025-07-24">
