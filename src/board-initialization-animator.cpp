@@ -22,25 +22,26 @@ void BoardInitializationAnimator::initializeAnimation(const BoardDiamondSeq& dia
   for (int i = 0; i < DP::diamondsNumber; i++) {
     // Get quadrant and spawn point
     int quadrant = spawnRegions.getQuadrantForDiamond(i);
-    sf::Vector2f spawnPoint = spawnRegions.getSpawnPoint(quadrant, window);
-    
-    // Get target position from diamond's final board position
-    const BoardDiamond& diamond = diamonds.diamonds[i];
-    sf::Vector2i gridPos = DP::transPosition(diamond.boardPosition);
-    sf::Vector2f targetPos = DP::getScreenPos(gridPos);
-    
-    // CRITICAL: Account for boardDiamonds position offset (202, 76) from game.cpp:148
-    // Static diamonds get this transform applied to the entire BoardDiamondSeq object
-    const sf::Vector2f boardOffset(202.0f, 76.0f);
-    
-    // Apply the same positioning logic as BoardDiamondSeq
-    const float offsetX = 2.4f;
-    const float offsetY = 2.4f;
+    sf::Vector2f globalSpawnPoint = spawnRegions.getSpawnPoint(quadrant, window);
 
-    // The animated item is drawn from its center, so we need center position
-    const float diamondSize = 35.2f; // Must match BoardDiamondSeq size
-    targetPos.x = targetPos.x + offsetX + (diamondSize * 0.5f) + boardOffset.x;
-    targetPos.y = targetPos.y + offsetY + (diamondSize * 0.5f) + boardOffset.y;
+    // THOR'S HAMMER FIX: Convert spawn point to the board's local coordinate system.
+    // The animator renders everything with a (202, 76) transform. The spawn points
+    // must be in this same local coordinate space to match the target points.
+    sf::Vector2f spawnPoint = globalSpawnPoint - sf::Vector2f(202.f, 76.f);
+    
+    // CRITICAL FIX: Use EXACT same position calculation as BoardDiamondSeq
+    const BoardDiamond& diamond = diamonds.diamonds[i];
+    sf::Vector2i cords = DP::transPosition(diamond.boardPosition);
+    sf::Vector2f tilePos = DP::getScreenPos(cords);
+    
+    // Use IDENTICAL calculation as BoardDiamondSeq::updateSingleDiamond() line 64
+    const float offsetX = 2.4f;      // (40 - 35.2) / 2 = 2.4f (centering offset)
+    const float offsetY = 2.4f;      // (40 - 35.2) / 2 = 2.4f (centering offset)
+    sf::Vector2f staticPosition(tilePos.x + offsetX, tilePos.y + offsetY);
+    
+    // GEMINI FIX: Use TOP-LEFT position directly, same as BoardDiamondSeq final rendering
+    // No center conversion - animation should target the exact same position as static rendering
+    sf::Vector2f targetPos = staticPosition;
     
     // Initialize animated item with diamond's idNumber for correct sprite
     AnimatedBoardItem item;

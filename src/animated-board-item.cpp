@@ -6,13 +6,19 @@ void AnimatedBoardItem::initialize(int id, sf::Vector2f spawn, sf::Vector2f targ
   diamondId = id;
   textureId = texId;
   spawnPoint = spawn;
-  targetPoint = target;
   progress = 0.0f;
   rotationAngle = 0.0f;
   currentScale = 0.3f;
   finished = false;
+
+  // GEMINI FIX: The provided `target` is the TOP-LEFT position.
+  // The animation logic (Bezier, rotation) uses the CENTER point.
+  // We must convert the target to be the center for internal calculations.
+  const float finalSize = 35.2f; // Must match final size in BoardDiamondSeq rendering
+  const float finalHalfSize = finalSize / 2.0f;
+  targetPoint = target + sf::Vector2f(finalHalfSize, finalHalfSize);
   
-  initializeBezierPath(spawn, target);
+  initializeBezierPath(spawn, targetPoint);
   
 #ifdef DEBUG
   std::cout << "[DEBUG] Diamond " << diamondId << " initialized: spawn(" 
