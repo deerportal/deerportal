@@ -29,9 +29,10 @@ void BoardInitializationAnimator::initializeAnimation(const BoardDiamondSeq& dia
     sf::Vector2i gridPos = DP::transPosition(diamond.boardPosition);
     sf::Vector2f targetPos = DP::getScreenPos(gridPos);
     
-    // Apply global offset (same as static diamonds in elem.cpp:33)
-    targetPos.x += 202.0f;
-    targetPos.y += 76.0f;
+    // Apply offset to match BoardDiamondSeq positioning (boarddiamondseq.cpp:64)
+    // This matches the VertexArray system positioning, not individual diamond positioning
+    targetPos.x += 2.4f;
+    targetPos.y += 2.4f;
     
     // Initialize animated item with diamond's idNumber for correct sprite
     AnimatedBoardItem item;
