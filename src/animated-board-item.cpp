@@ -3,6 +3,10 @@
 #include <cmath>
 #include <iostream>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 void AnimatedBoardItem::initialize(int id, sf::Vector2f spawn, sf::Vector2f target, int texId) {
   diamondId = id;
   textureId = texId;

@@ -31,7 +31,7 @@ Version 0.9.6 stable release completed with comprehensive documentation updates 
 
 Updated project documentation to reflect current codebase state. Key changes include removal of legacy particle system files, addition of new utility systems (window-manager, safe-asset-loader, error-handler), and updated file structure documentation. The modular architecture improvements have been properly documented with current file counts and system organization.
 
-## July 2025 - Animated Board Initialization (v0.9.9-pre.1)
+## July 2025 - Animated Board Initialization (v0.9.9-pre.2)
 Implemented board animation system with quadrant spawning, Bezier paths, rotation, scaling. Integrated new state and modules.
 
 # DeerPortal Version 0.9.5 - Code Formatting and Quality (STABLE RELEASE)

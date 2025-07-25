@@ -143,4 +143,4 @@ This creates a spectacular "board coming alive" effect that enhances the game's 
 
 ---
 
-*This document covers the animated board initialization system for DeerPortal 0.9.9-pre.1 "Development Phase" release.*
+*This document covers the animated board initialization system for DeerPortal 0.9.9-pre.2 "Development Phase" release.*

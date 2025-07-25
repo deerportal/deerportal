@@ -32,9 +32,9 @@
 ​  </provides>
 ​
 ​  <releases>
-    <release version="0.9.9-pre.1" date="2025-07-25">
+    <release version="0.9.9-pre.2" date="2025-07-25">
       <description>
-        <p>Version 0.9.9-pre.1 - Development Phase. "Animated Board Initialization Development" - Initial development phase for enhanced board initialization system with animated diamond and rune placement from quadrant corners, bezier curve movement paths, rotation and scaling effects, performance optimizations, and preparation for spectacular board awakening animations.</p>
+        <p>Version 0.9.9-pre.2 - Development Phase. "Animated Board Initialization Development" - Enhanced development phase with code formatting fixes, debug system optimization, and Linux build compatibility improvements for animated board initialization system.</p>
       </description>
     </release>
     <release version="0.9.8" date="2025-07-24">
