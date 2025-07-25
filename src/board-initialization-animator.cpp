@@ -22,12 +22,7 @@ void BoardInitializationAnimator::initializeAnimation(const BoardDiamondSeq& dia
   for (int i = 0; i < DP::diamondsNumber; i++) {
     // Get quadrant and spawn point
     int quadrant = spawnRegions.getQuadrantForDiamond(i);
-    sf::Vector2f globalSpawnPoint = spawnRegions.getSpawnPoint(quadrant, window);
-
-    // THOR'S HAMMER FIX: Convert spawn point to the board's local coordinate system.
-    // The animator renders everything with a (202, 76) transform. The spawn points
-    // must be in this same local coordinate space to match the target points.
-    sf::Vector2f spawnPoint = globalSpawnPoint - sf::Vector2f(202.f, 76.f);
+    sf::Vector2f spawnPoint = spawnRegions.getSpawnPoint(quadrant, window);
     
     // CRITICAL FIX: Use EXACT same position calculation as BoardDiamondSeq
     const BoardDiamond& diamond = diamonds.diamonds[i];
@@ -39,9 +34,9 @@ void BoardInitializationAnimator::initializeAnimation(const BoardDiamondSeq& dia
     const float offsetY = 2.4f;      // (40 - 35.2) / 2 = 2.4f (centering offset)
     sf::Vector2f staticPosition(tilePos.x + offsetX, tilePos.y + offsetY);
     
-    // GEMINI FIX: Use TOP-LEFT position directly, same as BoardDiamondSeq final rendering
-    // No center conversion - animation should target the exact same position as static rendering
-    sf::Vector2f targetPos = staticPosition;
+    // GROK4 FIX: Add board offset to align with global coordinate system
+    // Static diamonds now use transform, so animation targets must match global coordinates
+    sf::Vector2f targetPos = staticPosition + sf::Vector2f(202.f, 76.f);
     
     // Initialize animated item with diamond's idNumber for correct sprite
     AnimatedBoardItem item;

@@ -19,8 +19,8 @@ void BoardDiamondSeq::draw(sf::RenderTarget& target, sf::RenderStates states) co
     m_needsUpdate = false;
   }
 
-  // DEBUG: Try without transform to fix positioning
-  // states.transform *= getTransform();
+  // GROK4 FIX: Apply transform to ensure consistent (202,76) offset coordinate system
+  states.transform *= getTransform();
   states.texture = &textures->textureBoardDiamond;
 
   // Single draw call for all 112 diamonds!
@@ -61,7 +61,9 @@ void BoardDiamondSeq::updateSingleDiamond(int index) const {
   const float offsetX = 2.4f;      // (40 - 35.2) / 2 = 2.4f (centering offset)
   const float offsetY = 2.4f;      // (40 - 35.2) / 2 = 2.4f (centering offset)
 
-  sf::Vector2f position(tilePos.x + offsetX, tilePos.y + offsetY);
+  // GROK4 ADJUSTMENT: Since transform is now applied, subtract the board offset from vertices
+  // The (202,76) offset will be added back via getTransform(), so use local coordinates
+  sf::Vector2f position(tilePos.x + offsetX - 202.0f, tilePos.y + offsetY - 76.0f);
 
   // Calculate texture coordinates based on diamond ID (use full texture size)
   int idNumber = diamond.idNumber;
