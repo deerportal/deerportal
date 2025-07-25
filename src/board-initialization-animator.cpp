@@ -113,8 +113,8 @@ void BoardInitializationAnimator::updateVertexArray() {
       float scale = animatedItems[i].getCurrentScale();
       float rotation = animatedItems[i].getCurrentRotation();
       
-      // Diamond sprite size (assuming 32x32 base size)
-      float size = 32.0f * scale;
+      // Diamond sprite size (must match BoardDiamondSeq: 35.2f = 44.0f * 0.8f)
+      float size = 35.2f * scale;
       float halfSize = size * 0.5f;
       
       // Calculate rotated vertices
@@ -229,8 +229,8 @@ void BoardInitializationAnimator::initializeVertexArrayAtSpawn() {
     float scale = 1.0f; // Initial scale
     float rotation = 0.0f; // Initial rotation
     
-    // Diamond sprite size (assuming 32x32 base size)
-    float size = 32.0f * scale;
+    // Diamond sprite size (must match BoardDiamondSeq: 35.2f = 44.0f * 0.8f)
+    float size = 35.2f * scale;
     float halfSize = size * 0.5f;
     
     // Calculate rotated vertices

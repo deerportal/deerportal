@@ -108,8 +108,8 @@ void AnimatedBoardItem::addToVertexArray(sf::VertexArray& vertices, int vertexOf
   sf::Vector2f position = getCurrentPosition();
   sf::Vector2u textureSize = texture.getSize();
   
-  // Diamond sprite size (assuming square texture)
-  float size = static_cast<float>(textureSize.x) * currentScale;
+  // Diamond sprite size (must match BoardDiamondSeq: 35.2f = 44.0f * 0.8f)
+  float size = 35.2f * currentScale;
   float halfSize = size * 0.5f;
   
   // Calculate rotated vertices

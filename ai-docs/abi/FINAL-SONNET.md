@@ -593,6 +593,7 @@ const float inset = 50.0f;
 **Remaining Issues**: ✅ **ALL RESOLVED**
 1. ~~**Sprite Color**: All diamonds use blue sprite instead of proper element colors~~ ✅ **FIXED**
 2. ~~**Position Offset**: Diamonds are shifted right/down from exact target positions~~ ✅ **FIXED**
+3. ~~**Diamond Clipping**: Diamonds appearing cut off during animation~~ ✅ **FIXED**
 
 #### 5. **Position Offset Issue - DISCOVERED AND FIXED**
 **Problem**: Animated diamonds were landing 2.4 pixels right and down from static diamond positions.
@@ -656,6 +657,28 @@ targetPos.y += 76.0f;
 targetPos.x += 2.4f;
 targetPos.y += 2.4f;
 ```
+
+#### 8. **Diamond Clipping Issue - DISCOVERED AND FIXED**
+**Problem**: Animated diamonds appeared cut off/clipped during animation, not showing their full sprite.
+
+**Root Cause**: Animation system was using incorrect diamond sizing calculations that didn't match the BoardDiamondSeq system.
+
+**Analysis**: Found multiple inconsistent sizing values:
+- `AnimatedBoardItem`: Used full texture size
+- `BoardInitializationAnimator`: Used hardcoded 32.0f
+- `BoardDiamondSeq` (correct): Uses 35.2f (which is 44.0f * 0.8f - 80% scale)
+
+**Fix**: Unified all animation sizing to match BoardDiamondSeq:
+```cpp
+// WRONG (various inconsistent sizes):
+float size = static_cast<float>(textureSize.x) * currentScale;  // Used full texture
+float size = 32.0f * scale;  // Hardcoded 32px
+
+// CORRECT (matches BoardDiamondSeq):
+float size = 35.2f * currentScale;  // 44.0f * 0.8f = 35.2f (80% scaled)
+```
+
+This ensures animated diamonds render at exactly the same size as static diamonds in the final game state.
 
 ### Debug Output Example
 ```

@@ -1124,7 +1124,8 @@ void Game::render(float deltaTime) {
     drawBaseGame(); // Draw board elements but NOT static diamonds
     renderTexture.setView(viewFull);
     renderTexture.draw(groupHud);
-    renderTexture.setView(viewTiles);
+    // Render animated diamonds with viewFull to avoid viewport clipping
+    renderTexture.setView(viewFull);
     // NOTE: We do NOT draw static boardDiamonds here - only animated ones
     boardAnimator->render(renderTexture, textures.textureBoardDiamond);
     drawCharacters();
