@@ -25,6 +25,8 @@ public:
   void transitionToGame();
   void transitionToSetup();
   void transitionToIntroShader();
+  void transitionToBoardAnimation();
+  void transitionFromBoardAnimationToLetsBegin();
   void transitionToEndGame();
   void transitionToRollDice();
   void transitionToLetsBegin();
@@ -46,6 +48,7 @@ public:
 
   // State queries
   int getCurrentState() const;
+  std::string getCurrentStateName() const;
   bool isInGameState() const;
   bool isInMenuState() const;
   bool canTransitionTo(int targetState) const;

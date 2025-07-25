@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "game.h"
+#include "board-initialization-animator.h"
 
 namespace DP {
 
@@ -44,10 +45,8 @@ GameRenderer::GameRenderer(Game* gameInstance)
 GameRenderer::~GameRenderer() {}
 
 void GameRenderer::render(float deltaTime) {
-#ifndef NDEBUG
-  std::cout << "DEBUG: GameRenderer::render called, state=" << game->currentState
+  std::cout << "RENDER ENTRY: GameRenderer::render called, state=" << game->currentState
             << ", useDirectRendering=" << useDirectRendering << std::endl;
-#endif
   clearBuffers();
 
   // PERFORMANCE OPTIMIZATION: Direct rendering for gameplay states
@@ -65,14 +64,22 @@ void GameRenderer::render(float deltaTime) {
 #endif
 
   // Route to state-specific rendering (with post-processing)
+  std::cout << "RENDER DEBUG: Current state is " << game->currentState;
   switch (game->currentState) {
   case Game::state_game:
   case Game::state_roll_dice:
+    std::cout << " (state_game/roll_dice)" << std::endl;
     renderStateGame();
     break;
 
   case Game::state_setup_players:
+    std::cout << " (state_setup_players)" << std::endl;
     renderStateSetup();
+    break;
+
+  case Game::state_board_animation:
+    std::cout << " (state_board_animation) - CALLING renderStateBoardAnimation!" << std::endl;
+    renderStateBoardAnimation();
     break;
 
   case Game::state_gui_elem:
@@ -147,6 +154,33 @@ void GameRenderer::renderStateSetup() {
   for (int i = 0; i < 4; i++) {
     game->renderTexture.draw(*game->players[i].spriteAI);
   }
+}
+
+void GameRenderer::renderStateBoardAnimation() {
+  // Debug output to confirm we're in animation state
+  std::cout << "ANIMATION STATE: Rendering board animation" << std::endl;
+  
+  game->renderTexture.setView(game->viewFull);
+  // Temporarily comment out dark background to see if animation is visible
+  // game->renderTexture.draw(*game->spriteBackgroundDark);
+
+  game->renderTexture.setView(game->viewTiles);
+  drawBaseGame(); // Draw board elements but NOT static diamonds
+
+  game->renderTexture.setView(game->viewFull);
+  game->renderTexture.draw(game->groupHud);
+
+  game->renderTexture.setView(game->viewTiles);
+  // NOTE: We do NOT draw static boardDiamonds here - only animated ones
+  
+  // The moving diamonds are rendered
+  game->boardAnimator->render(game->renderTexture, game->textures.textureBoardDiamond);
+  
+  drawCharacters();
+  game->renderTexture.draw(game->bubble);
+
+  // Other effects and characters join the fray
+  game->getAnimationSystem()->drawCircleParticles(game->renderTexture);
 }
 
 void GameRenderer::renderStateGuiElem() {

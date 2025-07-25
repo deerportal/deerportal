@@ -6,6 +6,7 @@
 #include "game-input.h"
 #include "game-renderer.h"
 #include "safe-asset-loader.h"
+#include "board-initialization-animator.h"
 
 // Include all headers that were moved from game.h
 #include <algorithm>
@@ -587,6 +588,9 @@ Game::Game(bool newTestMode)
   core = std::make_unique<GameCore>(this);
   stateManager = std::make_unique<GameStateManager>(this);
   animationSystem = std::make_unique<GameAnimationSystem>(this);
+  
+  // Initialize board animation system
+  boardAnimator = std::make_unique<BoardInitializationAnimator>();
 
   loadAssets();
   textLoading->setFont(menuFont);
@@ -686,6 +690,18 @@ void Game::update(sf::Time frameTime) {
   case state_menu:
     // Only update menu-specific elements
     credits.update(frameTime);
+    break;
+
+  case state_board_animation:
+    std::cout << "UPDATE DEBUG: In state_board_animation, updating animation" << std::endl;
+    // Update board initialization animation
+    boardAnimator->update(frameTime);
+    if (boardAnimator->isComplete()) {
+      std::cout << "UPDATE DEBUG: Animation complete, transitioning to lets_begin" << std::endl;
+      // Transition to lets begin when animation is complete
+      stateManager->transitionFromBoardAnimationToLetsBegin();
+    }
+    updateMinimalElements(frameTime);
     break;
 
   case state_setup_players:
@@ -1100,6 +1116,20 @@ void Game::render(float deltaTime) {
     for (int i = 0; i < 4; i++) {
       renderTexture.draw(*players[i].spriteAI);
     }
+  } else if (currentState == state_board_animation) {
+    std::cout << "GAME RENDER: Rendering state_board_animation!" << std::endl;
+    renderTexture.setView(viewFull);
+    renderTexture.draw(*spriteBackgroundDark);
+    renderTexture.setView(viewTiles);
+    drawBaseGame(); // Draw board elements but NOT static diamonds
+    renderTexture.setView(viewFull);
+    renderTexture.draw(groupHud);
+    renderTexture.setView(viewTiles);
+    // NOTE: We do NOT draw static boardDiamonds here - only animated ones
+    boardAnimator->render(renderTexture, textures.textureBoardDiamond);
+    drawCharacters();
+    renderTexture.draw(bubble);
+    getAnimationSystem()->drawCircleParticles(renderTexture);
   } else if (currentState == state_gui_elem) {
     renderTexture.setView(viewFull);
     shaderBlur.setUniform("blur_radius", 2.0f);

@@ -70,6 +70,7 @@ private:
   void renderStateGame();
   void renderStateMenu();
   void renderStateSetup();
+  void renderStateBoardAnimation();
   void renderStateLetsBegin();
   void renderStateEndGame();
   void renderStateGuiEndRound();

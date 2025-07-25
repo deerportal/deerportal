@@ -2,6 +2,7 @@
 
 #include "game.h"
 #include "tilemap.h" // For TILE_SIZE, BOARD_SIZE, transCords
+#include "board-initialization-animator.h"
 
 namespace DP {
 
@@ -31,6 +32,21 @@ void GameInput::processEvents(sf::RenderWindow& window) {
 
 void GameInput::handleKeyboardInput(const sf::Event& event) {
   if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
+    // Handle board animation skip functionality
+    if (game->currentState == Game::state_board_animation) {
+      if (keyPressed->code == sf::Keyboard::Key::Space || keyPressed->code == sf::Keyboard::Key::Enter) {
+        game->boardAnimator->skipAnimation();
+        game->stateManager->transitionFromBoardAnimationToLetsBegin();
+        
+#ifdef DEBUG
+        sf::Vector2f mousePos = game->window.mapPixelToCoords(sf::Mouse::getPosition(game->window));
+        std::cout << "[DEBUG] Animation skipped via key press in state: " 
+                  << game->stateManager->getCurrentStateName() << std::endl;
+#endif
+        return;
+      }
+    }
+    
     if (keyPressed->code == sf::Keyboard::Key::Escape) {
       // Context-aware Escape behavior
       if (game->currentState == Game::state_menu) {
@@ -89,6 +105,10 @@ void GameInput::handleMouseInput(const sf::Event& event) {
   // Handle mouse click events
   if (const auto* mouseButtonReleased = event.getIf<sf::Event::MouseButtonReleased>()) {
     if (mouseButtonReleased->button == sf::Mouse::Button::Left) {
+#ifdef DEBUG
+      std::cout << "[DEBUG] Mouse click at (" << localPositionFull.x << ", " << localPositionFull.y 
+                << ") in state: " << game->stateManager->getCurrentStateName() << std::endl;
+#endif
       handleLeftClick(localPosition, localPositionFull, mousePos);
     }
   }
@@ -116,6 +136,8 @@ void GameInput::updateSelector(sf::Vector2f localPosition) {
 }
 
 void GameInput::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos) {
+  std::cout << "CLICK DEBUG: Left click at (" << posFull.x << ", " << posFull.y << ") in state: " << game->currentState << std::endl;
+  
   switch (game->currentState) {
   case Game::state_game:
     processGameInput(pos, posFull, mousePos);
@@ -145,6 +167,12 @@ void GameInput::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mous
     processEndGameInput(pos, posFull, mousePos);
     break;
 
+  case Game::state_board_animation:
+    // Skip animation on mouse click and go to lets begin
+    game->boardAnimator->skipAnimation();
+    game->stateManager->transitionFromBoardAnimationToLetsBegin();
+    break;
+
   case Game::state_intro_shader:
     // Skip intro and go to main menu on mouse click
     game->stateManager->showMenu();
@@ -166,6 +194,8 @@ void GameInput::processGameInput(sf::Vector2f pos, sf::Vector2f posFull, int mou
 }
 
 void GameInput::processSetupInput(sf::Vector2f pos, sf::Vector2f posFull, int mousePos) {
+  std::cout << "SETUP INPUT: processSetupInput called with click at (" << posFull.x << ", " << posFull.y << ")" << std::endl;
+  
   // Check for clicks on player AI/Human toggle buttons
   for (int i = 0; i < 4; i++) {
     sf::FloatRect spriteHumanRect(game->players[i].spriteAI->getGlobalBounds());
@@ -176,11 +206,27 @@ void GameInput::processSetupInput(sf::Vector2f pos, sf::Vector2f posFull, int mo
 
   // Check for start game button click
   sf::IntRect startGameRect({580, 640}, {180, 80});
+  std::cout << "BUTTON DEBUG: Click at (" << posFull.x << ", " << posFull.y << ") vs button rect (580,640) to (760,720)" << std::endl;
+  std::cout << "BUTTON DEBUG: Contains check result: " << startGameRect.contains(sf::Vector2i((int)posFull.x, (int)posFull.y)) << std::endl;
+  
   if (startGameRect.contains(sf::Vector2i((int)posFull.x, (int)posFull.y))) {
     game->bigDiamondActive = true;
-    game->banner.setText("start game");
-    game->currentState = Game::state_roll_dice;
-    game->launchNextPlayer();
+    // Don't set banner text during animation to avoid covering the animation
+    // game->banner.setText("start game");
+    
+#ifndef NDEBUG
+    std::cout << "[DEBUG] Start game button clicked, initializing animation" << std::endl;
+#endif
+    
+    // Initialize animation with final diamond positions
+    game->boardAnimator->initializeAnimation(game->boardDiamonds, game->window);
+    
+    // Transition to animation state instead of going directly to roll_dice
+    game->stateManager->transitionToBoardAnimation();
+    
+#ifndef NDEBUG
+    std::cout << "[DEBUG] Transitioned to board animation state" << std::endl;
+#endif
   }
 }
 

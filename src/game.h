@@ -36,7 +36,6 @@
 #include "textureholder.h"    // For TextureHolder textures;
 #include "window-manager.h"   // For WindowManager windowManager;
 
-// Forward declarations for classes only used as pointers or in function signatures
 // Include module headers for complete type information
 #include "game-animation-system.h"
 #include "game-assets.h"
@@ -44,6 +43,7 @@
 #include "game-input.h"
 #include "game-renderer.h"
 #include "game-state-manager.h"
+#include "board-initialization-animator.h"
 
 namespace DP {
 
@@ -121,6 +121,7 @@ private:
     state_menu,
     state_intro_shader, // NEW: Intro shader animation state
     state_setup_players,
+    state_board_animation, // NEW: Board initialization animation state
     state_lets_begin,
     state_roll_dice,
     state_game,
@@ -259,6 +260,9 @@ public:
   std::unique_ptr<GameCore> core;
   std::unique_ptr<GameStateManager> stateManager;
   std::unique_ptr<GameAnimationSystem> animationSystem;
+  
+  // NEW: Board initialization animator
+  std::unique_ptr<BoardInitializationAnimator> boardAnimator;
 
   // Module accessors
   GameAnimationSystem* getAnimationSystem() const { return animationSystem.get(); }

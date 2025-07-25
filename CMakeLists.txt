@@ -72,6 +72,9 @@ file(GLOB GAME_SOURCES
     src/utils.cpp
     src/safe-asset-loader.cpp
     src/error-handler.cpp
+    src/board-spawn-regions.cpp
+    src/animated-board-item.cpp
+    src/board-initialization-animator.cpp
 )
 
 file(GLOB OTHER_SOURCES 
