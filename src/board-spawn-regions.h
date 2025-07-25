@@ -4,7 +4,7 @@
 class BoardSpawnRegions {
 private:
   static constexpr float SPAWN_RADIUS = 200.0f;
-  
+
 public:
   // Fixed quadrant mapping with player 2/3 correction
   int getQuadrantForDiamond(int diamondIndex);

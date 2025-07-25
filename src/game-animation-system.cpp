@@ -27,10 +27,10 @@ GameAnimationSystem::GameAnimationSystem(Game* gameInstance)
 
   // Initialize VertexArray for batched particle rendering
   m_particleVertices.setPrimitiveType(sf::PrimitiveType::Triangles);
-  
+
   // Initialize advanced optimization systems
   initializeParticlePool();
-  
+
   // Web Performance Patterns: Initialize lookup tables
   if (!s_trigTablesInitialized) {
     initializeTrigTables();
@@ -237,8 +237,10 @@ void GameAnimationSystem::createCollectionBurst(sf::Vector2f position,
                                        std::sin(angle) * speed * speedVariation);
     } else if (config.pattern == ParticleConfig::BurstPattern::DIRECTIONAL) {
       // Directional pattern (upward with spread) - 4x wider distribution
-      float angle = -M_PI / 2 + (i - particleCount / 2) * (M_PI / 1.5) / particleCount; // 4x wider: PI/6 -> PI/1.5
-      particle.velocity = sf::Vector2f(std::cos(angle) * speed * 1.2f, std::sin(angle) * speed); // Enhanced horizontal spread
+      float angle = -M_PI / 2 + (i - particleCount / 2) * (M_PI / 1.5) /
+                                    particleCount; // 4x wider: PI/6 -> PI/1.5
+      particle.velocity = sf::Vector2f(std::cos(angle) * speed * 1.2f,
+                                       std::sin(angle) * speed); // Enhanced horizontal spread
     }
 
     // Lifetime from config
@@ -669,19 +671,19 @@ void GameAnimationSystem::initializeParticlePool() {
     m_availableParticleIndices.push(i);
   }
   m_activeParticleIndices.reserve(PARTICLE_POOL_SIZE / 4); // Reasonable active estimate
-  
+
   // Initialize double-buffered VertexArrays
   m_particleVertices.setPrimitiveType(sf::PrimitiveType::Triangles);
   m_particleVerticesBack.setPrimitiveType(sf::PrimitiveType::Triangles);
-  
+
   // Pre-allocate VertexArray capacity (200 particles × 6 vertices = 1200 vertices max per burst)
   m_particleVertices.resize(PARTICLE_POOL_SIZE * 6);
   m_particleVerticesBack.resize(PARTICLE_POOL_SIZE * 6);
-  
+
   initializeSpatialGrid();
-  
+
 #ifndef NDEBUG
-  std::cout << "DEBUG: Particle system initialized with " << PARTICLE_POOL_SIZE 
+  std::cout << "DEBUG: Particle system initialized with " << PARTICLE_POOL_SIZE
             << " pooled particles and advanced optimizations" << std::endl;
 #endif
 }
@@ -690,19 +692,20 @@ size_t GameAnimationSystem::acquireParticle() {
   // Web Browser Memory Management Pattern: O(1) allocation from free list
   if (m_availableParticleIndices.empty()) {
 #ifndef NDEBUG
-    std::cout << "WARNING: Particle pool exhausted! Consider increasing PARTICLE_POOL_SIZE" << std::endl;
+    std::cout << "WARNING: Particle pool exhausted! Consider increasing PARTICLE_POOL_SIZE"
+              << std::endl;
 #endif
     return SIZE_MAX; // Pool exhausted
   }
-  
+
   size_t index = m_availableParticleIndices.front();
   m_availableParticleIndices.pop();
   m_activeParticleIndices.push_back(index);
-  
+
   // Reset particle to clean state
   m_particlePool[index] = CircleParticle{}; // Zero-initialize
   m_particlePool[index].active = true;
-  
+
   markParticlesDirty(); // RequestAnimationFrame-style dirty marking
   return index;
 }
@@ -710,23 +713,23 @@ size_t GameAnimationSystem::acquireParticle() {
 void GameAnimationSystem::releaseParticle(size_t index) {
   // O(1) deallocation back to pool
   if (index >= PARTICLE_POOL_SIZE) return;
-  
+
   m_particlePool[index].active = false;
   m_availableParticleIndices.push(index);
-  
+
   // Remove from active list (O(n) but small list)
   auto it = std::find(m_activeParticleIndices.begin(), m_activeParticleIndices.end(), index);
   if (it != m_activeParticleIndices.end()) {
     m_activeParticleIndices.erase(it);
   }
-  
+
   markParticlesDirty();
 }
 
 bool GameAnimationSystem::shouldRebuildVertices(sf::Time currentTime) const {
   // RequestAnimationFrame-style throttling: prevent excessive rebuilds
   if (!m_particlesDirty) return false;
-  
+
   float timeSinceLastRebuild = (currentTime - m_lastVertexRebuild).asSeconds();
   return timeSinceLastRebuild >= VERTEX_REBUILD_THROTTLE;
 }
@@ -734,10 +737,10 @@ bool GameAnimationSystem::shouldRebuildVertices(sf::Time currentTime) const {
 void GameAnimationSystem::throttledVertexRebuild(sf::Time currentTime) {
   // Web Browser Dirty Rectangle Pattern: Only rebuild when needed and throttled
   if (!shouldRebuildVertices(currentTime)) return;
-  
+
   // Double-buffered VertexArray swap (OpenGL front/back buffer pattern)
   m_particleVerticesBack.clear();
-  
+
   // Efficiently rebuild only active particles with web-optimized precalculation
   for (size_t index : m_activeParticleIndices) {
     const auto& particle = m_particlePool[index];
@@ -745,17 +748,17 @@ void GameAnimationSystem::throttledVertexRebuild(sf::Time currentTime) {
       addParticleToVertexArrayPrecalc(particle, index); // Use precalculated version
     }
   }
-  
+
   // Atomic swap: minimal frame disruption
   std::swap(m_particleVertices, m_particleVerticesBack);
-  
+
   m_particlesDirty = false;
   m_lastVertexRebuild = currentTime;
-  
+
 #ifndef NDEBUG
   static int rebuildCount = 0;
   if (++rebuildCount % 60 == 0) { // Log every 60 rebuilds
-    std::cout << "DEBUG: VertexArray rebuilt " << rebuildCount 
+    std::cout << "DEBUG: VertexArray rebuilt " << rebuildCount
               << " times, active particles: " << m_activeParticleIndices.size() << std::endl;
   }
 #endif
@@ -763,16 +766,14 @@ void GameAnimationSystem::throttledVertexRebuild(sf::Time currentTime) {
 
 void GameAnimationSystem::initializeSpatialGrid() {
   // Game Engine Spatial Partitioning: 8×8 grid for culling
-  const float cellWidth = 1920.0f / SPATIAL_GRID_SIZE;  // Assume 1920x1080 viewport
+  const float cellWidth = 1920.0f / SPATIAL_GRID_SIZE; // Assume 1920x1080 viewport
   const float cellHeight = 1080.0f / SPATIAL_GRID_SIZE;
-  
+
   for (int x = 0; x < SPATIAL_GRID_SIZE; ++x) {
     for (int y = 0; y < SPATIAL_GRID_SIZE; ++y) {
       // SFML 3.0.1 syntax: sf::FloatRect(position, size)
-      m_spatialGrid[x][y].bounds = sf::FloatRect(
-        sf::Vector2f(x * cellWidth, y * cellHeight), 
-        sf::Vector2f(cellWidth, cellHeight)
-      );
+      m_spatialGrid[x][y].bounds = sf::FloatRect(sf::Vector2f(x * cellWidth, y * cellHeight),
+                                                 sf::Vector2f(cellWidth, cellHeight));
       m_spatialGrid[x][y].particleIndices.reserve(32); // Reasonable estimate
     }
   }
@@ -785,7 +786,7 @@ void GameAnimationSystem::updateSpatialPartitioning() {
       cell.particleIndices.clear();
     }
   }
-  
+
   // Distribute active particles into spatial cells
   for (size_t index : m_activeParticleIndices) {
     const auto& particle = m_particlePool[index];
@@ -802,17 +803,17 @@ std::pair<int, int> GameAnimationSystem::getGridCell(const sf::Vector2f& positio
   // Convert world position to grid coordinates
   const float cellWidth = 1920.0f / SPATIAL_GRID_SIZE;
   const float cellHeight = 1080.0f / SPATIAL_GRID_SIZE;
-  
+
   int x = static_cast<int>(position.x / cellWidth);
   int y = static_cast<int>(position.y / cellHeight);
-  
+
   return {x, y};
 }
 
 void GameAnimationSystem::cullInvisibleParticles(const sf::FloatRect& viewBounds) {
   // OpenGL Frustum Culling Pattern: Mark spatial cells as visible/invisible
   m_viewBounds = viewBounds;
-  
+
   for (auto& row : m_spatialGrid) {
     for (auto& cell : row) {
       // SFML 3.0.1: Custom intersection check (intersects method removed)
@@ -824,21 +825,22 @@ void GameAnimationSystem::cullInvisibleParticles(const sf::FloatRect& viewBounds
   }
 }
 
-void GameAnimationSystem::addParticleToVertexArrayOptimized(const CircleParticle& particle, size_t index) {
+void GameAnimationSystem::addParticleToVertexArrayOptimized(const CircleParticle& particle,
+                                                            size_t index) {
   // GPU-friendly optimized vertex generation with spatial culling
   auto [gridX, gridY] = getGridCell(particle.position);
-  
+
   // Spatial culling: skip particles outside view
   if (gridX >= 0 && gridX < SPATIAL_GRID_SIZE && gridY >= 0 && gridY < SPATIAL_GRID_SIZE) {
     if (!m_spatialGrid[gridX][gridY].visible) {
       return; // Particle culled
     }
   }
-  
+
   // Use original addParticleToVertexArray logic but with back buffer
   const sf::Vector2f& pos = particle.position;
   float halfSize = 22.0f * particle.scale; // Base size 44px / 2
-  
+
   // Calculate alpha for fade effect
   float alpha = 255.0f;
   if (particle.fadeOut && particle.totalLifetime > sf::Time::Zero) {
@@ -846,34 +848,37 @@ void GameAnimationSystem::addParticleToVertexArrayOptimized(const CircleParticle
     alpha *= lifeRatio;
   }
   alpha = std::max(0.0f, std::min(255.0f, alpha));
-  
+
   const sf::IntRect& textureRect = particle.textureRect;
-  
+
   // Create 6 vertices for 2 triangles (quad) - optimized for cache locality
   sf::Vertex vertices[6];
-  
+
   // First triangle (top-left, top-right, bottom-left)
   vertices[0].position = sf::Vector2f(pos.x - halfSize, pos.y - halfSize);
   vertices[0].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y);
   vertices[0].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
-  
+
   vertices[1].position = sf::Vector2f(pos.x + halfSize, pos.y - halfSize);
-  vertices[1].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y);
+  vertices[1].texCoords =
+      sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y);
   vertices[1].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
-  
+
   vertices[2].position = sf::Vector2f(pos.x - halfSize, pos.y + halfSize);
-  vertices[2].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y + textureRect.size.y);
+  vertices[2].texCoords =
+      sf::Vector2f(textureRect.position.x, textureRect.position.y + textureRect.size.y);
   vertices[2].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
-  
+
   // Second triangle (top-right, bottom-right, bottom-left)
   vertices[3] = vertices[1]; // Reuse top-right
-  
+
   vertices[4].position = sf::Vector2f(pos.x + halfSize, pos.y + halfSize);
-  vertices[4].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y + textureRect.size.y);
+  vertices[4].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x,
+                                       textureRect.position.y + textureRect.size.y);
   vertices[4].color = sf::Color(255, 255, 255, static_cast<uint8_t>(alpha));
-  
+
   vertices[5] = vertices[2]; // Reuse bottom-left
-  
+
   // Add to back buffer VertexArray
   for (int i = 0; i < 6; ++i) {
     m_particleVerticesBack.append(vertices[i]);
@@ -887,9 +892,9 @@ void GameAnimationSystem::logPerformanceMetrics() const {
   if (++logCount % 600 == 0) { // Log every 10 seconds
     size_t activeParticles = m_activeParticleIndices.size();
     size_t poolUtilization = (100 * activeParticles) / PARTICLE_POOL_SIZE;
-    
+
     if (activeParticles > 0) {
-      std::cout << "PARTICLE SYSTEM: " << activeParticles << "/" << PARTICLE_POOL_SIZE 
+      std::cout << "PARTICLE SYSTEM: " << activeParticles << "/" << PARTICLE_POOL_SIZE
                 << " active (" << poolUtilization << "% pool utilization)" << std::endl;
     }
   }
@@ -908,9 +913,10 @@ void GameAnimationSystem::initializeTrigTables() {
     s_cosTable[i] = std::cos(radians);
   }
   s_trigTablesInitialized = true;
-  
+
 #ifndef NDEBUG
-  std::cout << "DEBUG: Trigonometry lookup tables initialized (" << TRIG_TABLE_SIZE << " entries)" << std::endl;
+  std::cout << "DEBUG: Trigonometry lookup tables initialized (" << TRIG_TABLE_SIZE << " entries)"
+            << std::endl;
 #endif
 }
 
@@ -939,7 +945,7 @@ uint8_t GameAnimationSystem::getFadeAlpha(float ratio) const {
   // O(1) alpha calculation using lookup table
   if (ratio <= 0.0f) return 0;
   if (ratio >= 1.0f) return 255;
-  
+
   size_t index = static_cast<size_t>(ratio * (FADE_TABLE_SIZE - 1));
   return s_fadeTable[index];
 }
@@ -954,17 +960,19 @@ std::pair<int, int> GameAnimationSystem::getGridCellFast(const sf::Vector2f& pos
 
 uint32_t GameAnimationSystem::hashScale(float scale) const {
   // Simple hash function for memoization (JavaScript-style)
-  union { float f; uint32_t i; } converter;
+  union {
+    float f;
+    uint32_t i;
+  } converter;
   converter.f = scale;
   return converter.i;
 }
 
 uint64_t GameAnimationSystem::hashTypeScale(const sf::IntRect& rect, float scale) const {
   // Combined hash for vertex template caching
-  uint32_t rectHash = static_cast<uint32_t>(rect.position.x) ^ 
-                      (static_cast<uint32_t>(rect.position.y) << 8) ^
-                      (static_cast<uint32_t>(rect.size.x) << 16) ^
-                      (static_cast<uint32_t>(rect.size.y) << 24);
+  uint32_t rectHash =
+      static_cast<uint32_t>(rect.position.x) ^ (static_cast<uint32_t>(rect.position.y) << 8) ^
+      (static_cast<uint32_t>(rect.size.x) << 16) ^ (static_cast<uint32_t>(rect.size.y) << 24);
   uint32_t scaleHash = hashScale(scale);
   return (static_cast<uint64_t>(rectHash) << 32) | scaleHash;
 }
@@ -972,12 +980,12 @@ uint64_t GameAnimationSystem::hashTypeScale(const sf::IntRect& rect, float scale
 const GameAnimationSystem::VertexOffsets& GameAnimationSystem::getVertexOffsets(float scale) {
   // Memoization pattern: Cache expensive vertex offset calculations
   uint32_t key = hashScale(scale);
-  
+
   auto it = m_vertexOffsetCache.find(key);
   if (it != m_vertexOffsetCache.end()) {
     return it->second; // Cache hit - O(1) return
   }
-  
+
   // Cache miss - calculate and store
   float halfSize = 22.0f * scale; // Base size 44px / 2
   VertexOffsets offsets;
@@ -985,18 +993,19 @@ const GameAnimationSystem::VertexOffsets& GameAnimationSystem::getVertexOffsets(
   offsets.topRight = sf::Vector2f(halfSize, -halfSize);
   offsets.bottomLeft = sf::Vector2f(-halfSize, halfSize);
   offsets.bottomRight = sf::Vector2f(halfSize, halfSize);
-  
+
   m_vertexOffsetCache[key] = offsets;
   return m_vertexOffsetCache[key];
 }
 
-const GameAnimationSystem::VertexTemplate& GameAnimationSystem::getVertexTemplate(uint64_t typeScaleHash) {
+const GameAnimationSystem::VertexTemplate&
+GameAnimationSystem::getVertexTemplate(uint64_t typeScaleHash) {
   // Canvas-style vertex template caching (typed array pattern)
   auto it = m_vertexTemplateCache.find(typeScaleHash);
   if (it != m_vertexTemplateCache.end() && it->second.initialized) {
     return it->second; // Template cache hit
   }
-  
+
   // This is a placeholder - would be populated when creating particle templates
   // For now, return a default template
   static VertexTemplate defaultTemplate;
@@ -1010,13 +1019,14 @@ const GameAnimationSystem::VertexTemplate& GameAnimationSystem::getVertexTemplat
     defaultTemplate.positions[5] = sf::Vector2f(-1.0f, 1.0f);  // Bottom-left (repeat)
     defaultTemplate.initialized = true;
   }
-  
+
   return defaultTemplate;
 }
 
-void GameAnimationSystem::addParticleToVertexArrayPrecalc(const CircleParticle& particle, size_t index) {
+void GameAnimationSystem::addParticleToVertexArrayPrecalc(const CircleParticle& particle,
+                                                          size_t index) {
   // Web-optimized vertex generation using precalculated offsets and memoization
-  
+
   // Fast spatial culling with bit shifting
   auto [gridX, gridY] = getGridCellFast(particle.position);
   if (gridX >= 0 && gridX < SPATIAL_GRID_SIZE && gridY >= 0 && gridY < SPATIAL_GRID_SIZE) {
@@ -1024,46 +1034,49 @@ void GameAnimationSystem::addParticleToVertexArrayPrecalc(const CircleParticle& 
       return; // Particle culled - no expensive calculations needed
     }
   }
-  
+
   // Use memoized vertex offsets (Canvas optimization pattern)
   const VertexOffsets& offsets = getVertexOffsets(particle.scale);
-  
+
   // Fast alpha calculation using lookup table
   uint8_t alpha = 255;
   if (particle.fadeOut && particle.totalLifetime > sf::Time::Zero) {
     float lifeRatio = particle.lifetime.asSeconds() / particle.totalLifetime.asSeconds();
     alpha = getFadeAlpha(lifeRatio);
   }
-  
+
   const sf::Vector2f& pos = particle.position;
   const sf::IntRect& textureRect = particle.textureRect;
   sf::Color color(255, 255, 255, alpha);
-  
+
   // Optimized vertex creation using precalculated offsets
   sf::Vertex vertices[6];
-  
+
   // First triangle (top-left, top-right, bottom-left)
   vertices[0].position = pos + offsets.topLeft;
   vertices[0].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y);
   vertices[0].color = color;
-  
+
   vertices[1].position = pos + offsets.topRight;
-  vertices[1].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y);
+  vertices[1].texCoords =
+      sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y);
   vertices[1].color = color;
-  
+
   vertices[2].position = pos + offsets.bottomLeft;
-  vertices[2].texCoords = sf::Vector2f(textureRect.position.x, textureRect.position.y + textureRect.size.y);
+  vertices[2].texCoords =
+      sf::Vector2f(textureRect.position.x, textureRect.position.y + textureRect.size.y);
   vertices[2].color = color;
-  
+
   // Second triangle (reuse vertices for cache efficiency)
   vertices[3] = vertices[1]; // Top-right
-  
+
   vertices[4].position = pos + offsets.bottomRight;
-  vertices[4].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x, textureRect.position.y + textureRect.size.y);
+  vertices[4].texCoords = sf::Vector2f(textureRect.position.x + textureRect.size.x,
+                                       textureRect.position.y + textureRect.size.y);
   vertices[4].color = color;
-  
+
   vertices[5] = vertices[2]; // Bottom-left
-  
+
   // Add to back buffer VertexArray
   for (int i = 0; i < 6; ++i) {
     m_particleVerticesBack.append(vertices[i]);

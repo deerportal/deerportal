@@ -4,8 +4,8 @@
 #include <cmath> // For sin() function
 #include <stdexcept>
 
-#include "game.h"
 #include "board-initialization-animator.h"
+#include "game.h"
 
 namespace DP {
 
@@ -159,7 +159,7 @@ void GameRenderer::renderStateSetup() {
 void GameRenderer::renderStateBoardAnimation() {
   // Debug output to confirm we're in animation state
   std::cout << "ANIMATION STATE: Rendering board animation" << std::endl;
-  
+
   game->renderTexture.setView(game->viewFull);
   game->renderTexture.draw(*game->spriteBackgroundDark);
 
@@ -171,13 +171,13 @@ void GameRenderer::renderStateBoardAnimation() {
 
   game->renderTexture.setView(game->viewTiles);
   // NOTE: We do NOT draw static boardDiamonds here - only animated ones
-  
+
   // The moving diamonds are rendered LAST to ensure they appear on top
   game->boardAnimator->render(game->renderTexture, game->textures.textureBoardDiamond);
-  
+
   // Other effects and characters join the fray
   game->getAnimationSystem()->drawCircleParticles(game->renderTexture);
-  
+
   // Characters and UI elements should NOT cover diamonds during animation
   // drawCharacters();
   // game->renderTexture.draw(game->bubble);

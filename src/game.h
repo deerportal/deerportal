@@ -37,13 +37,13 @@
 #include "window-manager.h"   // For WindowManager windowManager;
 
 // Include module headers for complete type information
+#include "board-initialization-animator.h"
 #include "game-animation-system.h"
 #include "game-assets.h"
 #include "game-core.h"
 #include "game-input.h"
 #include "game-renderer.h"
 #include "game-state-manager.h"
-#include "board-initialization-animator.h"
 
 namespace DP {
 
@@ -260,7 +260,7 @@ public:
   std::unique_ptr<GameCore> core;
   std::unique_ptr<GameStateManager> stateManager;
   std::unique_ptr<GameAnimationSystem> animationSystem;
-  
+
   // NEW: Board initialization animator
   std::unique_ptr<BoardInitializationAnimator> boardAnimator;
 

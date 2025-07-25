@@ -21,15 +21,16 @@ private:
   int diamondId = 0;
   int textureId = 0; // For selecting correct sprite from texture atlas
   bool finished = false;
-  
+
   void initializeBezierPath(sf::Vector2f spawn, sf::Vector2f target);
   sf::Vector2f calculateBezierPosition(float t) const;
   float easeOutCubic(float t) const;
-  
+
 public:
   void initialize(int id, sf::Vector2f spawn, sf::Vector2f target, int texId = 0);
   void update(sf::Time deltaTime, const BoardAnimationConfig& config);
-  void addToVertexArray(sf::VertexArray& vertices, int vertexOffset, const sf::Texture& texture) const;
+  void addToVertexArray(sf::VertexArray& vertices, int vertexOffset,
+                        const sf::Texture& texture) const;
   bool isFinished() const { return finished; }
   sf::Vector2f getCurrentPosition() const;
   float getCurrentScale() const { return currentScale; }

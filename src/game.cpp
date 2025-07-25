@@ -1,12 +1,12 @@
 #include "game.h"
 
+#include "board-initialization-animator.h"
 #include "error-handler.h"
 #include "game-assets.h"
 #include "game-core.h"
 #include "game-input.h"
 #include "game-renderer.h"
 #include "safe-asset-loader.h"
-#include "board-initialization-animator.h"
 
 // Include all headers that were moved from game.h
 #include <algorithm>
@@ -588,7 +588,7 @@ Game::Game(bool newTestMode)
   core = std::make_unique<GameCore>(this);
   stateManager = std::make_unique<GameStateManager>(this);
   animationSystem = std::make_unique<GameAnimationSystem>(this);
-  
+
   // Initialize board animation system
   boardAnimator = std::make_unique<BoardInitializationAnimator>();
 
@@ -693,11 +693,15 @@ void Game::update(sf::Time frameTime) {
     break;
 
   case state_board_animation:
+#ifndef NDEBUG
     std::cout << "UPDATE DEBUG: In state_board_animation, updating animation" << std::endl;
+#endif
     // Update board initialization animation
     boardAnimator->update(frameTime);
     if (boardAnimator->isComplete()) {
+#ifndef NDEBUG
       std::cout << "UPDATE DEBUG: Animation complete, transitioning to lets_begin" << std::endl;
+#endif
       // Transition to lets begin when animation is complete
       stateManager->transitionFromBoardAnimationToLetsBegin();
     }
@@ -1117,7 +1121,9 @@ void Game::render(float deltaTime) {
       renderTexture.draw(*players[i].spriteAI);
     }
   } else if (currentState == state_board_animation) {
+#ifndef NDEBUG
     std::cout << "GAME RENDER: Rendering state_board_animation!" << std::endl;
+#endif
     renderTexture.setView(viewFull);
     renderTexture.draw(*spriteBackgroundDark);
     renderTexture.setView(viewTiles);

@@ -164,54 +164,54 @@ private:
   std::unique_ptr<sf::Sprite> m_particleSprite; // Reused for all particles
 
   // Advanced Optimization Patterns (Web/SFML 3.0.1/OpenGL inspired)
-  
+
   // 1. Object Pooling Pattern (inspired by web browser memory management)
   static constexpr size_t PARTICLE_POOL_SIZE = 2048; // Increased pool for 10x particle counts
   std::array<CircleParticle, PARTICLE_POOL_SIZE> m_particlePool;
   std::queue<size_t> m_availableParticleIndices; // Free list for O(1) allocation
   std::vector<size_t> m_activeParticleIndices;   // Active particles for iteration
-  
+
   // Web Performance Patterns: Precalculation & Memoization
-  
+
   // Trigonometry Lookup Tables (Canvas/WebGL pattern)
   static constexpr size_t TRIG_TABLE_SIZE = 360; // 1-degree precision
   static std::array<float, TRIG_TABLE_SIZE> s_sinTable;
   static std::array<float, TRIG_TABLE_SIZE> s_cosTable;
   static bool s_trigTablesInitialized;
-  
+
   // Vertex Offset Memoization (fast canvas vertex calculations)
   struct VertexOffsets {
     sf::Vector2f topLeft, topRight, bottomLeft, bottomRight;
   };
   std::unordered_map<uint32_t, VertexOffsets> m_vertexOffsetCache; // Memoized by scale hash
-  
+
   // Alpha Fade Lookup Table (smooth transitions)
   static constexpr size_t FADE_TABLE_SIZE = 256;
   static std::array<uint8_t, FADE_TABLE_SIZE> s_fadeTable;
-  
+
   // Fast Division with Bit Shifting (power-of-2 optimizations)
   static constexpr float CELL_WIDTH_SHIFT = 8.0f;  // 256 pixels per cell (2^8)
   static constexpr float CELL_HEIGHT_SHIFT = 8.0f; // Fast bit-shift division
-  static constexpr int CELL_SHIFT_BITS = 8;         // For >> 8 operations
-  
+  static constexpr int CELL_SHIFT_BITS = 8;        // For >> 8 operations
+
   // Vertex Template Caching (typed array pattern from Canvas API)
   struct VertexTemplate {
-    std::array<sf::Vector2f, 6> positions;     // Relative positions
-    std::array<sf::Vector2f, 6> texCoords;     // Texture coordinates
+    std::array<sf::Vector2f, 6> positions; // Relative positions
+    std::array<sf::Vector2f, 6> texCoords; // Texture coordinates
     bool initialized = false;
   };
   std::unordered_map<uint64_t, VertexTemplate> m_vertexTemplateCache; // By type+scale hash
-  
+
   // 2. Dirty Flag Optimization (inspired by web browser dirty rectangles)
-  bool m_particlesDirty = false;         // Track if VertexArray needs rebuilding
+  bool m_particlesDirty = false;                 // Track if VertexArray needs rebuilding
   sf::Time m_lastVertexRebuild = sf::Time::Zero; // Prevent excessive rebuilds
   static constexpr float VERTEX_REBUILD_THROTTLE = 1.0f / 120.0f; // Max 120 rebuilds/sec
-  
+
   // 3. VertexArray Double Buffering (inspired by OpenGL front/back buffer)
-  sf::VertexArray m_particleVertices;    // Current frame vertices
+  sf::VertexArray m_particleVertices;     // Current frame vertices
   sf::VertexArray m_particleVerticesBack; // Next frame vertices (for smooth updates)
   sf::Texture* m_particleTexture;
-  
+
   // 4. Spatial Partitioning for Culling (inspired by game engines)
   struct SpatialCell {
     std::vector<size_t> particleIndices;
@@ -221,7 +221,7 @@ private:
   static constexpr int SPATIAL_GRID_SIZE = 8; // 8x8 grid
   std::array<std::array<SpatialCell, SPATIAL_GRID_SIZE>, SPATIAL_GRID_SIZE> m_spatialGrid;
   sf::FloatRect m_viewBounds; // Current camera view for culling
-  
+
   // 5. Instanced Rendering Optimization (inspired by OpenGL instancing)
   struct ParticleInstanceData {
     sf::Vector2f position;
@@ -264,44 +264,45 @@ private:
   void cleanupFinishedEffects();
   float calculateOscillatorModifier() const;
   void updateCircleParticles(sf::Time frameTime);
-  
+
   // Advanced Optimization Methods (inspired by modern web/game engines)
-  
+
   // Object Pooling Pattern
   void initializeParticlePool();
-  size_t acquireParticle(); // O(1) allocation from pool
+  size_t acquireParticle();           // O(1) allocation from pool
   void releaseParticle(size_t index); // O(1) deallocation to pool
-  
+
   // Dirty Flag & RequestAnimationFrame-style throttling
   void markParticlesDirty() { m_particlesDirty = true; }
   bool shouldRebuildVertices(sf::Time currentTime) const;
   void throttledVertexRebuild(sf::Time currentTime);
-  
+
   // Spatial Partitioning & Frustum Culling
   void initializeSpatialGrid();
   void updateSpatialPartitioning();
   void cullInvisibleParticles(const sf::FloatRect& viewBounds);
   std::pair<int, int> getGridCell(const sf::Vector2f& position) const;
   std::pair<int, int> getGridCellFast(const sf::Vector2f& position) const; // Bit-shift version
-  
+
   // Web Performance Patterns: Precalculation & Memoization
-  static void initializeTrigTables();    // Lookup tables for sin/cos
-  static float fastSin(int degrees);     // O(1) trigonometry
-  static float fastCos(int degrees);     // O(1) trigonometry
-  void initializeFadeTable();            // Alpha transition lookup
+  static void initializeTrigTables();      // Lookup tables for sin/cos
+  static float fastSin(int degrees);       // O(1) trigonometry
+  static float fastCos(int degrees);       // O(1) trigonometry
+  void initializeFadeTable();              // Alpha transition lookup
   uint8_t getFadeAlpha(float ratio) const; // O(1) fade calculation
-  
+
   // Canvas-style Vertex Memoization
-  const VertexOffsets& getVertexOffsets(float scale); // Memoized vertex calculations
+  const VertexOffsets& getVertexOffsets(float scale);              // Memoized vertex calculations
   const VertexTemplate& getVertexTemplate(uint64_t typeScaleHash); // Cached templates
-  uint32_t hashScale(float scale) const;  // Hash function for memoization
+  uint32_t hashScale(float scale) const;                           // Hash function for memoization
   uint64_t hashTypeScale(const sf::IntRect& rect, float scale) const; // Template hash
-  
+
   // Instanced Rendering Data Preparation
   void prepareInstanceData();
   void addParticleToVertexArrayOptimized(const CircleParticle& particle, size_t index);
-  void addParticleToVertexArrayPrecalc(const CircleParticle& particle, size_t index); // Precalc version
-  
+  void addParticleToVertexArrayPrecalc(const CircleParticle& particle,
+                                       size_t index); // Precalc version
+
   // Simple particle metrics (no redundant FPS counter)
   void logPerformanceMetrics() const;
   void addParticleToVertexArray(const CircleParticle& particle);
@@ -311,10 +312,10 @@ private:
 namespace ParticlePresets {
 // Diamond collection burst (current default) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
-    120,                                                        // count (10x increase for massive visual impact)
-    180.0f,                                                     // speed (enhanced for visibility)
-    1.8f,                                                       // lifetime (enhanced for visibility)
-    0.8f,                                                       // scale (enhanced for visibility)
+    120,    // count (10x increase for massive visual impact)
+    180.0f, // speed (enhanced for visibility)
+    1.8f,   // lifetime (enhanced for visibility)
+    0.8f,   // scale (enhanced for visibility)
     sf::IntRect(sf::Vector2i(4 * 44, 0), sf::Vector2i(44, 44)), // textureRect
     "diamond",                                                  // textureId
     nullptr,                                                    // customTexture
@@ -326,10 +327,10 @@ constexpr GameAnimationSystem::ParticleConfig DIAMOND_BURST = {
 
 // Card collection effect - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
-    80,                                                       // count (10x increase for massive visual impact)
-    140.0f,                                                   // speed (enhanced for visibility)
-    1.4f,                                                     // lifetime (enhanced for visibility)
-    0.6f,                                                     // scale (enhanced for visibility)
+    80,     // count (10x increase for massive visual impact)
+    140.0f, // speed (enhanced for visibility)
+    1.4f,   // lifetime (enhanced for visibility)
+    0.6f,   // scale (enhanced for visibility)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),    // textureRect
     "card",                                                   // textureId
     nullptr,                                                  // customTexture
@@ -341,10 +342,10 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT = {
 
 // Card collection effect (random explosion pattern) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
-    80,                                                          // count (10x increase for massive visual impact)
-    140.0f,                                                      // speed (enhanced for visibility)
-    1.4f,                                                        // lifetime (enhanced for visibility)
-    0.6f,                                                        // scale (enhanced for visibility)
+    80,     // count (10x increase for massive visual impact)
+    140.0f, // speed (enhanced for visibility)
+    1.4f,   // lifetime (enhanced for visibility)
+    0.6f,   // scale (enhanced for visibility)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),       // textureRect
     "card",                                                      // textureId
     nullptr,                                                     // customTexture
@@ -356,10 +357,10 @@ constexpr GameAnimationSystem::ParticleConfig CARD_COLLECT_RANDOM = {
 
 // Stop card effect (falling particles) - enhanced for spectacular visibility
 constexpr GameAnimationSystem::ParticleConfig STOP_CARD = {
-    160,                                                           // count (10x increase for massive visual impact)
-    100.0f,                                                        // speed (enhanced for visibility)
-    1.6f,                                                          // lifetime (enhanced for visibility)
-    0.7f,                                                          // scale (enhanced for visibility)
+    160,    // count (10x increase for massive visual impact)
+    100.0f, // speed (enhanced for visibility)
+    1.6f,   // lifetime (enhanced for visibility)
+    0.7f,   // scale (enhanced for visibility)
     sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(32, 32)),         // textureRect
     "stop",                                                        // textureId
     nullptr,                                                       // customTexture

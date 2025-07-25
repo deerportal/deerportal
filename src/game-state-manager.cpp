@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "game.h"
 #include "board-initialization-animator.h"
+#include "game.h"
 
 namespace DP {
 
@@ -55,9 +55,9 @@ void GameStateManager::transitionToRollDice() {
 }
 
 void GameStateManager::transitionToBoardAnimation() {
-#ifdef DEBUG
-  std::cout << "[DEBUG] Transition: " << getCurrentStateName() 
-            << " -> state_board_animation" << std::endl;
+#ifndef NDEBUG
+  std::cout << "[DEBUG] Transition: " << getCurrentStateName() << " -> state_board_animation"
+            << std::endl;
 #endif
   if (game->currentState != Game::state_board_animation) {
     handleStateChange(game->currentState, Game::state_board_animation);
@@ -70,10 +70,10 @@ void GameStateManager::transitionFromBoardAnimationToLetsBegin() {
   if (game->currentState == Game::state_board_animation) {
     handleStateChange(game->currentState, Game::state_lets_begin);
     game->currentState = Game::state_lets_begin;
-    
+
     // Reset the down time counter for lets_begin state
     game->downTimeCounter = 0;
-    
+
     // Prepare for the next player after animation
     game->launchNextPlayer();
   }
@@ -138,7 +138,7 @@ void GameStateManager::showGameBoard() {
 
   // Go to setup_players state first (original flow)
   game->currentState = Game::state_setup_players;
-  
+
   game->sfx.playLetsBegin();
 }
 
@@ -167,27 +167,42 @@ int GameStateManager::getCurrentState() const {
 }
 
 std::string GameStateManager::getCurrentStateName() const {
-  switch(game->currentState) {
-    case Game::state_init: return "state_init";
-    case Game::state_menu: return "state_menu";
-    case Game::state_intro_shader: return "state_intro_shader";
-    case Game::state_setup_players: return "state_setup_players";
-    case Game::state_board_animation: return "state_board_animation";
-    case Game::state_lets_begin: return "state_lets_begin";
-    case Game::state_roll_dice: return "state_roll_dice";
-    case Game::state_game: return "state_game";
-    case Game::state_gui_elem: return "state_gui_elem";
-    case Game::state_select_building: return "state_select_building";
-    case Game::state_gui_end_round: return "state_gui_end_round";
-    case Game::state_end_game: return "state_end_game";
-    case Game::state_quit: return "state_quit";
-    default: return "unknown_state";
+  switch (game->currentState) {
+  case Game::state_init:
+    return "state_init";
+  case Game::state_menu:
+    return "state_menu";
+  case Game::state_intro_shader:
+    return "state_intro_shader";
+  case Game::state_setup_players:
+    return "state_setup_players";
+  case Game::state_board_animation:
+    return "state_board_animation";
+  case Game::state_lets_begin:
+    return "state_lets_begin";
+  case Game::state_roll_dice:
+    return "state_roll_dice";
+  case Game::state_game:
+    return "state_game";
+  case Game::state_gui_elem:
+    return "state_gui_elem";
+  case Game::state_select_building:
+    return "state_select_building";
+  case Game::state_gui_end_round:
+    return "state_gui_end_round";
+  case Game::state_end_game:
+    return "state_end_game";
+  case Game::state_quit:
+    return "state_quit";
+  default:
+    return "unknown_state";
   }
 }
 
 bool GameStateManager::isInGameState() const {
   return (game->currentState == Game::state_game || game->currentState == Game::state_roll_dice ||
-          game->currentState == Game::state_setup_players || game->currentState == Game::state_board_animation ||
+          game->currentState == Game::state_setup_players ||
+          game->currentState == Game::state_board_animation ||
           game->currentState == Game::state_lets_begin);
 }
 
