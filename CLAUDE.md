@@ -126,6 +126,14 @@ cmake_modules/     # CMake helper modules
 - **README.md**: User installation and setup instructions
 - **CARDS.md**, **HANDBOOK.md**: Game documentation and card reference
 
+### Technical Documentation (ai-docs/final-docs/)
+- **particles.md**: Complete particle system documentation with optimization details
+- **game_states.md**: Game state machine and transition management
+- **sprites.md**: Sprite system, texture atlases, and graphics assets  
+- **animation-diamonds-before-game.md**: Board initialization animation system
+- **music.md**: Background music system and state-based audio
+- **sound.md**: Sound effects system and audio feedback implementation
+
 ## Code Quality Resources
 - **Current Grade**: A (91/100) - Continuous improvement from B- (73/100)
 - **Quality Analysis**: See `ai-docs/code-quality-analysis.md` for detailed assessment
