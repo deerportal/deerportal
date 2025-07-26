@@ -1,6 +1,7 @@
 #include "lighting-manager.h"
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 namespace DP {
 
@@ -9,7 +10,13 @@ LightingManager::LightingManager()
   , baseLightRadius(80.0f)
   , lightingEnabled(true)
   , needsUpdate(true)
-  , debugMode(false) {
+  , debugMode(false)
+  , useVertexArrayBatching(true)
+  , useSpatialCulling(true)
+  , visibleLights(0) {
+  
+  // Initialize vertex array for batched rendering
+  lightVertices.setPrimitiveType(sf::PrimitiveType::Triangles);
 }
 
 LightingManager::~LightingManager() {
@@ -87,7 +94,20 @@ void LightingManager::beginFrame(sf::Color ambient) {
 }
 
 void LightingManager::addLight(sf::Vector2f position, float radius, float intensity, sf::Color color) {
-  lights.push_back({position, radius, intensity, color});
+  LightSource light;
+  light.position = position;
+  light.radius = radius;
+  light.intensity = intensity;
+  light.color = color;
+  light.isVisible = true; // Will be updated during spatial culling
+  
+  // Calculate light bounds for spatial culling (SFML 3.0.1 API)
+  light.bounds = sf::FloatRect(
+    sf::Vector2f(position.x - radius, position.y - radius), 
+    sf::Vector2f(radius * 2.0f, radius * 2.0f)
+  );
+  
+  lights.push_back(light);
 }
 
 void LightingManager::renderLights() {
@@ -124,8 +144,17 @@ void LightingManager::render(sf::RenderTarget& target) {
     return;
   }
   
-  // Render lights to light map
-  renderLights();
+  // Perform spatial culling if enabled
+  if (useSpatialCulling) {
+    performSpatialCulling(lightMap.getSize());
+  }
+  
+  // Choose rendering method based on performance settings
+  if (useVertexArrayBatching && lights.size() > 10) {
+    renderLightsBatched();
+  } else {
+    renderLights();
+  }
   
   // Apply light map with multiplicative blending (GEMINI25pro approach)
   sf::Sprite lightMapSprite(lightMap.getTexture());
@@ -133,6 +162,12 @@ void LightingManager::render(sf::RenderTarget& target) {
   lightMapStates.blendMode = sf::BlendMultiply; // Multiply lights with existing scene
   
   target.draw(lightMapSprite, lightMapStates);
+
+#ifndef NDEBUG
+  std::cout << "LIGHTING PERFORMANCE: Rendered " << visibleLights << "/" << lights.size() 
+            << " lights using " << (useVertexArrayBatching ? "batched" : "individual") 
+            << " method" << std::endl;
+#endif
 }
 
 void LightingManager::renderDebugInfo(sf::RenderTarget& target) {
@@ -162,6 +197,82 @@ void LightingManager::renderDebugInfo(sf::RenderTarget& target) {
 
 void LightingManager::cleanup() {
   lights.clear();
+  lightVertices.clear();
+  visibleLights = 0;
+}
+
+void LightingManager::performSpatialCulling(sf::Vector2u windowSize) {
+  // Calculate view bounds for culling (SFML 3.0.1 API)
+  viewBounds = sf::FloatRect(
+    sf::Vector2f(0, 0), 
+    sf::Vector2f(static_cast<float>(windowSize.x), static_cast<float>(windowSize.y))
+  );
+  
+  visibleLights = 0;
+  for (auto& light : lights) {
+    // Check if light bounds intersect with view bounds
+    light.isVisible = viewBounds.findIntersection(light.bounds).has_value();
+    if (light.isVisible) {
+      visibleLights++;
+    }
+  }
+}
+
+void LightingManager::renderLightsBatched() {
+  // Clear light map to ambient color
+  lightMap.clear(ambientColor);
+  
+  // Build vertex array for all visible lights
+  buildLightVertexArray();
+  
+  // Render all lights in single draw call
+  if (lightVertices.getVertexCount() > 0) {
+    sf::RenderStates lightStates;
+    lightStates.blendMode = sf::BlendAdd;
+    lightStates.texture = &lightTexture;
+    
+    lightMap.draw(lightVertices, lightStates);
+  }
+  
+  lightMap.display();
+}
+
+void LightingManager::buildLightVertexArray() {
+  // Clear and reserve space for efficiency
+  lightVertices.clear();
+  lightVertices.resize(visibleLights * VERTICES_PER_LIGHT);
+  
+  size_t vertexIndex = 0;
+  float texSize = static_cast<float>(lightTexture.getSize().x);
+  
+  for (const auto& light : lights) {
+    if (!light.isVisible) continue;
+    
+    // Calculate quad vertices for this light
+    float halfRadius = light.radius;
+    sf::Vector2f topLeft = light.position - sf::Vector2f(halfRadius, halfRadius);
+    sf::Vector2f bottomRight = light.position + sf::Vector2f(halfRadius, halfRadius);
+    
+    // Apply light color and intensity (SFML 3.0.1 compatible)
+    sf::Color lightColor = light.color;
+    lightColor.r = static_cast<uint8_t>(lightColor.r * light.intensity);
+    lightColor.g = static_cast<uint8_t>(lightColor.g * light.intensity);
+    lightColor.b = static_cast<uint8_t>(lightColor.b * light.intensity);
+    
+    // Create two triangles for quad using SFML 3.0.1 aggregate initialization
+    // Triangle 1: top-left, top-right, bottom-left
+    lightVertices[vertexIndex++] = sf::Vertex{topLeft, lightColor, sf::Vector2f(0, 0)};
+    lightVertices[vertexIndex++] = sf::Vertex{sf::Vector2f(bottomRight.x, topLeft.y), lightColor, sf::Vector2f(texSize, 0)};
+    lightVertices[vertexIndex++] = sf::Vertex{sf::Vector2f(topLeft.x, bottomRight.y), lightColor, sf::Vector2f(0, texSize)};
+    
+    // Triangle 2: top-right, bottom-right, bottom-left
+    lightVertices[vertexIndex++] = sf::Vertex{sf::Vector2f(bottomRight.x, topLeft.y), lightColor, sf::Vector2f(texSize, 0)};
+    lightVertices[vertexIndex++] = sf::Vertex{bottomRight, lightColor, sf::Vector2f(texSize, texSize)};
+    lightVertices[vertexIndex++] = sf::Vertex{sf::Vector2f(topLeft.x, bottomRight.y), lightColor, sf::Vector2f(0, texSize)};
+  }
+  
+  // Resize to actual number of vertices used
+  lightVertices.resize(vertexIndex);
 }
 
 } // namespace DP
