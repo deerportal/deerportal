@@ -75,6 +75,7 @@ file(GLOB GAME_SOURCES
     src/board-spawn-regions.cpp
     src/animated-board-item.cpp
     src/board-initialization-animator.cpp
+    src/lighting-manager.cpp
 )
 
 file(GLOB OTHER_SOURCES 

@@ -9,6 +9,7 @@
 #endif
 
 #include "data.h"
+#include "lighting-manager.h"
 
 void BoardInitializationAnimator::initializeAnimation(const BoardDiamondSeq& diamonds,
                                                       sf::RenderWindow& window) {
@@ -337,5 +338,40 @@ void BoardInitializationAnimator::skipAnimation() {
 
 #ifndef NDEBUG
   std::cout << "[DEBUG] Board initialization animation skipped" << std::endl;
+#endif
+}
+
+void BoardInitializationAnimator::updateLights(DP::LightingManager& lightingManager) const {
+  if (animationComplete) {
+#ifndef NDEBUG
+    std::cout << "LIGHTING: Animation complete, no lights to add" << std::endl;
+#endif
+    return;
+  }
+  
+  int lightCount = 0;
+  
+  // Add lights for each animated diamond
+  for (const auto& item : animatedItems) {
+    if (!item.isFinished()) {
+      sf::Vector2f position = item.getCurrentPosition();
+      float scale = item.getCurrentScale();
+      
+      // Light intensity based on diamond scale (0.3 to 1.0)
+      float intensity = scale * 0.8f; // Scale down slightly for better visual effect
+      
+      // Light radius scales with diamond size
+      float radius = 60.0f + (scale * 40.0f); // 60-100px radius range
+      
+      // Add light source
+      lightingManager.addLight(position, radius, intensity, sf::Color::White);
+      lightCount++;
+    }
+  }
+  
+#ifndef NDEBUG
+  if (lightCount > 0) {
+    std::cout << "LIGHTING: Added " << lightCount << " lights to lighting manager" << std::endl;
+  }
 #endif
 }

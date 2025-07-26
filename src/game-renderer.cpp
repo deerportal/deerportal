@@ -160,6 +160,29 @@ void GameRenderer::renderStateBoardAnimation() {
   // Debug output to confirm we're in animation state
   std::cout << "ANIMATION STATE: Rendering board animation" << std::endl;
 
+  // Initialize lighting manager if needed
+  static bool lightingInitialized = false;
+  static int lastAnimationId = -1;
+  
+  // Check if we need to initialize lighting for this animation
+  bool animationActive = game->boardAnimator && !game->boardAnimator->isComplete();
+  
+  if (animationActive && !lightingInitialized) {
+    sf::Vector2u windowSize = game->renderTexture.getSize();
+    if (lightingManager.initialize(windowSize)) {
+      lightingInitialized = true;
+      std::cout << "LIGHTING: Initialized lighting system for board animation" << std::endl;
+    } else {
+      std::cout << "LIGHTING: Failed to initialize lighting system" << std::endl;
+    }
+  }
+  
+  // Reset lighting when animation completes
+  if (!animationActive && lightingInitialized) {
+    std::cout << "LIGHTING: Animation completed, resetting lighting system" << std::endl;
+    lightingInitialized = false;
+  }
+
   game->renderTexture.setView(game->viewFull);
   game->renderTexture.draw(*game->spriteBackgroundDark);
 
@@ -174,6 +197,25 @@ void GameRenderer::renderStateBoardAnimation() {
 
   // The moving diamonds are rendered LAST to ensure they appear on top
   game->boardAnimator->render(game->renderTexture, game->textures.textureBoardDiamond);
+
+  // Apply lighting effects if animation is active
+  if (lightingInitialized && animationActive) {
+    std::cout << "LIGHTING: Applying lighting effects to board animation" << std::endl;
+    
+    // Begin lighting frame with dark ambient color
+    lightingManager.beginFrame(sf::Color(20, 20, 30, 255)); // Dark ambient lighting
+    
+    // Update lights from animated diamonds
+    game->boardAnimator->updateLights(lightingManager);
+    
+    // Render lighting effects
+    lightingManager.render(game->renderTexture);
+    
+    std::cout << "LIGHTING: Lighting effects applied successfully" << std::endl;
+  } else {
+    std::cout << "LIGHTING: Skipping lighting - initialized=" << lightingInitialized 
+              << ", animationActive=" << animationActive << std::endl;
+  }
 
   // Other effects and characters join the fray
   game->getAnimationSystem()->drawCircleParticles(game->renderTexture);

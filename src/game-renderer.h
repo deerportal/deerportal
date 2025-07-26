@@ -2,6 +2,7 @@
 #define GAME_RENDERER_H
 
 #include <SFML/Graphics.hpp>
+#include "lighting-manager.h"
 
 namespace DP {
 
@@ -51,6 +52,9 @@ public:
 
 private:
   Game* game; // Reference to main game instance
+
+  // Lighting system
+  LightingManager lightingManager;
 
   // Performance optimization variables
   float runningCounter;

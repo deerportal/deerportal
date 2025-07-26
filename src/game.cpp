@@ -591,6 +591,9 @@ Game::Game(bool newTestMode)
 
   // Initialize board animation system
   boardAnimator = std::make_unique<BoardInitializationAnimator>();
+  
+  // Initialize lighting system
+  lightingManager = std::make_unique<DP::LightingManager>();
 
   loadAssets();
   textLoading->setFont(menuFont);
@@ -1134,6 +1137,37 @@ void Game::render(float deltaTime) {
     renderTexture.setView(viewFull);
     // NOTE: We do NOT draw static boardDiamonds here - only animated ones
     boardAnimator->render(renderTexture, textures.textureBoardDiamond);
+    
+    // Apply lighting effects during board animation
+    if (boardAnimator && !boardAnimator->isComplete()) {
+#ifndef NDEBUG
+      std::cout << "LIGHTING: Applying lighting effects in state_board_animation" << std::endl;
+#endif
+      // Initialize lighting manager if needed
+      static bool lightingInitialized = false;
+      if (!lightingInitialized) {
+        if (lightingManager->initialize(renderTexture.getSize())) {
+          lightingInitialized = true;
+#ifndef NDEBUG
+          std::cout << "LIGHTING: Initialized lighting system in game.cpp" << std::endl;
+#endif
+        }
+      }
+      
+      // Begin lighting frame with dark ambient color
+      lightingManager->beginFrame(sf::Color(20, 20, 30, 255));
+      
+      // Update lights from animated diamonds
+      boardAnimator->updateLights(*lightingManager);
+      
+      // Render lighting effects
+      lightingManager->render(renderTexture);
+      
+#ifndef NDEBUG
+      std::cout << "LIGHTING: Lighting effects applied successfully in game.cpp" << std::endl;
+#endif
+    }
+    
     drawCharacters();
     renderTexture.draw(bubble);
     getAnimationSystem()->drawCircleParticles(renderTexture);

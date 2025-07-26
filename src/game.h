@@ -44,6 +44,7 @@
 #include "game-input.h"
 #include "game-renderer.h"
 #include "game-state-manager.h"
+#include "lighting-manager.h"
 
 namespace DP {
 
@@ -263,6 +264,9 @@ public:
 
   // NEW: Board initialization animator
   std::unique_ptr<BoardInitializationAnimator> boardAnimator;
+  
+  // NEW: Lighting system
+  std::unique_ptr<DP::LightingManager> lightingManager;
 
   // Module accessors
   GameAnimationSystem* getAnimationSystem() const { return animationSystem.get(); }

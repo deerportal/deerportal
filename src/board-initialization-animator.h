@@ -7,6 +7,11 @@
 #include "board-spawn-regions.h"
 #include "boarddiamondseq.h"
 
+// Forward declaration for lighting
+namespace DP {
+class LightingManager;
+}
+
 class BoardInitializationAnimator {
 private:
   std::vector<AnimatedBoardItem> animatedItems;
@@ -30,4 +35,7 @@ public:
   // Configuration access
   void setAnimationConfig(const BoardAnimationConfig& newConfig) { config = newConfig; }
   const BoardAnimationConfig& getAnimationConfig() const { return config; }
+  
+  // Lighting integration
+  void updateLights(DP::LightingManager& lightingManager) const;
 };
