@@ -1,5 +1,36 @@
 # DeerPortal Release Notes
 
+## Version 0.10.0-pre.1 "Lighting Effects Development" - July 26, 2025
+
+🔧 **PRE-RELEASE - Foundation Development**
+
+This pre-release establishes the technical foundation for implementing dynamic lighting effects during board initialization animation, featuring comprehensive planning and SFML 3.0.1 source validation.
+
+### 📋 Foundation Work
+
+**Technical Analysis & Planning**
+- Comprehensive lighting system architecture analysis with three implementation approaches
+- SFML 3.0.1 source code integration for technical validation and compatibility verification
+- Performance requirements established: 60+ FPS with 112 light sources
+- Memory optimization strategy: Single RenderTexture approach (~4MB overhead)
+
+**Documentation System Enhancement**
+- Complete final documentation covering particles, game states, sprites, animation systems, music, and sound
+- Multi-plan technical analysis (GROK4, GEMINI25pro, OPUS4) with detailed comparison
+- Optimal implementation selection: GEMINI25pro light map approach using native SFML blending
+
+**Lighting System Design**
+- Darkness overlay system for board initialization atmosphere
+- Dynamic light sources attached to animated diamonds
+- Native GPU blending using SFML's BlendAdd and BlendMultiply
+- Scalable architecture with O(1) performance scaling
+
+### 🎯 Next Steps
+- Implement LightingManager class with light map rendering
+- Create radial gradient light textures
+- Integrate lighting effects with BoardInitializationAnimator
+- Add configurable lighting parameters and debug visualization
+
 ## Version 0.9.9 "Animated Board Initialization" - July 25, 2025
 
 🎯 **STABLE RELEASE - Major Visual Enhancement**

@@ -1,3 +1,16 @@
+deerportal (0.10.0-pre.1-lighting-effects-development-ubuntu1) trusty; urgency=medium
+
+  * PRE-RELEASE 0.10.0-pre.1 "Lighting Effects Development"
+  * Enhanced documentation system with comprehensive technical analysis and SFML 3.0.1 source validation
+  * Lighting effects implementation planning with multi-plan analysis (GROK4, GEMINI25pro, OPUS4)
+  * Foundation work for dynamic lighting effects during board initialization animation
+  * SFML 3.0.1 source code integration for technical validation and implementation guidance
+  * Comprehensive lighting system architecture planning with performance optimization strategies
+  * Documentation updates covering particles, game states, sprites, animation systems, music, and sound
+  * LLVM code formatting maintenance and version management improvements
+
+ -- Rafał bluszcz Zawadzki <bluszcz@gmail.com>  Sat, 26 Jul 2025 12:00:00 +0000
+
 deerportal (0.9.9-animated-board-initialization-ubuntu1) trusty; urgency=medium
 
   * STABLE RELEASE 0.9.9 "Animated Board Initialization"

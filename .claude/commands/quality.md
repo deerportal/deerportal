@@ -1,0 +1,1 @@
+There is a file ai-docs/code-quality-analysis.md, read it and verify what is code quality now in current sources and update the docs. Don't use emoji and just factual language. This is very important.
