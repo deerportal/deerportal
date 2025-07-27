@@ -106,12 +106,13 @@ void BoardInitializationAnimator::update(sf::Time deltaTime) {
   updateVertexArray();
 
   // Check if animation is complete
-  if (allFinished) {
+  if (allFinished && !holdingDiamonds) {
     animationComplete = true;
+    holdingDiamonds = true; // Start holding diamonds at their final positions
 
 #ifndef NDEBUG
     std::cout << "[DEBUG] Board initialization animation completed after " << totalElapsedTime
-              << " seconds" << std::endl;
+              << " seconds, now holding diamonds in position" << std::endl;
 #endif
   }
 }
@@ -329,6 +330,7 @@ void BoardInitializationAnimator::initializeVertexArrayAtSpawn() {
 
 void BoardInitializationAnimator::skipAnimation() {
   animationComplete = true;
+  holdingDiamonds = true; // Still hold diamonds after skipping
 
   // Set all items to finished state
   for (auto& item : animatedItems) {
@@ -337,14 +339,15 @@ void BoardInitializationAnimator::skipAnimation() {
   }
 
 #ifndef NDEBUG
-  std::cout << "[DEBUG] Board initialization animation skipped" << std::endl;
+  std::cout << "[DEBUG] Board initialization animation skipped, holding diamonds in position" << std::endl;
 #endif
 }
 
 void BoardInitializationAnimator::updateLights(DP::LightingManager& lightingManager) const {
-  if (animationComplete) {
+  // Only skip lighting if fully complete (not holding diamonds)
+  if (animationComplete && !holdingDiamonds) {
 #ifndef NDEBUG
-    std::cout << "LIGHTING: Animation complete, no lights to add" << std::endl;
+    std::cout << "LIGHTING: Animation fully complete, no lights to add" << std::endl;
 #endif
     return;
   }

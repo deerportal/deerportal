@@ -267,6 +267,8 @@ public:
   
   // NEW: Lighting system
   std::unique_ptr<DP::LightingManager> lightingManager;
+  bool boardAnimationLightingInitialized = false;
+  bool letsBeginLightingInitialized = false;
 
   // Module accessors
   GameAnimationSystem* getAnimationSystem() const { return animationSystem.get(); }
