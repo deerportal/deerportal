@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DeerPortal is a hybrid board/card game built with SFML 3.0 and C++17. It's a cross-platform game supporting 0-4 players with AI opponents, featuring elemental mechanics and card-based gameplay.
 
-**Current Version: 0.10.0-pre.1 "Lighting Effects Development"**  
+**Current Version: 0.10.0 "Lighting Effects and Fadeout Fix"**  
 **Technology Stack: SFML 3.0.1, CMake, C++17**  
 **Code Quality: A+ Grade (97/100) - Professional implementation with latest state management fixes**
 
@@ -136,22 +136,10 @@ cmake_modules/     # CMake helper modules
 - **sound.md**: Sound effects system and audio feedback implementation
 
 ## Code Quality Resources
-- **Current Grade**: A (91/100) - Continuous improvement from B- (73/100)
 - **Quality Analysis**: See `ai-docs/code-quality-analysis.md` for detailed assessment
 - **Coding Standards**: See `ai-docs/coding-standards.md` for LLVM-style guidelines and best practices
-- **Recent Improvements**: Professional error handling, LLVM formatting, particle system removal, safe asset loading
-- **Remaining Priorities**: Replace std::exit() with exceptions (see memory management plan)
 
 ## Development Environment
-
-### Cursor IDE Rules
-The project includes Cursor IDE rules in `.cursor/rules/`:
-- **sfml31.mdc**: Ensures SFML 3.0.1 API usage consistency
-- **gitignore.mdc**: Maintains proper .gitignore file updates
-
-When using Cursor IDE, these rules will automatically apply to ensure:
-- Correct SFML 3.0.1 API calls (e.g., `font.openFromFile()` not `loadFromFile()`)
-- Updated .gitignore for temporary files and build artifacts
 
 ## Platform-Specific Notes
 
@@ -173,16 +161,10 @@ When using Cursor IDE, these rules will automatically apply to ensure:
 
 ## Writing Guidelines
 
-### Content Style
-- **Language Goal**: Write blog posts naturally, simply, and concisely
-- **Writing Approach**: 
-  - Focus on facts
-  - Avoid overly generous AI-style writing
-  - Eliminate unnecessary jokes or elaborate language
-  - Prioritize clarity and directness
-  - Dont assume if players like game, dont show off etc, dont assume that anything is good, just provide facts.
-  - If something is not fact, dont write about this.
-
 #### Build and Development
 
 When working on github actions fixes, always check release among with test release if they are unified.
+
+## Gemini
+
+Use gemini -p sometimes to get more context, its Gemini CLI Google Agent with one million context.

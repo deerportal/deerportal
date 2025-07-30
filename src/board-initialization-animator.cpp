@@ -79,14 +79,15 @@ void BoardInitializationAnimator::update(sf::Time deltaTime) {
   if (animationComplete && !fadingOut) return;
 
   totalElapsedTime += deltaTime.asSeconds();
-  
+
   // Handle fade-out phase
   if (fadingOut) {
     fadeOutElapsed += deltaTime.asSeconds();
     if (fadeOutElapsed >= fadeOutDuration) {
       fadingOut = false;
 #ifndef NDEBUG
-      std::cout << "[DEBUG] Board unveiling fade-out completed after " << fadeOutElapsed << " seconds" << std::endl;
+      std::cout << "[DEBUG] Board unveiling fade-out completed after " << fadeOutElapsed
+                << " seconds" << std::endl;
 #endif
     }
     return;
@@ -121,8 +122,8 @@ void BoardInitializationAnimator::update(sf::Time deltaTime) {
   if (allFinished && !holdingDiamonds) {
     animationComplete = true;
     holdingDiamonds = true; // Start holding diamonds at their final positions
-    fadingOut = true; // Start fade-out effect immediately after animation
-    fadeOutElapsed = 0.0f; // Reset fade-out timer
+    fadingOut = true;       // Start fade-out effect immediately after animation
+    fadeOutElapsed = 0.0f;  // Reset fade-out timer
 
 #ifndef NDEBUG
     std::cout << "[DEBUG] Board initialization animation completed after " << totalElapsedTime
@@ -137,7 +138,7 @@ void BoardInitializationAnimator::updateVertexArray() {
     float staggeredStartTime = i * config.staggerDelay;
     bool hasStarted = totalElapsedTime >= staggeredStartTime;
     bool isFinished = animatedItems[i].isFinished();
-    
+
     if (hasStarted || (isFinished && holdingDiamonds)) {
       // Note: We don't have direct access to texture here,
       // so we'll use placeholder texture coordinates
@@ -356,7 +357,8 @@ void BoardInitializationAnimator::skipAnimation() {
   }
 
 #ifndef NDEBUG
-  std::cout << "[DEBUG] Board initialization animation skipped, transitioning to static diamonds" << std::endl;
+  std::cout << "[DEBUG] Board initialization animation skipped, transitioning to static diamonds"
+            << std::endl;
 #endif
 }
 
@@ -368,27 +370,27 @@ void BoardInitializationAnimator::updateLights(DP::LightingManager& lightingMana
 #endif
     return;
   }
-  
+
   int lightCount = 0;
-  
+
   // Add lights for each animated diamond that has started moving
   for (const auto& item : animatedItems) {
-    if (item.getProgress() > 0.0f) {  // Includes animating and finished items
+    if (item.getProgress() > 0.0f) { // Includes animating and finished items
       sf::Vector2f position = item.getCurrentPosition();
       float scale = item.getCurrentScale();
-      
+
       // Light intensity based on diamond scale (0.3 to 1.0)
       float intensity = scale * 0.8f; // Scale down slightly for better visual effect
-      
+
       // Light radius scales with diamond size
       float radius = 60.0f + (scale * 40.0f); // 60-100px radius range
-      
+
       // Add light source
       lightingManager.addLight(position, radius, intensity, sf::Color::White);
       lightCount++;
     }
   }
-  
+
 #ifndef NDEBUG
   if (lightCount > 0) {
     std::cout << "LIGHTING: Added " << lightCount << " lights to lighting manager" << std::endl;
@@ -401,25 +403,26 @@ sf::Color BoardInitializationAnimator::getCurrentAmbientColor() const {
     // During animation and holding: dark ambient color
     return sf::Color(10, 10, 20, 255);
   }
-  
+
   // During fade-out: interpolate from dark to bright
   float progress = fadeOutElapsed / fadeOutDuration;
   progress = std::min(progress, 1.0f); // Clamp to 1.0
-  
+
   // Ease-out cubic for smooth fade
   float easedProgress = 1.0f - std::pow(1.0f - progress, 3.0f);
-  
+
   // Interpolate from dark (10, 10, 20) to bright (255, 255, 255)
   uint8_t r = static_cast<uint8_t>(10 + (245 * easedProgress));
   uint8_t g = static_cast<uint8_t>(10 + (245 * easedProgress));
   uint8_t b = static_cast<uint8_t>(20 + (235 * easedProgress));
-  
+
 #ifndef NDEBUG
   if (static_cast<int>(fadeOutElapsed * 10) % 5 == 0) { // Debug every 0.5 seconds
-    std::cout << "[DEBUG] Fade-out progress: " << (progress * 100) << "%, ambient color: (" 
-              << static_cast<int>(r) << ", " << static_cast<int>(g) << ", " << static_cast<int>(b) << ")" << std::endl;
+    std::cout << "[DEBUG] Fade-out progress: " << (progress * 100) << "%, ambient color: ("
+              << static_cast<int>(r) << ", " << static_cast<int>(g) << ", " << static_cast<int>(b)
+              << ")" << std::endl;
   }
 #endif
-  
+
   return sf::Color(r, g, b, 255);
 }

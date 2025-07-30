@@ -1,6 +1,7 @@
 # Sprites and Graphics Assets Documentation
 
-**Source Knowledge**: Commit 60a939ef8d8de62a00d82cdf3da244d8a17463ea
+**Source Commit**: b38430fdfbe036993a94a6b37c68a34cfe6e1d22  
+**Last Updated**: 2025-07-30
 
 ## Overview
 

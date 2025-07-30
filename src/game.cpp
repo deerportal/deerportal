@@ -220,7 +220,7 @@ void Game::restartGame() {
                        players[i].characters[0].getPosition().y - 45);
     players[i].done = false;
   }
-  
+
   // NOTE: Do NOT release animated diamonds here - they should persist longer
   numberFinishedPlayers = 0;
   turn = 0;
@@ -468,10 +468,10 @@ void Game::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)
       bigDiamondActive = true;
       // Don't set banner text during animation to avoid covering the animation
       // banner.setText("start game");
-      
+
       // Initialize animation with final diamond positions
       boardAnimator->initializeAnimation(boardDiamonds, window);
-      
+
       // Transition to animation state instead of going directly to roll_dice
       stateManager->transitionToBoardAnimation();
       return;
@@ -512,11 +512,11 @@ void Game::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)
 
   if (currentState == state_lets_begin) {
     if (boardAnimator) {
-        boardAnimator->releaseDiamonds();
+      boardAnimator->releaseDiamonds();
     }
     if (lightingManager && boardAnimationLightingInitialized) {
-        lightingManager->cleanup();
-        boardAnimationLightingInitialized = false;
+      lightingManager->cleanup();
+      boardAnimationLightingInitialized = false;
     }
     currentState = state_roll_dice;
     launchNextPlayer();
@@ -614,7 +614,7 @@ Game::Game(bool newTestMode)
 
   // Initialize board animation system
   boardAnimator = std::make_unique<BoardInitializationAnimator>();
-  
+
   // Initialize lighting system
   lightingManager = std::make_unique<DP::LightingManager>();
 
@@ -727,11 +727,12 @@ void Game::update(sf::Time frameTime) {
 #endif
     // Update board initialization animation
     boardAnimator->update(frameTime);
-    
+
     // Check for automatic transition after fade-out completes
     if (boardAnimator->isComplete()) {
 #ifndef NDEBUG
-      std::cout << "TRANSITION: Board animation and fade-out complete, starting game directly" << std::endl;
+      std::cout << "TRANSITION: Board animation and fade-out complete, starting game directly"
+                << std::endl;
 #endif
       // Clean up lighting system before transitioning
       if (boardAnimationLightingInitialized) {
@@ -743,7 +744,7 @@ void Game::update(sf::Time frameTime) {
       currentState = state_roll_dice;
       launchNextPlayer();
     }
-    
+
     updateMinimalElements(frameTime);
     break;
 
@@ -874,11 +875,12 @@ void Game::updateGameplayElements(sf::Time frameTime) {
   }
 
   // Game state transitions
-  
+
   // Auto-transition from board animation to gameplay when fade-out completes
   if (currentState == state_board_animation && boardAnimator && boardAnimator->isComplete()) {
 #ifndef NDEBUG
-    std::cout << "TRANSITION: Board animation and fade-out complete, starting game automatically" << std::endl;
+    std::cout << "TRANSITION: Board animation and fade-out complete, starting game automatically"
+              << std::endl;
 #endif
     // Clean up lighting system before transitioning
     if (boardAnimationLightingInitialized) {
@@ -890,11 +892,12 @@ void Game::updateGameplayElements(sf::Time frameTime) {
     launchNextPlayer();
     return;
   }
-  
+
   // Also handle automatic transition if somehow we ended up in state_lets_begin
   if (currentState == state_lets_begin && boardAnimator && boardAnimator->isComplete()) {
 #ifndef NDEBUG
-    std::cout << "TRANSITION: In lets_begin but fade-out complete, starting game immediately" << std::endl;
+    std::cout << "TRANSITION: In lets_begin but fade-out complete, starting game immediately"
+              << std::endl;
 #endif
     // Clean up lighting system before transitioning
     if (boardAnimationLightingInitialized) {
@@ -906,7 +909,7 @@ void Game::updateGameplayElements(sf::Time frameTime) {
     launchNextPlayer();
     return;
   }
-  
+
   if (currentState == state_lets_begin) {
     downTimeCounter += frameTime.asSeconds();
     spriteLestBegin->setColor(sf::Color(255, 255, 255, 255 - (downTimeCounter * 35)));
@@ -1210,8 +1213,9 @@ void Game::render(float deltaTime) {
       renderTexture.draw(boardDiamonds);
       renderTexture.setView(viewFull);
     }
-    
-    if (boardAnimator && (!boardAnimator->isAnimationPhaseComplete() || boardAnimator->isHoldingDiamonds())) {
+
+    if (boardAnimator &&
+        (!boardAnimator->isAnimationPhaseComplete() || boardAnimator->isHoldingDiamonds())) {
 #ifndef NDEBUG
       std::cout << "LIGHTING: Applying lighting effects in state_board_animation" << std::endl;
 #endif
@@ -1224,25 +1228,25 @@ void Game::render(float deltaTime) {
 #endif
         }
       }
-      
+
       // Begin lighting frame with dynamic ambient color (fades from dark to bright)
       sf::Color ambientColor = boardAnimator->getCurrentAmbientColor();
       lightingManager->beginFrame(ambientColor);
-      
+
       // Update lights from animated diamonds
       boardAnimator->updateLights(*lightingManager);
-      
+
       // Render lighting effects
       lightingManager->render(renderTexture);
-      
+
 #ifndef NDEBUG
       std::cout << "LIGHTING: Lighting effects applied successfully in game.cpp" << std::endl;
 #endif
     }
-    
+
     // DON'T reset lighting during fade-out - let it complete naturally
     // Lighting cleanup will happen during state transition
-    
+
     drawCharacters();
     getAnimationSystem()->drawCircleParticles(renderTexture);
   } else if (currentState == state_gui_elem) {
@@ -1265,7 +1269,7 @@ void Game::render(float deltaTime) {
     renderTexture.draw(*spriteBackgroundDark, &shaderBlur);
     renderTexture.setView(viewTiles);
     drawBaseGame();
-    
+
     // Render animated diamonds if still holding them, otherwise render real diamonds
     if (boardAnimator && boardAnimator->isHoldingDiamonds()) {
 #ifndef NDEBUG
@@ -1273,7 +1277,7 @@ void Game::render(float deltaTime) {
 #endif
       renderTexture.setView(viewFull);
       boardAnimator->render(renderTexture, textures.textureBoardDiamond);
-      
+
       // Continue lighting effects for animated diamonds
       if (lightingManager) {
         if (!letsBeginLightingInitialized) {
@@ -1294,7 +1298,7 @@ void Game::render(float deltaTime) {
 #endif
       renderTexture.draw(boardDiamonds, &shaderBlur);
     }
-    
+
     drawCharacters();
     renderTexture.setView(viewFull);
     drawPlayersGui();

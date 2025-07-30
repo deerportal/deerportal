@@ -32,6 +32,11 @@
 ​  </provides>
 ​
 ​  <releases>
+    <release version="0.10.0" date="2025-07-30">
+      <description>
+        <p>Version 0.10.0 - Stable Release. "Lighting Effects and Fadeout Fix" - Complete implementation of dynamic lighting effects during board initialization animation with automatic fadeout transition, sophisticated performance optimizations achieving 75% → 15-25% CPU reduction through state-aware conditional updates, and comprehensive architecture improvements with professional error handling and state management.</p>
+      </description>
+    </release>
     <release version="0.10.0-pre.1" date="2025-07-26">
       <description>
         <p>Version 0.10.0-pre.1 - Pre-release. "Lighting Effects Development" - Enhanced documentation system with comprehensive technical analysis, SFML 3.0.1 source validation for lighting implementation, lighting effects implementation planning with multi-plan analysis (GROK4, GEMINI25pro, OPUS4), and foundation work for dynamic lighting effects during board initialization animation.</p>

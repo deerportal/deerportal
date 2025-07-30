@@ -201,7 +201,8 @@ void GameInput::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mous
       } else {
         // Animation complete but fade-out still in progress, transition to lets_begin
 #ifndef NDEBUG
-        std::cout << "INPUT: Animation complete, fade-out in progress, proceeding to lets_begin" << std::endl;
+        std::cout << "INPUT: Animation complete, fade-out in progress, proceeding to lets_begin"
+                  << std::endl;
 #endif
         game->stateManager->transitionFromBoardAnimationToLetsBegin();
       }
@@ -297,10 +298,11 @@ void GameInput::processLetsBeginInput(sf::Vector2f pos, sf::Vector2f posFull, in
     if (game->boardAnimator) {
       game->boardAnimator->releaseDiamonds();
 #ifndef NDEBUG
-      std::cout << "INPUT: Released animated diamonds on user click in state_lets_begin" << std::endl;
+      std::cout << "INPUT: Released animated diamonds on user click in state_lets_begin"
+                << std::endl;
 #endif
     }
-    
+
     game->currentState = Game::state_roll_dice;
     game->restartGame();
     game->launchNextPlayer();

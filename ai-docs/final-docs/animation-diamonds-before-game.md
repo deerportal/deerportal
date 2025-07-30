@@ -1,6 +1,7 @@
 # Board Diamond Animation Documentation
 
-**Source Knowledge**: Commit 64792779bdd00dfe8a1c5576133b0084d1f5fc4b
+**Source Commit**: b38430fdfbe036993a94a6b37c68a34cfe6e1d22  
+**Last Updated**: 2025-07-30
 
 ## Overview
 
@@ -34,7 +35,7 @@ The animation proceeds through several distinct phases, managed by the `BoardIni
 1.  **Animation Phase**: All 112 diamonds are created at the center of the screen and animate outwards to their final positions along gentle S-curve Bezier paths. Their scale and rotation are interpolated over the animation duration.
 2.  **Hold Phase**: Once all diamonds have reached their destinations, they are held in place, and their lighting effects remain active.
 3.  **Fade-Out Phase**: Immediately after the hold phase begins, a 2-second fade-out of the dark ambient overlay starts. The `getCurrentAmbientColor()` method in the animator interpolates the color from dark to bright.
-4.  **Completion**: The animator's `isComplete()` method returns `true` only after the fade-out is finished. This triggers an automatic transition to the next game state (`state_lets_begin`).
+4.  **Completion**: The animator's `isComplete()` method returns `true` only after the fade-out is finished. This triggers an automatic transition directly to `state_roll_dice`, bypassing the problematic `state_lets_begin` that caused dark background flashes.
 
 ## Visual Effects
 

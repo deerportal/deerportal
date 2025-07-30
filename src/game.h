@@ -264,7 +264,7 @@ public:
 
   // NEW: Board initialization animator
   std::unique_ptr<BoardInitializationAnimator> boardAnimator;
-  
+
   // NEW: Lighting system
   std::unique_ptr<DP::LightingManager> lightingManager;
   bool boardAnimationLightingInitialized = false;

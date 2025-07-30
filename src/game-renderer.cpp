@@ -162,10 +162,10 @@ void GameRenderer::renderStateBoardAnimation() {
 
   // Initialize lighting manager if needed
   static bool lightingInitialized = false;
-  
+
   // Check if we need to initialize lighting for this animation
   bool animationActive = game->boardAnimator && !game->boardAnimator->isComplete();
-  
+
   if (animationActive && !lightingInitialized) {
     sf::Vector2u windowSize = game->renderTexture.getSize();
     if (lightingManager.initialize(windowSize)) {
@@ -173,12 +173,13 @@ void GameRenderer::renderStateBoardAnimation() {
       lightingManager.setVertexArrayBatching(true);
       lightingManager.setSpatialCulling(true);
       lightingInitialized = true;
-      std::cout << "LIGHTING: Initialized optimized lighting system for board animation" << std::endl;
+      std::cout << "LIGHTING: Initialized optimized lighting system for board animation"
+                << std::endl;
     } else {
       std::cout << "LIGHTING: Failed to initialize lighting system" << std::endl;
     }
   }
-  
+
   // Reset lighting when animation completes
   if (!animationActive && lightingInitialized) {
     std::cout << "LIGHTING: Animation completed, resetting lighting system" << std::endl;
@@ -203,22 +204,23 @@ void GameRenderer::renderStateBoardAnimation() {
   // Apply optimized lighting effects if animation is active
   if (lightingInitialized && animationActive) {
     std::cout << "LIGHTING: Applying optimized lighting effects to board animation" << std::endl;
-    
+
     // Begin lighting frame with dark ambient color
     lightingManager.beginFrame(sf::Color(20, 20, 30, 255)); // Dark ambient lighting
-    
+
     // Update lights from animated diamonds
     game->boardAnimator->updateLights(lightingManager);
-    
+
     // Render lighting effects with performance optimizations
     lightingManager.render(game->renderTexture);
-    
-    std::cout << "LIGHTING: Optimized lighting effects applied - " 
-              << lightingManager.getVisibleLightCount() << "/" << lightingManager.getLightCount() 
-              << " lights rendered using " << (lightingManager.isUsingBatching() ? "batched" : "individual") 
-              << " method" << std::endl;
+
+    std::cout << "LIGHTING: Optimized lighting effects applied - "
+              << lightingManager.getVisibleLightCount() << "/" << lightingManager.getLightCount()
+              << " lights rendered using "
+              << (lightingManager.isUsingBatching() ? "batched" : "individual") << " method"
+              << std::endl;
   } else {
-    std::cout << "LIGHTING: Skipping lighting - initialized=" << lightingInitialized 
+    std::cout << "LIGHTING: Skipping lighting - initialized=" << lightingInitialized
               << ", animationActive=" << animationActive << std::endl;
   }
 

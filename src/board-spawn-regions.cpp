@@ -4,8 +4,8 @@
 #include <iostream>
 
 // Big diamond center coordinates based on position (474, 342) and size (94x102)
-constexpr float BIG_DIAMOND_CENTER_X = 474.0f + 47.0f;  // 521
-constexpr float BIG_DIAMOND_CENTER_Y = 342.0f + 51.0f;  // 393
+constexpr float BIG_DIAMOND_CENTER_X = 474.0f + 47.0f; // 521
+constexpr float BIG_DIAMOND_CENTER_Y = 342.0f + 51.0f; // 393
 
 int BoardSpawnRegions::getQuadrantForDiamond(int diamondIndex) {
   // Player distribution with 2/3 swap correction:

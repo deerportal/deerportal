@@ -42,7 +42,7 @@ void AnimatedBoardItem::initializeBezierPath(sf::Vector2f spawn, sf::Vector2f ta
   // For center-origin animation, create radial explosion paths
   sf::Vector2f direction = target - spawn;
   float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-  
+
   // Normalize direction
   if (distance > 0) {
     direction /= distance;
@@ -50,10 +50,10 @@ void AnimatedBoardItem::initializeBezierPath(sf::Vector2f spawn, sf::Vector2f ta
 
   // Create slight curve for visual interest in radial explosion
   sf::Vector2f perpendicular(-direction.y, direction.x);
-  
+
   // Subtle curve amount for natural radial movement (10% of distance)
   float curveAmount = distance * 0.1f;
-  
+
   // Control points create gentle S-curve from center outward
   bezierPoints[1] = spawn + direction * (distance * 0.3f) + perpendicular * curveAmount;
   bezierPoints[2] = spawn + direction * (distance * 0.7f) - perpendicular * curveAmount;

@@ -2,6 +2,7 @@
 #define GAME_RENDERER_H
 
 #include <SFML/Graphics.hpp>
+
 #include "lighting-manager.h"
 
 namespace DP {

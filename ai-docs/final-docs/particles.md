@@ -1,10 +1,11 @@
-# Particles System Documentation
+# Particle System Documentation
 
-**Source Knowledge**: Commit 60a939ef8d8de62a00d82cdf3da244d8a17463ea
+**Source Commit**: b38430fdfbe036993a94a6b37c68a34cfe6e1d22  
+**Last Updated**: 2025-07-30
 
-## Overview
+## System Overview
 
-The DeerPortal game implements a sophisticated particle system through the `GameAnimationSystem` class (`src/game-animation-system.h/cpp`). The system provides visual feedback for game events through particle bursts and animated effects.
+The particle system is implemented in `src/game-animation-system.h/cpp` as part of the `GameAnimationSystem` class. It provides visual feedback for player actions through burst effects with extensive performance optimizations.
 
 ## Core Architecture
 
