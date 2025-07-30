@@ -708,8 +708,11 @@ void Game::update(sf::Time frameTime) {
     // Update intro shader animation
     introShader.update(frameTime.asSeconds());
     if (introShader.isFinished()) {
+      // Clear any previous render state before transition
+      window.clear();
       // Transition to menu after intro finishes
       stateManager->showMenu();
+      return; // Skip further processing this frame
     }
     break;
 
@@ -728,7 +731,7 @@ void Game::update(sf::Time frameTime) {
     // Check for automatic transition after fade-out completes
     if (boardAnimator->isComplete()) {
 #ifndef NDEBUG
-      std::cout << "TRANSITION: Board animation and fade-out complete, starting game automatically" << std::endl;
+      std::cout << "TRANSITION: Board animation and fade-out complete, starting game directly" << std::endl;
 #endif
       // Clean up lighting system before transitioning
       if (boardAnimationLightingInitialized) {
@@ -736,7 +739,9 @@ void Game::update(sf::Time frameTime) {
         lightingManager->cleanup();
       }
       boardAnimator->releaseDiamonds();
-      stateManager->transitionFromBoardAnimationToLetsBegin();
+      // Skip state_lets_begin and go directly to roll dice
+      currentState = state_roll_dice;
+      launchNextPlayer();
     }
     
     updateMinimalElements(frameTime);
