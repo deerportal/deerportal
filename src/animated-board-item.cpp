@@ -39,21 +39,24 @@ void AnimatedBoardItem::initializeBezierPath(sf::Vector2f spawn, sf::Vector2f ta
   bezierPoints[0] = spawn;  // Start point
   bezierPoints[3] = target; // End point
 
-  // Calculate control points for natural arc movement
+  // For center-origin animation, create radial explosion paths
   sf::Vector2f direction = target - spawn;
-  sf::Vector2f midPoint = spawn + direction * 0.5f;
-
-  // Create arc by offsetting control points perpendicular to direct path
-  sf::Vector2f perpendicular(-direction.y, direction.x);
-  float pathLength = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-
-  // Normalize perpendicular and scale for arc height (20% of path length)
-  if (pathLength > 0) {
-    perpendicular = perpendicular / pathLength * (pathLength * 0.2f);
+  float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+  
+  // Normalize direction
+  if (distance > 0) {
+    direction /= distance;
   }
 
-  bezierPoints[1] = midPoint + perpendicular * 0.5f; // First control point
-  bezierPoints[2] = midPoint + perpendicular * 0.5f; // Second control point
+  // Create slight curve for visual interest in radial explosion
+  sf::Vector2f perpendicular(-direction.y, direction.x);
+  
+  // Subtle curve amount for natural radial movement (10% of distance)
+  float curveAmount = distance * 0.1f;
+  
+  // Control points create gentle S-curve from center outward
+  bezierPoints[1] = spawn + direction * (distance * 0.3f) + perpendicular * curveAmount;
+  bezierPoints[2] = spawn + direction * (distance * 0.7f) - perpendicular * curveAmount;
 
 #ifndef NDEBUG
   // Only debug first 3 diamonds to avoid excessive output

@@ -5,7 +5,7 @@ struct BoardAnimationConfig {
   float animationDuration = 2.5f;
   float rotationSpeed = 180.0f;
   float spawnRadius = 200.0f;
-  float startScale = 0.3f;
+  float startScale = 0.1f;  // Start very small for center explosion effect
   float endScale = 1.0f;
   float staggerDelay = 0.05f;
   bool enableRotation = true;
