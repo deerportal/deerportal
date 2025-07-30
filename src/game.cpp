@@ -1173,8 +1173,9 @@ void Game::render(float deltaTime) {
         }
       }
       
-      // Begin lighting frame with darker ambient color for better contrast
-      lightingManager->beginFrame(sf::Color(10, 10, 20, 255));
+      // Begin lighting frame with dynamic ambient color (fades from dark to bright)
+      sf::Color ambientColor = boardAnimator->getCurrentAmbientColor();
+      lightingManager->beginFrame(ambientColor);
       
       // Update lights from animated diamonds
       boardAnimator->updateLights(*lightingManager);

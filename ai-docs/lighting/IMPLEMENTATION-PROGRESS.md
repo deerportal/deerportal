@@ -1,8 +1,8 @@
 # Lighting System Implementation Progress
 
-## Current Status: ✅ COMPLETED
+## Current Status: ✅ COMPLETED + CENTER-SPAWN + BOARD UNVEILING
 
-The lighting system is now fully functional with dynamic lighting effects during board initialization animation.
+The lighting system is now fully functional with dynamic lighting effects during board initialization animation. Enhanced with center-origin diamond animation for spectacular radial explosion effect. Added board unveiling effect that fades out dark overlay after animation completes.
 
 ## Completed Features
 
@@ -20,9 +20,11 @@ The lighting system is now fully functional with dynamic lighting effects during
 
 ### ✅ Board Animation Integration
 - Dynamic lighting during diamond animation
-- Light intensity scales with diamond size (0.3 to 1.0)
+- Light intensity scales with diamond size (0.1 to 1.0) - enhanced for center spawn
 - Light radius scales with diamond scale (60-100px)
 - Seamless lighting during hold state
+- **NEW**: Center-origin radial explosion animation from big diamond center
+- **NEW**: Board unveiling effect with 2-second fade-out of dark overlay
 
 ### ✅ Critical Fix: Diamond Persistence
 **Issue**: Diamonds were disappearing after completing individual animations
@@ -87,19 +89,23 @@ if (hasStarted || (isFinished && holdingDiamonds)) {
 state_setup_players
     ↓ (user clicks start)
 state_board_animation (lighting active)
-    ↓ (animation completes)
-state_lets_begin (lighting held)
+    ↓ (diamonds complete animation)
+state_board_animation (fade-out dark overlay - 2 seconds)
+    ↓ (fade-out completes)
+state_lets_begin (full board visible, ready for user click)
     ↓ (user clicks to proceed)
-state_roll_dice (lighting cleaned up)
+state_roll_dice (normal gameplay)
 ```
 
 ## Code Changes Summary
-1. **AnimatedBoardItem.h**: Added `getProgress()` method
-2. **BoardInitializationAnimator.cpp**:
+1. **AnimatedBoardItem.h**: Added `getProgress()` method, reduced startScale to 0.1f
+2. **AnimatedBoardItem.cpp**: Updated Bezier path calculation for radial explosion
+3. **BoardSpawnRegions.cpp**: Modified all spawn points to big diamond center (521, 393)
+4. **BoardInitializationAnimator.cpp**:
    - Fixed `updateVertexArray()` rendering logic
    - Updated `updateLights()` to use progress-based conditions
    - Modified `render()` to continue during hold state
-3. **Game.cpp**: Proper lighting cleanup synchronization
+5. **Game.cpp**: Proper lighting cleanup synchronization
 
 ## Testing Results
 - ✅ Diamonds no longer disappear during animation
@@ -107,6 +113,8 @@ state_roll_dice (lighting cleaned up)
 - ✅ Smooth transition from animated to static diamonds
 - ✅ No performance degradation with 112 active lights
 - ✅ Proper cleanup prevents lighting artifacts in gameplay
+- ✅ **NEW**: Spectacular radial diamond explosion from center creates dramatic visual effect
+- ✅ **NEW**: Center-spawn animation compiles and integrates with existing lighting
 
 ## Known Issues
 None - system is fully functional.

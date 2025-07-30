@@ -76,9 +76,21 @@ void BoardInitializationAnimator::startAnimation() {
 }
 
 void BoardInitializationAnimator::update(sf::Time deltaTime) {
-  if (animationComplete) return;
+  if (animationComplete && !fadingOut) return;
 
   totalElapsedTime += deltaTime.asSeconds();
+  
+  // Handle fade-out phase
+  if (fadingOut) {
+    fadeOutElapsed += deltaTime.asSeconds();
+    if (fadeOutElapsed >= fadeOutDuration) {
+      fadingOut = false;
+#ifndef NDEBUG
+      std::cout << "[DEBUG] Board unveiling fade-out completed after " << fadeOutElapsed << " seconds" << std::endl;
+#endif
+    }
+    return;
+  }
 
   bool allFinished = true;
 
@@ -109,10 +121,12 @@ void BoardInitializationAnimator::update(sf::Time deltaTime) {
   if (allFinished && !holdingDiamonds) {
     animationComplete = true;
     holdingDiamonds = true; // Start holding diamonds at their final positions
+    fadingOut = true; // Start fade-out effect immediately after animation
+    fadeOutElapsed = 0.0f; // Reset fade-out timer
 
 #ifndef NDEBUG
     std::cout << "[DEBUG] Board initialization animation completed after " << totalElapsedTime
-              << " seconds, now holding diamonds in position" << std::endl;
+              << " seconds, starting fade-out unveiling effect" << std::endl;
 #endif
   }
 }
@@ -380,4 +394,32 @@ void BoardInitializationAnimator::updateLights(DP::LightingManager& lightingMana
     std::cout << "LIGHTING: Added " << lightCount << " lights to lighting manager" << std::endl;
   }
 #endif
+}
+
+sf::Color BoardInitializationAnimator::getCurrentAmbientColor() const {
+  if (!fadingOut) {
+    // During animation and holding: dark ambient color
+    return sf::Color(10, 10, 20, 255);
+  }
+  
+  // During fade-out: interpolate from dark to bright
+  float progress = fadeOutElapsed / fadeOutDuration;
+  progress = std::min(progress, 1.0f); // Clamp to 1.0
+  
+  // Ease-out cubic for smooth fade
+  float easedProgress = 1.0f - std::pow(1.0f - progress, 3.0f);
+  
+  // Interpolate from dark (10, 10, 20) to bright (255, 255, 255)
+  uint8_t r = static_cast<uint8_t>(10 + (245 * easedProgress));
+  uint8_t g = static_cast<uint8_t>(10 + (245 * easedProgress));
+  uint8_t b = static_cast<uint8_t>(20 + (235 * easedProgress));
+  
+#ifndef NDEBUG
+  if (static_cast<int>(fadeOutElapsed * 10) % 5 == 0) { // Debug every 0.5 seconds
+    std::cout << "[DEBUG] Fade-out progress: " << (progress * 100) << "%, ambient color: (" 
+              << static_cast<int>(r) << ", " << static_cast<int>(g) << ", " << static_cast<int>(b) << ")" << std::endl;
+  }
+#endif
+  
+  return sf::Color(r, g, b, 255);
 }

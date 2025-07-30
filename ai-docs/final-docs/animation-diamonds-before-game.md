@@ -2,7 +2,7 @@
 
 ## Overview
 
-The board initialization animation system creates a spectacular visual effect where diamonds animate from the four corners of the screen to their final board positions in waves, accompanied by dynamic lighting effects.
+The board initialization animation system creates a spectacular visual effect where all 112 diamonds explode radially from the center big diamond location to their final board positions in waves, accompanied by dynamic lighting effects.
 
 ## System Components
 
@@ -18,18 +18,18 @@ The board initialization animation system creates a spectacular visual effect wh
 - **Purpose**: Individual diamond animation logic
 - **Features**:
   - Cubic Bezier path calculation
-  - Eased scaling (0.3 to 1.0)
+  - Eased scaling (0.1 to 1.0) - enhanced for center explosion
   - Rotation effects during movement
   - Progress tracking (0.0 to 1.0)
 
 ### 3. BoardSpawnRegions
 - **Purpose**: Determines spawn points for each diamond
-- **Logic**: Maps diamonds to quadrants and calculates appropriate corner spawn positions
+- **Logic**: All diamonds spawn from the big diamond center (521, 393) for radial explosion effect
 
 ## Animation States
 
-1. **Initialization**: Diamonds positioned at spawn points (corners)
-2. **Animation Phase**: Diamonds move along Bezier curves to targets
+1. **Initialization**: Diamonds positioned at center spawn point (big diamond center)
+2. **Animation Phase**: Diamonds explode radially along gentle S-curve Bezier paths to targets
 3. **Hold Phase**: Diamonds remain at final positions with lighting
 4. **Release**: Animation system releases control to static board rendering
 

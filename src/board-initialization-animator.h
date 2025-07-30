@@ -20,7 +20,10 @@ private:
   sf::VertexArray animationVertices;
   bool animationComplete = true;
   bool holdingDiamonds = false; // NEW: Hold diamonds after animation completes
+  bool fadingOut = false; // NEW: Fade out dark overlay after animation
   float totalElapsedTime = 0.0f;
+  float fadeOutElapsed = 0.0f;
+  float fadeOutDuration = 2.0f; // 2 seconds to fade out dark overlay
 
   void updateVertexArray();
   void initializeVertexArrayAtSpawn();
@@ -31,10 +34,11 @@ public:
   void update(sf::Time deltaTime);
   void render(sf::RenderTarget& target, const sf::Texture& texture) const;
   void skipAnimation();
-  bool isComplete() const { return animationComplete && !holdingDiamonds; }
+  bool isComplete() const { return animationComplete && !holdingDiamonds && !fadingOut; }
   bool isAnimationPhaseComplete() const { return animationComplete; } // NEW: Check if animation phase is done
   bool isHoldingDiamonds() const { return holdingDiamonds; } // NEW: Check if diamonds are being held
-  void releaseDiamonds() { holdingDiamonds = false; } // NEW: Release diamonds for game start
+  bool isFadingOut() const { return fadingOut; } // NEW: Check if fade-out is active
+  void releaseDiamonds() { holdingDiamonds = false; fadingOut = false; } // NEW: Release diamonds for game start
 
   // Configuration access
   void setAnimationConfig(const BoardAnimationConfig& newConfig) { config = newConfig; }
@@ -42,4 +46,5 @@ public:
   
   // Lighting integration
   void updateLights(DP::LightingManager& lightingManager) const;
+  sf::Color getCurrentAmbientColor() const; // NEW: Get current ambient color for fade-out
 };
