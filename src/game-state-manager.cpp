@@ -68,35 +68,9 @@ void GameStateManager::transitionToBoardAnimation() {
 
 void GameStateManager::transitionFromBoardAnimationToLetsBegin() {
   if (game->currentState == Game::state_board_animation) {
-#ifndef NDEBUG
-    std::cout << "[DEBUG] Transitioning from board_animation to lets_begin with cleanup" << std::endl;
-#endif
-    
     handleStateChange(game->currentState, Game::state_lets_begin);
     game->currentState = Game::state_lets_begin;
-
-    // Reset the timer for the 'Let's Begin' message fade-out
     game->downTimeCounter = 0;
-
-    // Handoff complete, release animator resources
-    if (game->boardAnimator) {
-      game->boardAnimator->releaseDiamonds();
-#ifndef NDEBUG
-      std::cout << "[DEBUG] Released animated diamonds after state transition" << std::endl;
-#endif
-    }
-
-    // Clean up lighting from the animation state
-    if (game->lightingManager && game->boardAnimationLightingInitialized) {
-      game->lightingManager->cleanup();
-      game->boardAnimationLightingInitialized = false;
-#ifndef NDEBUG
-      std::cout << "[DEBUG] Cleaned up lighting system after animation" << std::endl;
-#endif
-    }
-
-    // Prepare for the first player's turn
-    game->launchNextPlayer();
   }
 }
 

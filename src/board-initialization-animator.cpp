@@ -119,9 +119,12 @@ void BoardInitializationAnimator::update(sf::Time deltaTime) {
 
 void BoardInitializationAnimator::updateVertexArray() {
   for (size_t i = 0; i < animatedItems.size(); i++) {
-    // Only update vertex data for items that have started animating
+    // Render items that have started animating OR are finished (holding in position)
     float staggeredStartTime = i * config.staggerDelay;
-    if (totalElapsedTime >= staggeredStartTime) {
+    bool hasStarted = totalElapsedTime >= staggeredStartTime;
+    bool isFinished = animatedItems[i].isFinished();
+    
+    if (hasStarted || (isFinished && holdingDiamonds)) {
       // Note: We don't have direct access to texture here,
       // so we'll use placeholder texture coordinates
       // The actual texture will be provided during rendering
@@ -171,8 +174,8 @@ void BoardInitializationAnimator::updateVertexArray() {
 
       // Set color with alpha based on animation progress
       float alpha = 255.0f;
-      if (totalElapsedTime < staggeredStartTime + 0.2f) {
-        // Fade in during first 0.2 seconds
+      if (hasStarted && totalElapsedTime < staggeredStartTime + 0.2f) {
+        // Fade in during first 0.2 seconds only for items that just started
         alpha = ((totalElapsedTime - staggeredStartTime) / 0.2f) * 255.0f;
         alpha = std::max(0.0f, std::min(255.0f, alpha));
       }
@@ -230,9 +233,9 @@ void BoardInitializationAnimator::render(sf::RenderTarget& target,
     return;
   }
 
-  if (animationComplete) {
+  if (animationComplete && !holdingDiamonds) {
 #ifndef NDEBUG
-    std::cout << "ANIMATION RENDER: Skipped - animation complete" << std::endl;
+    std::cout << "ANIMATION RENDER: Skipped - animation complete and not holding" << std::endl;
 #endif
     return;
   }
@@ -354,9 +357,9 @@ void BoardInitializationAnimator::updateLights(DP::LightingManager& lightingMana
   
   int lightCount = 0;
   
-  // Add lights for each animated diamond
+  // Add lights for each animated diamond that has started moving
   for (const auto& item : animatedItems) {
-    if (!item.isFinished()) {
+    if (item.getProgress() > 0.0f) {  // Includes animating and finished items
       sf::Vector2f position = item.getCurrentPosition();
       float scale = item.getCurrentScale();
       

@@ -1,186 +1,132 @@
-# Board Diamond Animation Documentation
-
-**Source Knowledge**: Commit 60a939ef8d8de62a00d82cdf3da244d8a17463ea
+# Diamond Animation System - Board Initialization
 
 ## Overview
 
-DeerPortal implements an animated board initialization sequence where diamond pieces appear on the game board before gameplay begins. This is handled by the `BoardInitializationAnimator` class and related components.
+The board initialization animation system creates a spectacular visual effect where diamonds animate from the four corners of the screen to their final board positions in waves, accompanied by dynamic lighting effects.
 
-## Core Components
+## System Components
 
-### BoardInitializationAnimator (`src/board-initialization-animator.h`)
-The main class that orchestrates the diamond animation sequence.
+### 1. BoardInitializationAnimator
+- **Purpose**: Manages the overall animation sequence
+- **Key Features**:
+  - Staggered diamond spawning (0.05s delay between diamonds)
+  - Bezier curve movement paths for natural arcing motion
+  - Lighting integration during animation
+  - Hold state after animation completes
 
-#### Key Properties
-- `std::vector<AnimatedBoardItem> animatedItems`: Collection of animated diamonds
-- `BoardSpawnRegions spawnRegions`: Defines where diamonds spawn from
-- `BoardAnimationConfig config`: Animation parameters
-- `sf::VertexArray animationVertices`: Optimized rendering array
-- `bool animationComplete`: Tracks completion state
-- `float totalElapsedTime`: Animation timing tracker
+### 2. AnimatedBoardItem
+- **Purpose**: Individual diamond animation logic
+- **Features**:
+  - Cubic Bezier path calculation
+  - Eased scaling (0.3 to 1.0)
+  - Rotation effects during movement
+  - Progress tracking (0.0 to 1.0)
 
-### AnimatedBoardItem (`src/animated-board-item.h`)
-Individual diamond piece animation controller.
+### 3. BoardSpawnRegions
+- **Purpose**: Determines spawn points for each diamond
+- **Logic**: Maps diamonds to quadrants and calculates appropriate corner spawn positions
 
-#### Animation Properties
-- `spawnPoint`: Starting position for diamond
-- `targetPoint`: Final board position
-- `bezierPoints[4]`: Bezier curve control points for smooth movement
-- `progress`: Animation completion (0.0 to 1.0)
-- `rotationAngle`: Current rotation state
-- `currentScale`: Size scaling during animation
-- `diamondId`: Unique identifier for diamond
-- `textureId`: Atlas texture coordinate selector
+## Animation States
 
-## Animation Configuration
+1. **Initialization**: Diamonds positioned at spawn points (corners)
+2. **Animation Phase**: Diamonds move along Bezier curves to targets
+3. **Hold Phase**: Diamonds remain at final positions with lighting
+4. **Release**: Animation system releases control to static board rendering
 
-### BoardAnimationConfig Structure
+## Critical Fix: Diamond Disappearing Issue
+
+### Problem
+Diamonds were disappearing after completing their individual animations because the rendering logic only showed diamonds during their staggered start period.
+
+### Root Cause
+In `updateVertexArray()`, the condition was:
+```cpp
+if (totalElapsedTime >= staggeredStartTime) {
+    // Render diamond
+}
+```
+
+This meant once a diamond finished and new diamonds started, the finished ones became invisible.
+
+### Solution
+Modified the rendering condition to:
+```cpp
+bool hasStarted = totalElapsedTime >= staggeredStartTime;
+bool isFinished = animatedItems[i].isFinished();
+
+if (hasStarted || (isFinished && holdingDiamonds)) {
+    // Render diamond
+}
+```
+
+This ensures:
+- Diamonds render during their animation phase
+- Finished diamonds continue rendering when in hold state
+- All diamonds remain visible until explicitly released
+
+### Code Changes
+1. **AnimatedBoardItem.h**: Added `getProgress()` method
+2. **BoardInitializationAnimator.cpp**:
+   - Modified `updateVertexArray()` rendering logic
+   - Updated `updateLights()` to use progress-based condition
+   - Fixed `render()` to continue rendering during hold state
+
+## Lighting Integration
+
+The animation system integrates with the LightingManager to create dynamic lighting effects:
+
+- Each animated diamond generates a light source
+- Light intensity scales with diamond size (0.3 to 1.0)
+- Light radius: 60-100px based on scale
+- Lights persist during hold state for seamless transition
+
+## State Transitions
+
+```
+state_setup_players -> state_board_animation -> state_lets_begin -> state_roll_dice
+```
+
+1. User clicks "Start Game" in setup
+2. Animation initializes and runs
+3. Animation completes, enters hold state (state_lets_begin)
+4. User clicks to proceed to gameplay (state_roll_dice)
+5. Animated diamonds released, static diamonds take over
+
+## Performance Optimizations
+
+- VertexArray batching for efficient rendering
+- Spatial culling for lighting (when 100+ lights active)
+- Staggered updates to prevent frame drops
+- Single texture atlas for all diamond types
+
+## Configuration
+
 ```cpp
 struct BoardAnimationConfig {
-  float animationDuration = 2.5f;    // Total animation time
-  float rotationSpeed = 180.0f;      // Degrees per second rotation
-  float spawnRadius = 200.0f;        // Distance from center for spawn points
-  float startScale = 0.3f;           // Initial diamond size
-  float endScale = 1.0f;             // Final diamond size
-  float staggerDelay = 0.05f;        // Delay between diamond animations
-  bool enableRotation = true;        // Enable rotation during movement
+    float animationDuration = 2.5f;    // Total animation time
+    float rotationSpeed = 180.0f;      // Degrees per second
+    float spawnRadius = 200.0f;        // Distance from corners
+    float startScale = 0.3f;           // Initial diamond size
+    float endScale = 1.0f;             // Final diamond size
+    float staggerDelay = 0.05f;        // Delay between diamonds
+    bool enableRotation = true;        // Rotation during movement
 };
 ```
 
-## Animation Sequence
+## SFML 3.0.1 Compatibility
 
-### Initialization Phase
-1. `initializeAnimation()` called with `BoardDiamondSeq` and window reference
-2. Spawn regions calculated around board center
-3. Each diamond gets assigned spawn point and target position
-4. Vertex array initialized for efficient rendering
+The system is fully compatible with SFML 3.0.1:
+- Uses modern VertexArray rendering
+- Proper texture coordinate mapping
+- Compatible with new event system
+- Efficient batch rendering techniques
 
-### Animation Phase
-1. `startAnimation()` begins the sequence
-2. `update(sf::Time deltaTime)` called each frame:
-   - Updates each `AnimatedBoardItem` progress
-   - Applies easing functions for smooth movement
-   - Updates rotation and scaling
-   - Rebuilds vertex array for rendering
+## Debugging
 
-### Completion Phase
-1. Individual diamonds complete when `progress >= 1.0f`
-2. Overall animation completes when all diamonds finish
-3. `isComplete()` returns true when sequence finished
-4. Game state transitions to next phase
+Debug output can be enabled in non-release builds:
+- Animation state transitions
+- Individual diamond progress
+- Lighting system status
+- Vertex array updates
 
-## Movement Mechanics
-
-### Bezier Curve Trajectories
-Each diamond follows a cubic Bezier curve from spawn to target:
-- `initializeBezierPath()` calculates control points
-- `calculateBezierPosition(float t)` computes position at time t
-- Provides smooth, curved movement rather than linear paths
-
-### Easing Functions
-- `easeOutCubic(float t)`: Smooth deceleration at end of movement
-- Creates natural-feeling animation curves
-- Applied to position, scale, and rotation changes
-
-## Visual Effects
-
-### Scaling Animation
-- Diamonds start at 30% size (`startScale = 0.3f`)
-- Gradually scale to full size (`endScale = 1.0f`)
-- Creates "growing" appearance effect
-
-### Rotation Effects
-- Continuous rotation during movement (`rotationSpeed = 180.0f`)
-- Can be disabled via `enableRotation = false`
-- Adds dynamic visual interest
-
-### Staggered Timing
-- `staggerDelay = 0.05f` creates wave-like appearance
-- Prevents all diamonds from moving simultaneously
-- Creates more visually appealing sequence
-
-## Position Calculation
-
-Position calculations use the exact same logic as BoardDiamondSeq for pixel-perfect alignment:
-
-```cpp
-// Use EXACT same position calculation as BoardDiamondSeq
-const BoardDiamond& diamond = diamonds.diamonds[i];
-sf::Vector2i cords = DP::transPosition(diamond.boardPosition);
-sf::Vector2f tilePos = DP::getScreenPos(cords);
-
-// IDENTICAL centering offset as BoardDiamondSeq::updateSingleDiamond()
-const float offsetX = 2.4f;      // (40 - 35.2) / 2 = 2.4f
-const float offsetY = 2.4f;      // (40 - 35.2) / 2 = 2.4f
-sf::Vector2f staticPosition(tilePos.x + offsetX, tilePos.y + offsetY);
-
-// Convert to center position for animation (diamondSize = 35.2f)
-const float halfSize = 35.2f * 0.5f; // 17.6f
-sf::Vector2f targetPos(staticPosition.x + halfSize, staticPosition.y + halfSize);
-```
-
-This ensures seamless transition from animated to static diamonds.
-
-## Vertex Array Rendering
-
-- Uses sf::PrimitiveType::Triangles with 6 vertices per diamond (2 triangles forming a quad)
-- Supports rotation and scaling per diamond
-- Single draw call for all 112 diamonds
-- Dirty flag optimization prevents unnecessary rebuilds
-
-## Visual Effects
-
-### Scaling Animation
-- Diamonds start at 30% size (`startScale = 0.3f`)
-- Gradually scale to full size (`endScale = 1.0f`)
-- Creates "growing" appearance effect
-
-### Rotation Effects
-- Continuous rotation during movement (`rotationSpeed = 180.0f`)
-- Can be disabled via `enableRotation = false`
-- Adds dynamic visual interest
-
-### Staggered Timing
-- `staggerDelay = 0.05f` creates wave-like appearance
-- Prevents all diamonds from moving simultaneously
-- Creates more visually appealing sequence
-
-## Rendering Optimization
-
-### Vertex Array Implementation
-- All diamonds rendered in single draw call
-- `updateVertexArray()` rebuilds geometry each frame
-- Efficient batch rendering for multiple sprites
-
-### Texture Atlas Integration
-- `textureId` selects appropriate sprite from atlas
-- Supports different diamond types/colors
-- Optimized memory usage through texture sharing
-
-## Game State Integration
-
-### State Transitions
-1. Game enters `state_board_animation`
-2. `BoardInitializationAnimator::startAnimation()` called
-3. Animation runs until completion
-4. `transitionFromBoardAnimationToLetsBegin()` advances game state
-5. Normal gameplay begins
-
-### Skip Functionality
-- `skipAnimation()` method for immediate completion
-- Allows players to bypass animation if desired
-- Maintains game flow flexibility
-
-## Performance Considerations
-
-### Frame Rate Optimization
-- Vertex array prevents per-diamond draw calls
-- Bezier calculations cached for smooth performance
-- Delta time-based animation for frame rate independence
-
-### Memory Management
-- Efficient vector storage for animated items
-- Reuse of vertex array across frames
-- Cleanup of completed animations
-
-The board diamond animation system provides an engaging visual introduction to each game while maintaining high performance through optimized rendering techniques.
+The system provides comprehensive logging for troubleshooting animation issues.

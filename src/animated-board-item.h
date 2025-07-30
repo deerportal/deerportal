@@ -35,6 +35,7 @@ public:
   sf::Vector2f getCurrentPosition() const;
   float getCurrentScale() const { return currentScale; }
   float getCurrentRotation() const { return rotationAngle; }
+  float getProgress() const { return progress; }
   sf::Vector2f getSpawnPoint() const { return spawnPoint; }
   int getTextureId() const { return textureId; }
 };

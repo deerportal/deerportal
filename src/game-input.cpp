@@ -170,9 +170,19 @@ void GameInput::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mous
     break;
 
   case Game::state_board_animation:
-    // Skip animation on mouse click and go to lets begin
-    game->boardAnimator->skipAnimation();
-    game->stateManager->transitionFromBoardAnimationToLetsBegin();
+    // Allow user to proceed only after animation is done
+    if (game->boardAnimator->isComplete()) {
+#ifndef NDEBUG
+      std::cout << "INPUT: Animation complete, user clicked to proceed to lets_begin" << std::endl;
+#endif
+      game->stateManager->transitionFromBoardAnimationToLetsBegin();
+    } else {
+      // Skip animation on mouse click during animation
+#ifndef NDEBUG
+      std::cout << "INPUT: User clicked to skip animation" << std::endl;
+#endif
+      game->boardAnimator->skipAnimation();
+    }
     break;
 
   case Game::state_intro_shader:

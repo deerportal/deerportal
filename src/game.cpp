@@ -466,9 +466,23 @@ void Game::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)
     sf::IntRect startGameRect({580, 640}, {180, 80});
     if (startGameRect.contains(sf::Vector2i((int)posFull.x, (int)posFull.y))) {
       bigDiamondActive = true;
-      banner.setText("start game");
-      currentState = state_roll_dice;
-      launchNextPlayer();
+      // Don't set banner text during animation to avoid covering the animation
+      // banner.setText("start game");
+      
+      // Initialize animation with final diamond positions
+      boardAnimator->initializeAnimation(boardDiamonds, window);
+      
+      // Transition to animation state instead of going directly to roll_dice
+      stateManager->transitionToBoardAnimation();
+      return;
+    }
+  } else if (currentState == state_board_animation) {
+    // Allow user to proceed only after animation is complete
+    if (boardAnimator->isComplete()) {
+#ifndef NDEBUG
+      std::cout << "[DEBUG] Animation complete, user clicked to proceed to lets_begin" << std::endl;
+#endif
+      stateManager->transitionFromBoardAnimationToLetsBegin();
       return;
     }
   } else if (currentState == state_roll_dice) {
@@ -501,15 +515,25 @@ void Game::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)
     command(resultCommand);
   }
 
+  if (currentState == state_board_animation) {
+    // Allow user to proceed only after animation is done.
+    if (boardAnimator->isAnimationPhaseComplete()) {
+        stateManager->transitionFromBoardAnimationToLetsBegin();
+        return;
+    }
+  }
+
   if (currentState == state_lets_begin) {
-    // DISABLED: Automatic transition to state_roll_dice
-    // Let user manually trigger transition to keep diamonds visible longer
-    // if (downTimeCounter > 1) {
-    //   currentState = state_roll_dice;
-    //   restartGame();
-    //   launchNextPlayer();
-    //   return;
-    // }
+    if (boardAnimator) {
+        boardAnimator->releaseDiamonds();
+    }
+    if (lightingManager && boardAnimationLightingInitialized) {
+        lightingManager->cleanup();
+        boardAnimationLightingInitialized = false;
+    }
+    currentState = state_roll_dice;
+    launchNextPlayer();
+    return;
   }
 
   if (currentState == state_end_game) {
@@ -713,14 +737,6 @@ void Game::update(sf::Time frameTime) {
 #endif
     // Update board initialization animation
     boardAnimator->update(frameTime);
-    
-    // NEW: Immediately transition when animation is complete
-    if (boardAnimator->isComplete()) {
-#ifndef NDEBUG
-      std::cout << "UPDATE DEBUG: Animation complete, transitioning to lets_begin" << std::endl;
-#endif
-      stateManager->transitionFromBoardAnimationToLetsBegin();
-    }
     
     updateMinimalElements(frameTime);
     break;
@@ -1139,25 +1155,16 @@ void Game::render(float deltaTime) {
       renderTexture.draw(*players[i].spriteAI);
     }
   } else if (currentState == state_board_animation) {
-#ifndef NDEBUG
-    std::cout << "GAME RENDER: Rendering state_board_animation!" << std::endl;
-#endif
     renderTexture.setView(viewFull);
     renderTexture.draw(*spriteBackgroundDark);
     renderTexture.setView(viewTiles);
-    drawBaseGame(); // Draw board elements but NOT static diamonds
+    drawBaseGame();
     renderTexture.setView(viewFull);
     renderTexture.draw(groupHud);
-    // Draw the final board state underneath the animation
-    renderTexture.setView(viewTiles);
-    renderTexture.draw(boardDiamonds);
-    
-    // Render animated diamonds with viewFull to avoid viewport clipping
-    renderTexture.setView(viewFull);
+
     boardAnimator->render(renderTexture, textures.textureBoardDiamond);
     
-    // Apply lighting effects during board animation (including hold state)
-    if (boardAnimator && (!boardAnimator->isComplete() || boardAnimator->isHoldingDiamonds())) {
+    if (boardAnimator && (!boardAnimator->isAnimationPhaseComplete() || boardAnimator->isHoldingDiamonds())) {
 #ifndef NDEBUG
       std::cout << "LIGHTING: Applying lighting effects in state_board_animation" << std::endl;
 #endif

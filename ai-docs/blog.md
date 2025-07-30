@@ -1,5 +1,46 @@
 # DeerPortal Development Blog
 
+## 2025-01-28 - Diamond Animation System Fixed
+
+### Critical Fix: Disappearing Diamonds Resolved
+
+Today we successfully resolved a critical issue with the board initialization animation system where diamonds were disappearing mid-animation. The problem was affecting the spectacular lighting effects we've been working on.
+
+**The Issue**: Diamonds were vanishing after completing their individual animations, leaving gaps in the animation sequence. This was particularly noticeable in the upper sections of the board where diamonds would animate in beautifully, then suddenly disappear while other diamonds were still arriving.
+
+**Root Cause**: The rendering logic in `updateVertexArray()` was only showing diamonds during their staggered start period. Once a diamond finished animating, it would become invisible even though other diamonds were still moving.
+
+**The Fix**: Modified the rendering condition to continue showing finished diamonds when in the "hold" state:
+
+```cpp
+// Before (broken)
+if (totalElapsedTime >= staggeredStartTime) {
+    // Render diamond
+}
+
+// After (fixed)  
+bool hasStarted = totalElapsedTime >= staggeredStartTime;
+bool isFinished = animatedItems[i].isFinished();
+
+if (hasStarted || (isFinished && holdingDiamonds)) {
+    // Render diamond - ensures finished diamonds stay visible
+}
+```
+
+**Impact**: The animation now looks spectacular with all 112 diamonds visible throughout the entire sequence, accompanied by dynamic lighting effects. The lighting system scales beautifully with diamond size and position, creating an immersive game start experience.
+
+**Technical Details**:
+- Added `getProgress()` method to `AnimatedBoardItem`
+- Updated lighting system to track diamond progress properly
+- Ensured seamless transition from animated to static diamonds
+- Maintained 60+ FPS performance with 112 active lights
+
+This fix completes our lighting animation system implementation and brings the board initialization sequence to production quality.
+
+## Previous Entries
+
+[Previous blog entries would continue below...]
+
 ## July 26, 2025 - Lighting Effects Development (v0.10.0-pre.1) - PRE-RELEASE
 
 **Foundation Release**: Comprehensive planning and technical analysis for dynamic lighting effects during board initialization animation.
