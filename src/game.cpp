@@ -477,14 +477,9 @@ void Game::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)
       return;
     }
   } else if (currentState == state_board_animation) {
-    // Allow user to proceed only after animation is complete
-    if (boardAnimator->isComplete()) {
-#ifndef NDEBUG
-      std::cout << "[DEBUG] Animation complete, user clicked to proceed to lets_begin" << std::endl;
-#endif
-      stateManager->transitionFromBoardAnimationToLetsBegin();
-      return;
-    }
+    // Animation input handling is now done in GameInput class
+    // This section can be removed to avoid duplicate processing
+    return;
   } else if (currentState == state_roll_dice) {
     if (players[turn].human) {
       sf::FloatRect diceRect(roundDice.spriteDice->getGlobalBounds());
@@ -513,14 +508,6 @@ void Game::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mousePos)
   if (currentState == state_gui_end_round) {
     std::string resultCommand = guiRoundDice.getElem(pos);
     command(resultCommand);
-  }
-
-  if (currentState == state_board_animation) {
-    // Allow user to proceed only after animation is done.
-    if (boardAnimator->isAnimationPhaseComplete()) {
-        stateManager->transitionFromBoardAnimationToLetsBegin();
-        return;
-    }
   }
 
   if (currentState == state_lets_begin) {
@@ -1162,7 +1149,15 @@ void Game::render(float deltaTime) {
     renderTexture.setView(viewFull);
     renderTexture.draw(groupHud);
 
-    boardAnimator->render(renderTexture, textures.textureBoardDiamond);
+    // Render animated diamonds if animation is active or holding
+    if (!boardAnimator->isComplete() || boardAnimator->isHoldingDiamonds()) {
+      boardAnimator->render(renderTexture, textures.textureBoardDiamond);
+    } else {
+      // Animation skipped - render static diamonds immediately
+      renderTexture.setView(viewTiles);
+      renderTexture.draw(boardDiamonds);
+      renderTexture.setView(viewFull);
+    }
     
     if (boardAnimator && (!boardAnimator->isAnimationPhaseComplete() || boardAnimator->isHoldingDiamonds())) {
 #ifndef NDEBUG

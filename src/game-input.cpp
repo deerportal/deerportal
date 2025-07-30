@@ -170,18 +170,29 @@ void GameInput::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mous
     break;
 
   case Game::state_board_animation:
-    // Allow user to proceed only after animation is done
-    if (game->boardAnimator->isComplete()) {
+    // Skip animation and immediately start game on any click
+    if (!game->boardAnimator->isComplete()) {
+#ifndef NDEBUG
+      std::cout << "INPUT: User clicked to skip animation and start game immediately" << std::endl;
+#endif
+      // Skip animation and force all diamonds to final positions
+      game->boardAnimator->skipAnimation();
+      // Release diamonds immediately to transition to static rendering
+      game->boardAnimator->releaseDiamonds();
+      // Clean up lighting
+      if (game->lightingManager && game->boardAnimationLightingInitialized) {
+        game->lightingManager->cleanup();
+        game->boardAnimationLightingInitialized = false;
+      }
+      // Transition directly to roll_dice to start game
+      game->currentState = Game::state_roll_dice;
+      game->launchNextPlayer();
+    } else {
+      // Animation already complete, proceed normally
 #ifndef NDEBUG
       std::cout << "INPUT: Animation complete, user clicked to proceed to lets_begin" << std::endl;
 #endif
       game->stateManager->transitionFromBoardAnimationToLetsBegin();
-    } else {
-      // Skip animation on mouse click during animation
-#ifndef NDEBUG
-      std::cout << "INPUT: User clicked to skip animation" << std::endl;
-#endif
-      game->boardAnimator->skipAnimation();
     }
     break;
 

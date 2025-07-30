@@ -333,16 +333,16 @@ void BoardInitializationAnimator::initializeVertexArrayAtSpawn() {
 
 void BoardInitializationAnimator::skipAnimation() {
   animationComplete = true;
-  holdingDiamonds = true; // Still hold diamonds after skipping
+  holdingDiamonds = false; // Don't hold diamonds when skipping - allow immediate transition
 
-  // Set all items to finished state
+  // Set all items to finished state at their final positions
   for (auto& item : animatedItems) {
     // Force completion by updating with large time step
     item.update(sf::seconds(config.animationDuration + 1.0f), config);
   }
 
 #ifndef NDEBUG
-  std::cout << "[DEBUG] Board initialization animation skipped, holding diamonds in position" << std::endl;
+  std::cout << "[DEBUG] Board initialization animation skipped, transitioning to static diamonds" << std::endl;
 #endif
 }
 
