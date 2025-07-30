@@ -54,11 +54,16 @@ The game defines the following states in `src/game.h`:
 - Activates animated board initialization.
 - Calls `game->boardAnimator->startAnimation()`.
 
-#### `transitionFromBoardAnimationToLetsBegin()`
-- This transition is now **automatic**.
-- Triggered when the `BoardInitializationAnimator`'s `isComplete()` method returns `true` (after the fade-out completes).
-- Resets `downTimeCounter = 0`.
-- Calls `game->launchNextPlayer()` to continue game flow.
+#### `transitionFromBoardAnimationToLetsBegin()` - **DEPRECATED**
+- This transition method is **no longer used** as of the fadeout fix.
+- **Issue**: This method caused unwanted dark background rendering via `state_lets_begin`.
+- **New Behavior**: Direct transition from `state_board_animation` to `state_roll_dice` bypasses this intermediate state.
+
+#### **NEW: Direct Board Animation to Dice Transition**
+- **Location**: `Game::update()` in `state_board_animation` case
+- **Trigger**: When `boardAnimator->isComplete()` returns `true` (after fade-out completes)
+- **Implementation**: Direct state assignment + `launchNextPlayer()` call
+- **Result**: Seamless transition without dark background flash
 
 
 #### `transitionToEndGame()`
