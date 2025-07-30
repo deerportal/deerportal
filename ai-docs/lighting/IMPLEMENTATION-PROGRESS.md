@@ -28,7 +28,7 @@ The lighting system is now fully functional with dynamic lighting effects during
 
 ### ✅ Critical Fix: Diamond Persistence
 **Issue**: Diamonds were disappearing after completing individual animations
-**Root Cause**: Rendering logic only showed diamonds during staggered start period
+**Root Cause**: Rendering logic only showed diamonds during their staggered start period
 **Solution**: Modified `updateVertexArray()` to continue rendering finished diamonds during hold state
 
 ```cpp
@@ -91,21 +91,22 @@ state_setup_players
 state_board_animation (lighting active)
     ↓ (diamonds complete animation)
 state_board_animation (fade-out dark overlay - 2 seconds)
-    ↓ (fade-out completes)
-state_lets_begin (full board visible, ready for user click)
-    ↓ (user clicks to proceed)
-state_roll_dice (normal gameplay)
+    ↓ (fade-out completes - AUTOMATIC TRANSITION)
+state_roll_dice (normal gameplay starts immediately)
 ```
 
 ## Code Changes Summary
 1. **AnimatedBoardItem.h**: Added `getProgress()` method, reduced startScale to 0.1f
 2. **AnimatedBoardItem.cpp**: Updated Bezier path calculation for radial explosion
 3. **BoardSpawnRegions.cpp**: Modified all spawn points to big diamond center (521, 393)
-4. **BoardInitializationAnimator.cpp**:
+4. **BoardInitializationAnimator.h**: Added fade-out state variables and `getCurrentAmbientColor()` method
+5. **BoardInitializationAnimator.cpp**:
    - Fixed `updateVertexArray()` rendering logic
    - Updated `updateLights()` to use progress-based conditions
    - Modified `render()` to continue during hold state
-5. **Game.cpp**: Proper lighting cleanup synchronization
+   - **NEW**: Added fade-out effect with dynamic ambient color interpolation
+   - **NEW**: Ease-out cubic easing for smooth 2-second board unveiling
+6. **Game.cpp**: Dynamic ambient color from animator, automatic game start after fade-out completes
 
 ## Testing Results
 - ✅ Diamonds no longer disappear during animation
@@ -115,6 +116,10 @@ state_roll_dice (normal gameplay)
 - ✅ Proper cleanup prevents lighting artifacts in gameplay
 - ✅ **NEW**: Spectacular radial diamond explosion from center creates dramatic visual effect
 - ✅ **NEW**: Center-spawn animation compiles and integrates with existing lighting
+- ✅ **NEW**: Board unveiling effect smoothly fades dark overlay over 2 seconds
+- ✅ **NEW**: Dynamic ambient color interpolation from dark (10,10,20) to bright (255,255,255)
+- ✅ **NEW**: Ease-out cubic easing for natural fade-out effect
+- ✅ **NEW**: Game automatically starts when fade-out completes (no user click required)
 
 ## Known Issues
 None - system is fully functional.
@@ -124,5 +129,7 @@ None - system is fully functional.
 - Dynamic light intensity based on game events
 - Additional lighting effects for gameplay states
 - Shader-based lighting for advanced visual effects
+- Configurable fade-out duration and easing curves
+- Multiple fade-out patterns (radial, organic, etc.)
 
-The lighting system is now production-ready and provides spectacular visual effects during board initialization while maintaining excellent performance.
+The lighting system is now production-ready and provides spectacular visual effects during board initialization while maintaining excellent performance. The complete sequence creates a cinematic experience: radial diamond explosion → lighting hold → dramatic board unveiling.

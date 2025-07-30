@@ -1,132 +1,43 @@
-# Diamond Animation System - Board Initialization
+# Board Diamond Animation Documentation
+
+**Source Knowledge**: Commit 64792779bdd00dfe8a1c5576133b0084d1f5fc4b
 
 ## Overview
 
-The board initialization animation system creates a spectacular visual effect where all 112 diamonds explode radially from the center big diamond location to their final board positions in waves, accompanied by dynamic lighting effects.
+DeerPortal implements a spectacular board initialization sequence where all 112 diamond pieces explode radially from the center of the screen to their final board positions. This animation is accompanied by dynamic lighting effects and a board-unveiling fade-out, creating a polished and engaging start to the game.
 
-## System Components
+## Core Components
 
-### 1. BoardInitializationAnimator
-- **Purpose**: Manages the overall animation sequence
-- **Key Features**:
-  - Staggered diamond spawning (0.05s delay between diamonds)
-  - Bezier curve movement paths for natural arcing motion
-  - Lighting integration during animation
-  - Hold state after animation completes
+### BoardInitializationAnimator (`src/board-initialization-animator.h`)
+The main class that orchestrates the diamond animation sequence.
 
-### 2. AnimatedBoardItem
-- **Purpose**: Individual diamond animation logic
-- **Features**:
-  - Cubic Bezier path calculation
-  - Eased scaling (0.1 to 1.0) - enhanced for center explosion
-  - Rotation effects during movement
-  - Progress tracking (0.0 to 1.0)
+#### Key Properties
+- `std::vector<AnimatedBoardItem> animatedItems`: Collection of animated diamonds.
+- `BoardSpawnRegions spawnRegions`: Defines that all diamonds spawn from the center.
+- `BoardAnimationConfig config`: Animation parameters.
+- `sf::VertexArray animationVertices`: Optimized rendering array.
+- `bool animationComplete`, `bool holdingDiamonds`, `bool fadingOut`: Flags that manage the animation lifecycle.
 
-### 3. BoardSpawnRegions
-- **Purpose**: Determines spawn points for each diamond
-- **Logic**: All diamonds spawn from the big diamond center (521, 393) for radial explosion effect
+### AnimatedBoardItem (`src/animated-board-item.h`)
+Individual diamond piece animation controller.
 
-## Animation States
+#### Animation Properties
+- `spawnPoint`, `targetPoint`: Start and end positions for the animation.
+- `bezierPoints[4]`: Control points for a smooth, curved S-path.
+- `progress`: Animation completion (0.0 to 1.0).
+- `rotationAngle`, `currentScale`: Manages the diamond's rotation and size during animation.
 
-1. **Initialization**: Diamonds positioned at center spawn point (big diamond center)
-2. **Animation Phase**: Diamonds explode radially along gentle S-curve Bezier paths to targets
-3. **Hold Phase**: Diamonds remain at final positions with lighting
-4. **Release**: Animation system releases control to static board rendering
+## Animation Lifecycle
 
-## Critical Fix: Diamond Disappearing Issue
+The animation proceeds through several distinct phases, managed by the `BoardInitializationAnimator`:
 
-### Problem
-Diamonds were disappearing after completing their individual animations because the rendering logic only showed diamonds during their staggered start period.
+1.  **Animation Phase**: All 112 diamonds are created at the center of the screen and animate outwards to their final positions along gentle S-curve Bezier paths. Their scale and rotation are interpolated over the animation duration.
+2.  **Hold Phase**: Once all diamonds have reached their destinations, they are held in place, and their lighting effects remain active.
+3.  **Fade-Out Phase**: Immediately after the hold phase begins, a 2-second fade-out of the dark ambient overlay starts. The `getCurrentAmbientColor()` method in the animator interpolates the color from dark to bright.
+4.  **Completion**: The animator's `isComplete()` method returns `true` only after the fade-out is finished. This triggers an automatic transition to the next game state (`state_lets_begin`).
 
-### Root Cause
-In `updateVertexArray()`, the condition was:
-```cpp
-if (totalElapsedTime >= staggeredStartTime) {
-    // Render diamond
-}
-```
+## Visual Effects
 
-This meant once a diamond finished and new diamonds started, the finished ones became invisible.
-
-### Solution
-Modified the rendering condition to:
-```cpp
-bool hasStarted = totalElapsedTime >= staggeredStartTime;
-bool isFinished = animatedItems[i].isFinished();
-
-if (hasStarted || (isFinished && holdingDiamonds)) {
-    // Render diamond
-}
-```
-
-This ensures:
-- Diamonds render during their animation phase
-- Finished diamonds continue rendering when in hold state
-- All diamonds remain visible until explicitly released
-
-### Code Changes
-1. **AnimatedBoardItem.h**: Added `getProgress()` method
-2. **BoardInitializationAnimator.cpp**:
-   - Modified `updateVertexArray()` rendering logic
-   - Updated `updateLights()` to use progress-based condition
-   - Fixed `render()` to continue rendering during hold state
-
-## Lighting Integration
-
-The animation system integrates with the LightingManager to create dynamic lighting effects:
-
-- Each animated diamond generates a light source
-- Light intensity scales with diamond size (0.3 to 1.0)
-- Light radius: 60-100px based on scale
-- Lights persist during hold state for seamless transition
-
-## State Transitions
-
-```
-state_setup_players -> state_board_animation -> state_lets_begin -> state_roll_dice
-```
-
-1. User clicks "Start Game" in setup
-2. Animation initializes and runs
-3. Animation completes, enters hold state (state_lets_begin)
-4. User clicks to proceed to gameplay (state_roll_dice)
-5. Animated diamonds released, static diamonds take over
-
-## Performance Optimizations
-
-- VertexArray batching for efficient rendering
-- Spatial culling for lighting (when 100+ lights active)
-- Staggered updates to prevent frame drops
-- Single texture atlas for all diamond types
-
-## Configuration
-
-```cpp
-struct BoardAnimationConfig {
-    float animationDuration = 2.5f;    // Total animation time
-    float rotationSpeed = 180.0f;      // Degrees per second
-    float spawnRadius = 200.0f;        // Distance from corners
-    float startScale = 0.3f;           // Initial diamond size
-    float endScale = 1.0f;             // Final diamond size
-    float staggerDelay = 0.05f;        // Delay between diamonds
-    bool enableRotation = true;        // Rotation during movement
-};
-```
-
-## SFML 3.0.1 Compatibility
-
-The system is fully compatible with SFML 3.0.1:
-- Uses modern VertexArray rendering
-- Proper texture coordinate mapping
-- Compatible with new event system
-- Efficient batch rendering techniques
-
-## Debugging
-
-Debug output can be enabled in non-release builds:
-- Animation state transitions
-- Individual diamond progress
-- Lighting system status
-- Vertex array updates
-
-The system provides comprehensive logging for troubleshooting animation issues.
+- **Radial Explosion**: All diamonds spawning from a single point creates a dramatic "explosion" effect.
+- **Scaling**: Diamonds start small (10% of final size) and grow as they travel, adding to the sense of motion.
+- **Lighting**: Each diamond emits a light that illuminates the dark board, and the entire scene brightens as the dark overlay fades away.

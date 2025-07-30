@@ -93,8 +93,8 @@ cmake_modules/     # CMake helper modules
 
 
 ### Code Standards
-- **C++17**: Use modern C++ features, smart pointers, RAII
-- **SFML 3.0**: Follow SFML 3.0 patterns and API
+- **C++17**: Use modern C++ features, smart pointers, RAII, remember to run clang format to format code properly
+- **SFML 3.0.1**: Follow SFML 3.0.1 patterns and API
 - **Code Formatting**: LLVM style enforced via clang-format (see `.clang-format`)
 - **Naming Conventions**: camelCase for functions/variables, PascalCase for classes/types
 - **Indentation**: 2 spaces, no tabs, 100-character line limit
@@ -125,6 +125,7 @@ cmake_modules/     # CMake helper modules
 - **CMakeLists.txt**: Primary build configuration with SFML 3.0 detection
 - **README.md**: User installation and setup instructions
 - **CARDS.md**, **HANDBOOK.md**: Game documentation and card reference
+- ai-docs/lighting/ - lighting animation starts  docs
 
 ### Technical Documentation (ai-docs/final-docs/)
 - **particles.md**: Complete particle system documentation with optimization details

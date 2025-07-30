@@ -725,6 +725,20 @@ void Game::update(sf::Time frameTime) {
     // Update board initialization animation
     boardAnimator->update(frameTime);
     
+    // Check for automatic transition after fade-out completes
+    if (boardAnimator->isComplete()) {
+#ifndef NDEBUG
+      std::cout << "TRANSITION: Board animation and fade-out complete, starting game automatically" << std::endl;
+#endif
+      // Clean up lighting system before transitioning
+      if (boardAnimationLightingInitialized) {
+        boardAnimationLightingInitialized = false;
+        lightingManager->cleanup();
+      }
+      boardAnimator->releaseDiamonds();
+      stateManager->transitionFromBoardAnimationToLetsBegin();
+    }
+    
     updateMinimalElements(frameTime);
     break;
 
@@ -855,6 +869,39 @@ void Game::updateGameplayElements(sf::Time frameTime) {
   }
 
   // Game state transitions
+  
+  // Auto-transition from board animation to gameplay when fade-out completes
+  if (currentState == state_board_animation && boardAnimator && boardAnimator->isComplete()) {
+#ifndef NDEBUG
+    std::cout << "TRANSITION: Board animation and fade-out complete, starting game automatically" << std::endl;
+#endif
+    // Clean up lighting system before transitioning
+    if (boardAnimationLightingInitialized) {
+      boardAnimationLightingInitialized = false;
+      lightingManager->cleanup();
+    }
+    boardAnimator->releaseDiamonds();
+    currentState = state_roll_dice;
+    launchNextPlayer();
+    return;
+  }
+  
+  // Also handle automatic transition if somehow we ended up in state_lets_begin
+  if (currentState == state_lets_begin && boardAnimator && boardAnimator->isComplete()) {
+#ifndef NDEBUG
+    std::cout << "TRANSITION: In lets_begin but fade-out complete, starting game immediately" << std::endl;
+#endif
+    // Clean up lighting system before transitioning
+    if (boardAnimationLightingInitialized) {
+      boardAnimationLightingInitialized = false;
+      lightingManager->cleanup();
+    }
+    boardAnimator->releaseDiamonds();
+    currentState = state_roll_dice;
+    launchNextPlayer();
+    return;
+  }
+  
   if (currentState == state_lets_begin) {
     downTimeCounter += frameTime.asSeconds();
     spriteLestBegin->setColor(sf::Color(255, 255, 255, 255 - (downTimeCounter * 35)));
@@ -1188,14 +1235,8 @@ void Game::render(float deltaTime) {
 #endif
     }
     
-    // Reset lighting when animation fully completes
-    if (boardAnimator && boardAnimator->isComplete() && !boardAnimator->isHoldingDiamonds() && boardAnimationLightingInitialized) {
-      boardAnimationLightingInitialized = false;
-      lightingManager->cleanup();
-#ifndef NDEBUG
-      std::cout << "LIGHTING: Reset lighting system after animation completion" << std::endl;
-#endif
-    }
+    // DON'T reset lighting during fade-out - let it complete naturally
+    // Lighting cleanup will happen during state transition
     
     drawCharacters();
     getAnimationSystem()->drawCircleParticles(renderTexture);

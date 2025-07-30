@@ -37,7 +37,9 @@ void GameInput::handleKeyboardInput(const sf::Event& event) {
       if (keyPressed->code == sf::Keyboard::Key::Space ||
           keyPressed->code == sf::Keyboard::Key::Enter) {
         game->boardAnimator->skipAnimation();
-        game->stateManager->transitionFromBoardAnimationToLetsBegin();
+        // Skip directly to game instead of lets_begin
+        game->currentState = Game::state_roll_dice;
+        game->launchNextPlayer();
 
 #ifndef NDEBUG
         sf::Vector2f mousePos = game->window.mapPixelToCoords(sf::Mouse::getPosition(game->window));
@@ -188,11 +190,21 @@ void GameInput::handleLeftClick(sf::Vector2f pos, sf::Vector2f posFull, int mous
       game->currentState = Game::state_roll_dice;
       game->launchNextPlayer();
     } else {
-      // Animation already complete, proceed normally
+      // Animation complete - check if fade-out is also complete
+      if (game->boardAnimator && game->boardAnimator->isComplete()) {
+        // Fade-out also complete, start game immediately
 #ifndef NDEBUG
-      std::cout << "INPUT: Animation complete, user clicked to proceed to lets_begin" << std::endl;
+        std::cout << "INPUT: Animation and fade-out complete, starting game directly" << std::endl;
 #endif
-      game->stateManager->transitionFromBoardAnimationToLetsBegin();
+        game->currentState = Game::state_roll_dice;
+        game->launchNextPlayer();
+      } else {
+        // Animation complete but fade-out still in progress, transition to lets_begin
+#ifndef NDEBUG
+        std::cout << "INPUT: Animation complete, fade-out in progress, proceeding to lets_begin" << std::endl;
+#endif
+        game->stateManager->transitionFromBoardAnimationToLetsBegin();
+      }
     }
     break;
 

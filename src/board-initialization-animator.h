@@ -34,7 +34,7 @@ public:
   void update(sf::Time deltaTime);
   void render(sf::RenderTarget& target, const sf::Texture& texture) const;
   void skipAnimation();
-  bool isComplete() const { return animationComplete && !holdingDiamonds && !fadingOut; }
+  bool isComplete() const { return animationComplete && !fadingOut; } // Complete when fade-out is done
   bool isAnimationPhaseComplete() const { return animationComplete; } // NEW: Check if animation phase is done
   bool isHoldingDiamonds() const { return holdingDiamonds; } // NEW: Check if diamonds are being held
   bool isFadingOut() const { return fadingOut; } // NEW: Check if fade-out is active

@@ -46,15 +46,20 @@ The game defines the following states in `src/game.h`:
 - Activates intro shader animation sequence
 - Calls `showIntroShader()` for visual effects
 
+## State Transitions
+
+### Primary Transition Methods
+
 #### `transitionToBoardAnimation()`
-- Activates animated board initialization
-- Calls `game->boardAnimator->startAnimation()`
-- Includes debug logging for development builds
+- Activates animated board initialization.
+- Calls `game->boardAnimator->startAnimation()`.
 
 #### `transitionFromBoardAnimationToLetsBegin()`
-- Specialized transition from board animation completion
-- Resets `downTimeCounter = 0`
-- Calls `game->launchNextPlayer()` to continue game flow
+- This transition is now **automatic**.
+- Triggered when the `BoardInitializationAnimator`'s `isComplete()` method returns `true` (after the fade-out completes).
+- Resets `downTimeCounter = 0`.
+- Calls `game->launchNextPlayer()` to continue game flow.
+
 
 #### `transitionToEndGame()`
 - Handles game completion
